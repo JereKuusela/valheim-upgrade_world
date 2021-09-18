@@ -23,10 +23,11 @@ namespace UpgradeWorld {
     private static float MinDistanceFromPlayer => configMinDistanceFromPlayer.Value;
     public static ConfigEntry<float> configMaxDistanceFromPlayer;
     private static float MaxDistanceFromPlayer => configMaxDistanceFromPlayer.Value;
-    public static ConfigEntry<bool> configDisableDuplicateCheck;
-    public static bool DisableDuplicateCheck => configDisableDuplicateCheck.Value;
     public static ConfigEntry<string> configCustomPoints;
     private static string CustomPoints => configCustomPoints.Value;
+    public static ConfigEntry<string> configLocations;
+    private static string[] Locations => configLocations.Value.Split(',').Select(name => name.ToLower().Trim()).Where(name => name != "").ToArray();
+
     public static ConfigEntry<int> configNukesPerUpdate;
     public static int NukesPerUpdate => configNukesPerUpdate.Value;
 
@@ -39,10 +40,14 @@ namespace UpgradeWorld {
       configMaxDistanceFromCenter = config.Bind(section, "Maximum distance from the center", 0f, "Zones must be fully inside this distance to get upgraded. 0 for infinite.");
       configMinDistanceFromPlayer = config.Bind(section, "Minimum distance from the player", 0f, "Zones must be fully outside this distance to get upgraded.");
       configMaxDistanceFromPlayer = config.Bind(section, "Maximum distance from the player", 0f, "Zones must be fully inside this distance to get upgraded. 0 for infinite.");
-      configDisableDuplicateCheck = config.Bind(section, "Disable the check for duplicates", false, "When true, upgrading is slightly faster but already upgraded zones will get upgraded again.");
       configCustomPoints = config.Bind(section, "Custom points", "", "List of coordinates and ranges to filter zones. Format: x1,z1,min1,max1|x2,z2,min2,max2|...");
+      configLocations = config.Bind(section, "Locations", "TarPit1,Tarpit2,Tarpit3", "List of location ids (separated by ,) to include in upgrade operation.");
     }
 
+    /// <summary>Returns points and ranges to filter zones.</summary>
+    public static bool IsLocationIncluded(string name) {
+      return Locations.Length == 0 || Locations.Contains(name.ToLower());
+    }
     /// <summary>Returns points and ranges to filter zones.</summary>
     public static FilterPoint[] GetFilterPoints(Vector3 player) {
       var points = CustomPoints.Length > 0 ? CustomPoints.Split('|').Select(pointStr => {

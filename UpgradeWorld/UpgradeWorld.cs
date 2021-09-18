@@ -11,7 +11,7 @@ namespace UpgradeWorld {
       harmony.PatchAll();
     }
     public void Update() {
-      Operation.ProcessOne();
+      Operation.Process();
     }
   }
 }

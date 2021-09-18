@@ -30,7 +30,7 @@ namespace UpgradeWorld {
       }
       var array = text.Split(' ');
       if (array[0] == "upgrade") {
-        Operation.SetOperation("upgrade", GetZones("upgrade"));
+        Operation.SetOperation("upgrade_init", GetZones("upgrade"));
         return false;
       }
       if (array[0] == "nuke") {

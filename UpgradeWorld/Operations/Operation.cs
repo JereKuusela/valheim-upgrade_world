@@ -5,30 +5,46 @@ namespace UpgradeWorld {
     private static int zoneIndex = 0;
     private static int attempts = 0;
     private static int operationsFailed = 0;
-    private static int lastInputLength = 0;
     private static string operation = "";
-    public static void ProcessOne() {
+
+    public static void Process() {
+      if (operation == "upgrade_init") {
+        if (attempts == 0) {
+          Console.instance.Print("Redistributing locations to old areas. This may take a while...");
+          attempts++;
+        } else {
+          RedistributeLocations();
+          SetOperation("upgrade", zonesToUpgrade);
+        }
+      } else {
+        ProcessZones();
+      }
+    }
+    private static void ProcessZones() {
       if (zonesToUpgrade == null || zonesToUpgrade.Length == 0) {
         return;
       }
       var operations = operation == "nuke" ? Settings.NukesPerUpdate : 1;
       for (var i = 0; i < operations; i++) {
-        var zone = zonesToUpgrade[zoneIndex];
-        UpdateConsole(zone);
-        if (operation == "upgrade") {
-          var success = Upgrade(zone);
-          MoveToNextZone(success);
-        }
-        if (operation == "nuke") {
-          NukeUnloaded(zone);
-          MoveToNextZone();
-        }
-        if (zoneIndex >= zonesToUpgrade.Length) {
+        if (GetNextZone(out var zone)) {
+          if (operation == "upgrade") {
+            var success = Upgrade(zone);
+            MoveToNextZone(success);
+          }
+          if (operation == "nuke") {
+            NukeUnloaded(zone);
+            MoveToNextZone();
+          }
+        } else {
           break;
         }
       }
+      UpdateConsole();
       if (zoneIndex >= zonesToUpgrade.Length) {
         zonesToUpgrade = new Vector2i[0];
+        if (operation == "upgrade") {
+          Console.instance.Print("Upgrade completed. " + operationsFailed + " failures.");
+        }
         if (operation == "nuke") {
           Console.instance.Print("Zones destroyed. Run genloc to re-distribute location instances.");
         }
@@ -38,10 +54,30 @@ namespace UpgradeWorld {
     public static void SetOperation(string operationToDo, Vector2i[] zones) {
       zonesToUpgrade = zones;
       zoneIndex = 0;
-      lastInputLength = 0;
       operationsFailed = 0;
       attempts = 0;
       operation = operationToDo;
+    }
+    ///<summary>Returns the next zone that needs operating.</summary>
+    private static bool GetNextZone(out Vector2i zone) {
+      if (zoneIndex >= zonesToUpgrade.Length) {
+        zone = new Vector2i();
+        return false;
+      }
+
+      zone = zonesToUpgrade[zoneIndex];
+      if (operation == "nuke") {
+        return true;
+      }
+
+      while (!NeedsUpgrade(zone)) {
+        MoveToNextZone();
+        if (zoneIndex >= zonesToUpgrade.Length) {
+          return false;
+        }
+        zone = zonesToUpgrade[zoneIndex];
+      }
+      return true;
     }
     private static void MoveToNextZone(bool success = true) {
       if (success) {
@@ -49,21 +85,18 @@ namespace UpgradeWorld {
         zoneIndex++;
       } else {
         attempts++;
-        if (attempts > 10) {
+        if (attempts > 100) {
           operationsFailed++;
           attempts = 0;
           zoneIndex++;
         }
       }
     }
-    private static void UpdateConsole(Vector2i zone) {
+    private static void UpdateConsole() {
       var totalString = zonesToUpgrade.Length.ToString();
-      var updatedString = (zoneIndex + 1 - operationsFailed).ToString().PadLeft(totalString.Length, ' ');
-      var input = operation + ": " + updatedString + "/" + totalString + " (" + zone.ToString() + ")";
-      var newText = Console.instance.m_output.text.Substring(0, Console.instance.m_output.text.Length - lastInputLength) + input;
-      Console.instance.m_output.text = newText;
-      lastInputLength = input.Length;
+      var updatedString = zoneIndex.ToString().PadLeft(totalString.Length, '0');
+      var text = operation + ": " + updatedString + "/" + totalString;
+      Console.instance.Print(text);
     }
-
   }
 }
