@@ -27,9 +27,12 @@ namespace UpgradeWorld {
     public static bool DisableDuplicateCheck => configDisableDuplicateCheck.Value;
     public static ConfigEntry<string> configCustomPoints;
     private static string CustomPoints => configCustomPoints.Value;
+    public static ConfigEntry<int> configNukesPerUpdate;
+    public static int NukesPerUpdate => configNukesPerUpdate.Value;
 
     public static void Init(ConfigFile config) {
       var section = "General";
+      configNukesPerUpdate = config.Bind(section, "Nuke operation per update", 100, "How many zones to nuke per Unity update.");
       configIncludedBiomes = config.Bind(section, "Included biomes", "", "List of biome names to include (separated by ,). Zones must contain any of these to get upgraded.");
       configExcludedBiomes = config.Bind(section, "Excluded biomes", "", "List of biome names to exclude (separated by ,). Zones must not contain any of these to get upgraded.");
       configMinDistanceFromCenter = config.Bind(section, "Minimum distance from the center", 0f, "Zones must be fully outside this distance to get upgraded.");

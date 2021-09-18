@@ -11,18 +11,28 @@ namespace UpgradeWorld {
       if (zonesToUpgrade == null || zonesToUpgrade.Length == 0) {
         return;
       }
-      var zone = zonesToUpgrade[zoneIndex];
-      UpdateConsole(zone);
-      var success = false;
-      if (operation == "upgrade") {
-        success = Upgrade(zone);
+      var operations = operation == "nuke" ? Settings.NukesPerUpdate : 1;
+      for (var i = 0; i < operations; i++) {
+        var zone = zonesToUpgrade[zoneIndex];
+        UpdateConsole(zone);
+        if (operation == "upgrade") {
+          var success = Upgrade(zone);
+          MoveToNextZone(success);
+        }
+        if (operation == "nuke") {
+          NukeUnloaded(zone);
+          MoveToNextZone();
+        }
+        if (zoneIndex >= zonesToUpgrade.Length) {
+          break;
+        }
       }
-      if (operation == "nuke") {
-        success = NukeUnloaded(zone);
-      }
-      MoveToNextZone(success);
-      if (zoneIndex == zonesToUpgrade.Length) {
+      if (zoneIndex >= zonesToUpgrade.Length) {
         zonesToUpgrade = new Vector2i[0];
+        if (operation == "nuke") {
+          Console.instance.Print("Zones destroyed. Run genloc to re-distribute location instances.");
+        }
+
       }
     }
     public static void SetOperation(string operationToDo, Vector2i[] zones) {
@@ -33,7 +43,7 @@ namespace UpgradeWorld {
       attempts = 0;
       operation = operationToDo;
     }
-    private static void MoveToNextZone(bool success) {
+    private static void MoveToNextZone(bool success = true) {
       if (success) {
         attempts = 0;
         zoneIndex++;

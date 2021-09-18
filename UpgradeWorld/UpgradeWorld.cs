@@ -10,7 +10,7 @@ namespace UpgradeWorld {
       var harmony = new Harmony("valheim.jere.item_stand_all_items");
       harmony.PatchAll();
     }
-    public void FixedUpdate() {
+    public void Update() {
       Operation.ProcessOne();
     }
   }
