@@ -2,12 +2,12 @@
 using HarmonyLib;
 
 namespace UpgradeWorld {
-  [BepInPlugin("valheim.jere.upgrade_world", "UpgradeWorld", "0.1.0.0")]
+  [BepInPlugin("valheim.jere.upgrade_world", "UpgradeWorld", "1.1.0.0")]
   public class UpgradeWorld : BaseUnityPlugin {
 
     public void Awake() {
       Settings.Init(Config);
-      var harmony = new Harmony("valheim.jere.item_stand_all_items");
+      var harmony = new Harmony("valheim.jere.upgrade_world");
       harmony.PatchAll();
     }
     public void Update() {

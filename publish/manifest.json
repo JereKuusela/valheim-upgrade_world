@@ -1,6 +1,6 @@
 {
   "name": "Upgrade_World",
-  "version_number": "1.0.1",
+  "version_number": "1.1.0",
   "website_url": "https://github.com/JereKuusela/valheim-upgrade_world",
   "description": "A tool to regenerate or upgrade parts of existing worlds.",
   "dependencies": [

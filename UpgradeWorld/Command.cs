@@ -25,7 +25,12 @@ namespace UpgradeWorld {
       return zones;
     }
     public static bool Prefix(string text) {
+      if (!ZNet.instance) {
+        Console.instance.Print("Commands are not available. Please load a world first.");
+        return true;
+      }
       if (!ZNet.instance.IsServer()) {
+        Console.instance.Print("Commands are not available for clients. Please load this world on a single player mode.");
         return true;
       }
       var array = text.Split(' ');

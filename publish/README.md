@@ -10,6 +10,18 @@ Always back up your world before making any changes!
 2. Download the latest zip
 3. Extract it in the \<GameDirectory\>\BepInEx\plugins\ folder.
 
+# Quick instructions:
+
+1. Back up your world!
+2. Install the mod.
+3. Load the world.
+4. Open console with F5. write upgrade and press enter.
+5. Wait.
+6. Check that your bases are ok (especially if in Plains).
+7. If not, restore back up. read more detailed instructions and go back to the first step.
+8. Uninstall the mod.
+9. Enjoy tar pits!
+
 # Query
 
 "query" command prints out how many zones would get upgraded or removed when running other commands. Useful to check if zones are filtered properly.
@@ -28,6 +40,8 @@ For example setting "plains" to included biomes would only operate on plains and
 For example setting "p" to included biomes and "bl,mo,me,o,s" to excluded biomes would only operate inner parts of plains biomes.
 
 For example setting "300,500,500,0|1000,2000,500,0" to custom points would protect areas at coordinates 300,500 and 1000,2000 up to 500 radius.
+
+For example setting "300,500,0,100" to custom points would only operate near coordinates 300,500 witin 100 meters.
 
 
 # Upgrade
