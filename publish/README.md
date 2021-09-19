@@ -43,7 +43,6 @@ For example setting "300,500,500,0|1000,2000,500,0" to custom points would prote
 
 For example setting "300,500,0,100" to custom points would only operate near coordinates 300,500 witin 100 meters.
 
-
 # Upgrade
 
 "upgrade" command redistributes locations to already explored areas (takes a while) and then spawns them. This will destroy anything in their place so use with a caution.
@@ -56,7 +55,7 @@ Affected locations can be changed in the config and by default only includes tar
 
 For technical reasons, currently loaded areas are not nuked (about 200 meters around the player).
 
-After running, use "genloc" command to redistribute locations to destroyed areas (otherwise you get the same locations as before).
+After running, use "place" or "genloc" command to redistribute locations to destroyed areas (otherwise you get the same locations as before).
 
 Portals in the loaded area won't be autoamtically disconnected but relogging fixes that. 
 
@@ -64,7 +63,15 @@ Portals in the loaded area won't be autoamtically disconnected but relogging fix
 
 "stop" command stops the execution of current operation. Can be useful if it takes too long some reason.
 
+# Place
+
+"place" command runs the "genloc" command without needing to have devcommands enabled. This can be used to redistribute locations after nuking areas.
+
 # Changelog
 
-- v1.0.0: 
+- v1.1.0:
+	- Commands now work from the chat.
+	- Console is now enabled by default.
+
+- v1.0.0:
 	- Initial release

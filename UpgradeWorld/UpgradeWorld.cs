@@ -9,9 +9,17 @@ namespace UpgradeWorld {
       Settings.Init(Config);
       var harmony = new Harmony("valheim.jere.upgrade_world");
       harmony.PatchAll();
+      Commands.Init();
     }
     public void Update() {
       Operation.Process();
+    }
+  }
+
+  [HarmonyPatch(typeof(Console), "IsConsoleEnabled")]
+  public class IsConsoleEnabled {
+    public static void Postfix(ref bool __result) {
+      __result = true;
     }
   }
 }

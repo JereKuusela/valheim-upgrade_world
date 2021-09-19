@@ -6,15 +6,16 @@ namespace UpgradeWorld {
     private static int attempts = 0;
     private static int operationsFailed = 0;
     private static string operation = "";
+    private static Terminal context = null;
 
     public static void Process() {
       if (operation == "upgrade_init") {
         if (attempts == 0) {
-          Console.instance.Print("Redistributing locations to old areas. This may take a while...");
+          context.AddString("Redistributing locations to old areas. This may take a while...");
           attempts++;
         } else {
           RedistributeLocations();
-          SetOperation("upgrade", zonesToUpgrade);
+          SetOperation(context, "upgrade", zonesToUpgrade);
         }
       } else {
         ProcessZones();
@@ -43,15 +44,16 @@ namespace UpgradeWorld {
       if (zoneIndex >= zonesToUpgrade.Length) {
         zonesToUpgrade = new Vector2i[0];
         if (operation == "upgrade") {
-          Console.instance.Print("Upgrade completed. " + operationsFailed + " failures.");
+          context.AddString("Upgrade completed. " + operationsFailed + " failures.");
         }
         if (operation == "nuke") {
-          Console.instance.Print("Zones destroyed. Run genloc to re-distribute location instances.");
+          context.AddString("Zones destroyed. Run place or genloc to re-distribute location instances.");
         }
 
       }
     }
-    public static void SetOperation(string operationToDo, Vector2i[] zones) {
+    public static void SetOperation(Terminal terminal, string operationToDo, Vector2i[] zones) {
+      context = terminal;
       zonesToUpgrade = zones;
       zoneIndex = 0;
       operationsFailed = 0;
@@ -96,7 +98,7 @@ namespace UpgradeWorld {
       var totalString = zonesToUpgrade.Length.ToString();
       var updatedString = zoneIndex.ToString().PadLeft(totalString.Length, '0');
       var text = operation + ": " + updatedString + "/" + totalString;
-      Console.instance.Print(text);
+      context.AddString(text);
     }
   }
 }
