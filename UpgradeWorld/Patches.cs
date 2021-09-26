@@ -1,8 +1,8 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace UpgradeWorld {
   [HarmonyPatch]
@@ -36,6 +36,11 @@ namespace UpgradeWorld {
     [HarmonyReversePatch]
     [HarmonyPatch(typeof(ZDOMan), "FindObjects")]
     public static void ZDOMan_FindObjects(ZDOMan instance, Vector2i sector, List<ZDO> objects) {
+      throw new NotImplementedException("Dummy");
+    }
+    [HarmonyReversePatch]
+    [HarmonyPatch(typeof(Minimap), "ScreenToWorldPoint")]
+    public static Vector3 ScreenToWorldPoint(Minimap instance, Vector3 mousePos) {
       throw new NotImplementedException("Dummy");
     }
   }

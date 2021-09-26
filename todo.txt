@@ -1,0 +1,10 @@
+- upgrade_chests:
+ - finds predefined locations
+ - searches for predefined chests
+ - if predefined item is missing then rolls drops
+ - adds the predefined item if rolled item
+- upgrade_locations: previous upgrade
+- upgrade: combines both upgrade commands
+- visualize exclusion points (cylinders?)
+- visualize which zones are included (draw zone corners without overlap)
+- regenerate_location ???: nukes only a location (removes everything within exterior and respawns?)

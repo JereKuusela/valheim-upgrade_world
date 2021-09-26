@@ -1,11 +1,12 @@
+using System;
 using System.Linq;
 using UnityEngine;
 
 namespace UpgradeWorld {
 
-  // First step of the upgrader: Get an array of zones determined by the upgrade command.
+  /// <summary>First step of the upgrader: Get an array of zones determined by the upgrade command.</summary>
   public static class Filter {
-    // Filters given zones by biomes.
+    /// <summary>Filters given zones by biomes.</summary>
     public static Vector2i[] FilterByBiomes(Vector2i[] zones, Heightmap.Biome[] included, Heightmap.Biome[] excluded) {
       var zoneSystem = ZoneSystem.instance;
       var halfZone = zoneSystem.m_zoneSize / 2.0f;
@@ -24,46 +25,7 @@ namespace UpgradeWorld {
         return isIncluded && !isExcluded;
       }).ToArray();
     }
-    /**public static Vector2i[] FilterByBiomes(Vector2i[] zones, Heightmap.Biome[] included, Heightmap.Biome[] excluded) {
-      var zoneSystem = ZoneSystem.instance;
-      var halfZone = zoneSystem.m_zoneSize / 2.0f;
-      return zones.Where(zone => {
-        var shouldBeUnloaded = Patch.ZoneSystem_PokeLocalZone(zoneSystem, zone);
-        var mZones = Patch.GetZones(zoneSystem);
-        foreach (var key in mZones.Keys) {
-          if (key.ToString() != zone.ToString()) {
-            continue;
-          }
-
-          var obj = mZones[zone];
-          if (obj == null) {
-            Debug.Log("NO OBJ");
-            break;
-          }
-          var root = Patch.Get<GameObject>(obj, "m_root");
-          if (root == null) {
-            Debug.Log("NO ROOT");
-            break;
-          }
-          var heightmap = Zones.GetHeightmap(root);
-          if (heightmap == null) {
-            Debug.Log("NO HEIGHT");
-            break;
-          }
-          var isIncluded = included.Count() == 0 || included.Any(heightmap.HaveBiome);
-          var isExcluded = excluded.Any(heightmap.HaveBiome);
-          if (shouldBeUnloaded) {
-            Object.Destroy(root);
-            mZones.Remove(zone);
-          }
-          return isIncluded && !isExcluded;
-        }
-        Debug.Log("KEY " + zone + " NOT FOUND");
-        return false;
-      }).ToArray();
-    }
-    */
-    // Returns only zones that are partially within a given distance from a given position.
+    /// <summary>Returns zones that are fully within a given range.</summary>
     public static Vector2i[] FilterByRange(Vector2i[] zones, Vector3 position, float min, float max) {
       var zoneSystem = ZoneSystem.instance;
       var halfZone = zoneSystem.m_zoneSize / 2.0f;
@@ -78,6 +40,36 @@ namespace UpgradeWorld {
         var outsideMin = min == 0 || (corner1.magnitude >= min && corner2.magnitude >= min && corner3.magnitude >= min && corner4.magnitude >= min);
         var insideMax = max == 0 || (corner1.magnitude <= max && corner2.magnitude <= max && corner3.magnitude <= max && corner4.magnitude <= max);
         return outsideMin && insideMax;
+      }).ToArray();
+    }
+    /// <summary>Returns only zones that are within a given adjacencty to a given center zone.</summary>
+    public static Vector2i[] FilterByAdjacent(Vector2i[] zones, Vector2i centerZone, int adjacent) {
+      return zones.Where(zone => {
+        var withinX = Math.Abs(centerZone.x - zone.x) <= adjacent;
+        var withinY = Math.Abs(centerZone.y - zone.y) <= adjacent;
+        return withinX && withinY;
+      }).ToArray();
+    }
+
+    /// <summary>Returns only zones that are included within a given distance.</summary>
+    // From: https://stackoverflow.com/a/402010
+    public static Vector2i[] FilterByRadius(Vector2i[] zones, Vector3 position, float radius) {
+      var zoneSystem = ZoneSystem.instance;
+      var halfZone = zoneSystem.m_zoneSize / 2.0f;
+      return zones.Where(zone => {
+        var center = zoneSystem.GetZonePos(zone);
+        center.y = 0f;
+        var distance = center - position;
+        distance.x = Math.Abs(distance.x);
+        distance.z = Math.Abs(distance.z);
+
+        if (distance.x > halfZone + radius) return false;
+        if (distance.y > halfZone + radius) return false;
+        if (distance.z <= halfZone) return true;
+        if (distance.z <= halfZone) return true;
+
+        var cornerDistance_sq = (distance.x - halfZone) * (distance.x - halfZone) + (distance.z - halfZone) * (distance.z - halfZone);
+        return cornerDistance_sq <= radius * radius;
       }).ToArray();
     }
   }

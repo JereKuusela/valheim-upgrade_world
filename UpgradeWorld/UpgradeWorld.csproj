@@ -13,14 +13,11 @@
     <Reference Include="UnityEngine.CoreModule.dll">
       <HintPath>..\Libs\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule.dll">
+      <HintPath>..\Libs\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI.dll">
       <HintPath>..\Libs\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule.dll">
-      <HintPath>..\Libs\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ParticleSystemModule.dll">
-      <HintPath>..\Libs\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
     <Reference Include="0Harmony.dll">
       <HintPath>..\Libs\0Harmony.dll</HintPath>

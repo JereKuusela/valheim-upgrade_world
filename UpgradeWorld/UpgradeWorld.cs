@@ -2,7 +2,7 @@
 using HarmonyLib;
 
 namespace UpgradeWorld {
-  [BepInPlugin("valheim.jere.upgrade_world", "UpgradeWorld", "1.1.0.0")]
+  [BepInPlugin("valheim.jere.upgrade_world", "UpgradeWorld", "1.3.0.0")]
   public class UpgradeWorld : BaseUnityPlugin {
 
     public void Awake() {
@@ -12,7 +12,7 @@ namespace UpgradeWorld {
       Commands.Init();
     }
     public void Update() {
-      Operation.Process();
+      Operations.Process();
     }
   }
 

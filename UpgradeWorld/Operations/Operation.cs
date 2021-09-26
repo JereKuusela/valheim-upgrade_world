@@ -1,21 +1,37 @@
 namespace UpgradeWorld {
 
-  public partial class Operation {
+  public enum Operation {
+    Upgrade,
+    UpgradeInit,
+    Regenerate,
+    Query,
+    None
+  }
+
+  public partial class Operations {
     private static Vector2i[] zonesToUpgrade;
     private static int zoneIndex = 0;
     private static int attempts = 0;
-    private static int operationsFailed = 0;
-    private static string operation = "";
+    private static int skipped = 0;
+    private static int failed = 0;
+    private static Operation operation = Operation.None;
     private static Terminal context = null;
 
+
+    public static string GetName(Operation operation) {
+      if (operation == Operation.Regenerate) return "Regenerate";
+      if (operation == Operation.Upgrade) return "Upgrade";
+      if (operation == Operation.Query) return "Operate";
+      return "Unknown operation";
+    }
     public static void Process() {
-      if (operation == "upgrade_init") {
+      if (operation == Operation.UpgradeInit) {
         if (attempts == 0) {
           context.AddString("Redistributing locations to old areas. This may take a while...");
           attempts++;
         } else {
-          RedistributeLocations();
-          SetOperation(context, "upgrade", zonesToUpgrade);
+          RedistributeLocations(true, true);
+          SetOperation(context, Operation.Upgrade, zonesToUpgrade);
         }
       } else {
         ProcessZones();
@@ -25,15 +41,15 @@ namespace UpgradeWorld {
       if (zonesToUpgrade == null || zonesToUpgrade.Length == 0) {
         return;
       }
-      var operations = operation == "nuke" ? Settings.NukesPerUpdate : 1;
+      var operations = operation == Operation.Regenerate ? Settings.RegenerationsPerUpdate : 1;
       for (var i = 0; i < operations; i++) {
         if (GetNextZone(out var zone)) {
-          if (operation == "upgrade") {
+          if (operation == Operation.Upgrade) {
             var success = Upgrade(zone);
             MoveToNextZone(success);
           }
-          if (operation == "nuke") {
-            NukeUnloaded(zone);
+          if (operation == Operation.Regenerate) {
+            RegenerateZone(zone);
             MoveToNextZone();
           }
         } else {
@@ -42,22 +58,23 @@ namespace UpgradeWorld {
       }
       UpdateConsole();
       if (zoneIndex >= zonesToUpgrade.Length) {
+        if (operation == Operation.Upgrade) {
+          var upgraded = zonesToUpgrade.Length - skipped - failed;
+          context.AddString("Upgrade completed. " + upgraded + " zones upgraded. " + skipped + " skipped. " + failed + " errors.");
+        }
+        if (operation == Operation.Regenerate) {
+          context.AddString("Zones destroyed. Run place or genloc to re-distribute the location instances.");
+        }
         zonesToUpgrade = new Vector2i[0];
-        if (operation == "upgrade") {
-          context.AddString("Upgrade completed. " + operationsFailed + " failures.");
-        }
-        if (operation == "nuke") {
-          context.AddString("Zones destroyed. Run place or genloc to re-distribute location instances.");
-        }
-
       }
     }
-    public static void SetOperation(Terminal terminal, string operationToDo, Vector2i[] zones) {
+    public static void SetOperation(Terminal terminal, Operation operationToDo, Vector2i[] zones) {
       context = terminal;
       zonesToUpgrade = zones;
       zoneIndex = 0;
-      operationsFailed = 0;
+      failed = 0;
       attempts = 0;
+      skipped = 0;
       operation = operationToDo;
     }
     ///<summary>Returns the next zone that needs operating.</summary>
@@ -68,12 +85,13 @@ namespace UpgradeWorld {
       }
 
       zone = zonesToUpgrade[zoneIndex];
-      if (operation == "nuke") {
+      if (operation == Operation.Regenerate) {
         return true;
       }
 
       while (!NeedsUpgrade(zone)) {
         MoveToNextZone();
+        skipped++;
         if (zoneIndex >= zonesToUpgrade.Length) {
           return false;
         }
@@ -88,7 +106,7 @@ namespace UpgradeWorld {
       } else {
         attempts++;
         if (attempts > 100) {
-          operationsFailed++;
+          failed++;
           attempts = 0;
           zoneIndex++;
         }

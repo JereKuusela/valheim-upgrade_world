@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UpgradeWorld {
 
-  public partial class Operation {
+  public partial class Operations {
     public static bool NeedsUpgrade(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
       var locations = zoneSystem.m_locationInstances;
