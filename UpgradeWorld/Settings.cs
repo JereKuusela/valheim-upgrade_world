@@ -44,7 +44,7 @@ namespace UpgradeWorld {
       configMaxDistanceFromCenter = config.Bind(section, "Maximum distance from the center", 0f, "Zones must be fully inside this distance to get upgraded. 0 for infinite.");
       configMinDistanceFromPlayer = config.Bind(section, "Minimum distance from the player", 0f, "Zones must be fully outside this distance to get upgraded.");
       configMaxDistanceFromPlayer = config.Bind(section, "Maximum distance from the player", 0f, "Zones must be fully inside this distance to get upgraded. 0 for infinite.");
-      configCustomPoints = config.Bind(section, "Custom points", "", "List of coordinates and ranges to filter zones. Format: x1,z1,min1,max1|x2,z2,min2,max2|...");
+      configCustomPoints = config.Bind(section, "Custom points", "", "List of coordinates and ranges to filter zones. Format: x1,z1,min1,max1,comment1|x2,z2,min2,max2,comment2|...");
       configLocations = config.Bind("Redistribute", "Locations", "TarPit1,Tarpit2,Tarpit3", "List of location ids (separated by ,) included in the redistribute operation (used by upgrade).");
     }
 

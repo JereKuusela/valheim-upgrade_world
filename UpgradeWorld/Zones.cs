@@ -1,6 +1,7 @@
-using UnityEngine;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace UpgradeWorld {
 
@@ -45,6 +46,19 @@ namespace UpgradeWorld {
     public static Vector2i[] GetAllZones() {
       var zoneSystem = ZoneSystem.instance;
       return Patch.GetGeneratedZones(zoneSystem).ToArray();
+    }
+    private static int WORLD_LIMIT = 165;
+    // Returns an array of all generated zones.
+    public static Vector2i[] GetWorldZones() {
+      var zoneSystem = ZoneSystem.instance;
+      var zones = new List<Vector2i>();
+      for (var i = -WORLD_LIMIT; i <= WORLD_LIMIT; i++) {
+        for (var j = -WORLD_LIMIT; j <= WORLD_LIMIT; j++) {
+          if (i * i + j * j > WORLD_LIMIT * WORLD_LIMIT) continue;
+          zones.Add(new Vector2i(i, j));
+        }
+      }
+      return zones.ToArray();
     }
   }
 }

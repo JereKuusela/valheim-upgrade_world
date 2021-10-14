@@ -65,7 +65,7 @@ Filtering options in the config:
 # Upgrade
 
 1. Runs a modified genloc command which allows redistributing unplaced locations to already generated areas.
-2. Skip zones that didn't get a new loctaion.
+2. Skip zones that didn't get a new location.
 3. For each redistributed location, destroy everything within the location exterior radius and place the location to the world.
 
 # Regenerate
@@ -78,7 +78,7 @@ For technical reasons, currently loaded areas are not included (about 200 meters
 4. Locations are not automatically redistributed. Use "redistribute" command (otherwise you get the same locations as before).
 5. Visiting zones will regenerate them.
 
-Portals in the loaded area won't be autoamtically disconnected but relogging fixes that. 
+Portals in the loaded area won't be automatically disconnected but relogging fixes that. 
 
 # Glossary
 

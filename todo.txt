@@ -8,3 +8,7 @@
 - visualize exclusion points (cylinders?)
 - visualize which zones are included (draw zone corners without overlap)
 - regenerate_location ???: nukes only a location (removes everything within exterior and respawns?)
+
+Changes:
+
+- New command "pregenerate_all" that generates zones (no idea of any uses though)

@@ -4,6 +4,7 @@ namespace UpgradeWorld {
     Upgrade,
     UpgradeInit,
     Regenerate,
+    Generate,
     Query,
     None
   }
@@ -48,6 +49,10 @@ namespace UpgradeWorld {
             var success = Upgrade(zone);
             MoveToNextZone(success);
           }
+          if (operation == Operation.Generate) {
+            var success = Generate(zone);
+            MoveToNextZone(success);
+          }
           if (operation == Operation.Regenerate) {
             RegenerateZone(zone);
             MoveToNextZone();
@@ -64,6 +69,10 @@ namespace UpgradeWorld {
         }
         if (operation == Operation.Regenerate) {
           context.AddString("Zones destroyed. Run place or genloc to re-distribute the location instances.");
+        }
+        if (operation == Operation.Generate) {
+          var generated = zonesToUpgrade.Length - skipped - failed;
+          context.AddString("Generate completed. " + generated + " zones generated. " + skipped + " skipped. " + failed + " errors.");
         }
         zonesToUpgrade = new Vector2i[0];
       }
@@ -88,7 +97,17 @@ namespace UpgradeWorld {
       if (operation == Operation.Regenerate) {
         return true;
       }
-
+      if (operation == Operation.Generate) {
+        while (!NeedsGenerating(zone)) {
+          MoveToNextZone();
+          skipped++;
+          if (zoneIndex >= zonesToUpgrade.Length) {
+            return false;
+          }
+          zone = zonesToUpgrade[zoneIndex];
+        }
+        return true;
+      }
       while (!NeedsUpgrade(zone)) {
         MoveToNextZone();
         skipped++;
