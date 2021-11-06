@@ -16,7 +16,7 @@ namespace UpgradeWorld {
 
     public override bool Execute() {
       if (Type == "tarpits") {
-        Executor.AddOperation(new DistributeLocations(new string[] { "TarPit1", "TarPit2", "TarPit3" }, true, Context));
+        Executor.AddOperation(new DistributeLocations(new string[] { "TarPit1", "TarPit2", "TarPit3" }, Context));
         Executor.AddOperation(new PlaceLocations(Context));
       }
       return base.Execute();

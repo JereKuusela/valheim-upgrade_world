@@ -125,7 +125,7 @@ namespace UpgradeWorld {
           args.Context.AddString("Missing location ids.");
           return;
         }
-        Executor.AddOperation(new DistributeLocations(args.Args, true, args.Context));
+        Executor.AddOperation(new DistributeLocations(args.Args, args.Context));
         Executor.AddOperation(new PlaceLocations(args.Context));
       }, onlyServer: true);
       new Terminal.ConsoleCommand("query", "- Returns how many zones would get operated with current config", delegate (Terminal.ConsoleEventArgs args) {
@@ -145,7 +145,7 @@ namespace UpgradeWorld {
         Executor.AddOperation(new Count(args[1], radius, args.Context));
       }, onlyServer: true, optionsFetcher: ZNetScene.instance.GetPrefabNames);
       new Terminal.ConsoleCommand("distribute", "- Redistributes unplaced locations with the genloc command. ", delegate (Terminal.ConsoleEventArgs args) {
-        ZoneSystem.instance.GenerateLocations();
+        Executor.AddOperation(new DistributeLocations(new string[0], args.Context));
       }, onlyServer: true);
     }
   }

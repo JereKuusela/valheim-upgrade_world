@@ -10,15 +10,11 @@ namespace UpgradeWorld {
     protected override bool ExecuteZone(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
       if (zoneSystem.IsZoneLoaded(zone)) {
-        UpgradeLoaded(zone);
+        PlaceLocation(zone);
         return true;
       }
       zoneSystem.PokeLocalZone(zone);
-      if (!zoneSystem.IsZoneLoaded(zone)) {
-        return false;
-      }
-      UpgradeUnloaded(zone);
-      return true;
+      return false;
     }
     protected override bool NeedsOperation(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
@@ -29,32 +25,22 @@ namespace UpgradeWorld {
       var upgraded = ZonesToUpgrade.Length - Failed;
       Print("Upgrade completed. " + upgraded + " zones upgraded. " + Failed + " errors.");
     }
-    private void UpgradeLoaded(Vector2i zone) {
-      var zoneSystem = ZoneSystem.instance;
-      var root = zoneSystem.m_zones[zone].m_root;
-      PlaceLocation(zone, root, ZoneSystem.SpawnMode.Full);
-    }
-    private void UpgradeUnloaded(Vector2i zone) {
-      var zoneSystem = ZoneSystem.instance;
-      var root = zoneSystem.m_zones[zone].m_root;
-      PlaceLocation(zone, root, ZoneSystem.SpawnMode.Ghost);
-      foreach (var obj in spawnedObjects) {
-        Object.Destroy(obj);
-      }
-      spawnedObjects.Clear();
-      Object.Destroy(root);
-      zoneSystem.m_zones.Remove(zone);
-    }
     private readonly List<GameObject> spawnedObjects = new List<GameObject>();
     /// <summary>Places a location to the game world.</summary>
-    private void PlaceLocation(Vector2i zone, GameObject root, ZoneSystem.SpawnMode mode) {
+    private void PlaceLocation(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
+      if (Settings.LocationsExcludePlayerBases && IsInsidePlayerBase(zone)) {
+        Failed++;
+        Print("Location placement failed at " + zone.ToString() + " because of a player base.");
+        return;
+      }
+      var root = zoneSystem.m_zones[zone].m_root;
       var zonePos = ZoneSystem.instance.GetZonePos(zone);
       var heightmap = Zones.GetHeightmap(root);
       ClearAreaForLocation(zone);
       var clearAreas = new List<ZoneSystem.ClearArea>();
       spawnedObjects.Clear();
-      zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, mode, spawnedObjects);
+      zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Full, spawnedObjects);
     }
     /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
     private void ClearAreaForLocation(Vector2i zone) {
@@ -66,8 +52,18 @@ namespace UpgradeWorld {
           ClearZDOsWithinRadius(zone, location.m_position, radius);
         }
       }
-
     }
+
+    /// <summary>Returns is the location inside player base.</summary>
+    private bool IsInsidePlayerBase(Vector2i zone) {
+      var zoneSystem = ZoneSystem.instance;
+      var locations = zoneSystem.m_locationInstances;
+      if (locations.TryGetValue(zone, out var location)) {
+        return EffectArea.IsPointInsideArea(location.m_position, EffectArea.Type.PlayerBase, location.m_location.m_exteriorRadius);
+      }
+      return false;
+    }
+
     /// <summary>Clears entities too close to a given position.</summary>
     private void ClearZDOsWithinRadius(Vector2i zone, Vector3 position, float radius) {
       var sectorObjects = new List<ZDO>();

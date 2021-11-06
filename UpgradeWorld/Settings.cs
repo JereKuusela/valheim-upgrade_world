@@ -20,6 +20,8 @@ namespace UpgradeWorld {
     private static float MinDistanceFromCenter => configMinDistanceFromCenter.Value;
     public static ConfigEntry<bool> configDestroyLoadedAreas;
     public static bool DestroyLoadedAreas => configDestroyLoadedAreas.Value;
+    public static ConfigEntry<bool> configLocationsExcludePlayerBases;
+    public static bool LocationsExcludePlayerBases => configLocationsExcludePlayerBases.Value;
     public static ConfigEntry<float> configMaxDistanceFromCenter;
     private static float MaxDistanceFromCenter => configMaxDistanceFromCenter.Value;
     public static ConfigEntry<float> configMinDistanceFromPlayer;
@@ -40,6 +42,8 @@ namespace UpgradeWorld {
       configMinDistanceFromPlayer = config.Bind(section, "Minimum distance from the player", 0f, "Zones must be fully outside this distance to get upgraded.");
       configMaxDistanceFromPlayer = config.Bind(section, "Maximum distance from the player", 0f, "Zones must be fully inside this distance to get upgraded. 0 for infinite.");
       configCustomPoints = config.Bind(section, "Custom points", "", "List of coordinates and ranges to filter zones. Format: x1,z1,min1,max1,comment1|x2,z2,min2,max2,comment2|...");
+
+      configLocationsExcludePlayerBases = config.Bind("Locations", "Exclude player bases", true, "If true, locations won't be placed inside player bases.");
 
       configDestroyLoadedAreas = config.Bind("Destroying", "Destroy loaded areas", false, "If true, loaded areas are also destroyed. USE AT YOUR WORN RISK!");
       configDestroysPerUpdate = config.Bind("Destroying", "Operations per update", 100, "How many zones are destroyed per Unity update.");

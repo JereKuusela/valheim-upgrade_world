@@ -14,3 +14,4 @@ Changes:
 - New command for counting amount of entities.
 - New command to place any locations (replacing one of the config settings).
 - Upgrade command now has a second parameter to determine the operation (currently only tarpits).
+- Added a new setting that prevents location placement on player bases (enabled by default).
