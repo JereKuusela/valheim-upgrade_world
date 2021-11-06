@@ -18,8 +18,8 @@ namespace UpgradeWorld {
     public static Heightmap.Biome[] ExcludedBiomes => GetBiomes(configExcludedBiomes.Value);
     public static ConfigEntry<float> configMinDistanceFromCenter;
     private static float MinDistanceFromCenter => configMinDistanceFromCenter.Value;
-    public static ConfigEntry<bool> configRegenerateLoadedAreas;
-    public static bool RegenerateLoadedAreas => configRegenerateLoadedAreas.Value;
+    public static ConfigEntry<bool> configDestroyLoadedAreas;
+    public static bool DestroyLoadedAreas => configDestroyLoadedAreas.Value;
     public static ConfigEntry<float> configMaxDistanceFromCenter;
     private static float MaxDistanceFromCenter => configMaxDistanceFromCenter.Value;
     public static ConfigEntry<float> configMinDistanceFromPlayer;
@@ -31,13 +31,11 @@ namespace UpgradeWorld {
     public static ConfigEntry<string> configLocations;
     private static string[] Locations => configLocations.Value.Split(',').Select(name => name.ToLower().Trim()).Where(name => name != "").ToArray();
 
-    public static ConfigEntry<int> configRegenerationsPerUpdate;
-    public static int RegenerationsPerUpdate => configRegenerationsPerUpdate.Value;
+    public static ConfigEntry<int> configDestroysPerUpdate;
+    public static int DestroysPerUpdate => configDestroysPerUpdate.Value;
 
     public static void Init(ConfigFile config) {
-      var section = "Exclusion";
-      configRegenerateLoadedAreas = config.Bind("Regenerate", "Regenerate loaded areas", false, "If true, loaded areas are also destroyed. USE AT YOUR WORN RISK!");
-      configRegenerationsPerUpdate = config.Bind("Regenerate", "Operations per update", 100, "How many zones are destroyed per Unity update.");
+      var section = "General";
       configIncludedBiomes = config.Bind(section, "Included biomes", "", "List of biome names to include (separated by ,). Zones must contain any of these to get upgraded.");
       configExcludedBiomes = config.Bind(section, "Excluded biomes", "", "List of biome names to exclude (separated by ,). Zones must not contain any of these to get upgraded.");
       configMinDistanceFromCenter = config.Bind(section, "Minimum distance from the center", 0f, "Zones must be fully outside this distance to get upgraded.");
@@ -45,7 +43,12 @@ namespace UpgradeWorld {
       configMinDistanceFromPlayer = config.Bind(section, "Minimum distance from the player", 0f, "Zones must be fully outside this distance to get upgraded.");
       configMaxDistanceFromPlayer = config.Bind(section, "Maximum distance from the player", 0f, "Zones must be fully inside this distance to get upgraded. 0 for infinite.");
       configCustomPoints = config.Bind(section, "Custom points", "", "List of coordinates and ranges to filter zones. Format: x1,z1,min1,max1,comment1|x2,z2,min2,max2,comment2|...");
+
       configLocations = config.Bind("Redistribute", "Locations", "TarPit1,Tarpit2,Tarpit3", "List of location ids (separated by ,) included in the redistribute operation (used by upgrade).");
+
+
+      configDestroyLoadedAreas = config.Bind("Destroying", "Destroy loaded areas", false, "If true, loaded areas are also destroyed. USE AT YOUR WORN RISK!");
+      configDestroysPerUpdate = config.Bind("Destroying", "Operations per update", 100, "How many zones are destroyed per Unity update.");
     }
 
     /// <summary>Returns points and ranges to filter zones.</summary>

@@ -6,7 +6,7 @@ namespace UpgradeWorld {
     /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
     public static void RegenerateZone(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
-      if (!Settings.RegenerateLoadedAreas && zoneSystem.IsZoneLoaded(zone)) {
+      if (!Settings.DestroyLoadedAreas && zoneSystem.IsZoneLoaded(zone)) {
         return;
       }
       var sectorObjects = new List<ZDO>();

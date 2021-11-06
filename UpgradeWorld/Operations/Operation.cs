@@ -3,7 +3,7 @@ namespace UpgradeWorld {
   public enum Operation {
     Upgrade,
     UpgradeInit,
-    Regenerate,
+    Destroy,
     Generate,
     Query,
     None
@@ -20,7 +20,7 @@ namespace UpgradeWorld {
 
 
     public static string GetName(Operation operation) {
-      if (operation == Operation.Regenerate) return "Regenerate";
+      if (operation == Operation.Destroy) return "Regenerate";
       if (operation == Operation.Upgrade) return "Upgrade";
       if (operation == Operation.Query) return "Operate";
       return "Unknown operation";
@@ -42,7 +42,7 @@ namespace UpgradeWorld {
       if (zonesToUpgrade == null || zonesToUpgrade.Length == 0) {
         return;
       }
-      var operations = operation == Operation.Regenerate ? Settings.RegenerationsPerUpdate : 1;
+      var operations = operation == Operation.Destroy ? Settings.DestroysPerUpdate : 1;
       for (var i = 0; i < operations; i++) {
         if (GetNextZone(out var zone)) {
           if (operation == Operation.Upgrade) {
@@ -53,7 +53,7 @@ namespace UpgradeWorld {
             var success = Generate(zone);
             MoveToNextZone(success);
           }
-          if (operation == Operation.Regenerate) {
+          if (operation == Operation.Destroy) {
             RegenerateZone(zone);
             MoveToNextZone();
           }
@@ -67,7 +67,7 @@ namespace UpgradeWorld {
           var upgraded = zonesToUpgrade.Length - skipped - failed;
           context.AddString("Upgrade completed. " + upgraded + " zones upgraded. " + skipped + " skipped. " + failed + " errors.");
         }
-        if (operation == Operation.Regenerate) {
+        if (operation == Operation.Destroy) {
           context.AddString("Zones destroyed. Run place or genloc to re-distribute the location instances.");
         }
         if (operation == Operation.Generate) {
@@ -94,7 +94,7 @@ namespace UpgradeWorld {
       }
 
       zone = zonesToUpgrade[zoneIndex];
-      if (operation == Operation.Regenerate) {
+      if (operation == Operation.Destroy) {
         return true;
       }
       if (operation == Operation.Generate) {

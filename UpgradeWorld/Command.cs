@@ -36,13 +36,13 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("upgrade", "- Upgrades all zones defined by the configuration.", delegate (Terminal.ConsoleEventArgs args) {
         Operations.SetOperation(args.Context, Operation.UpgradeInit, GetZones(args.Context, Operation.Upgrade));
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("regenerate_all", "- Regenerates all zones defined by the configuration.", delegate (Terminal.ConsoleEventArgs args) {
-        Operations.SetOperation(args.Context, Operation.Regenerate, GetZones(args.Context, Operation.Regenerate));
+      new Terminal.ConsoleCommand("destroy_all", "- Destroys all zones defined by the configuration.", delegate (Terminal.ConsoleEventArgs args) {
+        Operations.SetOperation(args.Context, Operation.Destroy, GetZones(args.Context, Operation.Destroy));
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("pregenerate_all", "- Generates all missing zones defined by the configuration.", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("generate_all", "- Generates all missing zones defined by the configuration.", delegate (Terminal.ConsoleEventArgs args) {
         Operations.SetOperation(args.Context, Operation.Generate, GetZones(args.Context, Operation.Generate));
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("regenerate_position", "[x] [y] [radius=0] - Regenerates zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("destroy_position", "[x] [y] [radius=0] - Destroys zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Length < 2) {
           args.Context.AddString("Missing coordinate X");
           return;
@@ -68,14 +68,14 @@ namespace UpgradeWorld {
         }
         var position = new Vector3(x, 0, z);
         var zone = ZoneSystem.instance.GetZone(position);
-        if (!Settings.RegenerateLoadedAreas && ZoneSystem.instance.IsZoneLoaded(zone)) {
+        if (!Settings.DestroyLoadedAreas && ZoneSystem.instance.IsZoneLoaded(zone)) {
           args.Context.AddString("Target zone is loaded. Move away and wait up to 10 seconds to unload it.");
           return;
         }
-        Operations.SetOperation(args.Context, Operation.Regenerate, GetIncludedZones(args.Context, position, radius, Operation.Regenerate));
+        Operations.SetOperation(args.Context, Operation.Destroy, GetIncludedZones(args.Context, position, radius, Operation.Destroy));
       }, onlyServer: true);
 
-      new Terminal.ConsoleCommand("regenerate_zones", "[x] [y] [adjacent=0] - Regenerates zones at a given zone coordinates.", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("destroy_zones", "[x] [y] [adjacent=0] - Destroys zones at a given zone coordinates.", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Length < 2) {
           args.Context.AddString("Missing zone x");
           return;
@@ -100,13 +100,13 @@ namespace UpgradeWorld {
           }
         }
         var zone = new Vector2i(x, z);
-        if (!Settings.RegenerateLoadedAreas && ZoneSystem.instance.IsZoneLoaded(zone)) {
+        if (!Settings.DestroyLoadedAreas && ZoneSystem.instance.IsZoneLoaded(zone)) {
           args.Context.AddString("Target zone is loaded. Move away and wait up to 10 seconds to unload it.");
           return;
         }
-        Operations.SetOperation(args.Context, Operation.Regenerate, GetAdjacentZones(args.Context, zone, adjacent, Operation.Regenerate));
+        Operations.SetOperation(args.Context, Operation.Destroy, GetAdjacentZones(args.Context, zone, adjacent, Operation.Destroy));
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("pregenerate_position", "[x] [y] [radius=0] - Pregenerates zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("generate_position", "[x] [y] [radius=0] - Generates zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Length < 2) {
           args.Context.AddString("Missing coordinate X");
           return;
@@ -139,7 +139,7 @@ namespace UpgradeWorld {
         Operations.SetOperation(args.Context, Operation.Generate, GetIncludedZones(args.Context, position, radius, Operation.Generate));
       }, onlyServer: true);
 
-      new Terminal.ConsoleCommand("pregenerate_zones", "[x] [y] [adjacent=0] - Pregenerates zones at a given zone coordinates.", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("Generate_zones", "[x] [y] [adjacent=0] - Generates zones at a given zone coordinates.", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Length < 2) {
           args.Context.AddString("Missing zone x");
           return;

@@ -11,4 +11,5 @@
 
 Changes:
 
-- New command "pregenerate_all" that generates zones (no idea of any uses though)
+- Regeneration commands renamed to destroy to make the effect more clear.
+- New commands for generating areas without having to physically go there.
