@@ -15,7 +15,7 @@ namespace UpgradeWorld {
         UpgradeLoaded(zone);
         return true;
       }
-      _ = Patch.ZoneSystem_PokeLocalZone(zoneSystem, zone);
+      zoneSystem.PokeLocalZone(zone);
       if (!zoneSystem.IsZoneLoaded(zone)) {
         return false;
       }
@@ -24,21 +24,19 @@ namespace UpgradeWorld {
     }
     private static void UpgradeLoaded(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
-      var mZones = Patch.GetZones(zoneSystem);
-      var root = Zones.GetRoot(mZones[zone]);
+      var root = zoneSystem.m_zones[zone].m_root;
       PlaceLocation(zone, root, ZoneSystem.SpawnMode.Full);
     }
     private static void UpgradeUnloaded(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
-      var mZones = Patch.GetZones(zoneSystem);
-      var root = Zones.GetRoot(mZones[zone]);
+      var root = zoneSystem.m_zones[zone].m_root;
       PlaceLocation(zone, root, ZoneSystem.SpawnMode.Ghost);
       foreach (var obj in spawnedObjects) {
         Object.Destroy(obj);
       }
       spawnedObjects.Clear();
       Object.Destroy(root);
-      mZones.Remove(zone);
+      zoneSystem.m_zones.Remove(zone);
     }
     private static readonly List<GameObject> spawnedObjects = new List<GameObject>();
     /// <summary>Places a location to the game world.</summary>
@@ -46,9 +44,10 @@ namespace UpgradeWorld {
       var zoneSystem = ZoneSystem.instance;
       var zonePos = ZoneSystem.instance.GetZonePos(zone);
       var heightmap = Zones.GetHeightmap(root);
-      ClearAreaForLocation(zone); var clearAreas = new List<object>();
+      ClearAreaForLocation(zone);
+      var clearAreas = new List<ZoneSystem.ClearArea>();
       spawnedObjects.Clear();
-      Patch.ZoneSystem_PlaceLocations(zoneSystem, zone, zonePos, root.transform, heightmap, clearAreas, mode, spawnedObjects);
+      zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, mode, spawnedObjects);
     }
     /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
     private static void ClearAreaForLocation(Vector2i zone) {
@@ -65,7 +64,7 @@ namespace UpgradeWorld {
     /// <summary>Clears entities too close to a given position.</summary>
     private static void ClearZDOsWithinRadius(Vector2i zone, Vector3 position, float radius) {
       var sectorObjects = new List<ZDO>();
-      Patch.ZDOMan_FindObjects(ZDOMan.instance, zone, sectorObjects);
+      ZDOMan.instance.FindObjects(zone, sectorObjects);
       foreach (var zdo in sectorObjects) {
         if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid) {
           continue;

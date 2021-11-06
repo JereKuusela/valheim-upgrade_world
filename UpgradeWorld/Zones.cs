@@ -7,10 +7,6 @@ namespace UpgradeWorld {
 
   // First step of the upgrader: Get an array of zones determined by the upgrade command.
   public static class Zones {
-
-    public static GameObject GetRoot(object obj) {
-      return Patch.Get<GameObject>(obj, "m_root");
-    }
     public static Heightmap GetHeightmap(GameObject root) {
       return root.GetComponentInChildren<Heightmap>();
     }
@@ -43,10 +39,7 @@ namespace UpgradeWorld {
       return Filter.FilterByRange(zones, position, 0, radius);
     }
     // Returns an array of all generated zones.
-    public static Vector2i[] GetAllZones() {
-      var zoneSystem = ZoneSystem.instance;
-      return Patch.GetGeneratedZones(zoneSystem).ToArray();
-    }
+    public static Vector2i[] GetAllZones() => ZoneSystem.instance.m_generatedZones.ToArray();
     private static int WORLD_LIMIT = 165;
     // Returns an array of all generated zones.
     public static Vector2i[] GetWorldZones() {

@@ -10,7 +10,7 @@ namespace UpgradeWorld {
         return;
       }
       var sectorObjects = new List<ZDO>();
-      Patch.ZDOMan_FindObjects(ZDOMan.instance, zone, sectorObjects);
+      ZDOMan.instance.FindObjects(zone, sectorObjects);
       foreach (var zdo in sectorObjects) {
         if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid) {
           continue;
@@ -25,8 +25,7 @@ namespace UpgradeWorld {
         location.m_placed = false;
         zoneSystem.m_locationInstances[zone] = location;
       }
-      var generated = Patch.GetGeneratedZones(zoneSystem);
-      _ = generated.Remove(zone);
+      zoneSystem.m_generatedZones.Remove(zone);
     }
 
   }
