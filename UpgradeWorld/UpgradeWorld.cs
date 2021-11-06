@@ -12,7 +12,7 @@ namespace UpgradeWorld {
       Commands.Init();
     }
     public void Update() {
-      Operations.Process();
+      Executor.Execute();
     }
   }
 

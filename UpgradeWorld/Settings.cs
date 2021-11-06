@@ -28,9 +28,6 @@ namespace UpgradeWorld {
     private static float MaxDistanceFromPlayer => configMaxDistanceFromPlayer.Value;
     public static ConfigEntry<string> configCustomPoints;
     private static string CustomPoints => configCustomPoints.Value;
-    public static ConfigEntry<string> configLocations;
-    private static string[] Locations => configLocations.Value.Split(',').Select(name => name.ToLower().Trim()).Where(name => name != "").ToArray();
-
     public static ConfigEntry<int> configDestroysPerUpdate;
     public static int DestroysPerUpdate => configDestroysPerUpdate.Value;
 
@@ -44,16 +41,8 @@ namespace UpgradeWorld {
       configMaxDistanceFromPlayer = config.Bind(section, "Maximum distance from the player", 0f, "Zones must be fully inside this distance to get upgraded. 0 for infinite.");
       configCustomPoints = config.Bind(section, "Custom points", "", "List of coordinates and ranges to filter zones. Format: x1,z1,min1,max1,comment1|x2,z2,min2,max2,comment2|...");
 
-      configLocations = config.Bind("Redistribute", "Locations", "TarPit1,Tarpit2,Tarpit3", "List of location ids (separated by ,) included in the redistribute operation (used by upgrade).");
-
-
       configDestroyLoadedAreas = config.Bind("Destroying", "Destroy loaded areas", false, "If true, loaded areas are also destroyed. USE AT YOUR WORN RISK!");
       configDestroysPerUpdate = config.Bind("Destroying", "Operations per update", 100, "How many zones are destroyed per Unity update.");
-    }
-
-    /// <summary>Returns points and ranges to filter zones.</summary>
-    public static bool IsLocationIncluded(string name) {
-      return Locations.Length == 0 || Locations.Contains(name.ToLower());
     }
     /// <summary>Returns points and ranges to filter zones.</summary>
     public static FilterPoint[] GetFilterPoints(Vector3 player) {

@@ -1,27 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 
 namespace UpgradeWorld {
 
   public partial class Operations {
     /// <summary>Controls if only locations defined in the config get redistributed.</summary>
-    public static bool OnlyConfigured = false;
+    public static string[] IncludedIds = new string[0];
     /// <summary>Controls if the redistribution can also target already generated zones.</summary>
     public static bool PlaceToAlreadyGenerated = false;
     /// <summary>Re-places whitelisted locations to also already generated zones</summary>
-    public static void RedistributeLocations(bool onlyConfigured, bool toAlreadyGenerated) {
-      OnlyConfigured = onlyConfigured;
+    public static void RedistributeLocations(string[] ids, bool toAlreadyGenerated) {
+      IncludedIds = ids.Select(item => item.ToLower()).ToArray();
       PlaceToAlreadyGenerated = toAlreadyGenerated;
       ZoneSystem.instance.GenerateLocations();
       PlaceToAlreadyGenerated = false;
-      OnlyConfigured = false;
-    }
-    /// <summary>Re-places whitelisted locations to also already generated zones</summary>
-    public static void RedistributeLocations2() {
-      OnlyConfigured = true;
-      ZoneSystem.instance.GenerateLocations();
-      OnlyConfigured = false;
+      IncludedIds = new string[0];
     }
   }
   // Location generation only places them on ungenerated zones. Skipping this check allows upgrading existing zones.
@@ -39,10 +34,10 @@ namespace UpgradeWorld {
   [HarmonyPatch(typeof(ZoneSystem), "ClearNonPlacedLocations")]
   public class ClearNonPlacedLocations {
     public static bool Prefix(ZoneSystem __instance) {
-      if (Operations.OnlyConfigured) {
+      if (Operations.IncludedIds.Length > 0) {
         var dictionary = new Dictionary<Vector2i, ZoneSystem.LocationInstance>();
         foreach (var keyValuePair in __instance.m_locationInstances) {
-          if (keyValuePair.Value.m_placed || !Settings.IsLocationIncluded(keyValuePair.Value.m_location.m_prefabName)) {
+          if (keyValuePair.Value.m_placed || !Operations.IncludedIds.Contains(keyValuePair.Value.m_location.m_prefabName.ToLower())) {
             dictionary.Add(keyValuePair.Key, keyValuePair.Value);
           }
         }
@@ -56,7 +51,7 @@ namespace UpgradeWorld {
   [HarmonyPatch(typeof(ZoneSystem), "GenerateLocations", new Type[] { typeof(ZoneSystem.ZoneLocation) })]
   public class GenerateLocations {
     public static bool Prefix(ZoneSystem.ZoneLocation location) {
-      return !Operations.PlaceToAlreadyGenerated || Settings.IsLocationIncluded(location.m_prefabName);
+      return !Operations.PlaceToAlreadyGenerated || Operations.IncludedIds.Contains(location.m_prefabName.ToLower());
     }
   }
 }
