@@ -30,14 +30,6 @@ namespace UpgradeWorld {
     /// <summary>Places a location to the game world.</summary>
     private void PlaceLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
       var zoneSystem = ZoneSystem.instance;
-      if (Settings.LocationsExcludePlayerBases && IsInsidePlayerBase(location)) {
-        Failed++;
-        if (Settings.Verbose)
-          Print("Location placement failed at " + zone.ToString() + " because of a player base.");
-        else
-          Print("Location placement failed because of a player base (enable verbose mode to see the zone).");
-        return;
-      }
       var root = zoneSystem.m_zones[zone].m_root;
       var zonePos = ZoneSystem.instance.GetZonePos(zone);
       var heightmap = Zones.GetHeightmap(root);
@@ -53,9 +45,6 @@ namespace UpgradeWorld {
       if (location.m_location.m_location.m_clearArea)
         ClearZDOsWithinRadius(zone, location.m_position, location.m_location.m_exteriorRadius);
     }
-
-    /// <summary>Returns is the location inside player base.</summary>
-    private bool IsInsidePlayerBase(ZoneSystem.LocationInstance location) => EffectArea.IsPointInsideArea(location.m_position, EffectArea.Type.PlayerBase, location.m_location.m_exteriorRadius);
 
     /// <summary>Clears entities too close to a given position.</summary>
     private void ClearZDOsWithinRadius(Vector2i zone, Vector3 position, float radius) {

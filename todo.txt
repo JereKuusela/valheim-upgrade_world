@@ -13,4 +13,3 @@ Changes:
 - Upgrade command now has a second parameter to determine the operation (currently only tarpits).
 - New upgrade command for generating onion seeds.
 - New upgrade command for regenerating Mistlands.
-- Added a new setting that prevents location placement on player bases (enabled by default).
