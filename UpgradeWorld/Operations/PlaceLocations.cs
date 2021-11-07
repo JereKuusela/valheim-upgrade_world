@@ -4,22 +4,23 @@ using UnityEngine;
 namespace UpgradeWorld {
   public class PlaceLocations : ZoneOperation {
 
-    public PlaceLocations(Terminal context) : base(context, Zones.GetAllZones(), new AllZones()) {
+    public PlaceLocations(Terminal context) : base(context, Zones.GetAllZones(), new ZoneFilterer[] { new ConfigFilterer(), new LocationFilterer() }) {
       Operation = "Place location";
     }
     protected override bool ExecuteZone(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
       if (zoneSystem.IsZoneLoaded(zone)) {
-        PlaceLocation(zone);
+        var locations = zoneSystem.m_locationInstances;
+        if (locations.TryGetValue(zone, out var location))
+          PlaceLocation(zone, location);
+        else {
+          Print("ERROR: Missing location.");
+          Failed++;
+        }
         return true;
       }
       zoneSystem.PokeLocalZone(zone);
       return false;
-    }
-    protected override bool NeedsOperation(Vector2i zone) {
-      var zoneSystem = ZoneSystem.instance;
-      var locations = zoneSystem.m_locationInstances;
-      return locations.TryGetValue(zone, out var location) && !location.m_placed;
     }
     protected override void OnEnd() {
       var upgraded = ZonesToUpgrade.Length - Failed;
@@ -27,42 +28,34 @@ namespace UpgradeWorld {
     }
     private readonly List<GameObject> spawnedObjects = new List<GameObject>();
     /// <summary>Places a location to the game world.</summary>
-    private void PlaceLocation(Vector2i zone) {
+    private void PlaceLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
       var zoneSystem = ZoneSystem.instance;
-      if (Settings.LocationsExcludePlayerBases && IsInsidePlayerBase(zone)) {
+      if (Settings.LocationsExcludePlayerBases && IsInsidePlayerBase(location)) {
         Failed++;
-        Print("Location placement failed at " + zone.ToString() + " because of a player base.");
+        if (Settings.Verbose)
+          Print("Location placement failed at " + zone.ToString() + " because of a player base.");
+        else
+          Print("Location placement failed because of a player base (enable verbose mode to see the zone).");
         return;
       }
       var root = zoneSystem.m_zones[zone].m_root;
       var zonePos = ZoneSystem.instance.GetZonePos(zone);
       var heightmap = Zones.GetHeightmap(root);
-      ClearAreaForLocation(zone);
+      ClearAreaForLocation(zone, location);
       var clearAreas = new List<ZoneSystem.ClearArea>();
       spawnedObjects.Clear();
       zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Full, spawnedObjects);
+      if (Settings.Verbose)
+        Print("Location " + location.m_location.m_prefabName + " placed at " + zone.ToString() + ".");
     }
     /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
-    private void ClearAreaForLocation(Vector2i zone) {
-      var zoneSystem = ZoneSystem.instance;
-      var locations = zoneSystem.m_locationInstances;
-      if (locations.TryGetValue(zone, out var location)) {
-        if (location.m_location.m_location.m_clearArea) {
-          var radius = location.m_location.m_exteriorRadius;
-          ClearZDOsWithinRadius(zone, location.m_position, radius);
-        }
-      }
+    private void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
+      if (location.m_location.m_location.m_clearArea)
+        ClearZDOsWithinRadius(zone, location.m_position, location.m_location.m_exteriorRadius);
     }
 
     /// <summary>Returns is the location inside player base.</summary>
-    private bool IsInsidePlayerBase(Vector2i zone) {
-      var zoneSystem = ZoneSystem.instance;
-      var locations = zoneSystem.m_locationInstances;
-      if (locations.TryGetValue(zone, out var location)) {
-        return EffectArea.IsPointInsideArea(location.m_position, EffectArea.Type.PlayerBase, location.m_location.m_exteriorRadius);
-      }
-      return false;
-    }
+    private bool IsInsidePlayerBase(ZoneSystem.LocationInstance location) => EffectArea.IsPointInsideArea(location.m_position, EffectArea.Type.PlayerBase, location.m_location.m_exteriorRadius);
 
     /// <summary>Clears entities too close to a given position.</summary>
     private void ClearZDOsWithinRadius(Vector2i zone, Vector3 position, float radius) {

@@ -1,8 +1,3 @@
-- upgrade_chests:
- - finds predefined locations
- - searches for predefined chests
- - if predefined item is missing then rolls drops
- - adds the predefined item if rolled item
 - visualize exclusion points (cylinders?)
 - visualize which zones are included (draw zone corners without overlap)
 - regenerate_location ???: nukes only a location (removes everything within exterior and respawns?)
@@ -10,8 +5,12 @@
 Changes:
 
 - Regeneration commands renamed to destroy to make the effect more clear.
+- Destroy all command now requires biomes as a parameter (replacing the config setting and making harder to accidentally do things).
 - New commands for generating areas without having to physically go there.
 - New command for counting amount of entities.
 - New command to place any locations (replacing one of the config settings).
+- New command to reroll any chest.
 - Upgrade command now has a second parameter to determine the operation (currently only tarpits).
+- New upgrade command for generating onion seeds.
+- New upgrade command for regenerating Mistlands.
 - Added a new setting that prevents location placement on player bases (enabled by default).

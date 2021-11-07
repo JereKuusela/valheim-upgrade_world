@@ -12,14 +12,12 @@ namespace UpgradeWorld {
     public float max;
   }
   public static class Settings {
-    public static ConfigEntry<string> configIncludedBiomes;
-    public static Heightmap.Biome[] IncludedBiomes => GetBiomes(configIncludedBiomes.Value);
-    public static ConfigEntry<string> configExcludedBiomes;
-    public static Heightmap.Biome[] ExcludedBiomes => GetBiomes(configExcludedBiomes.Value);
     public static ConfigEntry<float> configMinDistanceFromCenter;
     private static float MinDistanceFromCenter => configMinDistanceFromCenter.Value;
     public static ConfigEntry<bool> configDestroyLoadedAreas;
     public static bool DestroyLoadedAreas => configDestroyLoadedAreas.Value;
+    public static ConfigEntry<bool> configVerbose;
+    public static bool Verbose => configVerbose.Value;
     public static ConfigEntry<bool> configLocationsExcludePlayerBases;
     public static bool LocationsExcludePlayerBases => configLocationsExcludePlayerBases.Value;
     public static ConfigEntry<float> configMaxDistanceFromCenter;
@@ -35,8 +33,7 @@ namespace UpgradeWorld {
 
     public static void Init(ConfigFile config) {
       var section = "General";
-      configIncludedBiomes = config.Bind(section, "Included biomes", "", "List of biome names to include (separated by ,). Zones must contain any of these to get upgraded.");
-      configExcludedBiomes = config.Bind(section, "Excluded biomes", "", "List of biome names to exclude (separated by ,). Zones must not contain any of these to get upgraded.");
+      configVerbose = config.Bind(section, "Verbose output", false, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
       configMinDistanceFromCenter = config.Bind(section, "Minimum distance from the center", 0f, "Zones must be fully outside this distance to get upgraded.");
       configMaxDistanceFromCenter = config.Bind(section, "Maximum distance from the center", 0f, "Zones must be fully inside this distance to get upgraded. 0 for infinite.");
       configMinDistanceFromPlayer = config.Bind(section, "Minimum distance from the player", 0f, "Zones must be fully outside this distance to get upgraded.");
@@ -79,45 +76,6 @@ namespace UpgradeWorld {
       }
       return points;
     }
-    /// <summary>Converts biome names to biomes.</summary>
-    private static Heightmap.Biome[] GetBiomes(string biomes) {
-      var split = biomes.Split(',');
-      return split.Select(GetBiome).Where(biome => biome != Heightmap.Biome.None).ToArray();
-    }
-    /// <summary>Converts a biome name to a biome.</summary>
-    private static Heightmap.Biome GetBiome(string name) {
-      name = name.ToLower();
-      if (name.StartsWith("a")) {
-        return Heightmap.Biome.AshLands;
-      }
 
-      if (name.StartsWith("b")) {
-        return Heightmap.Biome.BlackForest;
-      }
-      if (name.StartsWith("d")) {
-        return Heightmap.Biome.DeepNorth;
-      }
-      if (name.StartsWith("me")) {
-        return Heightmap.Biome.Meadows;
-      }
-      if (name.StartsWith("me")) {
-        return Heightmap.Biome.Meadows;
-      }
-      if (name.StartsWith("mo")) {
-        return Heightmap.Biome.Mountain;
-      }
-      if (name.StartsWith("o")) {
-        return Heightmap.Biome.Ocean;
-      }
-
-      if (name.StartsWith("p")) {
-        return Heightmap.Biome.Plains;
-      }
-
-      if (name.StartsWith("s")) {
-        return Heightmap.Biome.Swamp;
-      }
-      return Heightmap.Biome.None;
-    }
   }
 }

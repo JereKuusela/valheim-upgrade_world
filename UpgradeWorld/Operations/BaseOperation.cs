@@ -8,10 +8,13 @@ namespace UpgradeWorld {
     protected BaseOperation(Terminal context) {
       Context = context;
     }
-    public virtual bool Execute() {
+    public bool Execute() {
       Attempts++;
-      return true;
+      var ret = OnExecute();
+      if (ret) OnEnd();
+      return ret;
     }
+    protected abstract bool OnExecute();
     public void Print(string value) {
       if (Context) Context.AddString(value);
     }

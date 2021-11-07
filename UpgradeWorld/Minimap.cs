@@ -6,14 +6,16 @@ namespace UpgradeWorld {
 
   public class Minimap_ShowPos {
     // Text doesn't always get updated so extra stuff must be reseted manually.
-    private static string previousText = "";
+    private static string previousLargeText = "";
+    private static string previousSmallText = "";
     public static void Prefix(Minimap __instance) {
-      __instance.m_biomeNameLarge.text = previousText;
-      __instance.m_biomeNameSmall.text = previousText;
+      __instance.m_biomeNameLarge.text = previousLargeText;
+      __instance.m_biomeNameSmall.text = previousSmallText;
 
     }
     public static void Postfix(Minimap __instance, Player player) {
-      previousText = __instance.m_biomeNameLarge.text;
+      previousLargeText = __instance.m_biomeNameLarge.text;
+      previousSmallText = __instance.m_biomeNameSmall.text;
       var mode = __instance.m_mode;
       var position = player.transform.position;
       if (mode == Minimap.MapMode.Large)
@@ -21,9 +23,10 @@ namespace UpgradeWorld {
       var zone = ZoneSystem.instance.GetZone(position);
       var positionText = "x: " + position.x.ToString("F0") + " z: " + position.z.ToString("F0");
       var zoneText = "zone: " + zone.x + "/" + zone.y;
-      var text = "\n\n" + previousText + "\n" + zoneText + "\n" + positionText;
-      __instance.m_biomeNameLarge.text = text;
-      __instance.m_biomeNameSmall.text = text;
+      var largeText = "\n\n" + previousLargeText + "\n" + zoneText + "\n" + positionText;
+      var smallText = "\n\n" + previousSmallText + "\n" + zoneText + "\n" + positionText;
+      __instance.m_biomeNameLarge.text = largeText;
+      __instance.m_biomeNameSmall.text = smallText;
     }
   }
 }

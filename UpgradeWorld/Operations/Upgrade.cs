@@ -6,7 +6,9 @@ namespace UpgradeWorld {
     public static List<string> GetTypes() {
       return new List<string>()
       {
-        "tarpits"
+        "tarpits",
+        "onions",
+        "mistlands"
       };
     }
     string Type;
@@ -14,12 +16,18 @@ namespace UpgradeWorld {
       Type = type;
     }
 
-    public override bool Execute() {
+    protected override bool OnExecute() {
       if (Type == "tarpits") {
         Executor.AddOperation(new DistributeLocations(new string[] { "TarPit1", "TarPit2", "TarPit3" }, Context));
         Executor.AddOperation(new PlaceLocations(Context));
       }
-      return base.Execute();
+      if (Type == "onions") {
+        Executor.AddOperation(new RerollChests("TreasureChest_mountains", new string[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, Context));
+      }
+      if (Type == "mistlands") {
+        Executor.AddOperation(new DestroyBiomes(new string[] { "mist" }, true, Context));
+      }
+      return true;
     }
   }
 }

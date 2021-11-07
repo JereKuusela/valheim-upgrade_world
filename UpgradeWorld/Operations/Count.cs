@@ -10,8 +10,7 @@ namespace UpgradeWorld {
       Id = id;
       Radius = radius;
     }
-    public override bool Execute() {
-      base.Execute();
+    protected override bool OnExecute() {
       var prefab = ZNetScene.instance.GetPrefab(Id);
       if (prefab == null)
         Print("Invalid entity ID.");

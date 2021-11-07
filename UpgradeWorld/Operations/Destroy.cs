@@ -4,7 +4,7 @@ using UnityEngine;
 namespace UpgradeWorld {
   /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
   public abstract class Destroy : ZoneOperation {
-    public Destroy(Terminal context, ZoneFilterer filterer) : base(context, Zones.GetAllZones(), filterer) {
+    public Destroy(Terminal context, ZoneFilterer[] filterers) : base(context, Zones.GetAllZones(), filterers) {
       Operation = "Destroy";
       ZonesPerUpdate = Settings.DestroysPerUpdate;
     }
@@ -31,26 +31,21 @@ namespace UpgradeWorld {
       return true;
     }
 
-    protected override bool NeedsOperation(Vector2i zone) {
-      var zoneSystem = ZoneSystem.instance;
-      return Settings.DestroyLoadedAreas || !zoneSystem.IsZoneLoaded(zone);
-    }
-
     protected override void OnEnd() {
       Print("Zones destroyed. Run distribute or genloc command to re-distribute the location instances.");
     }
   }
 
-  public class DestroyAll : Destroy {
-    public DestroyAll(Terminal context) : base(context, new AllZones()) {
+  public class DestroyBiomes : Destroy {
+    public DestroyBiomes(string[] biomes, bool includeEdges, Terminal context) : base(context, new ZoneFilterer[] { new BiomeFilterer(biomes, includeEdges), new ConfigFilterer(), new LoadedFilterer(!Settings.DestroyLoadedAreas) }) {
     }
   }
   public class DestroyAdjacent : Destroy {
-    public DestroyAdjacent(Vector2i center, int adjacent, Terminal context) : base(context, new AdjacentZones(center, adjacent)) {
+    public DestroyAdjacent(Vector2i center, int adjacent, Terminal context) : base(context, new ZoneFilterer[] { new AdjacencyFilterer(center, adjacent), new LoadedFilterer(!Settings.DestroyLoadedAreas) }) {
     }
   }
   public class DestroyIncluded : Destroy {
-    public DestroyIncluded(Vector3 center, float radius, Terminal context) : base(context, new IncludedZones(center, radius)) {
+    public DestroyIncluded(Vector3 center, float radius, Terminal context) : base(context, new ZoneFilterer[] { new RangeFilterer(center, radius), new LoadedFilterer(!Settings.DestroyLoadedAreas) }) {
     }
   }
 }

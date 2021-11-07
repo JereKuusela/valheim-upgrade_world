@@ -2,6 +2,18 @@ using UnityEngine;
 
 namespace UpgradeWorld {
   public static class Commands {
+    private static bool ParseBiomes(Terminal.ConsoleEventArgs args, out string[] biomes, out bool includeEdges) {
+      biomes = new string[0];
+      includeEdges = true;
+      if (args.Length < 2) {
+        args.Context.AddString("Missing biomes");
+        return false;
+      }
+      biomes = args[1].Split(',');
+      if (args.Length > 3)
+        includeEdges = args[3].ToLower() == "true" || args[3].ToLower() == "1";
+      return true;
+    }
     private static bool ParseZoneArgs(Terminal.ConsoleEventArgs args, out int x, out int z, out int adjacent) {
       x = 0;
       z = 0;
@@ -59,8 +71,9 @@ namespace UpgradeWorld {
       return true;
     }
     private static void Destroying() {
-      new Terminal.ConsoleCommand("destroy_all", "- Destroys all zones defined by the configuration.", delegate (Terminal.ConsoleEventArgs args) {
-        Executor.AddOperation(new DestroyAll(args.Context));
+      new Terminal.ConsoleCommand("destroy_biomes", "[biome1, biome2, ...] [includeEdges=true] - Destroys all zones in given biomes.", delegate (Terminal.ConsoleEventArgs args) {
+        if (!ParseBiomes(args, out var biomes, out var includeEdges)) return;
+        Executor.AddOperation(new DestroyBiomes(biomes, includeEdges, args.Context));
       }, onlyServer: true);
       new Terminal.ConsoleCommand("destroy_position", "[x] [y] [radius=0] - Destroys zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
         if (!ParseIncludedArgs(args, out var x, out var z, out var radius)) return;
@@ -84,8 +97,9 @@ namespace UpgradeWorld {
       }, onlyServer: true);
     }
     private static void Generating() {
-      new Terminal.ConsoleCommand("generate_all", "- Generates all missing zones defined by the configuration.", delegate (Terminal.ConsoleEventArgs args) {
-        Executor.AddOperation(new GenerateAll(args.Context));
+      new Terminal.ConsoleCommand("generate_biomes", "[biome1, biome2, ...] [includeEdges=true] - Generates all zones in given biomes.", delegate (Terminal.ConsoleEventArgs args) {
+        if (!ParseBiomes(args, out var biomes, out var includeEdges)) return;
+        Executor.AddOperation(new GenerateBiomes(biomes, includeEdges, args.Context));
       }, onlyServer: true);
 
       new Terminal.ConsoleCommand("generate_position", "[x] [y] [radius=0] - Generates zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
@@ -120,14 +134,22 @@ namespace UpgradeWorld {
         }
         Executor.AddOperation(new Upgrade(args[1], args.Context));
       }, onlyServer: true, optionsFetcher: Upgrade.GetTypes);
-      new Terminal.ConsoleCommand("place_locations", "[id1] [id2] ... - Places given location ids to already generated zones.", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("place_locations", "[location1,location2,...] - Places given location ids to already generated zones.", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Length < 2) {
           args.Context.AddString("Missing location ids.");
           return;
         }
-        Executor.AddOperation(new DistributeLocations(args.Args, args.Context));
+        Executor.AddOperation(new DistributeLocations(args.Args[1].Split(','), args.Context));
         Executor.AddOperation(new PlaceLocations(args.Context));
       }, onlyServer: true);
+      new Terminal.ConsoleCommand("reroll_chests", "[chest name] [item1,item2,...] - Rerolls items at given chests, if they only have given items (all chests if no items).", delegate (Terminal.ConsoleEventArgs args) {
+        if (args.Length < 2) {
+          args.Context.AddString("Missing chest name.");
+          return;
+        }
+        var items = args.Length > 2 ? args[2].Split(',') : new string[0];
+        Executor.AddOperation(new RerollChests(args[1], items, args.Context));
+      }, onlyServer: true, optionsFetcher: () => RerollChests.ChestsNames);
       new Terminal.ConsoleCommand("query", "- Returns how many zones would get operated with current config", delegate (Terminal.ConsoleEventArgs args) {
         Executor.AddOperation(new Query(args.Context));
       }, onlyServer: true);
@@ -143,7 +165,7 @@ namespace UpgradeWorld {
           }
         }
         Executor.AddOperation(new Count(args[1], radius, args.Context));
-      }, onlyServer: true, optionsFetcher: ZNetScene.instance.GetPrefabNames);
+      }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("distribute", "- Redistributes unplaced locations with the genloc command. ", delegate (Terminal.ConsoleEventArgs args) {
         Executor.AddOperation(new DistributeLocations(new string[0], args.Context));
       }, onlyServer: true);

@@ -1,25 +1,30 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace UpgradeWorld {
 
   public abstract class ZoneOperation : BaseOperation {
     protected Vector2i[] ZonesToUpgrade;
     protected int ZonesPerUpdate = 1;
-    protected int ZoneIndex = 0;
-    protected ZoneFilterer Filterer;
-    protected ZoneOperation(Terminal context, Vector2i[] zonesToUpgrade, ZoneFilterer filterer) : base(context) {
+    protected int ZoneIndex = -1;
+    protected ZoneFilterer[] Filterers;
+    protected ZoneOperation(Terminal context, Vector2i[] zonesToUpgrade, ZoneFilterer[] filterers) : base(context) {
       ZonesToUpgrade = zonesToUpgrade;
-      Filterer = filterer;
+      Filterers = filterers;
     }
-    protected abstract bool NeedsOperation(Vector2i zone);
     protected abstract bool ExecuteZone(Vector2i zone);
-    public override bool Execute() {
+    protected void Init() {
+      var amount = ZonesToUpgrade.Length;
+      var messages = new List<string>();
+      ZonesToUpgrade = Filterers.Aggregate(ZonesToUpgrade, (zones, filterer) => filterer.FilterZones(zones, ref messages));
+      Print(Operation + ": " + ZonesToUpgrade.Length + " of " + amount + " zones (" + string.Join(", ", messages) + ")");
+    }
+    protected override bool OnExecute() {
       if (ZonesToUpgrade == null || ZonesToUpgrade.Length == 0) return true;
-      if (ZoneIndex == 0) {
-        ZonesToUpgrade = Filterer.FilterZones(ZonesToUpgrade, NeedsOperation);
-        Print(ZonesToUpgrade.Length + " to " + Operation + " (" + Filterer.Message + ")");
+      if (ZoneIndex == -1) {
+        Init();
+        ZoneIndex = 0;
       }
 
       for (var i = 0; i < ZonesPerUpdate && ZoneIndex < ZonesToUpgrade.Length; i++) {
@@ -29,7 +34,6 @@ namespace UpgradeWorld {
       }
       UpdateConsole();
       if (ZoneIndex >= ZonesToUpgrade.Length) {
-        OnEnd();
         return true;
       }
       return false;
@@ -41,85 +45,29 @@ namespace UpgradeWorld {
         ZoneIndex++;
       } else {
         Attempts++;
-        if (Attempts > 100) {
+        if (Attempts > 1000) {
           Failed++;
           Attempts = 0;
           ZoneIndex++;
         }
       }
     }
+    // Track the same message to reduce clutter.
+    private int PreviousPercent = -1;
+    private int PreviousIndex = -1;
     private void UpdateConsole() {
-      var totalString = ZonesToUpgrade.Length.ToString();
-      var updatedString = ZoneIndex.ToString().PadLeft(totalString.Length, '0');
-      var text = Operation + ": " + updatedString + "/" + totalString;
-      Print(text);
-    }
-  }
-
-  public interface ZoneFilterer {
-    Vector2i[] FilterZones(Vector2i[] zones, Func<Vector2i, bool> needsOperation);
-    string Message { get; set; }
-
-  }
-  public class AllZones : ZoneFilterer {
-    public string Message { get; set; }
-
-    public Vector2i[] FilterZones(Vector2i[] zones, Func<Vector2i, bool> needsOperation) {
-
-      var generatedZones = zones.Length;
-      zones = Filter.FilterByBiomes(zones, Settings.IncludedBiomes, Settings.ExcludedBiomes);
-      var filteredByBiome = generatedZones - zones.Length;
-      var filterPoints = Settings.GetFilterPoints(GetPlayerPosition());
-      foreach (var filterPoint in filterPoints) {
-        zones = Filter.FilterByRange(zones, new Vector3(filterPoint.x, 0, filterPoint.y), filterPoint.min, filterPoint.max);
+      if (Settings.Verbose) {
+        var totalString = ZonesToUpgrade.Length.ToString();
+        var updatedString = ZoneIndex.ToString().PadLeft(totalString.Length, '0');
+        if (ZoneIndex != PreviousIndex)
+          Print(Operation + ": " + updatedString + "/" + totalString);
+        PreviousIndex = ZoneIndex;
+      } else {
+        var percent = Math.Min(100, ZonesToUpgrade.Length == 0 ? 100 : (int)Math.Floor(100.0 * ZoneIndex / ZonesToUpgrade.Length));
+        if (percent != PreviousPercent)
+          Print(Operation + ": " + percent + "%");
+        PreviousPercent = percent;
       }
-      var filteredByPoints = generatedZones - filteredByBiome - zones.Length;
-      zones = zones.Where(needsOperation).ToArray();
-      var filteredByNeed = generatedZones - filteredByBiome - filteredByPoints - zones.Length;
-      Message = "from " + generatedZones + " generated zones " + filteredByBiome + " filtered by biome, " + filteredByPoints + " filtered by position and " + filteredByNeed + " skipped";
-      return zones;
-
-    }
-    private static Vector3 GetPlayerPosition() {
-      var player = Player.m_localPlayer;
-      return player ? player.transform.position : new Vector3(0, 0, 0);
-    }
-
-  }
-  public class AdjacentZones : ZoneFilterer {
-    private Vector2i Center;
-    private int Adjacent;
-    public AdjacentZones(Vector2i center, int adjacent) {
-      Center = center;
-      Adjacent = adjacent;
-    }
-    public string Message { get; set; }
-
-    public Vector2i[] FilterZones(Vector2i[] zones, Func<Vector2i, bool> needsOperation) {
-      zones = Filter.FilterByAdjacent(zones, Center, Adjacent);
-      var includedZones = zones.Length;
-      zones = zones.Where(needsOperation).ToArray();
-      var filteredByNeed = includedZones - zones.Length;
-      Message = filteredByNeed + " of " + includedZones + " were skipped";
-      return zones;
-    }
-  }
-  public class IncludedZones : ZoneFilterer {
-    private Vector3 Center;
-    private float Radius;
-    public IncludedZones(Vector3 center, float radius) {
-      Center = center;
-      Radius = radius;
-    }
-    public string Message { get; set; }
-
-    public Vector2i[] FilterZones(Vector2i[] zones, Func<Vector2i, bool> needsOperation) {
-      zones = Filter.FilterByRadius(zones, Center, Radius);
-      var includedZones = zones.Length;
-      zones = zones.Where(needsOperation).ToArray();
-      var filteredByNeed = includedZones - zones.Length;
-      Message = filteredByNeed + " of " + includedZones + " were skipped";
-      return zones;
     }
   }
 }
