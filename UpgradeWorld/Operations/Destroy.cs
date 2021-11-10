@@ -4,7 +4,7 @@ using UnityEngine;
 namespace UpgradeWorld {
   /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
   public abstract class Destroy : ZoneOperation {
-    public Destroy(Terminal context, ZoneFilterer[] filterers) : base(context, Zones.GetAllZones(), filterers) {
+    public Destroy(Terminal context, ZoneFilterer[] filterers) : base(context, filterers) {
       Operation = "Destroy";
       ZonesPerUpdate = Settings.DestroysPerUpdate;
     }
@@ -32,12 +32,14 @@ namespace UpgradeWorld {
     }
 
     protected override void OnEnd() {
-      Print("Zones destroyed. Run distribute or genloc command to re-distribute the location instances.");
+      var destroyed = ZonesToUpgrade.Length - Failed;
+      Print(Operation + ": " + destroyed + " zones destroyed");
+      Print("Run distribute or genloc command to re-distribute the location instances (if needed)");
     }
   }
 
   public class DestroyBiomes : Destroy {
-    public DestroyBiomes(string[] biomes, bool includeEdges, Terminal context) : base(context, new ZoneFilterer[] { new BiomeFilterer(biomes, includeEdges), new ConfigFilterer(), new LoadedFilterer(!Settings.DestroyLoadedAreas) }) {
+    public DestroyBiomes(IEnumerable<Heightmap.Biome> biomes, bool includeEdges, Terminal context) : base(context, new ZoneFilterer[] { new BiomeFilterer(biomes, includeEdges), new ConfigFilterer(), new LoadedFilterer(!Settings.DestroyLoadedAreas) }) {
     }
   }
   public class DestroyAdjacent : Destroy {

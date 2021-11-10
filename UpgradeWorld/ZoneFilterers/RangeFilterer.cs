@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace UpgradeWorld {
+  ///<summary>Filters zones based on whether they are close enough to a given position.</summary>
   public class RangeFilterer : ZoneFilterer {
     private Vector3 Center;
     private float Range;
@@ -14,8 +15,8 @@ namespace UpgradeWorld {
     public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages) {
       var amount = zones.Length;
       zones = FilterByRange(zones, Center, Range);
-      var filtered = amount - zones.Length;
-      if (filtered > 0) messages.Add(filtered + " by the command");
+      var skipped = amount - zones.Length;
+      if (skipped > 0) messages.Add(skipped + " skipped by the command");
       return zones;
     }
 
@@ -39,10 +40,6 @@ namespace UpgradeWorld {
         var cornerDistance_sq = (distance.x - halfZone) * (distance.x - halfZone) + (distance.z - halfZone) * (distance.z - halfZone);
         return cornerDistance_sq <= radius * radius;
       }).ToArray();
-    }
-
-    Vector2i[] ZoneFilterer.FilterZones(Vector2i[] zones, ref List<string> messages) {
-      throw new NotImplementedException();
     }
   }
 }

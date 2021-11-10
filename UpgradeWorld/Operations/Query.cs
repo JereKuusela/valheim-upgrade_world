@@ -1,7 +1,7 @@
 namespace UpgradeWorld {
   /// <summary>Prints amount of affected zones by the config.</summary>
   public class Query : ZoneOperation {
-    public Query(Terminal context) : base(context, Zones.GetAllZones(), new ZoneFilterer[] { new ConfigFilterer() }) {
+    public Query(Terminal context) : base(context, new ZoneFilterer[] { new ConfigFilterer() }, TargetZones.All) {
       Operation = "Query";
     }
 

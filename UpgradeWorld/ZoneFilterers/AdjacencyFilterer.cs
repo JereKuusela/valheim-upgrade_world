@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace UpgradeWorld {
+  ///<summary>Filters zones based on whether they are close enough to a given zone.</summary>
   public class AdjacencyFilterer : ZoneFilterer {
     private Vector2i Center;
     private int Adjacent;
@@ -13,8 +14,8 @@ namespace UpgradeWorld {
     public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages) {
       var amount = zones.Length;
       zones = FilterByAdjacent(zones, Center, Adjacent);
-      var filtered = amount - zones.Length;
-      if (filtered > 0) messages.Add(filtered + " by the command");
+      var skipped = amount - zones.Length;
+      if (skipped > 0) messages.Add(skipped + " skipped by the command");
       return zones;
     }
     /// <summary>Returns only zones that are within a given adjacencty to a given center zone.</summary>

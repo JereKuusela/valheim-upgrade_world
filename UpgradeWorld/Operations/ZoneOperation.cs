@@ -9,16 +9,18 @@ namespace UpgradeWorld {
     protected int ZonesPerUpdate = 1;
     protected int ZoneIndex = -1;
     protected ZoneFilterer[] Filterers;
-    protected ZoneOperation(Terminal context, Vector2i[] zonesToUpgrade, ZoneFilterer[] filterers) : base(context) {
-      ZonesToUpgrade = zonesToUpgrade;
+    protected TargetZones TargetZones = TargetZones.Generated;
+    protected ZoneOperation(Terminal context, ZoneFilterer[] filterers, TargetZones targetZones = TargetZones.Generated) : base(context) {
+      ZonesToUpgrade = Zones.GetWorldZones();
       Filterers = filterers;
+      TargetZones = targetZones;
     }
     protected abstract bool ExecuteZone(Vector2i zone);
     protected void Init() {
-      var amount = ZonesToUpgrade.Length;
       var messages = new List<string>();
+      ZonesToUpgrade = new TargetZonesFilterer(TargetZones).FilterZones(ZonesToUpgrade, ref messages);
       ZonesToUpgrade = Filterers.Aggregate(ZonesToUpgrade, (zones, filterer) => filterer.FilterZones(zones, ref messages));
-      Print(Operation + ": " + ZonesToUpgrade.Length + " of " + amount + " zones (" + string.Join(", ", messages) + ")");
+      Print(Operation + ": " + ZonesToUpgrade.Length + " zones (" + Helper.JoinRows(messages) + ")");
     }
     protected override bool OnExecute() {
       if (ZonesToUpgrade == null || ZonesToUpgrade.Length == 0) return true;
@@ -52,21 +54,14 @@ namespace UpgradeWorld {
         }
       }
     }
-    // Track the same message to reduce clutter.
-    private int PreviousPercent = -1;
-    private int PreviousIndex = -1;
     private void UpdateConsole() {
       if (Settings.Verbose) {
         var totalString = ZonesToUpgrade.Length.ToString();
         var updatedString = ZoneIndex.ToString().PadLeft(totalString.Length, '0');
-        if (ZoneIndex != PreviousIndex)
-          Print(Operation + ": " + updatedString + "/" + totalString);
-        PreviousIndex = ZoneIndex;
+        PrintOnce(Operation + ": " + updatedString + "/" + totalString, false);
       } else {
         var percent = Math.Min(100, ZonesToUpgrade.Length == 0 ? 100 : (int)Math.Floor(100.0 * ZoneIndex / ZonesToUpgrade.Length));
-        if (percent != PreviousPercent)
-          Print(Operation + ": " + percent + "%");
-        PreviousPercent = percent;
+        PrintOnce(Operation + ": " + percent + "%", false);
       }
     }
   }

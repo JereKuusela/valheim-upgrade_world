@@ -18,14 +18,15 @@ namespace UpgradeWorld {
 
     protected override bool OnExecute() {
       if (Type == "tarpits") {
-        Executor.AddOperation(new DistributeLocations(new string[] { "TarPit1", "TarPit2", "TarPit3" }, Context));
-        Executor.AddOperation(new PlaceLocations(Context));
+        var locations = new string[] { "TarPit1", "TarPit2", "TarPit3" };
+        Executor.AddOperation(new DistributeLocations(locations, Context));
+        Executor.AddOperation(new PlaceLocations(locations, Context));
       }
       if (Type == "onions") {
         Executor.AddOperation(new RerollChests("TreasureChest_mountains", new string[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, Context));
       }
       if (Type == "mistlands") {
-        Executor.AddOperation(new DestroyBiomes(new string[] { "mist" }, true, Context));
+        Executor.AddOperation(new DestroyBiomes(new List<Heightmap.Biome> { Heightmap.Biome.Mistlands }, true, Context));
       }
       return true;
     }

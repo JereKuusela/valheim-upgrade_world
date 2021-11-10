@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace UpgradeWorld {
+  ///<summary>Filters zones based on whether they have a given prefab.</summary>
   public class PrefabFilterer : ZoneFilterer {
     private HashSet<Vector2i> IncludedZones;
     public PrefabFilterer(string id) {
@@ -14,14 +15,14 @@ namespace UpgradeWorld {
       if (IncludedZones == null) {
         var amount = zones.Length;
         zones = zones.Where(zone => false).ToArray();
-        var filtered = amount - zones.Length;
-        if (filtered > 0) messages.Add(filtered + " skipped by having invalid entity id");
+        var skipped = amount - zones.Length;
+        if (skipped > 0) messages.Add(skipped + " skipped by having invalid entity id");
         return zones;
       } else {
         var amount = zones.Length;
         zones = zones.Where(IncludedZones.Contains).ToArray();
-        var filtered = amount - zones.Length;
-        if (filtered > 0) messages.Add(filtered + " skipped by not having the entity");
+        var skipped = amount - zones.Length;
+        if (skipped > 0) messages.Add(skipped + " skipped by not having the entity");
         return zones;
       }
     }

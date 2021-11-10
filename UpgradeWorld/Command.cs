@@ -1,15 +1,42 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace UpgradeWorld {
   public static class Commands {
-    private static bool ParseBiomes(Terminal.ConsoleEventArgs args, out string[] biomes, out bool includeEdges) {
-      biomes = new string[0];
+    private static List<string> AvailableBiomes = new List<string>{
+      "*", "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains", "Swamp"
+    };
+    /// <summary>Converts a biome name to a biome.</summary>
+    private static Heightmap.Biome GetBiome(string name) {
+      name = Helper.Normalize(name);
+      var possibleBiomes = new List<Heightmap.Biome>();
+      if (name == "*") possibleBiomes.Add(Heightmap.Biome.BiomesMax);
+      if ("ashlands".StartsWith(name) || name == "al") possibleBiomes.Add(Heightmap.Biome.AshLands);
+      if ("blackforest".StartsWith(name) || name == "bf") possibleBiomes.Add(Heightmap.Biome.BlackForest);
+      if ("deepnorth".StartsWith(name) || name == "dn") possibleBiomes.Add(Heightmap.Biome.DeepNorth);
+      if ("meadows".StartsWith(name)) possibleBiomes.Add(Heightmap.Biome.Meadows);
+      if ("mistlands".StartsWith(name) || name == "ml") possibleBiomes.Add(Heightmap.Biome.Mistlands);
+      if ("mountain".StartsWith(name)) possibleBiomes.Add(Heightmap.Biome.Mountain);
+      if ("ocean".StartsWith(name)) possibleBiomes.Add(Heightmap.Biome.Ocean);
+      if ("plains".StartsWith(name)) possibleBiomes.Add(Heightmap.Biome.Plains);
+      if ("swamp".StartsWith(name)) possibleBiomes.Add(Heightmap.Biome.Swamp);
+      if (possibleBiomes.Count == 1) return possibleBiomes.First();
+      return Heightmap.Biome.None;
+    }
+    private static bool ParseBiomes(Terminal.ConsoleEventArgs args, out IEnumerable<Heightmap.Biome> biomes, out bool includeEdges) {
+      biomes = new List<Heightmap.Biome>();
       includeEdges = true;
       if (args.Length < 2) {
         args.Context.AddString("Missing biomes");
         return false;
       }
-      biomes = args[1].Split(',');
+      // Max biome means no filtering.
+      biomes = args[1].Split(',').Select(GetBiome).Where(biome => biome != Heightmap.Biome.BiomesMax);
+      if (biomes.Contains(Heightmap.Biome.None)) {
+        args.Context.AddString("Invalid biomes");
+        return false;
+      }
       if (args.Length > 3)
         includeEdges = args[3].ToLower() == "true" || args[3].ToLower() == "1";
       return true;
@@ -74,7 +101,7 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("destroy_biomes", "[biome1, biome2, ...] [includeEdges=true] - Destroys all zones in given biomes.", delegate (Terminal.ConsoleEventArgs args) {
         if (!ParseBiomes(args, out var biomes, out var includeEdges)) return;
         Executor.AddOperation(new DestroyBiomes(biomes, includeEdges, args.Context));
-      }, onlyServer: true);
+      }, onlyServer: true, optionsFetcher: () => AvailableBiomes);
       new Terminal.ConsoleCommand("destroy_position", "[x] [y] [radius=0] - Destroys zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
         if (!ParseIncludedArgs(args, out var x, out var z, out var radius)) return;
         var position = new Vector3(x, 0, z);
@@ -100,7 +127,7 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("generate_biomes", "[biome1, biome2, ...] [includeEdges=true] - Generates all zones in given biomes.", delegate (Terminal.ConsoleEventArgs args) {
         if (!ParseBiomes(args, out var biomes, out var includeEdges)) return;
         Executor.AddOperation(new GenerateBiomes(biomes, includeEdges, args.Context));
-      }, onlyServer: true);
+      }, onlyServer: true, optionsFetcher: () => AvailableBiomes);
 
       new Terminal.ConsoleCommand("generate_position", "[x] [y] [radius=0] - Generates zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
         if (!ParseIncludedArgs(args, out var x, out var z, out var radius)) return;
@@ -134,15 +161,16 @@ namespace UpgradeWorld {
         }
         Executor.AddOperation(new Upgrade(args[1], args.Context));
       }, onlyServer: true, optionsFetcher: Upgrade.GetTypes);
-      new Terminal.ConsoleCommand("place_locations", "[location1,location2,...] - Places given location ids to already generated zones.", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("place_locations", "[location1, location2, ...] - Places given location ids to already generated zones.", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Length < 2) {
           args.Context.AddString("Missing location ids.");
           return;
         }
-        Executor.AddOperation(new DistributeLocations(args.Args[1].Split(','), args.Context));
-        Executor.AddOperation(new PlaceLocations(args.Context));
+        var ids = args.Args[1].Split(',').Select(item => item.Trim());
+        Executor.AddOperation(new DistributeLocations(ids, args.Context));
+        Executor.AddOperation(new PlaceLocations(ids, args.Context));
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("reroll_chests", "[chest name] [item1,item2,...] - Rerolls items at given chests, if they only have given items (all chests if no items).", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("reroll_chests", "[chest name] [item1, item2, ...] - Rerolls items at given chests, if they only have given items (all chests if no items).", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Length < 2) {
           args.Context.AddString("Missing chest name.");
           return;
@@ -156,15 +184,19 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("stop", "- Stops execution of current operation.", delegate (Terminal.ConsoleEventArgs args) {
         Executor.RemoveOperation();
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("count", " id [radius=0] - Counts amount of a given entity within a radius (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("count", " [id1, id2, id3] [radius=0] - Counts amounts of given entity ids within a radius (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
         var radius = 0f;
+        if (args.Length < 2) {
+          args.Context.AddString("Missing entity ids.");
+          return;
+        }
         if (args.Length > 2) {
           if (!float.TryParse(args[2], out radius)) {
             args.Context.AddString("Invalid format for radius.");
             return;
           }
         }
-        Executor.AddOperation(new Count(args[1], radius, args.Context));
+        Executor.AddOperation(new Count(args[1].Split(',').Select(id => id.Trim()), radius, args.Context));
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("distribute", "- Redistributes unplaced locations with the genloc command. ", delegate (Terminal.ConsoleEventArgs args) {
         Executor.AddOperation(new DistributeLocations(new string[0], args.Context));

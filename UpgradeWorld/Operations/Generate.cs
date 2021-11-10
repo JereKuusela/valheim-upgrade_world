@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UpgradeWorld {
   public abstract class Generate : ZoneOperation {
-    public Generate(Terminal context, ZoneFilterer[] filterers) : base(context, Zones.GetWorldZones(), filterers) {
+    public Generate(Terminal context, ZoneFilterer[] filterers) : base(context, filterers, TargetZones.Ungenerated) {
       Operation = "Generate";
     }
 
@@ -18,7 +19,7 @@ namespace UpgradeWorld {
   }
 
   public class GenerateBiomes : Generate {
-    public GenerateBiomes(string[] biomes, bool includeEdges, Terminal context) : base(context, new ZoneFilterer[] { new BiomeFilterer(biomes, includeEdges), new ConfigFilterer() }) {
+    public GenerateBiomes(IEnumerable<Heightmap.Biome> biomes, bool includeEdges, Terminal context) : base(context, new ZoneFilterer[] { new BiomeFilterer(biomes, includeEdges), new ConfigFilterer() }) {
     }
   }
   public class GenerateAdjacent : Generate {

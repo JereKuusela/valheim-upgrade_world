@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,34 +13,8 @@ namespace UpgradeWorld {
     private static Vector2i[] Sort(Vector2i[] zones) {
       return zones.OrderBy(zone => zone.Magnitude()).ToArray();
     }
-    // Returns an array of zones from the center zone towards edge zones within a given adjacency.
-    public static Vector2i[] GetZonesToUpgrade(Vector3 position, int adjacent) {
-      position.y = 0f;
-      var side = 1 + (adjacent * 2);
-      var zones = new Vector2i[side * side];
-      var zoneSystem = ZoneSystem.instance;
-      var currentZone = zoneSystem.GetZone(position);
-      var index = 0;
-      for (var x = -adjacent; x <= adjacent; x++) {
-        for (var y = -adjacent; y <= adjacent; y++) {
-          zones[index++] = currentZone + new Vector2i(x, y);
-        }
-      }
-      return Sort(zones);
-    }
-
-    // Returns an array of zones from the center zone towards edge zones within a given distance.
-    public static Vector2i[] GetZonesToUpgradeByRadius(Vector3 position, float radius) {
-      position.y = 0f;
-      var zoneSystem = ZoneSystem.instance;
-      var adjacent = (int)Math.Ceiling(radius / zoneSystem.m_zoneSize);
-      var zones = GetZonesToUpgrade(position, adjacent);
-      return Filter.FilterByRange(zones, position, 0, radius);
-    }
-    // Returns an array of all generated zones.
-    public static Vector2i[] GetAllZones() => ZoneSystem.instance.m_generatedZones.ToArray();
     private static int WORLD_LIMIT = 165;
-    // Returns an array of all generated zones.
+    // Returns an array of all ungenerated zones.
     public static Vector2i[] GetWorldZones() {
       var zoneSystem = ZoneSystem.instance;
       var zones = new List<Vector2i>();
@@ -51,7 +24,7 @@ namespace UpgradeWorld {
           zones.Add(new Vector2i(i, j));
         }
       }
-      return zones.ToArray();
+      return Sort(zones.ToArray());
     }
   }
 }
