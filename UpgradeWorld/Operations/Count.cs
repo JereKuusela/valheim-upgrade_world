@@ -10,7 +10,23 @@ namespace UpgradeWorld {
       Ids = ids;
       Radius = radius;
     }
-    protected override bool OnExecute() {
+    private void CountAll() {
+      var counts = new Dictionary<int, int>();
+      var position = Player.m_localPlayer.transform.position;
+      foreach (var zdo in ZDOMan.instance.m_objectsByID.Values) {
+        if (Utils.DistanceXZ(zdo.GetPosition(), position) < Radius) continue;
+        var id = zdo.GetPrefab();
+        if (!counts.ContainsKey(id)) counts[id] = 0;
+        counts[id]++;
+      }
+
+      foreach (var id in ZNetScene.instance.GetPrefabNames()) {
+        var code = id.GetStableHashCode();
+        if (counts.ContainsKey(code))
+          Print(id + ": " + counts[code]);
+      }
+    }
+    private void CountGiven() {
       foreach (var id in Ids) {
         var prefab = ZNetScene.instance.GetPrefab(id);
         if (prefab == null)
@@ -24,6 +40,12 @@ namespace UpgradeWorld {
           Print(id + ": " + count);
         }
       }
+    }
+    protected override bool OnExecute() {
+      if (Ids.Count() == 0)
+        CountAll();
+      else
+        CountGiven();
       return true;
     }
   }

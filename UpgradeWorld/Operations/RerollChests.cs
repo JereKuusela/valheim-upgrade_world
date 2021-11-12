@@ -13,7 +13,7 @@ namespace UpgradeWorld {
     private HashSet<string> AllowedItems;
     private int TotalChests = 0;
     private int RolledChests = 0;
-    public RerollChests(string id, string[] allowedItems, Terminal context) : base(context) {
+    public RerollChests(string id, IEnumerable<string> allowedItems, Terminal context) : base(context) {
       Operation = "Reroll chests";
       AllowedItems = allowedItems.Select(Helper.Normalize).ToHashSet();
       Id = id;

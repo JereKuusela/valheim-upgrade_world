@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace UpgradeWorld {
-  ///<summary>Filters zones based on whether they have a given prefab.</summary>
-  public class PrefabFilterer : ZoneFilterer {
+  ///<summary>Filters zones based on whether they include a player base item.</summary>
+  public class PlayerBaseFilterer : ZoneFilterer {
     private string Id;
-    public PrefabFilterer(string id) {
+    public PlayerBaseFilterer(string id) {
       Id = id;
     }
     public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages) {

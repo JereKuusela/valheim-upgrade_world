@@ -44,7 +44,7 @@ namespace UpgradeWorld {
     }
     /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
     private void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
-      if (location.m_location.m_location.m_clearArea)
+      if (Settings.ClearLocationAreas && location.m_location.m_location.m_clearArea)
         ClearZDOsWithinRadius(zone, location.m_position, location.m_location.m_exteriorRadius);
     }
 
@@ -59,7 +59,7 @@ namespace UpgradeWorld {
         var zdoPosition = zdo.GetPosition();
         var delta = position - zdoPosition;
         delta.y = 0;
-        if (delta.magnitude < radius) ZDOMan.instance.RemoveFromSector(zdo, zone);
+        if (delta.magnitude < radius) ZDOMan.instance.DestroyZDO(zdo);
       }
     }
   }
