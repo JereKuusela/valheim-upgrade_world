@@ -154,9 +154,28 @@ namespace UpgradeWorld {
         Executor.AddOperation(new GenerateAdjacent(zone, adjacent, args.Context));
       }, onlyServer: true);
     }
+    private static void Mapping() {
+      new Terminal.ConsoleCommand("reveal_position", "[x] [y] [distance=0] - Explores the map at a given position to a given distance.", delegate (Terminal.ConsoleEventArgs args) {
+        if (!ParseIncludedArgs(args, out var x, out var z, out var distance)) return;
+        var position = new Vector3(x, 0, z);
+        Executor.AddOperation(new ExploreMap(position, distance, true, args.Context));
+      }, onlyServer: true);
+      new Terminal.ConsoleCommand("hide_position", "[x] [y] [distance=0] - Hides the map at a given position to a given distance.", delegate (Terminal.ConsoleEventArgs args) {
+        if (!ParseIncludedArgs(args, out var x, out var z, out var distance)) return;
+        var position = new Vector3(x, 0, z);
+        Executor.AddOperation(new ExploreMap(position, distance, false, args.Context));
+      }, onlyServer: true);
+      new Terminal.ConsoleCommand("remove_pins", "[x] [y] [distance=0] - Removes pins from the map at a given position to a given distance.", delegate (Terminal.ConsoleEventArgs args) {
+        if (!ParseIncludedArgs(args, out var x, out var z, out var distance)) return;
+        var position = new Vector3(x, 0, z);
+        Executor.AddOperation(new RemovePins(position, distance, args.Context));
+      }, onlyServer: true);
+
+    }
     public static void Init() {
       Destroying();
       Generating();
+      Mapping();
       new Terminal.ConsoleCommand("upgrade", "[operation] - Performs a predefined upgrade operation.", delegate (Terminal.ConsoleEventArgs args) {
         var valid = Upgrade.GetTypes();
         if (!valid.Contains(args[1])) {

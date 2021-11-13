@@ -13,6 +13,7 @@ Always back up your world before making any changes!
 - Completely regenerate Mistlands.
 - Remove any object from the game world.
 - Generate the whole world without having to physically go anywhere.
+- Explore/hide parts of the map (unfortunately only for the current character).
 
 # Manual Installation:
 
@@ -49,6 +50,9 @@ Overview of available commands (remember that tab key can be used for autocomple
 - count_all [distance]: Counts all entities within a given distance (use 0 for infinite).
 - count [id1, id2, id3] [distance=0]: Counts given entities within a given distance (use 0 for infinite).
 - remove [id1, id2, id3] [distance=0]: Removes given entities within a given distance (use 0 for infinite).
+- reveal_position [x] [y] [distance=0]: Explores the map at a given position to a given distance.
+- hide_position [x] [y] [distance=0]: Hides the map at a given position to a given distance.
+- remove_pins [x] [y] [distance=0]: Removes map from the map at a given position to a given distance.
 - redistribute: Runs the "genloc" command for locations defined by the config. This is needed to redistribute locations after destroying zones.
 - stop: Stops execution of the current operation.  Can be useful if it takes too long some reason.
 - query: Prints how many zones would get operated with the current config.
@@ -85,19 +89,19 @@ If you don't know the id, use "count_all" with a right distance to find the enti
 
 # How it works
 
-Place locations:
+_Place locations_
 
 1. Runs a modified genloc command which allows redistributing unplaced locations to already generated areas.
 2. Skip zones that didn't get a new location.
 3. For each redistributed location, destroy everything within the location exterior radius and place the location to the world.
 
-Reroll chests:
+_Reroll chests_
 
 1. Gets all chests from the save file. Filters chests that are empty (looted or loot not rolled yet) or include a wrong item (to not replace manually put items).
 2. If the chest is in a loaded area, remove all items and roll loot.
 3. Otherwise remove all items and set the chest as "not rolled yet" so that the loot is rolled when the chest is loaded. This is done directly by modifying the save file without actually loading the chest.
 
-Destroy:
+_Destroy_
 
 For technical reasons, currently loaded areas are not included (about 200 meters around the player). This can be overridden by config but contains more risks.
 
@@ -130,6 +134,9 @@ Calls the generating function for each zone.
 	- New command to remove entities.
 	- New command to place any unplaced locations (replacing one of the config settings).
 	- New command to reroll any chest.
+	- New command to explore a part of the map.
+	- New command to hide a part of the map.
+	- New command to remove pins from a part of the map.
 	- Upgrade command now has a second parameter to determine the operation.
 	- New upgrade command for generating onion seeds.
 	- New upgrade command for regenerating Mistlands.
