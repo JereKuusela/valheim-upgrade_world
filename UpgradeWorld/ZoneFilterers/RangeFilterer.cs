@@ -14,7 +14,7 @@ namespace UpgradeWorld {
     }
     public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages) {
       var amount = zones.Length;
-      zones = FilterByRange(zones, Center, Range);
+      zones = FilterByDIstance(zones, Center, Range);
       var skipped = amount - zones.Length;
       if (skipped > 0) messages.Add(skipped + " skipped by the command");
       return zones;
@@ -22,23 +22,23 @@ namespace UpgradeWorld {
 
     /// <summary>Returns only zones that are included within a given distance.</summary>
     // From: https://stackoverflow.com/a/402010
-    private static Vector2i[] FilterByRange(Vector2i[] zones, Vector3 position, float radius) {
+    private static Vector2i[] FilterByDIstance(Vector2i[] zones, Vector3 position, float distance) {
       var zoneSystem = ZoneSystem.instance;
       var halfZone = zoneSystem.m_zoneSize / 2.0f;
       return zones.Where(zone => {
         var center = zoneSystem.GetZonePos(zone);
         center.y = 0f;
-        var distance = center - position;
-        distance.x = Math.Abs(distance.x);
-        distance.z = Math.Abs(distance.z);
+        var delta = center - position;
+        delta.x = Math.Abs(delta.x);
+        delta.z = Math.Abs(delta.z);
 
-        if (distance.x > halfZone + radius) return false;
-        if (distance.y > halfZone + radius) return false;
-        if (distance.z <= halfZone) return true;
-        if (distance.z <= halfZone) return true;
+        if (delta.x > halfZone + distance) return false;
+        if (delta.y > halfZone + distance) return false;
+        if (delta.z <= halfZone) return true;
+        if (delta.z <= halfZone) return true;
 
-        var cornerDistance_sq = (distance.x - halfZone) * (distance.x - halfZone) + (distance.z - halfZone) * (distance.z - halfZone);
-        return cornerDistance_sq <= radius * radius;
+        var cornerDistance_sq = (delta.x - halfZone) * (delta.x - halfZone) + (delta.z - halfZone) * (delta.z - halfZone);
+        return cornerDistance_sq <= distance * distance;
       }).ToArray();
     }
   }

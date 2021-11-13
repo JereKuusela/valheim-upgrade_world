@@ -12,7 +12,7 @@ namespace UpgradeWorld {
         zones = FilterByRange(zones, new Vector3(filterPoint.x, 0, filterPoint.y), filterPoint.min, filterPoint.max);
       }
       if (Player.m_localPlayer)
-        zones = FilterByRange(zones, Player.m_localPlayer.transform.position, Settings.PlayerSafeRadius, 0);
+        zones = FilterByRange(zones, Player.m_localPlayer.transform.position, Settings.PlayerSafeDistance, 0);
       var skipped = amount - zones.Length;
       if (skipped > 0) messages.Add(skipped + " skipped by being excluded the config");
       return zones;

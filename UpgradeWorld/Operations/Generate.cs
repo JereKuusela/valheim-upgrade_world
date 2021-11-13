@@ -14,7 +14,10 @@ namespace UpgradeWorld {
 
     protected override void OnEnd() {
       var generated = ZonesToUpgrade.Length - Failed;
-      Print("Generate completed. " + generated + " zones generated. " + Failed + " errors.");
+      var text = Operation + " completed.";
+      if (Settings.Verbose) text += " " + generated + " zones generated.";
+      if (Failed > 0) text += " " + Failed + " errors.";
+      Print(text);
     }
   }
 
@@ -27,7 +30,7 @@ namespace UpgradeWorld {
     }
   }
   public class GenerateIncluded : Generate {
-    public GenerateIncluded(Vector3 center, float radius, Terminal context) : base(context, new ZoneFilterer[] { new RangeFilterer(center, radius) }) {
+    public GenerateIncluded(Vector3 center, float distance, Terminal context) : base(context, new ZoneFilterer[] { new RangeFilterer(center, distance) }) {
     }
   }
 }

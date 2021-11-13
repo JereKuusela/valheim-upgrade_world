@@ -16,11 +16,12 @@ namespace UpgradeWorld {
       TargetZones = targetZones;
     }
     protected abstract bool ExecuteZone(Vector2i zone);
-    protected void Init() {
+    protected void Init(bool forceVerbose = false) {
       var messages = new List<string>();
       ZonesToUpgrade = new TargetZonesFilterer(TargetZones).FilterZones(ZonesToUpgrade, ref messages);
       ZonesToUpgrade = Filterers.Aggregate(ZonesToUpgrade, (zones, filterer) => filterer.FilterZones(zones, ref messages));
-      Print(Operation + ": " + ZonesToUpgrade.Length + " zones (" + Helper.JoinRows(messages) + ")");
+      if (Settings.Verbose || forceVerbose)
+        Print(Operation + ": " + ZonesToUpgrade.Length + " zones (" + Helper.JoinRows(messages) + ")");
     }
     protected override bool OnExecute() {
       if (ZonesToUpgrade == null || ZonesToUpgrade.Length == 0) return true;

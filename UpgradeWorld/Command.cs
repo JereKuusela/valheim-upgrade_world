@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 
 namespace UpgradeWorld {
   public static class Commands {
+    private static bool ParseInt(string arg, out int number) => int.TryParse(arg, NumberStyles.Integer, CultureInfo.InvariantCulture, out number);
+    private static bool ParseFloat(string arg, out float number) => float.TryParse(arg, NumberStyles.Float, CultureInfo.InvariantCulture, out number);
     private static IEnumerable<string> ParseArgs(IEnumerable<string> args, int skip) => string.Join(",", args.Skip(skip)).Split(',').Select(arg => arg.Trim()).Where(arg => arg != "");
     private static List<string> AvailableBiomes = new List<string>{
       "*", "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains", "Swamp"
@@ -25,18 +28,18 @@ namespace UpgradeWorld {
       if (possibleBiomes.Count == 1) return possibleBiomes.First();
       return Heightmap.Biome.None;
     }
-    private static bool ParseArgsWithRadius(Terminal.ConsoleEventArgs args, out IEnumerable<string> ids, out float radius) {
+    private static bool ParseArgsWithDistance(Terminal.ConsoleEventArgs args, out IEnumerable<string> ids, out float distance) {
       ids = new List<string>();
-      radius = 0;
+      distance = 0;
       if (args.Length < 2) {
         args.Context.AddString("Error: Missing ids.");
         return false;
       }
       var parsed = ParseArgs(args.Args, 1);
-      ids = parsed.Where(arg => !float.TryParse(arg, out var _));
-      var other = parsed.Where(arg => float.TryParse(arg, out var _));
+      ids = parsed.Where(arg => !ParseFloat(arg, out var _));
+      var other = parsed.Where(arg => ParseFloat(arg, out var _));
       if (other.Count() == 1)
-        radius = float.Parse(other.First());
+        distance = float.Parse(other.First());
       return true;
     }
     private static bool ParseBiomes(Terminal.ConsoleEventArgs args, out IEnumerable<Heightmap.Biome> biomes, out bool includeEdges) {
@@ -72,26 +75,26 @@ namespace UpgradeWorld {
         args.Context.AddString("Error: Missing zone y");
         return false;
       }
-      if (!int.TryParse(args[1], out x)) {
+      if (!ParseInt(args[1], out x)) {
         args.Context.AddString("Error: Invalid format for X coordinate.");
         return false;
       }
-      if (!int.TryParse(args[2], out z)) {
+      if (!ParseInt(args[2], out z)) {
         args.Context.AddString("Error: Invalid format for Z coordinate.");
         return false;
       }
       if (args.Length > 3) {
-        if (!int.TryParse(args[3], out adjacent)) {
+        if (!ParseInt(args[3], out adjacent)) {
           args.Context.AddString("Error: Invalid format for adjacency.");
           return false;
         }
       }
       return true;
     }
-    private static bool ParseIncludedArgs(Terminal.ConsoleEventArgs args, out float x, out float z, out float radius) {
+    private static bool ParseIncludedArgs(Terminal.ConsoleEventArgs args, out float x, out float z, out float distance) {
       x = 0;
       z = 0;
-      radius = 0;
+      distance = 0;
       if (args.Length < 2) {
         args.Context.AddString("Error: Missing coordinate X");
         return false;
@@ -100,17 +103,17 @@ namespace UpgradeWorld {
         args.Context.AddString("Error: Missing coordinate Z");
         return false;
       }
-      if (!float.TryParse(args[1], out x)) {
+      if (!ParseFloat(args[1], out x)) {
         args.Context.AddString("Error: Invalid format for X coordinate.");
         return false;
       }
-      if (!float.TryParse(args[2], out z)) {
+      if (!ParseFloat(args[2], out z)) {
         args.Context.AddString("Error: Invalid format for Z coordinate.");
         return false;
       }
       if (args.Length > 3) {
-        if (!float.TryParse(args[3], out radius)) {
-          args.Context.AddString("Error: Invalid format for radius.");
+        if (!ParseFloat(args[3], out distance)) {
+          args.Context.AddString("Error: Invalid format for distance.");
           return false;
         }
       }
@@ -121,10 +124,10 @@ namespace UpgradeWorld {
         if (!ParseBiomes(args, out var biomes, out var includeEdges)) return;
         Executor.AddOperation(new DestroyBiomes(biomes, includeEdges, args.Context));
       }, onlyServer: true, optionsFetcher: () => AvailableBiomes);
-      new Terminal.ConsoleCommand("destroy_position", "[x] [y] [radius=0] - Destroys zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
-        if (!ParseIncludedArgs(args, out var x, out var z, out var radius)) return;
+      new Terminal.ConsoleCommand("destroy_position", "[x] [y] [distance=0] - Destroys zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
+        if (!ParseIncludedArgs(args, out var x, out var z, out var distance)) return;
         var position = new Vector3(x, 0, z);
-        Executor.AddOperation(new DestroyIncluded(position, radius, args.Context));
+        Executor.AddOperation(new DestroyIncluded(position, distance, args.Context));
       }, onlyServer: true);
 
       new Terminal.ConsoleCommand("destroy_zones", "[x] [y] [adjacent=0] - Destroys zones at a given zone coordinates.", delegate (Terminal.ConsoleEventArgs args) {
@@ -139,10 +142,10 @@ namespace UpgradeWorld {
         Executor.AddOperation(new GenerateBiomes(biomes, includeEdges, args.Context));
       }, onlyServer: true, optionsFetcher: () => AvailableBiomes);
 
-      new Terminal.ConsoleCommand("generate_position", "[x] [y] [radius=0] - Generates zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
-        if (!ParseIncludedArgs(args, out var x, out var z, out var radius)) return;
+      new Terminal.ConsoleCommand("generate_position", "[x] [y] [distance=0] - Generates zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
+        if (!ParseIncludedArgs(args, out var x, out var z, out var distance)) return;
         var position = new Vector3(x, 0, z);
-        Executor.AddOperation(new GenerateIncluded(position, radius, args.Context));
+        Executor.AddOperation(new GenerateIncluded(position, distance, args.Context));
       }, onlyServer: true);
 
       new Terminal.ConsoleCommand("generate_zones", "[x] [y] [adjacent=0] - Generates zones at a given zone coordinates.", delegate (Terminal.ConsoleEventArgs args) {
@@ -154,10 +157,10 @@ namespace UpgradeWorld {
     public static void Init() {
       Destroying();
       Generating();
-      new Terminal.ConsoleCommand("upgrade", "[type] - Performs a predefined upgrade operation.", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("upgrade", "[operation] - Performs a predefined upgrade operation.", delegate (Terminal.ConsoleEventArgs args) {
         var valid = Upgrade.GetTypes();
         if (!valid.Contains(args[1])) {
-          args.Context.AddString("Error:Invalid upgrade type.");
+          args.Context.AddString("Error: Invalid upgrade operation.");
           return;
         }
         Executor.AddOperation(new Upgrade(args[1], args.Context));
@@ -169,9 +172,9 @@ namespace UpgradeWorld {
         }
         var ids = ParseArgs(args.Args, 1);
         Executor.AddOperation(new DistributeLocations(ids, args.Context));
-        Executor.AddOperation(new PlaceLocations(ids, args.Context));
+        Executor.AddOperation(new PlaceLocations(args.Context));
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("reroll_chests", "[chest name] [item1, item2, ...] - Rerolls items at given chests, if they only have given items (all chests if no items).", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("reroll_chests", "[chest name] [item1, item2, ...] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Length < 2) {
           args.Context.AddString("Error: Missing chest name.");
           return;
@@ -185,21 +188,25 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("stop", "- Stops execution of current operation.", delegate (Terminal.ConsoleEventArgs args) {
         Executor.RemoveOperation();
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("count", " [radius] [id1, id2, id3] - Counts amounts of given entity ids within a radius (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
-        ParseArgsWithRadius(args, out var ids, out var radius);
-        Executor.AddOperation(new Count(ids, radius, args.Context));
+      new Terminal.ConsoleCommand("count", "[id1, id2, id3] [distance=0] - Counts amounts of given entity ids within a distance (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
+        ParseArgsWithDistance(args, out var ids, out var distance);
+        Executor.AddOperation(new Count(ids, distance, args.Context));
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
-      new Terminal.ConsoleCommand("count_all", " [radius] - Counts all entities within a radius (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
-        var radius = 0f;
+      new Terminal.ConsoleCommand("count_all", " [distance] - Counts all entities within a distance (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
+        var distance = 0f;
         if (args.Length < 2) {
-          args.Context.AddString("Error: Missing radius.");
+          args.Context.AddString("Error: Missing distance.");
           return;
         }
-        Executor.AddOperation(new Count(new string[0], radius, args.Context));
+        if (!ParseFloat(args[1], out distance)) {
+          args.Context.AddString("Error: Invalid format distance.");
+          return;
+        }
+        Executor.AddOperation(new Count(new string[0], distance, args.Context));
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
-      new Terminal.ConsoleCommand("remove", "[id1, id2, id3] [radius=0] - Removes given entity ids within a radius (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
-        ParseArgsWithRadius(args, out var ids, out var radius);
-        Executor.AddOperation(new Remove(ids, radius, args.Context));
+      new Terminal.ConsoleCommand("remove", "[id1, id2, id3] [distance=0] - Removes given entity ids within a distance (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
+        ParseArgsWithDistance(args, out var ids, out var distance);
+        Executor.AddOperation(new Remove(ids, distance, args.Context));
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("distribute", "- Redistributes unplaced locations with the genloc command. ", delegate (Terminal.ConsoleEventArgs args) {
         Executor.AddOperation(new DistributeLocations(new string[0], args.Context));

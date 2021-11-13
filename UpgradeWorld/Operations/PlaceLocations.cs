@@ -4,8 +4,8 @@ using UnityEngine;
 namespace UpgradeWorld {
   public class PlaceLocations : ZoneOperation {
 
-    public PlaceLocations(IEnumerable<string> ids, Terminal context) : base(context, new ZoneFilterer[] { new ConfigFilterer(), new LocationFilterer() }) {
-      Operation = "Place locations (" + Helper.JoinRows(ids) + ")";
+    public PlaceLocations(Terminal context) : base(context, new ZoneFilterer[] { new ConfigFilterer(), new LocationFilterer() }) {
+      Operation = "Place locations";
     }
     protected override bool ExecuteZone(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
@@ -24,8 +24,9 @@ namespace UpgradeWorld {
     }
     protected override void OnEnd() {
       var placed = ZonesToUpgrade.Length - Failed;
-      var text = Operation + ": " + placed + " locations placed";
-      if (Failed > 0) text += " (" + Failed + " errors)";
+      var text = Operation + " completed.";
+      if (Settings.Verbose) text += " " + placed + " locations placed.";
+      if (Failed > 0) text += " " + Failed + " errors.";
       Print(text);
     }
     private readonly List<GameObject> spawnedObjects = new List<GameObject>();
@@ -45,11 +46,11 @@ namespace UpgradeWorld {
     /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
     private void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
       if (Settings.ClearLocationAreas && location.m_location.m_location.m_clearArea)
-        ClearZDOsWithinRadius(zone, location.m_position, location.m_location.m_exteriorRadius);
+        ClearZDOsWithinDistance(zone, location.m_position, location.m_location.m_exteriorRadius);
     }
 
     /// <summary>Clears entities too close to a given position.</summary>
-    private void ClearZDOsWithinRadius(Vector2i zone, Vector3 position, float radius) {
+    private void ClearZDOsWithinDistance(Vector2i zone, Vector3 position, float distance) {
       var sectorObjects = new List<ZDO>();
       ZDOMan.instance.FindObjects(zone, sectorObjects);
       foreach (var zdo in sectorObjects) {
@@ -59,7 +60,7 @@ namespace UpgradeWorld {
         var zdoPosition = zdo.GetPosition();
         var delta = position - zdoPosition;
         delta.y = 0;
-        if (delta.magnitude < radius) ZDOMan.instance.DestroyZDO(zdo);
+        if (delta.magnitude < distance) ZDOMan.instance.DestroyZDO(zdo);
       }
     }
   }

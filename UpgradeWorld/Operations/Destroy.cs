@@ -33,8 +33,11 @@ namespace UpgradeWorld {
 
     protected override void OnEnd() {
       var destroyed = ZonesToUpgrade.Length - Failed;
-      Print(Operation + ": " + destroyed + " zones destroyed");
-      Print("Run distribute or genloc command to re-distribute the location instances (if needed)");
+      var text = Operation + " completed.";
+      if (Settings.Verbose) text += " " + destroyed + " zones destroyed.";
+      if (Failed > 0) text += " " + Failed + " errors.";
+      Print(text);
+      Print("Run distribute or genloc command to re-distribute the location instances (if needed).");
     }
   }
 
@@ -47,7 +50,7 @@ namespace UpgradeWorld {
     }
   }
   public class DestroyIncluded : Destroy {
-    public DestroyIncluded(Vector3 center, float radius, Terminal context) : base(context, new ZoneFilterer[] { new RangeFilterer(center, radius), new LoadedFilterer(!Settings.DestroyLoadedAreas) }) {
+    public DestroyIncluded(Vector3 center, float distance, Terminal context) : base(context, new ZoneFilterer[] { new RangeFilterer(center, distance), new LoadedFilterer(!Settings.DestroyLoadedAreas) }) {
     }
   }
 }

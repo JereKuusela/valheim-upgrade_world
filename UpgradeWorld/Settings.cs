@@ -17,8 +17,8 @@ namespace UpgradeWorld {
     public static bool ClearLocationAreas => configClearLocationAreas.Value;
     public static ConfigEntry<bool> configVerbose;
     public static bool Verbose => configVerbose.Value;
-    public static ConfigEntry<float> configPlayerSafeRadius;
-    public static float PlayerSafeRadius => configPlayerSafeRadius.Value;
+    public static ConfigEntry<float> configPlayerSafeDistance;
+    public static float PlayerSafeDistance => configPlayerSafeDistance.Value;
     public static ConfigEntry<string> configCustomPoints;
     private static string CustomPoints => configCustomPoints.Value;
     public static ConfigEntry<int> configDestroysPerUpdate;
@@ -27,7 +27,7 @@ namespace UpgradeWorld {
     public static void Init(ConfigFile config) {
       var section = "General";
       configVerbose = config.Bind(section, "Verbose output", false, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
-      configPlayerSafeRadius = config.Bind(section, "Safe radius around the player", 0f, "Zones within this distance won't be changed.");
+      configPlayerSafeDistance = config.Bind(section, "Safe distance around the player", 0f, "Zones within this distance won't be changed.");
       configCustomPoints = config.Bind(section, "Custom points", "", "List of coordinates and ranges to filter zones. Format: x1,z1,min1,max1,comment1|x2,z2,min2,max2,comment2|...");
 
       configClearLocationAreas = config.Bind("Locations", "Clear location areas", true, "If true, objects under places locatins will be removed.");

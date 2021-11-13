@@ -31,7 +31,7 @@ namespace UpgradeWorld {
         TotalChests++;
         if (!zdo.GetBool("addedDefaultItems", false)) {
           if (Settings.Verbose)
-            Print("Skipping a chest: Drops not rolled.");
+            Print("Skipping a chest: Drops already unrolled.");
           continue;
         }
         var obj = ZNetScene.instance.FindInstance(zdo);
@@ -71,11 +71,11 @@ namespace UpgradeWorld {
     }
     protected override void OnEnd() {
       if (Failed == 1)
-        Print("Invalid chest ID.");
+        Print("Error: Invalid chest ID.");
       else if (Settings.Verbose)
         Print("Chests rerolled (" + RolledChests + " of " + TotalChests + ").");
       else
-        Print("Chests rerolled");
+        Print("Chests rerolled.");
     }
   }
 }

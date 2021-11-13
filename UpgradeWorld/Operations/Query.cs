@@ -6,7 +6,7 @@ namespace UpgradeWorld {
     }
 
     protected override bool OnExecute() {
-      Init();
+      Init(true);
       return true;
     }
 

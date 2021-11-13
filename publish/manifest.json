@@ -1,9 +1,9 @@
 {
   "name": "Upgrade_World",
-  "version_number": "1.2.0",
+  "version_number": "1.3.0",
   "website_url": "https://github.com/JereKuusela/valheim-upgrade_world",
   "description": "A tool to regenerate or upgrade already explored areas.",
   "dependencies": [
-    "denikson-BepInExPack_Valheim-5.4.1501"
+    "denikson-BepInExPack_Valheim-5.4.1601"
   ]
 }

@@ -2,18 +2,4 @@
 - visualize which zones are included (draw zone corners without overlap)
 - regenerate_location ???: nukes only a location (removes everything within exterior and respawns?)
 
-Changes:
-
-- Regeneration commands renamed to destroy to make the effect more clear.
-- Destroy all command now requires biomes as a parameter (replacing the config setting and making harder to accidentally do things).
-- New commands for generating areas without having to physically go there.
-- New command for counting amount of entities.
-- New command for counting all entities.
-- New command to remove entities.
-- New command to place any locations (replacing one of the config settings).
-- New command to reroll any chest.
-- Upgrade command now has a second parameter to determine the operation (currently only tarpits).
-- New upgrade command for generating onion seeds.
-- New upgrade command for regenerating Mistlands.
-- New setting to disable area clearing when placing locations.
-- Improved area clearing when placing locations.
+TODO: Map exploring...

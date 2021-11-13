@@ -20,10 +20,10 @@ namespace UpgradeWorld {
   [HarmonyPatch(typeof(ZoneSystem), "ClearNonPlacedLocations")]
   public class ClearNonPlacedLocations {
     public static bool Prefix(ZoneSystem __instance) {
-      if (DistributeLocations.Ids.Count() > 0) {
+      if (DistributeLocations.DistributedIds.Count() > 0) {
         var dictionary = new Dictionary<Vector2i, ZoneSystem.LocationInstance>();
         foreach (var keyValuePair in __instance.m_locationInstances) {
-          if (keyValuePair.Value.m_placed || !DistributeLocations.Ids.Contains(keyValuePair.Value.m_location.m_prefabName.ToLower())) {
+          if (keyValuePair.Value.m_placed || !DistributeLocations.DistributedIds.Contains(keyValuePair.Value.m_location.m_prefabName.ToLower())) {
             dictionary.Add(keyValuePair.Key, keyValuePair.Value);
           }
         }
@@ -37,7 +37,7 @@ namespace UpgradeWorld {
   [HarmonyPatch(typeof(ZoneSystem), "GenerateLocations", new Type[] { typeof(ZoneSystem.ZoneLocation) })]
   public class GenerateLocations {
     public static bool Prefix(ZoneSystem.ZoneLocation location) {
-      return DistributeLocations.Ids.Count() == 0 || DistributeLocations.Ids.Contains(location.m_prefabName.ToLower());
+      return DistributeLocations.DistributedIds.Count() == 0 || DistributeLocations.DistributedIds.Contains(location.m_prefabName.ToLower());
     }
   }
 }

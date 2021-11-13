@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 namespace UpgradeWorld {
-  /// <summary>Counts the amount of a given entity id within a given radius.</summary>
+  /// <summary>Predefined upgrade operations</summary>
   public class Upgrade : BaseOperation {
     public static List<string> GetTypes() {
       return new List<string>()
@@ -18,9 +18,10 @@ namespace UpgradeWorld {
 
     protected override bool OnExecute() {
       if (Type == "tarpits") {
-        var locations = new string[] { "TarPit1", "TarPit2", "TarPit3" };
-        Executor.AddOperation(new DistributeLocations(locations, Context));
-        Executor.AddOperation(new PlaceLocations(locations, Context));
+        Executor.AddOperation(new DistributeLocations(new string[] { "TarPit1" }, Context));
+        Executor.AddOperation(new DistributeLocations(new string[] { "TarPit2" }, Context));
+        Executor.AddOperation(new DistributeLocations(new string[] { "TarPit3" }, Context));
+        Executor.AddOperation(new PlaceLocations(Context));
       }
       if (Type == "onions") {
         Executor.AddOperation(new RerollChests("TreasureChest_mountains", new string[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, Context));
