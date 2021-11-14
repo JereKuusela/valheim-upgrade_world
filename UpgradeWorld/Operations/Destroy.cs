@@ -42,17 +42,17 @@ namespace UpgradeWorld {
   }
 
   public class DestroyBiomes : Destroy {
-    public DestroyBiomes(IEnumerable<Heightmap.Biome> biomes, bool includeEdges, Terminal context) : base(context, new ZoneFilterer[] { new BiomeFilterer(biomes, includeEdges), new ConfigFilterer(), new LoadedFilterer(!Settings.DestroyLoadedAreas) }) {
+    public DestroyBiomes(IEnumerable<Heightmap.Biome> biomes, bool includeEdges, Terminal context) : base(context, new ZoneFilterer[] { new BiomeFilterer(biomes, includeEdges), new ConfigFilterer() }) {
       InitString = "Destroy " + (includeEdges ? "" : "center ") + "zones in biomes " + string.Join(", ", biomes);
     }
   }
   public class DestroyAdjacent : Destroy {
-    public DestroyAdjacent(Vector2i center, int adjacent, Terminal context) : base(context, new ZoneFilterer[] { new AdjacencyFilterer(center, adjacent), new LoadedFilterer(!Settings.DestroyLoadedAreas) }) {
+    public DestroyAdjacent(Vector2i center, int adjacent, Terminal context) : base(context, new ZoneFilterer[] { new AdjacencyFilterer(center, adjacent) }) {
       InitString = "Destroy zones within " + adjacent + " zones from " + center.x + ", " + center.y;
     }
   }
   public class DestroyIncluded : Destroy {
-    public DestroyIncluded(Vector3 center, float distance, Terminal context) : base(context, new ZoneFilterer[] { new RangeFilterer(center, distance), new LoadedFilterer(!Settings.DestroyLoadedAreas) }) {
+    public DestroyIncluded(Vector3 center, float distance, Terminal context) : base(context, new ZoneFilterer[] { new RangeFilterer(center, distance) }) {
       InitString = "Destroy zones within " + distance + " meters from " + center.x + ", " + center.z;
     }
   }

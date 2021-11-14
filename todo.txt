@@ -6,10 +6,5 @@
  * Amount of parameters? First is radius? If others then those are coordinates.
 - Merge count_all and count, and add wild card support (same for remove).
  * Paging doesn't seem to be needed? (Verify that all is shown.)
-- Make commands print affected zones at start, but start executing after putting "start"
- * Users would get some idea what would happen.
 - Command to remove entities by component (some common ones like container, structure, creature).
  * First step for automatic base detection.
-
-- Operation split to instant and delayed operations. Delayed operations print some initial output but require start command to execute,
-- Removed query command as obsolete.

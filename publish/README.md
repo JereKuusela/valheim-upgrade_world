@@ -73,7 +73,6 @@ Other settings are:
 
 - Verbose output: Prints more output which gives a better understanding how the mod operators. However this can spoil things of your world.
 - Clear location areas: Whether location placement destroyes anything under the location. Recommended to keep this true to prevent things clipping with each other.
-- Destroy loaded areas: Whether destroy command affects currently loaded areas. Destroying already loaded areas has more risks which is why this is false by default. However no issues have been found by testing.
 - Operations per update: How many zones are destroyed per Unity update. Can be useful if destroying large parts of a world, but recommended to keep it as it is.
 
 Examples:
@@ -103,8 +102,6 @@ _Reroll chests_
 
 _Destroy_
 
-For technical reasons, currently loaded areas are not included (about 200 meters around the player). This can be overridden by config but contains more risks.
-
 1. Removes all objects from a zone (including player placed structures).
 2. If the zone has a location, marks the location as unplaced (to allow redistributing it).
 3. Marks the zone as ungenerated.  Visiting the zone will regenerate like it were at start of the game.
@@ -124,6 +121,11 @@ Calls the generating function for each zone.
 - Zone: The world is split to tiles of 64 m x 64 m size. This is the granularity of the world generation. See https://valheim.fandom.com/wiki/Zones for more info.
 
 # Changelog
+
+- v1.4.0:
+	- Operation split to instant and delayed operations. Delayed operations print some initial output but require start command to execute,
+	- Removed query command as obsolete.
+	- Removed setting to prevent loaded areas being destroyed (after all testing seems to work fine).
 
 - v1.3.0:
 	- Regeneration commands renamed to destroy to make the effect more clear.
