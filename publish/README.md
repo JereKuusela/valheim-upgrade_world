@@ -54,8 +54,8 @@ Overview of available commands (remember that tab key can be used for autocomple
 - hide_position [x] [y] [distance=0]: Hides the map at a given position to a given distance.
 - remove_pins [x] [y] [distance=0]: Removes map from the map at a given position to a given distance.
 - redistribute: Runs the "genloc" command for locations defined by the config. This is needed to redistribute locations after destroying zones.
-- stop: Stops execution of the current operation.  Can be useful if it takes too long some reason.
-- query: Prints how many zones would get operated with the current config.
+- stop: Stops execution of operations. Can be useful if it takes too long some reason.
+- start: Starts execution of delayed operations.
 
 This mod also adds current coordinates (and zone index) to the minimaps which should help using the commands and setting up the config.
 

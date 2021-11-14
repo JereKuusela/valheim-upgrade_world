@@ -1,22 +1,11 @@
 using System.Linq;
-
 namespace UpgradeWorld {
-
+  ///<summary>Base class for all operations. Only provides basic utilities.</summary>
   public abstract class BaseOperation {
-    public string Operation = "BaseOperation";
-    protected int Attempts = 0;
     protected Terminal Context = null;
-    protected int Failed = 0;
     protected BaseOperation(Terminal context) {
       Context = context;
     }
-    public bool Execute() {
-      Attempts++;
-      var ret = OnExecute();
-      if (ret) OnEnd();
-      return ret;
-    }
-    protected abstract bool OnExecute();
     public void Print(string value, bool addDot = true) {
       if (addDot && !value.EndsWith("")) value += ".";
       if (Context) Context.AddString(value);
@@ -30,8 +19,5 @@ namespace UpgradeWorld {
       Previous = value;
       Print(value, addDot);
     }
-    protected virtual void OnEnd() {
-    }
   }
-
 }

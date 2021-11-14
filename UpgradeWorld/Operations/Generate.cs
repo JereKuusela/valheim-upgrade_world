@@ -23,14 +23,17 @@ namespace UpgradeWorld {
 
   public class GenerateBiomes : Generate {
     public GenerateBiomes(IEnumerable<Heightmap.Biome> biomes, bool includeEdges, Terminal context) : base(context, new ZoneFilterer[] { new BiomeFilterer(biomes, includeEdges), new ConfigFilterer() }) {
+      InitString = "Generate " + (includeEdges ? "" : "center ") + "zones in biomes " + string.Join(", ", biomes);
     }
   }
   public class GenerateAdjacent : Generate {
     public GenerateAdjacent(Vector2i center, int adjacent, Terminal context) : base(context, new ZoneFilterer[] { new AdjacencyFilterer(center, adjacent) }) {
+      InitString = "Generate zones within " + adjacent + " zones from " + center.x + ", " + center.y;
     }
   }
   public class GenerateIncluded : Generate {
     public GenerateIncluded(Vector3 center, float distance, Terminal context) : base(context, new ZoneFilterer[] { new RangeFilterer(center, distance) }) {
+      InitString = "Generate zones within " + distance + " meters from " + center.x + ", " + center.z;
     }
   }
 }

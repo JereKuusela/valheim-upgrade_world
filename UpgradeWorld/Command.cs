@@ -158,17 +158,17 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("reveal_position", "[x] [y] [distance=0] - Explores the map at a given position to a given distance.", delegate (Terminal.ConsoleEventArgs args) {
         if (!ParseIncludedArgs(args, out var x, out var z, out var distance)) return;
         var position = new Vector3(x, 0, z);
-        Executor.AddOperation(new ExploreMap(position, distance, true, args.Context));
+        new ExploreMap(position, distance, true, args.Context);
       }, onlyServer: true);
       new Terminal.ConsoleCommand("hide_position", "[x] [y] [distance=0] - Hides the map at a given position to a given distance.", delegate (Terminal.ConsoleEventArgs args) {
         if (!ParseIncludedArgs(args, out var x, out var z, out var distance)) return;
         var position = new Vector3(x, 0, z);
-        Executor.AddOperation(new ExploreMap(position, distance, false, args.Context));
+        new ExploreMap(position, distance, false, args.Context);
       }, onlyServer: true);
       new Terminal.ConsoleCommand("remove_pins", "[x] [y] [distance=0] - Removes pins from the map at a given position to a given distance.", delegate (Terminal.ConsoleEventArgs args) {
         if (!ParseIncludedArgs(args, out var x, out var z, out var distance)) return;
         var position = new Vector3(x, 0, z);
-        Executor.AddOperation(new RemovePins(position, distance, args.Context));
+        new RemovePins(position, distance, args.Context);
       }, onlyServer: true);
 
     }
@@ -182,7 +182,7 @@ namespace UpgradeWorld {
           args.Context.AddString("Error: Invalid upgrade operation.");
           return;
         }
-        Executor.AddOperation(new Upgrade(args[1], args.Context));
+        new Upgrade(args[1], args.Context);
       }, onlyServer: true, optionsFetcher: Upgrade.GetTypes);
       new Terminal.ConsoleCommand("place_locations", "[location1, location2, ...] - Places given location ids to already generated zones.", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Length < 2) {
@@ -199,17 +199,17 @@ namespace UpgradeWorld {
           return;
         }
         var ids = ParseArgs(args.Args, 2);
-        Executor.AddOperation(new RerollChests(args[1], ids, args.Context));
+        new RerollChests(args[1], ids, args.Context);
       }, onlyServer: true, optionsFetcher: () => RerollChests.ChestsNames);
-      new Terminal.ConsoleCommand("query", "- Returns how many zones would get operated with current config", delegate (Terminal.ConsoleEventArgs args) {
-        Executor.AddOperation(new Query(args.Context));
+      new Terminal.ConsoleCommand("start", "- Starts execution of operations.", delegate (Terminal.ConsoleEventArgs args) {
+        Executor.DoExecute = true;
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("stop", "- Stops execution of current operation.", delegate (Terminal.ConsoleEventArgs args) {
-        Executor.RemoveOperation();
+      new Terminal.ConsoleCommand("stop", "- Stops execution of operations.", delegate (Terminal.ConsoleEventArgs args) {
+        Executor.RemoveOperations();
       }, onlyServer: true);
       new Terminal.ConsoleCommand("count", "[id1, id2, id3] [distance=0] - Counts amounts of given entity ids within a distance (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
         ParseArgsWithDistance(args, out var ids, out var distance);
-        Executor.AddOperation(new Count(ids, distance, args.Context));
+        new Count(ids, distance, args.Context);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("count_all", " [distance] - Counts all entities within a distance (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
         var distance = 0f;
@@ -221,11 +221,11 @@ namespace UpgradeWorld {
           args.Context.AddString("Error: Invalid format distance.");
           return;
         }
-        Executor.AddOperation(new Count(new string[0], distance, args.Context));
+        new Count(new string[0], distance, args.Context);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("remove", "[id1, id2, id3] [distance=0] - Removes given entity ids within a distance (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
         ParseArgsWithDistance(args, out var ids, out var distance);
-        Executor.AddOperation(new Remove(ids, distance, args.Context));
+        new RemoveEntities(ids, distance, args.Context);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("distribute", "- Redistributes unplaced locations with the genloc command. ", delegate (Terminal.ConsoleEventArgs args) {
         Executor.AddOperation(new DistributeLocations(new string[0], args.Context));

@@ -3,17 +3,22 @@ using System.Collections.Generic;
 namespace UpgradeWorld {
 
   public static class Executor {
-    private static List<BaseOperation> operations = new List<BaseOperation>();
+    private static List<ExecutedOperation> operations = new List<ExecutedOperation>();
+    public static bool DoExecute = false;
 
-    public static void AddOperation(BaseOperation operation) => operations.Add(operation);
-    public static void RemoveOperation() {
-      if (operations.Count > 0)
-        operations.RemoveAt(0);
+    public static void AddOperation(ExecutedOperation operation) {
+      operation.Init();
+      operations.Add(operation);
+    }
+    public static void RemoveOperations() {
+      operations.Clear();
     }
     public static void Execute() {
-      if (operations.Count == 0) return;
+      if (!DoExecute) return;
       if (operations[0].Execute())
-        RemoveOperation();
+        operations.RemoveAt(0);
+      if (operations.Count == 0)
+        DoExecute = false;
     }
   }
 }

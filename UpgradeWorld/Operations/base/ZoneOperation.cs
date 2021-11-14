@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace UpgradeWorld {
+  ///<summary>Base class for all zone based operations. Provides the "zone by zone" execution logic.</summary>
 
-  public abstract class ZoneOperation : BaseOperation {
+  public abstract class ZoneOperation : ExecutedOperation {
+    public string Operation = "BaseOperation";
     protected Vector2i[] ZonesToUpgrade;
     protected int ZonesPerUpdate = 1;
-    protected int ZoneIndex = -1;
+    protected int ZoneIndex = 0;
     protected ZoneFilterer[] Filterers;
     protected TargetZones TargetZones = TargetZones.Generated;
     protected ZoneOperation(Terminal context, ZoneFilterer[] filterers, TargetZones targetZones = TargetZones.Generated) : base(context) {
@@ -15,20 +17,19 @@ namespace UpgradeWorld {
       Filterers = filterers;
       TargetZones = targetZones;
     }
-    protected abstract bool ExecuteZone(Vector2i zone);
-    protected void Init(bool forceVerbose = false) {
+    protected string InitString = "";
+    protected override string OnInit() {
       var messages = new List<string>();
       ZonesToUpgrade = new TargetZonesFilterer(TargetZones).FilterZones(ZonesToUpgrade, ref messages);
       ZonesToUpgrade = Filterers.Aggregate(ZonesToUpgrade, (zones, filterer) => filterer.FilterZones(zones, ref messages));
-      if (Settings.Verbose || forceVerbose)
-        Print(Operation + ": " + ZonesToUpgrade.Length + " zones (" + Helper.JoinRows(messages) + ")");
+      var zoneString = ZonesToUpgrade.Length + " zones (" + Helper.JoinRows(messages) + ")";
+      if (Settings.Verbose)
+        InitString += ": " + zoneString;
+      return InitString;
     }
+    protected abstract bool ExecuteZone(Vector2i zone);
     protected override bool OnExecute() {
       if (ZonesToUpgrade == null || ZonesToUpgrade.Length == 0) return true;
-      if (ZoneIndex == -1) {
-        Init();
-        ZoneIndex = 0;
-      }
 
       for (var i = 0; i < ZonesPerUpdate && ZoneIndex < ZonesToUpgrade.Length; i++) {
         var zone = ZonesToUpgrade[ZoneIndex];
