@@ -130,6 +130,22 @@ Hides the map at a given position to a given distance.
 
 Removes map from the map at a given position to a given distance.
 
+## change_time [seconds]
+
+Experimental. Changes the world time by real life seconds while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
+
+Verbose mode prints how many data entries were affected.
+
+## change_day [day]
+
+Experimental. Changes the world time by in-game days while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
+
+Verbose mode prints how many data entries were affected.
+
+## remove_pins [x] [y] [distance=0]
+
+Removes map from the map at a given position to a given distance.
+
 ## redistribute
 
 Runs the "genloc" command without needing devcommands enabled. This can be used to redistribute locations after destroying zones.
@@ -171,19 +187,19 @@ If you don't know the id, use "count_all" with a right distance to find the enti
 
 # How it works
 
-_Place locations_
+## Place locations
 
 1. Runs a modified genloc command which allows redistributing unplaced locations to already generated areas.
 2. Skip zones that didn't get a new location.
 3. For each redistributed location, destroy everything within the location exterior radius and place the location to the world.
 
-_Reroll chests_
+## Reroll chests
 
 1. Gets all chests from the save file. Filters chests that are empty (looted or loot not rolled yet) or include a wrong item (to not replace manually put items).
 2. If the chest is in a loaded area, remove all items and roll loot.
 3. Otherwise remove all items and set the chest as "not rolled yet" so that the loot is rolled when the chest is loaded. This is done directly by modifying the save file without actually loading the chest.
 
-_Destroy_
+## Destroy
 
 1. Removes all objects from a zone (including player placed structures).
 2. If the zone has a location, marks the location as unplaced (to allow redistributing it).
@@ -193,9 +209,31 @@ _Destroy_
 
 Portals in the loaded area won't be automatically disconnected but relogging fixes that.
 
-Generate:
+## Generate:
 
 Calls the generating function for each zone.
+
+## Change time/day
+
+The main issue with changing the time is that many entities store the current time to their data. This causes issue when going back in the time as many things freeze until the time has passed back to the original. For example preventing enemies from spawning.
+
+So after changing the time, the command also updates the following data values (if their value is not 0):
+- For general enemy spawning, all data values of the zone control entity are updated. Each of these data values affect spawning of a one enemy type.
+- "spawntime" for offspring growth timer and also for ship build timer (but unlikely to use the command when constructing a ship).
+- "SpawnTime" for item drop despawn timer.
+- "lastTime" for beehive and fireplace progressing.
+- "StartTime" for cooking, smelting and fermenting.
+- "timeOfDeath" is not included as this is for coropses and gravestones. The value doesn't seem to be currently used at all.
+- "alive_time" for spawn point timers.
+- "spawn_time" for loot spawners (not used in the game at the moment).
+- "picked_time" for pickable respawn timers.
+- "plantTime" for growth timers.
+- "pregrant" for breeding timers.
+- "TameLastFeeding" for animal hunger timer.
+
+Affected data values can be configured but recommended to keep them as it is. 
+
+
 
 # Glossary
 

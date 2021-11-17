@@ -219,6 +219,36 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("distribute", "- Redistributes unplaced locations with the genloc command.", delegate (Terminal.ConsoleEventArgs args) {
         Executor.AddOperation(new DistributeLocations(new string[0], args.Context));
       }, onlyServer: true);
+      new Terminal.ConsoleCommand("change_time", "[seconds] - Changes time while updating entities.", delegate (Terminal.ConsoleEventArgs args) {
+        if (args.Args.Count() == 0) {
+          args.Context.AddString("Error: Missing seconds.");
+          return;
+        }
+        if (!ParseInt(args[1], out var time)) {
+          args.Context.AddString("Error: Invalid format for seconds.");
+          return;
+        }
+        if (args.Args.Count() > 2) {
+          args.Context.AddString("Error: Too many parameters.");
+          return;
+        }
+        new ChangeTime(args.Context, time);
+      }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
+      new Terminal.ConsoleCommand("change_day", "[day] - Changes day while updating entities.", delegate (Terminal.ConsoleEventArgs args) {
+        if (args.Args.Count() == 0) {
+          args.Context.AddString("Error: Missing day.");
+          return;
+        }
+        if (!ParseInt(args[1], out var time)) {
+          args.Context.AddString("Error: Invalid format for day.");
+          return;
+        }
+        if (args.Args.Count() > 2) {
+          args.Context.AddString("Error: Too many parameters.");
+          return;
+        }
+        new ChangeTime(args.Context, time * EnvMan.instance.m_dayLengthSec);
+      }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
     }
   }
 }

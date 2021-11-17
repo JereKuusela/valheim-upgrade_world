@@ -5,9 +5,8 @@
 - Commands with args:
  * reroll_chests: first extra is container, others are item ids.
 - Setting to force start without needing to do it manually.
-- Tool to edit day (while also updating relevant timers).
 - Add wild card support to list/count/remove entities.
-- Command to remove entities by component (some common ones like container, structure, creature).
+- Command to find entities by component (some common ones like container, structure, creature).
  * This is slow so do a list operation.
- * First step for automatic base detection.
 - clear area setting as a flag to placelocation
+- verbose command to enable verbose
