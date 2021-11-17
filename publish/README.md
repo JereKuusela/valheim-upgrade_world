@@ -34,40 +34,123 @@ Always back up your world before making any changes!
 8. Uninstall the mod.
 9. Enjoy the new stuff!
 
-# Features
+This mod also adds current coordinates (and zone index) to the minimaps which should help using the commands and setting up the config.
+
+# Parameters
+
+Effective usage of this tool requires understanding the general parameters that are used to filter out affected zones and entities. Following parameters are available to most commands:
+
+- Biome names to only include those biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
+- Minimum and maximum distance as a range "min-max". Either of the values can be omitted for either "min" or "-max".
+- Center position as two parameters "x" and "z" (y coordinate is used the altitude).
+- Flag "noedges" to only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
+- Flag "ignorebase" to skip automatic player base detection.
+- Flag "zones" to change distance and position parameters to be zone based. "x" and "z" are zone indices. "min" and "max" determine how many adjacent zones are included.
+
+Examples:
+- command mistlands: Affects zones which have Mistlands biome at any of their corners.
+- command 5000 0 0: Affects zones which are 5000 meters away from the world center.
+- command 3000-5000 0 0: Affects zones which are from 3000 to 5000 meters away from the world center.
+- command 3 -3 zones ignorebase: Affects the zone at indices 3,-3 while ignoring any nearby player base structures.
+- command blackforest ocean -1000 noedges: Affects zones that only have Black Forest or Ocean at their corners and that are up to 1000 meters away from the player.
+
+# Commands
 
 Overview of available commands (remember that tab key can be used for autocomplete / cycle through options):
 
-- upgrade [operation]: Performs a predefined upgrade operation. Available operations are tarpits, onions and mistlands.
-- place_locations [location1, location2, ...]: Distributes locations to already explored areas (used by the tarpits operation). Also affected by the config.
-- reroll_chests [chest name] [item1, item2, ...]: Rerolls contents of a given chest, if they only have given items (all chests if no items specified).
-- destroy_biomes [biome1, biome2, ...] [includeEdges=true]: Destroys zones in given biomes (\* for all) which allows the world generator to regenerate them with new content. true/false can be used to determine if zones with multiple biomes are included. Also affected by the config.
-- destroy_position [x] [y] [distance=0]: Destroys zones at a given coordinates and distance.
-- destroy_zones [x] [y] [adjacent=0]: Destroys zones at a given zone index and adjacent zones.
-- generate_biomes [biome1, biome2, ...] [includeEdges=true]: Generates zones in given biomes (\* for all) without having to physically move there. true/false can be used to determine if zones with multiple biomes are included. Also affected by the config.
-- generate_position [x] [y] [distance=0]: Generates zones at a given coordinates and distance.
-- generate_zones [x] [y] [adjacent=0]: Generates zones at a given zone index and adjacent zones.
-- count_all [distance]: Counts all entities within a given distance (use 0 for infinite).
-- count [id1, id2, id3] [distance=0]: Counts given entities within a given distance (use 0 for infinite).
-- remove [id1, id2, id3] [distance=0]: Removes given entities within a given distance (use 0 for infinite).
-- reveal_position [x] [y] [distance=0]: Explores the map at a given position to a given distance.
-- hide_position [x] [y] [distance=0]: Hides the map at a given position to a given distance.
-- remove_pins [x] [y] [distance=0]: Removes map from the map at a given position to a given distance.
-- redistribute: Runs the "genloc" command for locations defined by the config. This is needed to redistribute locations after destroying zones.
-- stop: Stops execution of operations. Can be useful if it takes too long some reason.
-- start: Starts execution of delayed operations.
+## upgrade [operation] [...args]
 
-This mod also adds current coordinates (and zone index) to the minimaps which should help using the commands and setting up the config.
+Performs a predefined upgrade operation. Available operations are tarpits, onions and mistlands.
+
+Examples
+- upgrade tarpits: Places tar pits to already explored areas.
+- upgrade onions: Rerolls already generated and unlooted mountain chests.
+- upgrade mistlands: Fully regenerates mistlands biomes.
+
+## destroy [..args]
+
+Destroys zones which allows the world generator to regenerate them when visited.
+
+Examples:
+- destroy mistlands: Destryoing a biome.
+- destroy 5000 0 0 : Destroying areas after 5000 meters from the world center.
+- destroy 3 -3 zones ignorebase: Destroy a single zone at indices 3,-3 to fix any local issues.
+
+## generate [..args]
+
+Generates zones which allows pregenerating the world without having to move there physically.
+
+Examples:
+- generate: To generate the entire world (takes hours) and then use count_entities command to check how many of each entity exists.
+- generate: To generate the entire world (takes hours) and then use remove_entities for modifications.
+
+## place_locations [...location_ids] [...args]
+
+Distributes unplaced locations to already explored areas and then places them to the world.
+
+Normally this command (or the similar genloc command) won't do anything because the locations will be generated the same way. However if a new update adds new locations or the world generating otherwise changes this causes changed to the world.
+
+## reroll_chests [chest name] [...item_ids] [...args]
+
+Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Empty (looted) chests won't be rerolled.
+
+Item ids can be used to detect and prevent rerolling chests which players are using to store items.
+
+Example:
+- reroll_chests TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds: Rerolls mountain treasure chests which only have naturally occurring items.
+
+## count_biomes [frequency=100] [...args]
+
+Counts amounts of biomes. Frequency determines in meters how often the biome is checked. Result it also printed to the player.log file.
+
+Example:
+- count_biomes 5000 0 0: Counts only biomes after 5000 meters from the world center.
+
+## count_entities [showzero] [...ids] [...args]
+
+Counts amounts of given entities. If no ids given then counts all entities. All entities are listed with the flag "showzero". Result it also printed to the player.log file.
+
+## list_entities [...ids] [...args]
+
+Lists given entities showing their position and biome. Result it also printed to the player.log file.
+
+## remove_entities [...ids] [...args]
+
+Removes entities. Recommended to use count_entities to verify the parameters.
+
+## reveal_position [x] [y] [distance=0]
+
+Explores the map at a given position to a given distance.
+
+## hide_position [x] [y] [distance=0]
+
+Hides the map at a given position to a given distance.
+
+## remove_pins [x] [y] [distance=0]
+
+Removes map from the map at a given position to a given distance.
+
+## redistribute
+
+Runs the "genloc" command without needing devcommands enabled. This can be used to redistribute locations after destroying zones.
+
+## start
+
+Zone based commands don't exeute instantly but instead print the amount of zones being affected. This command can be then used to start executing.
+
+## stop
+
+Stops execution of commands and removes any pending commands.
 
 # Configuration
-
-Zones affected by "place_locations", "destroy_biomes" and "generate_biomes" commands can be filtered to exclude some parts of the world (for example your base).
 
 The config can be found in the \<GameDirectory\>\BepInEx\config\ folder after the first start up.
 
 Filtering options in the config:
-- Safe distance around the player: Only zones that are fully outside the given distance of the player.
-- Custom points: Coordinates and distances to create excluded areas. Format: x1,z1,min1,max1|x2,z2,min2,max2|...
+- Safe zone items: List of items used for the automatic player base detection. By default includes structures that have the player base effect.
+- How many adjacent zones are included in the safe zone: Size of the player base protection. Default value 1 means 3x3 zones per player base structure to ensure proper coverage. Value -1 can be used to disable the player base detection.
+- Safe distance around the player: Excludes zones that are too close to the players (in meters). All commands allow specifying the minimum distance so using this setting is not really needed.
+- Custom points: Coordinates and distances to exclude zones. Format: x1,z1,min1,max1|x2,z2,min2,max2|...
 
 Other settings are:
 
@@ -126,6 +209,12 @@ Calls the generating function for each zone.
 	- Operation split to instant and delayed operations. Delayed operations print some initial output but require start command to execute,
 	- Removed query command as obsolete.
 	- Removed setting to prevent loaded areas being destroyed (after all testing seems to work fine).
+	- Added general argument system (same set of basic arguments for most commands).
+	- Merged all destroy commands to a single command.
+	- Merged all generate commands to a single command.
+	- Mergend entity counting commands to a single command.
+	- Added a new command to count biomes.
+	- Added automatic player base detection.
 
 - v1.3.0:
 	- Regeneration commands renamed to destroy to make the effect more clear.

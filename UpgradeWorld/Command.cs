@@ -6,91 +6,76 @@ using UnityEngine;
 namespace UpgradeWorld {
   public static class Commands {
     private static bool ParseInt(string arg, out int number) => int.TryParse(arg, NumberStyles.Integer, CultureInfo.InvariantCulture, out number);
-    private static bool ParseFloat(string arg, out float number) => float.TryParse(arg, NumberStyles.Float, CultureInfo.InvariantCulture, out number);
+    private static bool TryParseFloat(string arg, out float number) => float.TryParse(arg, NumberStyles.Float, CultureInfo.InvariantCulture, out number);
+    private static bool IsFloat(string arg) => float.TryParse(arg, NumberStyles.Float, CultureInfo.InvariantCulture, out var _);
+    private static float ParseFloat(string arg) => float.Parse(arg, NumberStyles.Float, CultureInfo.InvariantCulture);
     private static IEnumerable<string> ParseArgs(IEnumerable<string> args, int skip) => string.Join(",", args.Skip(skip)).Split(',').Select(arg => arg.Trim()).Where(arg => arg != "");
     private static List<string> AvailableBiomes = new List<string>{
-      "*", "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains", "Swamp"
+      "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains", "Swamp"
     };
     /// <summary>Converts a biome name to a biome.</summary>
     private static Heightmap.Biome GetBiome(string name) {
       name = Helper.Normalize(name);
-      var possibleBiomes = new List<Heightmap.Biome>();
-      if (name == "*") possibleBiomes.Add(Heightmap.Biome.BiomesMax);
-      if ("ashlands".StartsWith(name) || name == "al") possibleBiomes.Add(Heightmap.Biome.AshLands);
-      if ("blackforest".StartsWith(name) || name == "bf") possibleBiomes.Add(Heightmap.Biome.BlackForest);
-      if ("deepnorth".StartsWith(name) || name == "dn") possibleBiomes.Add(Heightmap.Biome.DeepNorth);
-      if ("meadows".StartsWith(name)) possibleBiomes.Add(Heightmap.Biome.Meadows);
-      if ("mistlands".StartsWith(name) || name == "ml") possibleBiomes.Add(Heightmap.Biome.Mistlands);
-      if ("mountain".StartsWith(name)) possibleBiomes.Add(Heightmap.Biome.Mountain);
-      if ("ocean".StartsWith(name)) possibleBiomes.Add(Heightmap.Biome.Ocean);
-      if ("plains".StartsWith(name)) possibleBiomes.Add(Heightmap.Biome.Plains);
-      if ("swamp".StartsWith(name)) possibleBiomes.Add(Heightmap.Biome.Swamp);
-      if (possibleBiomes.Count == 1) return possibleBiomes.First();
+      if (name == "ashlands") return Heightmap.Biome.AshLands;
+      if (name == "blackforest") return Heightmap.Biome.BlackForest;
+      if (name == "deepnorth") return Heightmap.Biome.DeepNorth;
+      if (name == "meadows") return Heightmap.Biome.Meadows;
+      if (name == "mistlands") return Heightmap.Biome.Mistlands;
+      if (name == "mountain") return Heightmap.Biome.Mountain;
+      if (name == "ocean") return Heightmap.Biome.Ocean;
+      if (name == "plains") return Heightmap.Biome.Plains;
+      if (name == "swamp") return Heightmap.Biome.Swamp;
       return Heightmap.Biome.None;
     }
-    private static bool ParseArgsWithDistance(Terminal.ConsoleEventArgs args, out IEnumerable<string> ids, out float distance) {
-      ids = new List<string>();
-      distance = 0;
-      if (args.Length < 2) {
-        args.Context.AddString("Error: Missing ids.");
-        return false;
-      }
+    private static IEnumerable<string> ParseFiltererArgs(Terminal.ConsoleEventArgs args, FiltererParameters parameters) {
       var parsed = ParseArgs(args.Args, 1);
-      ids = parsed.Where(arg => !ParseFloat(arg, out var _));
-      var other = parsed.Where(arg => ParseFloat(arg, out var _));
-      if (other.Count() == 1)
-        distance = float.Parse(other.First());
-      return true;
-    }
-    private static bool ParseBiomes(Terminal.ConsoleEventArgs args, out IEnumerable<Heightmap.Biome> biomes, out bool includeEdges) {
-      biomes = new List<Heightmap.Biome>();
-      includeEdges = true;
-      if (args.Length < 2) {
-        args.Context.AddString("Error: Missing biomes");
-        biomes = null;
-        return false;
+      var other = parsed.Where(arg => !TryParseFloat(arg, out var _));
+      var allNumbers = parsed.Where(arg => TryParseFloat(arg, out var _)).Select(ParseFloat);
+      var ranges = other.Where(arg => arg.Split('-').Length == 2 && arg.Split('-').All(IsFloat));
+      var range = ranges.FirstOrDefault();
+      // Add back unused ranges.
+      other.ToList().AddRange(ranges.Skip(1));
+      if (range != null) {
+        var split = range.Split('-').Select(ParseFloat);
+        parameters.MinDistance = split.First();
+        parameters.MaxDistance = split.Last();
       }
-      var parsed = ParseArgs(args.Args, 1);
-      // Max biome means no filtering.
-      biomes = parsed.Where(arg => arg.ToLower() != "true" && arg.ToLower() != "false").Select(GetBiome).Where(biome => biome != Heightmap.Biome.BiomesMax);
-      if (biomes.Contains(Heightmap.Biome.None)) {
-        args.Context.AddString("Error: Invalid biomes");
-        biomes = null;
-        return false;
-      }
-      var other = parsed.Where(arg => arg.ToLower() == "true" || arg.ToLower() == "false");
-      if (other.Count() == 1)
-        includeEdges = other.First().ToLower() == "true";
-      return true;
-    }
-    private static bool ParseZoneArgs(Terminal.ConsoleEventArgs args, out int x, out int z, out int adjacent) {
-      x = 0;
-      z = 0;
-      adjacent = 0;
-      if (args.Length < 2) {
-        args.Context.AddString("Error: Missing zone x");
-        return false;
-      }
-      if (args.Length < 3) {
-        args.Context.AddString("Error: Missing zone y");
-        return false;
-      }
-      if (!ParseInt(args[1], out x)) {
-        args.Context.AddString("Error: Invalid format for X coordinate.");
-        return false;
-      }
-      if (!ParseInt(args[2], out z)) {
-        args.Context.AddString("Error: Invalid format for Z coordinate.");
-        return false;
-      }
-      if (args.Length > 3) {
-        if (!ParseInt(args[3], out adjacent)) {
-          args.Context.AddString("Error: Invalid format for adjacency.");
-          return false;
+      var numbers = allNumbers.Take(range == null ? 3 : 2);
+      // Add back unused numbers.
+      other.ToList().AddRange(allNumbers.Skip(numbers.Count()).Select(arg => arg.ToString()));
+
+      if (numbers.Count() == 1 || numbers.Count() == 3) {
+        var distance = numbers.First();
+        parameters.MinDistance = 0;
+        parameters.MaxDistance = 0;
+        if (distance > 0)
+          parameters.MinDistance = distance;
+        else
+          parameters.MaxDistance = -distance;
+        if (numbers.Count() == 3) {
+          parameters.X = numbers.Skip(1).First();
+          parameters.Y = numbers.Last();
+        } else {
+          parameters.X = Player.m_localPlayer.transform.position.x;
+          parameters.Y = Player.m_localPlayer.transform.position.y;
         }
       }
-      return true;
+      if (numbers.Count() == 2) {
+        parameters.MinDistance = 0;
+        parameters.MaxDistance = 0;
+        parameters.X = numbers.First();
+        parameters.Y = numbers.Last();
+      }
+
+      parameters.Biomes = other.Select(GetBiome).Where(biome => biome != Heightmap.Biome.BiomesMax && biome != Heightmap.Biome.None);
+      other = other.Where(arg => GetBiome(arg) == Heightmap.Biome.None);
+      other = ParseFlag(other, "ignorebase", out parameters.NoPlayerBase);
+      other = ParseFlag(other, "zones", out parameters.MeasureWithZones);
+      other = ParseFlag(other, "noedges", out parameters.IncludeEdges);
+      parameters.TargetZones = TargetZones.Generated;
+      return other;
     }
+
     private static bool ParseIncludedArgs(Terminal.ConsoleEventArgs args, out float x, out float z, out float distance) {
       x = 0;
       z = 0;
@@ -103,56 +88,25 @@ namespace UpgradeWorld {
         args.Context.AddString("Error: Missing coordinate Z");
         return false;
       }
-      if (!ParseFloat(args[1], out x)) {
+      if (!TryParseFloat(args[1], out x)) {
         args.Context.AddString("Error: Invalid format for X coordinate.");
         return false;
       }
-      if (!ParseFloat(args[2], out z)) {
+      if (!TryParseFloat(args[2], out z)) {
         args.Context.AddString("Error: Invalid format for Z coordinate.");
         return false;
       }
       if (args.Length > 3) {
-        if (!ParseFloat(args[3], out distance)) {
+        if (!TryParseFloat(args[3], out distance)) {
           args.Context.AddString("Error: Invalid format for distance.");
           return false;
         }
       }
       return true;
     }
-    private static void Destroying() {
-      new Terminal.ConsoleCommand("destroy_biomes", "[biome1, biome2, ...] [includeEdges=true] - Destroys all zones in given biomes.", delegate (Terminal.ConsoleEventArgs args) {
-        if (!ParseBiomes(args, out var biomes, out var includeEdges)) return;
-        Executor.AddOperation(new DestroyBiomes(biomes, includeEdges, args.Context));
-      }, onlyServer: true, optionsFetcher: () => AvailableBiomes);
-      new Terminal.ConsoleCommand("destroy_position", "[x] [y] [distance=0] - Destroys zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
-        if (!ParseIncludedArgs(args, out var x, out var z, out var distance)) return;
-        var position = new Vector3(x, 0, z);
-        Executor.AddOperation(new DestroyIncluded(position, distance, args.Context));
-      }, onlyServer: true);
-
-      new Terminal.ConsoleCommand("destroy_zones", "[x] [y] [adjacent=0] - Destroys zones at a given zone coordinates.", delegate (Terminal.ConsoleEventArgs args) {
-        if (!ParseZoneArgs(args, out int x, out int z, out int adjacent)) return;
-        var zone = new Vector2i(x, z);
-        Executor.AddOperation(new DestroyAdjacent(zone, adjacent, args.Context));
-      }, onlyServer: true);
-    }
-    private static void Generating() {
-      new Terminal.ConsoleCommand("generate_biomes", "[biome1, biome2, ...] [includeEdges=true] - Generates all zones in given biomes.", delegate (Terminal.ConsoleEventArgs args) {
-        if (!ParseBiomes(args, out var biomes, out var includeEdges)) return;
-        Executor.AddOperation(new GenerateBiomes(biomes, includeEdges, args.Context));
-      }, onlyServer: true, optionsFetcher: () => AvailableBiomes);
-
-      new Terminal.ConsoleCommand("generate_position", "[x] [y] [distance=0] - Generates zones at a given position.", delegate (Terminal.ConsoleEventArgs args) {
-        if (!ParseIncludedArgs(args, out var x, out var z, out var distance)) return;
-        var position = new Vector3(x, 0, z);
-        Executor.AddOperation(new GenerateIncluded(position, distance, args.Context));
-      }, onlyServer: true);
-
-      new Terminal.ConsoleCommand("generate_zones", "[x] [y] [adjacent=0] - Generates zones at a given zone coordinates.", delegate (Terminal.ConsoleEventArgs args) {
-        if (!ParseZoneArgs(args, out int x, out int z, out int adjacent)) return;
-        var zone = new Vector2i(x, z);
-        Executor.AddOperation(new GenerateAdjacent(zone, adjacent, args.Context));
-      }, onlyServer: true);
+    private static IEnumerable<string> ParseFlag(IEnumerable<string> parameters, string flag, out bool value) {
+      value = parameters.FirstOrDefault(arg => arg.ToLower() == flag) == null;
+      return parameters.Where(arg => arg.ToLower() != flag);
     }
     private static void Mapping() {
       new Terminal.ConsoleCommand("reveal_position", "[x] [y] [distance=0] - Explores the map at a given position to a given distance.", delegate (Terminal.ConsoleEventArgs args) {
@@ -172,34 +126,59 @@ namespace UpgradeWorld {
       }, onlyServer: true);
 
     }
+    private static bool CheckUnhandled(Terminal.ConsoleEventArgs args, IEnumerable<string> extra, int handled = 0) {
+      if (extra.Count() > handled) {
+        args.Context.AddString("Error: Unhandled parameters " + string.Join(", ", extra.Skip(handled)));
+        return false;
+      }
+      return true;
+    }
     public static void Init() {
-      Destroying();
-      Generating();
+      new Terminal.ConsoleCommand("destroy", "[...args] - Destroys zones which allows the world generator to regenerate them.", delegate (Terminal.ConsoleEventArgs args) {
+        var parameters = new FiltererParameters();
+        var extra = ParseFiltererArgs(args, parameters);
+        if (CheckUnhandled(args, extra))
+          Executor.AddOperation(new Destroy(args.Context, parameters));
+      }, onlyServer: true, optionsFetcher: () => AvailableBiomes);
+
+      new Terminal.ConsoleCommand("generate", "[...args] - Generates zones which allows pregenerating the world without having to move there physically.", delegate (Terminal.ConsoleEventArgs args) {
+        var parameters = new FiltererParameters();
+        var extra = ParseFiltererArgs(args, parameters);
+        if (CheckUnhandled(args, extra))
+          Executor.AddOperation(new Generate(args.Context, parameters));
+      }, onlyServer: true, optionsFetcher: () => AvailableBiomes);
+
       Mapping();
-      new Terminal.ConsoleCommand("upgrade", "[operation] - Performs a predefined upgrade operation.", delegate (Terminal.ConsoleEventArgs args) {
-        var valid = Upgrade.GetTypes();
-        if (!valid.Contains(args[1])) {
-          args.Context.AddString("Error: Invalid upgrade operation.");
-          return;
-        }
-        new Upgrade(args[1], args.Context);
+
+      new Terminal.ConsoleCommand("upgrade", "[operation] [...args] - Performs a predefined upgrade operation.", delegate (Terminal.ConsoleEventArgs args) {
+        var parameters = new FiltererParameters();
+        var extra = ParseFiltererArgs(args, parameters);
+        var type = extra.FirstOrDefault();
+        if (CheckUnhandled(args, extra, 1))
+          new Upgrade(args.Context, type, parameters);
       }, onlyServer: true, optionsFetcher: Upgrade.GetTypes);
-      new Terminal.ConsoleCommand("place_locations", "[location1, location2, ...] - Places given location ids to already generated zones.", delegate (Terminal.ConsoleEventArgs args) {
-        if (args.Length < 2) {
+
+      new Terminal.ConsoleCommand("place_locations", "[...location_ids] [...args] - Places given location ids to already generated zones.", delegate (Terminal.ConsoleEventArgs args) {
+        var parameters = new FiltererParameters();
+        var ids = ParseFiltererArgs(args, parameters);
+        if (ids.Count() == 0) {
           args.Context.AddString("Error: Missing location ids.");
           return;
         }
-        var ids = ParseArgs(args.Args, 1);
+        // TODO: Should validate location ids / provide parameter list.
         Executor.AddOperation(new DistributeLocations(ids, args.Context));
-        Executor.AddOperation(new PlaceLocations(args.Context));
+        Executor.AddOperation(new PlaceLocations(args.Context, parameters));
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("reroll_chests", "[chest name] [item1, item2, ...] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", delegate (Terminal.ConsoleEventArgs args) {
-        if (args.Length < 2) {
+      new Terminal.ConsoleCommand("reroll_chests", "[chest_name] [...item_ids] [...args] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", delegate (Terminal.ConsoleEventArgs args) {
+        var parameters = new FiltererParameters();
+        var extra = ParseFiltererArgs(args, parameters);
+        if (extra.Count() == 0) {
           args.Context.AddString("Error: Missing chest name.");
           return;
         }
-        var ids = ParseArgs(args.Args, 2);
-        new RerollChests(args[1], ids, args.Context);
+        var chestName = extra.First();
+        var ids = extra.Skip(1);
+        new RerollChests(chestName, ids, args.Context);
       }, onlyServer: true, optionsFetcher: () => RerollChests.ChestsNames);
       new Terminal.ConsoleCommand("start", "- Starts execution of operations.", delegate (Terminal.ConsoleEventArgs args) {
         Executor.DoExecute = true;
@@ -207,27 +186,37 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("stop", "- Stops execution of operations.", delegate (Terminal.ConsoleEventArgs args) {
         Executor.RemoveOperations();
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("count", "[id1, id2, id3] [distance=0] - Counts amounts of given entity ids within a distance (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
-        ParseArgsWithDistance(args, out var ids, out var distance);
-        new Count(ids, distance, args.Context);
-      }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
-      new Terminal.ConsoleCommand("count_all", " [distance] - Counts all entities within a distance (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
-        var distance = 0f;
-        if (args.Length < 2) {
-          args.Context.AddString("Error: Missing distance.");
+      new Terminal.ConsoleCommand("count_biomes", "[frequency=100] [...args] - Counts amounts of biomes.", delegate (Terminal.ConsoleEventArgs args) {
+        var parameters = new FiltererParameters();
+        var extra = ParseFiltererArgs(args, parameters);
+        var frequency = 100f;
+        if (extra.Count() > 0 && !TryParseFloat(extra.First(), out frequency)) {
+          args.Context.AddString("Error: Frequency has wrong format.");
           return;
         }
-        if (!ParseFloat(args[1], out distance)) {
-          args.Context.AddString("Error: Invalid format distance.");
-          return;
-        }
-        new Count(new string[0], distance, args.Context);
+        if (CheckUnhandled(args, extra, 1))
+          new CountBiomes(args.Context, frequency, parameters);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
-      new Terminal.ConsoleCommand("remove", "[id1, id2, id3] [distance=0] - Removes given entity ids within a distance (0 for infinite).", delegate (Terminal.ConsoleEventArgs args) {
-        ParseArgsWithDistance(args, out var ids, out var distance);
-        new RemoveEntities(ids, distance, args.Context);
+      new Terminal.ConsoleCommand("count_entities", "[showzero] [...ids] [...args] - Counts amounts of given entities. If no ids given then counts all entities.", delegate (Terminal.ConsoleEventArgs args) {
+        var parameters = new FiltererParameters();
+        var ids = ParseFiltererArgs(args, parameters);
+        ids = ParseFlag(ids, "showzero", out var showZero);
+        if (ids.Count() == 0)
+          new CountAllEntities(args.Context, showZero, parameters);
+        else
+          new CountEntities(args.Context, ids, parameters);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
-      new Terminal.ConsoleCommand("distribute", "- Redistributes unplaced locations with the genloc command. ", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("list_entities", "[...ids] [...args] - Counts amounts of given entities. If no ids given then counts all entities.", delegate (Terminal.ConsoleEventArgs args) {
+        var parameters = new FiltererParameters();
+        var ids = ParseFiltererArgs(args, parameters);
+        new ListEntityPositions(args.Context, ids, parameters);
+      }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
+      new Terminal.ConsoleCommand("remove_entities", "[...ids] [...args] - Removes entities.", delegate (Terminal.ConsoleEventArgs args) {
+        var parameters = new FiltererParameters();
+        var ids = ParseFiltererArgs(args, parameters);
+        new RemoveEntities(args.Context, ids, parameters);
+      }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
+      new Terminal.ConsoleCommand("distribute", "- Redistributes unplaced locations with the genloc command.", delegate (Terminal.ConsoleEventArgs args) {
         Executor.AddOperation(new DistributeLocations(new string[0], args.Context));
       }, onlyServer: true);
     }

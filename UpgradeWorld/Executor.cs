@@ -14,11 +14,10 @@ namespace UpgradeWorld {
       operations.Clear();
     }
     public static void Execute() {
+      if (operations.Count == 0) DoExecute = false;
       if (!DoExecute) return;
       if (operations[0].Execute())
         operations.RemoveAt(0);
-      if (operations.Count == 0)
-        DoExecute = false;
     }
   }
 }

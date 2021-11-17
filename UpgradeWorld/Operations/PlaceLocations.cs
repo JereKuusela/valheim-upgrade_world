@@ -1,11 +1,14 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace UpgradeWorld {
   public class PlaceLocations : ZoneOperation {
 
-    public PlaceLocations(Terminal context) : base(context, new ZoneFilterer[] { new ConfigFilterer(), new LocationFilterer() }) {
+    public PlaceLocations(Terminal context, FiltererParameters args) : base(context) {
       Operation = "Place locations";
+      args.TargetZones = TargetZones.Generated;
+      Filterers = FiltererFactory.Create(args).Append(new LocationFilterer());
     }
     protected override bool ExecuteZone(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,6 +26,12 @@ namespace UpgradeWorld {
         }
       }
       return Sort(zones.ToArray());
+    }
+
+    public static int Distance(Vector2i a, Vector2i b) => Math.Max(Math.Abs(a.x - b.x), Math.Abs(a.y - b.y));
+    public static bool IsWithin(Vector2i a, Vector2i b, int min, int max) {
+      var distance = Distance(a, b);
+      return distance >= min && (max == 0 || distance <= max);
     }
   }
 }

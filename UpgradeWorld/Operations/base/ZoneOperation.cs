@@ -10,17 +10,13 @@ namespace UpgradeWorld {
     protected Vector2i[] ZonesToUpgrade;
     protected int ZonesPerUpdate = 1;
     protected int ZoneIndex = 0;
-    protected ZoneFilterer[] Filterers;
-    protected TargetZones TargetZones = TargetZones.Generated;
-    protected ZoneOperation(Terminal context, ZoneFilterer[] filterers, TargetZones targetZones = TargetZones.Generated) : base(context) {
+    protected IEnumerable<ZoneFilterer> Filterers;
+    protected ZoneOperation(Terminal context) : base(context) {
       ZonesToUpgrade = Zones.GetWorldZones();
-      Filterers = filterers;
-      TargetZones = targetZones;
     }
     protected string InitString = "";
     protected override string OnInit() {
       var messages = new List<string>();
-      ZonesToUpgrade = new TargetZonesFilterer(TargetZones).FilterZones(ZonesToUpgrade, ref messages);
       ZonesToUpgrade = Filterers.Aggregate(ZonesToUpgrade, (zones, filterer) => filterer.FilterZones(zones, ref messages));
       var zoneString = ZonesToUpgrade.Length + " zones (" + Helper.JoinRows(messages) + ")";
       if (Settings.Verbose)

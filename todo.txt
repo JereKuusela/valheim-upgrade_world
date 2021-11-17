@@ -2,9 +2,12 @@
 - visualize which zones are included (draw zone corners without overlap)
 - regenerate_location ???: nukes only a location (removes everything within exterior and respawns?)
 
-- All commands should support being centered around the player or around a given location.
- * Amount of parameters? First is radius? If others then those are coordinates.
-- Merge count_all and count, and add wild card support (same for remove).
- * Paging doesn't seem to be needed? (Verify that all is shown.)
+- Commands with args:
+ * reroll_chests: first extra is container, others are item ids.
+- Setting to force start without needing to do it manually.
+- Tool to edit day (while also updating relevant timers).
+- Add wild card support to list/count/remove entities.
 - Command to remove entities by component (some common ones like container, structure, creature).
+ * This is slow so do a list operation.
  * First step for automatic base detection.
+- clear area setting as a flag to placelocation
