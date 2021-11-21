@@ -84,9 +84,9 @@ Examples:
 - generate: To generate the entire world (takes hours) and then use count_entities command to check how many of each entity exists.
 - generate: To generate the entire world (takes hours) and then use remove_entities for modifications.
 
-## place_locations [...location_ids] [...args]
+## place_locations [noclearing] [...location_ids] [...args]
 
-Distributes unplaced locations to already explored areas and then places them to the world.
+Distributes unplaced locations to already explored areas and then places them to the world. With "noclearing" flag, the area under placed location is not cleared of existing entities.
 
 Normally this command (or the similar genloc command) won't do anything because the locations will be generated the same way. However if a new update adds new locations or the world generating otherwise changes this causes changed to the world.
 
@@ -108,11 +108,18 @@ Example:
 
 ## count_entities [showzero] [...ids] [...args]
 
-Counts amounts of given entities. If no ids given then counts all entities. All entities are listed with the flag "showzero". Result it also printed to the player.log file.
+Counts amounts of given entities. If no ids given then counts all entities. All entities are listed with the flag "showzero". Result is also printed to the player.log file.
+
+Wildcards are also supported.
+
+Examples:
+- count_entities Spawner_\*: Counts all creature spawnpoints.
+- count_entities \*\_wall\*\_: Counts all walls structures.
+
 
 ## list_entities [...ids] [...args]
 
-Lists given entities showing their position and biome. Result it also printed to the player.log file.
+Lists given entities showing their position and biome. Result is also printed to the player.log file.
 
 ## remove_entities [...ids] [...args]
 
@@ -158,6 +165,10 @@ Zone based commands don't exeute instantly but instead print the amount of zones
 
 Stops execution of commands and removes any pending commands.
 
+## verbose [off]
+
+Enables the verbose mode (or disabled with "off" flag).
+
 # Configuration
 
 The config can be found in the \<GameDirectory\>\BepInEx\config\ folder after the first start up.
@@ -171,7 +182,7 @@ Filtering options in the config:
 Other settings are:
 
 - Verbose output: Prints more output which gives a better understanding how the mod operators. However this can spoil things of your world.
-- Clear location areas: Whether location placement destroyes anything under the location. Recommended to keep this true to prevent things clipping with each other.
+- Automatic start: Starts commands automatically without having to use the start command. This allows using the commands more easily but can lead to more mistakes.
 - Operations per update: How many zones are destroyed per Unity update. Can be useful if destroying large parts of a world, but recommended to keep it as it is.
 
 Examples:
@@ -244,15 +255,21 @@ Affected data values can be configured but recommended to keep them as it is.
 # Changelog
 
 - v1.4.0:
-	- Operation split to instant and delayed operations. Delayed operations print some initial output but require start command to execute,
+	- Operation split to instant and delayed operations. Delayed operations print some initial output but require start command to execute.
+	- Added setting to force start operations without having to use the start command.
 	- Removed query command as obsolete.
 	- Removed setting to prevent loaded areas being destroyed (after all testing seems to work fine).
+	- Removed setting about location placement clearing the area (can be given as a flag parameter).
 	- Added general argument system (same set of basic arguments for most commands).
 	- Merged all destroy commands to a single command.
 	- Merged all generate commands to a single command.
-	- Mergend entity counting commands to a single command.
+	- Merged entity counting commands to a single command.
 	- Added a new command to count biomes.
+	- Added new command to change world time (while also updating entities).
+	- Added new command to list each entity and their position.
 	- Added automatic player base detection.
+	- Count, remove and list entities support wildcards.
+	- Added setting to enable/disable verbose mode.
 
 - v1.3.0:
 	- Regeneration commands renamed to destroy to make the effect more clear.

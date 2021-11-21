@@ -12,10 +12,10 @@ namespace UpgradeWorld {
     public float max;
   }
   public static class Settings {
-    public static ConfigEntry<bool> configClearLocationAreas;
-    public static bool ClearLocationAreas => configClearLocationAreas.Value;
     public static ConfigEntry<bool> configVerbose;
     public static bool Verbose => configVerbose.Value;
+    public static ConfigEntry<bool> configAutoStart;
+    public static bool AutoStart => configAutoStart.Value;
     public static ConfigEntry<float> configPlayerSafeDistance;
     public static float PlayerSafeDistance => configPlayerSafeDistance.Value;
     public static ConfigEntry<string> configCustomPoints;
@@ -35,12 +35,12 @@ namespace UpgradeWorld {
     public static void Init(ConfigFile config) {
       var section = "1. General";
       configVerbose = config.Bind(section, "Verbose output", false, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
+      configAutoStart = config.Bind(section, "Automatic start", false, "If true, operations start automatically without having to use the start command.");
       configPlayerSafeDistance = config.Bind(section, "Safe distance around the player", 0f, "Zones within this distance won't be changed.");
       configCustomPoints = config.Bind(section, "Custom points", "", "List of coordinates and ranges to filter zones. Format: x1,z1,min1,max1,comment1|x2,z2,min2,max2,comment2|...");
       configSafeZoneItems = config.Bind(section, "Safe zone items", "blastfurnace,bonfire,charcoal_kiln,fermenter,fire_pit,forge,guard_stone,hearth,piece_artisanstation,piece_bed02,piece_brazierceiling01,piece_groundtorch,piece_groundtorch_blue,piece_groundtorch_green,piece_groundtorch_wood,piece_oven,piece_spinningwheel,piece_stonecutter,piece_walltorch,piece_workbench,portal,portal_wood,smelter,windmill", "List of entity names that prevent zones being modified.");
       configSafeZoneSize = config.Bind(section, "How many adjacent zones are included in the safe zone", 1, "-1 = disable, 0 = only the zone, 1 = 3x3 zones, 2 = 5x5 zones, etc.");
 
-      configClearLocationAreas = config.Bind("4. Locations", "Clear location areas", true, "If true, objects under places locatins will be removed.");
       configDestroysPerUpdate = config.Bind("2. Destroying", "Operations per update", 100, "How many zones are destroyed per Unity update.");
       configTimeBasedDataNames = config.Bind("3. Change time/day", "Time based data names", "spawntime,lastTime,SpawnTime,StartTime,alive_time,spawn_time,picked_time,plantTime,pregnant,TameLastFeeding", "Names of the data values that should be updated with the new time. Changing these is NOT recommended.");
       configZoneControlId = config.Bind("3. Change time/day", "Zone control name", "_ZoneCtrl", "Name of the zone control entity which controls the enemy spawning. Changing these is NOT recommended.");

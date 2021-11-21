@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+
 namespace UpgradeWorld {
   ///<summary>Base class for entity related operations. Provides some utilities.</summary>
   public abstract class EntityOperation : BaseOperation {
@@ -17,9 +19,25 @@ namespace UpgradeWorld {
       }
       return true;
     }
+    private bool IsIncluded(string id, string name) {
+      if (id.StartsWith("*") && id.EndsWith("*")) {
+        return name.Contains(id.Substring(1, id.Length - 3));
+      }
+      if (id.StartsWith("*")) return name.EndsWith(id.Substring(1));
+      if (id.EndsWith("*")) return name.StartsWith(id.Substring(0, id.Length - 2));
+      return id == name;
+    }
+    private IEnumerable<int> GetPrefabs(string id) {
+      IEnumerable<GameObject> values = ZNetScene.instance.m_namedPrefabs.Values;
+      if (id.Contains("*"))
+        values = values.Where(prefab => IsIncluded(id, prefab.name));
+      else
+        values = values.Where(prefab => prefab.name == id);
+      return values.Select(prefab => prefab.name.GetStableHashCode());
+    }
     protected IEnumerable<ZDO> GetZDOs(string id, FiltererParameters args) {
-      var code = id.GetStableHashCode();
-      var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => zdo.GetPrefab() == code);
+      var codes = GetPrefabs(id);
+      var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => codes.Contains(zdo.GetPrefab()));
       return FilterZdos(zdos, args);
     }
     protected IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.FilterZdos(zdos);

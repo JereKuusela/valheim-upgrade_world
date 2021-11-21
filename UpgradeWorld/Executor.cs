@@ -15,7 +15,7 @@ namespace UpgradeWorld {
     }
     public static void Execute() {
       if (operations.Count == 0) DoExecute = false;
-      if (!DoExecute) return;
+      if (!DoExecute && !Settings.AutoStart) return;
       if (operations[0].Execute())
         operations.RemoveAt(0);
     }

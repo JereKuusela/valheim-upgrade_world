@@ -5,8 +5,10 @@ using UnityEngine;
 namespace UpgradeWorld {
   public class PlaceLocations : ZoneOperation {
 
-    public PlaceLocations(Terminal context, FiltererParameters args) : base(context) {
+    private bool ClearLocationAreas = true;
+    public PlaceLocations(Terminal context, bool clearLocationAreas, FiltererParameters args) : base(context) {
       Operation = "Place locations";
+      ClearLocationAreas = clearLocationAreas;
       args.TargetZones = TargetZones.Generated;
       Filterers = FiltererFactory.Create(args).Append(new LocationFilterer());
     }
@@ -48,7 +50,7 @@ namespace UpgradeWorld {
     }
     /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
     private void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
-      if (Settings.ClearLocationAreas && location.m_location.m_location.m_clearArea)
+      if (ClearLocationAreas && location.m_location.m_location.m_clearArea)
         ClearZDOsWithinDistance(zone, location.m_position, location.m_location.m_exteriorRadius);
     }
 

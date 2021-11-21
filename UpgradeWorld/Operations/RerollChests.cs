@@ -3,28 +3,27 @@ using System.Linq;
 
 namespace UpgradeWorld {
   /// <summary>Rerolls given chests.</summary>
-  public class RerollChests : BaseOperation {
+  public class RerollChests : EntityOperation {
     public static List<string> ChestsNames = new List<string>() {
       "TreasureChest_blackforest", "TreasureChest_fCrypt", "TreasureChest_forestcrypt", "TreasureChest_heath",
       "TreasureChest_meadows", "TreasureChest_meadows_buried","TreasureChest_mountains", "TreasureChest_plains_stone",
       "TreasureChest_sunkencrypt", "TreasureChest_swamp", "TreasureChest_trollcave", "shipwreck_karve_chest",
       "loot_chest_wood", "loot_chest_stone" }.OrderBy(item => item).ToList();
     private HashSet<string> AllowedItems;
-    public RerollChests(string id, IEnumerable<string> allowedItems, Terminal context) : base(context) {
+    public RerollChests(string id, IEnumerable<string> allowedItems, FiltererParameters args, Terminal context) : base(context) {
       AllowedItems = allowedItems.Select(Helper.Normalize).ToHashSet();
-      Reroll(id);
+      Reroll(id, args);
     }
 
-    private void Reroll(string id) {
+    private void Reroll(string id, FiltererParameters args) {
       var totalChests = 0;
-      var rolledChests = 0;
+      var rolledChests = 0; ;
       var prefab = ZNetScene.instance.GetPrefab(id);
       if (prefab == null || prefab.GetComponent<Container>() == null) {
         Print("Error: Invalid chest ID.");
         return;
       }
-      var zdos = new List<ZDO>();
-      ZDOMan.instance.GetAllZDOsWithPrefab(id, zdos);
+      var zdos = GetZDOs(id, args);
       foreach (var zdo in zdos) {
         totalChests++;
         if (!zdo.GetBool("addedDefaultItems", false)) {

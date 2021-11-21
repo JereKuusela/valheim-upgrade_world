@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UpgradeWorld {
   /// <summary>Predefined upgrade operations</summary>
@@ -11,22 +12,27 @@ namespace UpgradeWorld {
         "mistlands"
       };
     }
-    public Upgrade(Terminal context, string type, FiltererParameters args) : base(context) {
-      AddOperations(type, args);
+    public Upgrade(Terminal context, string type, IEnumerable<string> extra, FiltererParameters args) : base(context) {
+      AddOperations(type, extra, args);
     }
 
-    private void AddOperations(string type, FiltererParameters args) {
+    private void AddOperations(string type, IEnumerable<string> extra, FiltererParameters args) {
       if (type == null) {
         Print("Error: Missing upgrade type");
       }
       type = type.ToLower();
       if (type == "tarpits") {
+        extra = Helper.ParseFlag(extra, "noclearing", out var noClearing);
         Executor.AddOperation(new DistributeLocations(new string[] { "TarPit1" }, Context));
         Executor.AddOperation(new DistributeLocations(new string[] { "TarPit2" }, Context));
         Executor.AddOperation(new DistributeLocations(new string[] { "TarPit3" }, Context));
-        Executor.AddOperation(new PlaceLocations(Context, args));
+        Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
       } else if (type == "onions") {
-        new RerollChests("TreasureChest_mountains", new string[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, Context);
+        if (extra.Count() > 0) {
+          Print("Error: This operation doesn't support extra parameters " + string.Join(", ", extra));
+          return;
+        }
+        new RerollChests("TreasureChest_mountains", new string[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, args, Context);
       } else if (type == "mistlands") {
         if (args.Biomes != null) {
           Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));

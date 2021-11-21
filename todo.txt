@@ -2,11 +2,7 @@
 - visualize which zones are included (draw zone corners without overlap)
 - regenerate_location ???: nukes only a location (removes everything within exterior and respawns?)
 
-- Commands with args:
- * reroll_chests: first extra is container, others are item ids.
-- Setting to force start without needing to do it manually.
-- Add wild card support to list/count/remove entities.
 - Command to find entities by component (some common ones like container, structure, creature).
  * This is slow so do a list operation.
-- clear area setting as a flag to placelocation
-- verbose command to enable verbose
+- Some way to recommend verbose way (probably godo to be off on default..)
+- generate command to accept a list of item ids which are force enabled in the vegetation?
