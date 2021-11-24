@@ -27,13 +27,13 @@ namespace UpgradeWorld {
       if (id.EndsWith("*")) return name.StartsWith(id.Substring(0, id.Length - 2));
       return id == name;
     }
-    private IEnumerable<int> GetPrefabs(string id) {
+    private HashSet<int> GetPrefabs(string id) {
       IEnumerable<GameObject> values = ZNetScene.instance.m_namedPrefabs.Values;
       if (id.Contains("*"))
         values = values.Where(prefab => IsIncluded(id, prefab.name));
       else
         values = values.Where(prefab => prefab.name == id);
-      return values.Select(prefab => prefab.name.GetStableHashCode());
+      return values.Select(prefab => prefab.name.GetStableHashCode()).ToHashSet();
     }
     protected IEnumerable<ZDO> GetZDOs(string id, FiltererParameters args) {
       var codes = GetPrefabs(id);

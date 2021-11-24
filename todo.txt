@@ -1,8 +1,12 @@
 - visualize exclusion points (cylinders?)
 - visualize which zones are included (draw zone corners without overlap)
+
 - regenerate_location ???: nukes only a location (removes everything within exterior and respawns?)
 
 - Command to find entities by component (some common ones like container, structure, creature).
  * This is slow so do a list operation.
-- Some way to recommend verbose way (probably godo to be off on default..)
-- generate command to accept a list of item ids which are force enabled in the vegetation?
+- Some way to recommend verbose way (probably good to be off on default..)
+- command to replace entities with another
+- command to change entity params
+- command to filter entity by attribute
+- command to enable/disable locations

@@ -13,7 +13,7 @@ namespace UpgradeWorld {
     private void Count(float frequency, FiltererParameters args) {
       if (args.MaxDistance == 0) args.MaxDistance = 10500f;
       var biomes = new Dictionary<Heightmap.Biome, int>();
-      var start = (float)Math.Ceiling(args.MaxDistance / frequency) * frequency;
+      var start = -(float)Math.Ceiling(args.MaxDistance / frequency) * frequency;
       for (var x = start; x <= args.MaxDistance; x += frequency) {
         for (var y = start; y <= args.MaxDistance; y += frequency) {
           var distance = new Vector2(x - args.X, y - args.Y).magnitude;

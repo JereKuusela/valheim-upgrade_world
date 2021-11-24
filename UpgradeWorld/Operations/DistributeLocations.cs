@@ -8,7 +8,7 @@ namespace UpgradeWorld {
     public static IEnumerable<string> DistributedIds = new string[0];
     private IEnumerable<string> Ids = new string[0];
     public static bool PlaceToAlreadyGenerated => DistributedIds.Count() > 0;
-    public DistributeLocations(IEnumerable<string> ids, Terminal context) : base(context) {
+    public DistributeLocations(IEnumerable<string> ids, bool autoStart, Terminal context) : base(context, autoStart) {
       Ids = ids;
     }
     protected override bool OnExecute() {

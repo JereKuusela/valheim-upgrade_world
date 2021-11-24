@@ -1,10 +1,8 @@
 namespace UpgradeWorld {
   /// <summary>Generates zones.</summary>
   public class Generate : ZoneOperation {
-    public Generate(Terminal context, FiltererParameters args) : base(context) {
+    public Generate(Terminal context, FiltererParameters args) : base(context, args.ForceStart) {
       Operation = "Generate";
-      args.TargetZones = TargetZones.Ungenerated;
-      args.NoPlayerBase = true;
       Filterers = FiltererFactory.Create(args);
     }
 

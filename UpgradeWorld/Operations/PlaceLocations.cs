@@ -6,7 +6,7 @@ namespace UpgradeWorld {
   public class PlaceLocations : ZoneOperation {
 
     private bool ClearLocationAreas = true;
-    public PlaceLocations(Terminal context, bool clearLocationAreas, FiltererParameters args) : base(context) {
+    public PlaceLocations(Terminal context, bool clearLocationAreas, FiltererParameters args) : base(context, args.ForceStart) {
       Operation = "Place locations";
       ClearLocationAreas = clearLocationAreas;
       args.TargetZones = TargetZones.Generated;

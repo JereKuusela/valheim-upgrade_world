@@ -25,8 +25,8 @@ namespace UpgradeWorld {
       return zones.Where(zone => {
         var withinMinX = Math.Abs(centerZone.x - zone.x) >= minDistance;
         var withinMinY = Math.Abs(centerZone.y - zone.y) >= minDistance;
-        var withinMaxX = maxDistance == 0 || Math.Abs(centerZone.x - zone.x) <= maxDistance;
-        var withinMaxY = maxDistance == 0 || Math.Abs(centerZone.y - zone.y) <= maxDistance;
+        var withinMaxX = Math.Abs(centerZone.x - zone.x) <= maxDistance;
+        var withinMaxY = Math.Abs(centerZone.y - zone.y) <= maxDistance;
         return withinMinX && withinMinY && withinMaxX && withinMaxY;
       }).ToArray();
     }

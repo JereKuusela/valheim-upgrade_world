@@ -28,8 +28,8 @@ namespace UpgradeWorld {
         var center = zoneSystem.GetZonePos(zone);
         center.y = 0f;
         var delta = center - position;
-        var withinMin = delta.sqrMagnitude <= minDistance * minDistance;
-        var withinMax = maxDistance == 0 || delta.sqrMagnitude >= maxDistance * maxDistance;
+        var withinMin = delta.sqrMagnitude >= minDistance * minDistance;
+        var withinMax = maxDistance == 0 || delta.sqrMagnitude <= maxDistance * maxDistance;
         return withinMin && withinMax;
       }).ToArray();
     }

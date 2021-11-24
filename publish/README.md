@@ -44,14 +44,16 @@ Effective usage of this tool requires understanding the general parameters that 
 - Minimum and maximum distance as a range "min-max". Either of the values can be omitted for either "min" or "-max".
 - Center position as two parameters "x" and "z" (y coordinate is used the altitude).
 - Flag "noedges" to only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
-- Flag "ignorebase" to skip automatic player base detection.
+- Flag "ignorebase" to skip automatic player base detection. Can be permanently turned on from the config.
 - Flag "zones" to change distance and position parameters to be zone based. "x" and "z" are zone indices. "min" and "max" determine how many adjacent zones are included.
+- Flag "force" to automatically execute the command. Can be permanently turned on from the config.
 
 Examples:
 - command mistlands: Affects zones which have Mistlands biome at any of their corners.
 - command 5000 0 0: Affects zones which are 5000 meters away from the world center.
 - command 3000-5000 0 0: Affects zones which are from 3000 to 5000 meters away from the world center.
 - command 3 -3 zones ignorebase: Affects the zone at indices 3,-3 while ignoring any nearby player base structures.
+- command zones: Affects the current zone at the player's position.
 - command blackforest ocean -1000 noedges: Affects zones that only have Black Forest or Ocean at their corners and that are up to 1000 meters away from the player.
 
 # Commands
@@ -66,6 +68,7 @@ Examples
 - upgrade tarpits: Places tar pits to already explored areas.
 - upgrade onions: Rerolls already generated and unlooted mountain chests.
 - upgrade mistlands: Fully regenerates mistlands biomes.
+- upgrade old_mistlands: Fully regenerates mistlands biomes with the legacy content (webs, etc.).
 
 ## destroy [..args]
 
@@ -157,6 +160,21 @@ Removes map from the map at a given position to a given distance.
 
 Runs the "genloc" command without needing devcommands enabled. This can be used to redistribute locations after destroying zones.
 
+## set_vegetation [disable] [...ids]
+
+Enables vegetation for the world generator, affecting any forced (with "generate" command) or natural generation. Disables vegetation with the "disable" flag.
+
+Tab key can be used to autocomplete available prefab ids.
+
+Examples:
+- set_vegetation disable BlueberryBush: Disables generation of blueberry bushes.
+- set_vegetation vertical_web horizontal_web tunnel_web: Enables webs to generate in Mistlands.
+
+## reset_vegetation
+
+Revert vegetation generation back to the original.
+
+
 ## start
 
 Zone based commands don't exeute instantly but instead print the amount of zones being affected. This command can be then used to start executing.
@@ -245,7 +263,6 @@ So after changing the time, the command also updates the following data values (
 Affected data values can be configured but recommended to keep them as it is. 
 
 
-
 # Glossary
 
 - Generated area: The world generator generates up to 500 meters from places any player has visited. This is much bigger area than what gets revelead on the minimap.
@@ -256,7 +273,7 @@ Affected data values can be configured but recommended to keep them as it is.
 
 - v1.4.0:
 	- Operation split to instant and delayed operations. Delayed operations print some initial output but require start command to execute.
-	- Added setting to force start operations without having to use the start command.
+	- Added setting to force start operations without having to use the start command. Added parameter to force start commands.
 	- Removed query command as obsolete.
 	- Removed setting to prevent loaded areas being destroyed (after all testing seems to work fine).
 	- Removed setting about location placement clearing the area (can be given as a flag parameter).

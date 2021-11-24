@@ -11,7 +11,7 @@ namespace UpgradeWorld {
     protected int ZonesPerUpdate = 1;
     protected int ZoneIndex = 0;
     protected IEnumerable<ZoneFilterer> Filterers;
-    protected ZoneOperation(Terminal context) : base(context) {
+    protected ZoneOperation(Terminal context, bool autoStart) : base(context, autoStart) {
       ZonesToUpgrade = Zones.GetWorldZones();
     }
     protected string InitString = "";

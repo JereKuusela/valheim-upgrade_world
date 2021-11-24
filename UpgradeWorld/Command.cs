@@ -40,6 +40,8 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("generate", "[...args] - Generates zones which allows pregenerating the world without having to move there physically.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
         var extra = Helper.ParseFiltererArgs(args, parameters);
+        parameters.TargetZones = TargetZones.Generated;
+        parameters.NoPlayerBase = true;
         if (CheckUnhandled(args, extra))
           Executor.AddOperation(new Generate(args.Context, parameters));
       }, onlyServer: true, optionsFetcher: () => Helper.AvailableBiomes);
@@ -49,8 +51,12 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("upgrade", "[operation] [...args] - Performs a predefined upgrade operation.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
         var extra = Helper.ParseFiltererArgs(args, parameters);
-        var type = extra.FirstOrDefault();
-        new Upgrade(args.Context, type, extra.Skip(1), parameters);
+        var selectedType = "";
+        foreach (var type in Upgrade.GetTypes()) {
+          extra = Helper.ParseFlag(extra, type, out var found);
+          if (found) selectedType = type;
+        }
+        new Upgrade(args.Context, selectedType, extra, parameters);
       }, onlyServer: true, optionsFetcher: Upgrade.GetTypes);
 
       new Terminal.ConsoleCommand("place_locations", "[...location_ids] [noclearing] [...args] - Places given location ids to already generated zones.", delegate (Terminal.ConsoleEventArgs args) {
@@ -62,7 +68,7 @@ namespace UpgradeWorld {
           return;
         }
         // TODO: Should validate location ids / provide parameter list.
-        Executor.AddOperation(new DistributeLocations(ids, args.Context));
+        Executor.AddOperation(new DistributeLocations(ids, parameters.ForceStart, args.Context));
         Executor.AddOperation(new PlaceLocations(args.Context, !noClearing, parameters));
       }, onlyServer: true);
       new Terminal.ConsoleCommand("reroll_chests", "[chest_name] [...item_ids] [...args] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", delegate (Terminal.ConsoleEventArgs args) {
@@ -113,7 +119,7 @@ namespace UpgradeWorld {
         new RemoveEntities(args.Context, ids, parameters);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("distribute", "- Redistributes unplaced locations with the genloc command.", delegate (Terminal.ConsoleEventArgs args) {
-        Executor.AddOperation(new DistributeLocations(new string[0], args.Context));
+        Executor.AddOperation(new DistributeLocations(new string[0], true, args.Context));
       }, onlyServer: true);
       new Terminal.ConsoleCommand("change_time", "[seconds] - Changes time while updating entities.", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Args.Count() == 0) {
@@ -129,7 +135,7 @@ namespace UpgradeWorld {
           return;
         }
         new ChangeTime(args.Context, time);
-      }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
+      }, onlyServer: true);
       new Terminal.ConsoleCommand("change_day", "[day] - Changes day while updating entities.", delegate (Terminal.ConsoleEventArgs args) {
         if (args.Args.Count() == 0) {
           args.Context.AddString("Error: Missing day.");
@@ -144,7 +150,24 @@ namespace UpgradeWorld {
           return;
         }
         new ChangeTime(args.Context, time * EnvMan.instance.m_dayLengthSec);
-      }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
+      }, onlyServer: true);
+      new Terminal.ConsoleCommand("set_vegetation", "[...ids] [disable] - Enables/disables vegetation for the world generator.", delegate (Terminal.ConsoleEventArgs args) {
+        var ids = Helper.ParseArgs(args.Args, 1);
+        ids = Helper.ParseFlag(args.Args, "disable", out var disable);
+        if (ids.Count() == 0) {
+          args.Context.AddString("Error: No entity ids given.");
+          return;
+        }
+        new SetVegetation(args.Context, !disable, ids);
+      }, onlyServer: true, optionsFetcher: SetVegetation.GetIds);
+      new Terminal.ConsoleCommand("reset_vegetation", "- Resets vegetation generation to the default.", delegate (Terminal.ConsoleEventArgs args) {
+        var extra = Helper.ParseArgs(args.Args, 1);
+        if (extra.Count() > 0) {
+          args.Context.AddString("Error: No parameters expected.");
+          return;
+        }
+        new ResetVegetation(args.Context);
+      }, onlyServer: true);
       new Terminal.ConsoleCommand("verbose", "[off] - Enable or disable the verbose mode.", delegate (Terminal.ConsoleEventArgs args) {
         var verbose = true;
         Settings.configVerbose.Value = verbose;

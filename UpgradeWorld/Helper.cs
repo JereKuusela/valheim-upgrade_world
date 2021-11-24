@@ -31,6 +31,10 @@ namespace UpgradeWorld {
     }
     public static IEnumerable<string> ParseFiltererArgs(Terminal.ConsoleEventArgs args, FiltererParameters parameters) {
       var parsed = ParseArgs(args.Args, 1);
+      parsed = ParseFlag(parsed, "ignorebase", out parameters.NoPlayerBase);
+      parsed = ParseFlag(parsed, "zones", out parameters.MeasureWithZones);
+      parsed = ParseFlag(parsed, "noedges", out parameters.NoEdges);
+      parsed = ParseFlag(parsed, "force", out parameters.ForceStart);
       var other = parsed.Where(arg => !TryParseFloat(arg, out var _));
       var allNumbers = parsed.Where(arg => TryParseFloat(arg, out var _)).Select(ParseFloat);
       var ranges = other.Where(arg => arg.Split('-').Length == 2 && arg.Split('-').All(IsFloat));
@@ -45,7 +49,11 @@ namespace UpgradeWorld {
       var numbers = allNumbers.Take(range == null ? 3 : 2);
       // Add back unused numbers.
       other.ToList().AddRange(allNumbers.Skip(numbers.Count()).Select(arg => arg.ToString()));
-
+      if (numbers.Count() == 0 && parameters.MeasureWithZones) {
+        var zone = ZoneSystem.instance.GetZone(Player.m_localPlayer.transform.position);
+        parameters.X = zone.x;
+        parameters.Y = zone.y;
+      }
       if (numbers.Count() == 1 || numbers.Count() == 3) {
         var distance = numbers.First();
         parameters.MinDistance = 0;
@@ -58,8 +66,15 @@ namespace UpgradeWorld {
           parameters.X = numbers.Skip(1).First();
           parameters.Y = numbers.Last();
         } else {
-          parameters.X = Player.m_localPlayer.transform.position.x;
-          parameters.Y = Player.m_localPlayer.transform.position.y;
+          if (parameters.MeasureWithZones) {
+            var zone = ZoneSystem.instance.GetZone(Player.m_localPlayer.transform.position);
+            parameters.X = zone.x;
+            parameters.Y = zone.y;
+          } else {
+            parameters.X = Player.m_localPlayer.transform.position.x;
+            parameters.Y = Player.m_localPlayer.transform.position.z;
+
+          }
         }
       }
       if (numbers.Count() == 2) {
@@ -69,12 +84,10 @@ namespace UpgradeWorld {
         parameters.Y = numbers.Last();
       }
 
-      parameters.Biomes = other.Select(GetBiome).Where(biome => biome != Heightmap.Biome.BiomesMax && biome != Heightmap.Biome.None);
+      parameters.Biomes = other.Select(GetBiome).Where(biome => biome != Heightmap.Biome.BiomesMax && biome != Heightmap.Biome.None).ToHashSet();
       other = other.Where(arg => GetBiome(arg) == Heightmap.Biome.None);
-      other = ParseFlag(other, "ignorebase", out parameters.NoPlayerBase);
-      other = ParseFlag(other, "zones", out parameters.MeasureWithZones);
-      other = ParseFlag(other, "noedges", out parameters.IncludeEdges);
       parameters.TargetZones = TargetZones.Generated;
+      Console.instance.Print(parameters.ToString());
       return other;
     }
 
@@ -107,7 +120,7 @@ namespace UpgradeWorld {
       return true;
     }
     public static IEnumerable<string> ParseFlag(IEnumerable<string> parameters, string flag, out bool value) {
-      value = parameters.FirstOrDefault(arg => arg.ToLower() == flag) == null;
+      value = parameters.FirstOrDefault(arg => arg.ToLower() == flag) != null;
       return parameters.Where(arg => arg.ToLower() != flag);
     }
   }

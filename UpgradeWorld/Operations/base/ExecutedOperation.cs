@@ -3,7 +3,9 @@ namespace UpgradeWorld {
   public abstract class ExecutedOperation : BaseOperation {
     protected int Attempts = 0;
     protected int Failed = 0;
-    protected ExecutedOperation(Terminal context) : base(context) {
+    public bool AutoStart = false;
+    protected ExecutedOperation(Terminal context, bool autoStart) : base(context) {
+      AutoStart = autoStart;
     }
     public bool Execute() {
       Attempts++;
