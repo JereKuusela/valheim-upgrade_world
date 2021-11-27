@@ -10,6 +10,7 @@ namespace UpgradeWorld {
       Operation = "Place locations";
       ClearLocationAreas = clearLocationAreas;
       args.TargetZones = TargetZones.Generated;
+      InitString = args.Print("Place locations at");
       Filterers = FiltererFactory.Create(args).Append(new LocationFilterer());
     }
     protected override bool ExecuteZone(Vector2i zone) {

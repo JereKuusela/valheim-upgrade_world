@@ -32,16 +32,16 @@ namespace UpgradeWorld {
     public static void Init() {
       new Terminal.ConsoleCommand("destroy", "[...args] - Destroys zones which allows the world generator to regenerate them.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
-        var extra = Helper.ParseFiltererArgs(args, parameters);
+        var extra = Helper.ParseFiltererArgs(args.Args, parameters);
         if (CheckUnhandled(args, extra))
           Executor.AddOperation(new Destroy(args.Context, parameters));
       }, onlyServer: true, optionsFetcher: () => Helper.AvailableBiomes);
 
       new Terminal.ConsoleCommand("generate", "[...args] - Generates zones which allows pregenerating the world without having to move there physically.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
-        var extra = Helper.ParseFiltererArgs(args, parameters);
+        var extra = Helper.ParseFiltererArgs(args.Args, parameters);
         parameters.TargetZones = TargetZones.Generated;
-        parameters.NoPlayerBase = true;
+        parameters.IncludePlayerBases = true;
         if (CheckUnhandled(args, extra))
           Executor.AddOperation(new Generate(args.Context, parameters));
       }, onlyServer: true, optionsFetcher: () => Helper.AvailableBiomes);
@@ -50,7 +50,7 @@ namespace UpgradeWorld {
 
       new Terminal.ConsoleCommand("upgrade", "[operation] [...args] - Performs a predefined upgrade operation.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
-        var extra = Helper.ParseFiltererArgs(args, parameters);
+        var extra = Helper.ParseFiltererArgs(args.Args, parameters);
         var selectedType = "";
         foreach (var type in Upgrade.GetTypes()) {
           extra = Helper.ParseFlag(extra, type, out var found);
@@ -61,7 +61,7 @@ namespace UpgradeWorld {
 
       new Terminal.ConsoleCommand("place_locations", "[...location_ids] [noclearing] [...args] - Places given location ids to already generated zones.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
-        var extra = Helper.ParseFiltererArgs(args, parameters);
+        var extra = Helper.ParseFiltererArgs(args.Args, parameters);
         var ids = Helper.ParseFlag(extra, "noclearing", out var noClearing);
         if (ids.Count() == 0) {
           args.Context.AddString("Error: Missing location ids.");
@@ -73,7 +73,7 @@ namespace UpgradeWorld {
       }, onlyServer: true);
       new Terminal.ConsoleCommand("reroll_chests", "[chest_name] [...item_ids] [...args] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
-        var extra = Helper.ParseFiltererArgs(args, parameters);
+        var extra = Helper.ParseFiltererArgs(args.Args, parameters);
         if (extra.Count() == 0) {
           args.Context.AddString("Error: Missing chest name.");
           return;
@@ -88,20 +88,26 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("stop", "- Stops execution of operations.", delegate (Terminal.ConsoleEventArgs args) {
         Executor.RemoveOperations();
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("count_biomes", "[frequency=100] [...args] - Counts amounts of biomes.", delegate (Terminal.ConsoleEventArgs args) {
-        var parameters = new FiltererParameters();
-        var extra = Helper.ParseFiltererArgs(args, parameters);
+      new Terminal.ConsoleCommand("count_biomes", "[frequency] [...args] - Counts amounts of biomes with given meters of frequency.", delegate (Terminal.ConsoleEventArgs args) {
         var frequency = 100f;
-        if (extra.Count() > 0 && !Helper.TryParseFloat(extra.First(), out frequency)) {
+        if (args.Args.Count() < 2) {
+          args.Context.AddString("Error: Missing frequency.");
+          return;
+        }
+        if (!Helper.TryParseFloat(args.Args[1], out frequency)) {
           args.Context.AddString("Error: Frequency has wrong format.");
           return;
         }
-        if (CheckUnhandled(args, extra, 1))
+        // Remove only one was ParseFiltererArgs will also remove one.
+        var extra = Helper.ParseArgs(args.Args, 1);
+        var parameters = new FiltererParameters();
+        extra = Helper.ParseFiltererArgs(extra, parameters);
+        if (CheckUnhandled(args, extra))
           new CountBiomes(args.Context, frequency, parameters);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("count_entities", "[showzero] [...ids] [...args] - Counts amounts of given entities. If no ids given then counts all entities.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
-        var ids = Helper.ParseFiltererArgs(args, parameters);
+        var ids = Helper.ParseFiltererArgs(args.Args, parameters);
         ids = Helper.ParseFlag(ids, "showzero", out var showZero);
         if (ids.Count() == 0)
           new CountAllEntities(args.Context, showZero, parameters);
@@ -110,12 +116,12 @@ namespace UpgradeWorld {
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("list_entities", "[...ids] [...args] - Counts amounts of given entities. If no ids given then counts all entities.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
-        var ids = Helper.ParseFiltererArgs(args, parameters);
+        var ids = Helper.ParseFiltererArgs(args.Args, parameters);
         new ListEntityPositions(args.Context, ids, parameters);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("remove_entities", "[...ids] [...args] - Removes entities.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
-        var ids = Helper.ParseFiltererArgs(args, parameters);
+        var ids = Helper.ParseFiltererArgs(args.Args, parameters);
         new RemoveEntities(args.Context, ids, parameters);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
       new Terminal.ConsoleCommand("distribute", "- Redistributes unplaced locations with the genloc command.", delegate (Terminal.ConsoleEventArgs args) {
@@ -168,9 +174,12 @@ namespace UpgradeWorld {
         }
         new ResetVegetation(args.Context);
       }, onlyServer: true);
-      new Terminal.ConsoleCommand("verbose", "[off] - Enable or disable the verbose mode.", delegate (Terminal.ConsoleEventArgs args) {
-        var verbose = true;
-        Settings.configVerbose.Value = verbose;
+      new Terminal.ConsoleCommand("verbose", "[off] - Toggles the verbose mode.", delegate (Terminal.ConsoleEventArgs args) {
+        Settings.configVerbose.Value = !Settings.Verbose;
+        if (Settings.Verbose)
+          args.Context.AddString("Verbose mode enabled.");
+        else
+          args.Context.AddString("Verbose mode disabled.");
       }, onlyServer: true);
     }
   }

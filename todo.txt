@@ -5,8 +5,9 @@
 
 - Command to find entities by component (some common ones like container, structure, creature).
  * This is slow so do a list operation.
-- Some way to recommend verbose way (probably good to be off on default..)
 - command to replace entities with another
 - command to change entity params
 - command to filter entity by attribute
 - command to enable/disable locations
+
+TESTED UP TO count_biomes, print should be localized (no , as decimals).

@@ -7,13 +7,12 @@ namespace UpgradeWorld {
     protected BaseOperation(Terminal context) {
       Context = context;
     }
-    protected void Print(string value, bool addDot = true) {
+    public void Print(string value, bool addDot = true) {
       if (addDot && !value.EndsWith("")) value += ".";
       if (Context) Context.AddString(value);
     }
     protected void Log(IEnumerable<string> values) {
-      foreach (var value in values) Print(value, false);
-      ZLog.Log(string.Join("\n", values));
+      ZLog.Log("\n" + string.Join("\n", values));
     }
     private string Previous = "";
     protected void PrintOnce(string value, bool addDot = true) {

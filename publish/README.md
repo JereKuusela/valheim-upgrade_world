@@ -44,7 +44,7 @@ Effective usage of this tool requires understanding the general parameters that 
 - Minimum and maximum distance as a range "min-max". Either of the values can be omitted for either "min" or "-max".
 - Center position as two parameters "x" and "z" (y coordinate is used the altitude).
 - Flag "noedges" to only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
-- Flag "ignorebase" to skip automatic player base detection. Can be permanently turned on from the config.
+- Flag "includebases" to skip automatic player base detection. Can be permanently turned on from the config.
 - Flag "zones" to change distance and position parameters to be zone based. "x" and "z" are zone indices. "min" and "max" determine how many adjacent zones are included.
 - Flag "force" to automatically execute the command. Can be permanently turned on from the config.
 
@@ -52,7 +52,7 @@ Examples:
 - command mistlands: Affects zones which have Mistlands biome at any of their corners.
 - command 5000 0 0: Affects zones which are 5000 meters away from the world center.
 - command 3000-5000 0 0: Affects zones which are from 3000 to 5000 meters away from the world center.
-- command 3 -3 zones ignorebase: Affects the zone at indices 3,-3 while ignoring any nearby player base structures.
+- command 3 -3 zones includebases: Affects the zone at indices 3,-3 even if it has player base structures.
 - command zones: Affects the current zone at the player's position.
 - command blackforest ocean -1000 noedges: Affects zones that only have Black Forest or Ocean at their corners and that are up to 1000 meters away from the player.
 
@@ -67,7 +67,7 @@ Performs a predefined upgrade operation. Available operations are tarpits, onion
 Examples
 - upgrade tarpits: Places tar pits to already explored areas.
 - upgrade onions: Rerolls already generated and unlooted mountain chests.
-- upgrade mistlands: Fully regenerates mistlands biomes.
+- upgrade new_mistlands: Fully regenerates mistlands biomes.
 - upgrade old_mistlands: Fully regenerates mistlands biomes with the legacy content (webs, etc.).
 
 ## destroy [..args]
@@ -102,7 +102,7 @@ Item ids can be used to detect and prevent rerolling chests which players are us
 Example:
 - reroll_chests TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds: Rerolls mountain treasure chests which only have naturally occurring items.
 
-## count_biomes [frequency=100] [...args]
+## count_biomes [frequency] [...args]
 
 Counts amounts of biomes. Frequency determines in meters how often the biome is checked. Result it also printed to the player.log file.
 
@@ -183,9 +183,9 @@ Zone based commands don't exeute instantly but instead print the amount of zones
 
 Stops execution of commands and removes any pending commands.
 
-## verbose [off]
+## verbose
 
-Enables the verbose mode (or disabled with "off" flag).
+Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
 
 # Configuration
 
@@ -287,6 +287,8 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Added automatic player base detection.
 	- Count, remove and list entities support wildcards.
 	- Added setting to enable/disable verbose mode.
+	- Added command to toggle the verbose mode.
+	- Improved output.
 
 - v1.3.0:
 	- Regeneration commands renamed to destroy to make the effect more clear.

@@ -29,15 +29,16 @@ namespace UpgradeWorld {
       if (name == "swamp") return Heightmap.Biome.Swamp;
       return Heightmap.Biome.None;
     }
-    public static IEnumerable<string> ParseFiltererArgs(Terminal.ConsoleEventArgs args, FiltererParameters parameters) {
-      var parsed = ParseArgs(args.Args, 1);
-      parsed = ParseFlag(parsed, "ignorebase", out parameters.NoPlayerBase);
+    public static IEnumerable<string> ParseFiltererArgs(IEnumerable<string> args, FiltererParameters parameters) {
+      var parsed = ParseArgs(args, 1);
+      parsed = ParseFlag(parsed, "includebases", out parameters.IncludePlayerBases);
       parsed = ParseFlag(parsed, "zones", out parameters.MeasureWithZones);
       parsed = ParseFlag(parsed, "noedges", out parameters.NoEdges);
       parsed = ParseFlag(parsed, "force", out parameters.ForceStart);
       var other = parsed.Where(arg => !TryParseFloat(arg, out var _));
       var allNumbers = parsed.Where(arg => TryParseFloat(arg, out var _)).Select(ParseFloat);
       var ranges = other.Where(arg => arg.Split('-').Length == 2 && arg.Split('-').All(IsFloat));
+      other = other.Where(arg => arg.Split('-').Length != 2 || !arg.Split('-').All(IsFloat));
       var range = ranges.FirstOrDefault();
       // Add back unused ranges.
       other.ToList().AddRange(ranges.Skip(1));
@@ -87,7 +88,6 @@ namespace UpgradeWorld {
       parameters.Biomes = other.Select(GetBiome).Where(biome => biome != Heightmap.Biome.BiomesMax && biome != Heightmap.Biome.None).ToHashSet();
       other = other.Where(arg => GetBiome(arg) == Heightmap.Biome.None);
       parameters.TargetZones = TargetZones.Generated;
-      Console.instance.Print(parameters.ToString());
       return other;
     }
 

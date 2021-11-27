@@ -16,10 +16,10 @@ namespace UpgradeWorld {
       var start = -(float)Math.Ceiling(args.MaxDistance / frequency) * frequency;
       for (var x = start; x <= args.MaxDistance; x += frequency) {
         for (var y = start; y <= args.MaxDistance; y += frequency) {
-          var distance = new Vector2(x - args.X, y - args.Y).magnitude;
+          var distance = new Vector2(x, y).magnitude;
           if (distance < args.MinDistance) continue;
           if (distance > args.MaxDistance) continue;
-          var biome = WorldGenerator.instance.GetBiome(x, y);
+          var biome = WorldGenerator.instance.GetBiome(args.X + x, args.Y + y);
           if (!args.IsBiomeValid(biome)) continue;
           if (!biomes.ContainsKey(biome)) biomes[biome] = 0;
           biomes[biome]++;

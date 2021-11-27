@@ -18,9 +18,11 @@ namespace UpgradeWorld {
     protected override string OnInit() {
       var messages = new List<string>();
       ZonesToUpgrade = Filterers.Aggregate(ZonesToUpgrade, (zones, filterer) => filterer.FilterZones(zones, ref messages));
-      var zoneString = ZonesToUpgrade.Length + " zones (" + Helper.JoinRows(messages) + ")";
+      var zoneString = ZonesToUpgrade.Length + " zones: " + Helper.JoinRows(messages);
       if (Settings.Verbose)
-        InitString += ": " + zoneString;
+        InitString += " (" + zoneString + ")";
+      else
+        InitString += " (use verbose command to show amount of zones)";
       return InitString;
     }
     protected abstract bool ExecuteZone(Vector2i zone);

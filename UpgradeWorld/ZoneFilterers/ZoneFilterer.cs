@@ -15,7 +15,7 @@ namespace UpgradeWorld {
     public float MinDistance = 0;
     public float MaxDistance = 0;
     public bool MeasureWithZones = false;
-    public bool NoPlayerBase = false;
+    public bool IncludePlayerBases = false;
     public TargetZones TargetZones = TargetZones.Generated;
     public bool IsBiomeValid(Heightmap.Biome biome) => Biomes.Count() == 0 || Biomes.Contains(biome);
     public bool IsBiomeValid(Vector3 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos));
@@ -49,6 +49,40 @@ namespace UpgradeWorld {
       };
       return string.Join("\n", texts);
     }
+    public string Print(string operation) {
+      var str = operation;
+      if (MinDistance > 0 || MaxDistance > 0) {
+        str += " zones";
+        if (MinDistance > 0) str += " more than " + MinDistance;
+        if (MinDistance > 0 && MaxDistance > 0) str += " and ";
+        if (MaxDistance > 0) str += " less than " + MaxDistance;
+        if (MeasureWithZones)
+          str += " zones";
+        else
+          str += " meters";
+        str += " away from the ";
+        if (X == Player.m_localPlayer.transform.position.x && Y == Player.m_localPlayer.transform.position.z)
+          str += "player";
+        else if (X == 0 && Y == 0)
+          str += "world center";
+        else if (MeasureWithZones)
+          str += "zone " + X + "," + Y;
+        else
+          str += "coordinates " + X + "," + Y;
+      } else if (MeasureWithZones)
+        str += " the zone " + X + "," + Y;
+      else
+        str += " all zones";
+      if (Biomes.Count > 0) {
+        if (NoEdges)
+          str += " that only have " + string.Join(", ", Biomes);
+        else
+          str += " that have " + string.Join(", ", Biomes);
+      }
+      if (IncludePlayerBases)
+        str += " without player base detection";
+      return str;
+    }
   }
   public static class FiltererFactory {
     public static IEnumerable<ZoneFilterer> Create(FiltererParameters args) {
@@ -56,7 +90,7 @@ namespace UpgradeWorld {
       filters.Add(new TargetZonesFilterer(args.TargetZones));
       filters.Add(new BiomeFilterer(args.Biomes, !args.NoEdges));
       filters.Add(new ConfigFilterer());
-      if (!args.NoPlayerBase) filters.Add(new PlayerBaseFilterer());
+      if (!args.IncludePlayerBases) filters.Add(new PlayerBaseFilterer());
       if (args.MeasureWithZones) filters.Add(new ZoneDistanceFilterer(new Vector2i((int)args.X, (int)args.Y), (int)args.MinDistance, (int)args.MaxDistance));
       else filters.Add(new DistanceFilterer(new Vector3(args.X, 0, args.Y), args.MinDistance, args.MaxDistance));
       return filters;

@@ -7,6 +7,7 @@ namespace UpgradeWorld {
       Operation = "Destroy";
       ZonesPerUpdate = Settings.DestroysPerUpdate;
       args.TargetZones = TargetZones.Generated;
+      InitString = args.Print("Destroy");
       Filterers = FiltererFactory.Create(args);
     }
 

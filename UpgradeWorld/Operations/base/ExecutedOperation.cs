@@ -18,13 +18,8 @@ namespace UpgradeWorld {
       var output = OnInit();
       if (output != "")
         Print(output);
-      Print("Use start to begin execution or stop to cancel.");
     }
     protected abstract string OnInit();
-    protected void InitPrint(string text) {
-      Print(text);
-      Print("Use start to begin execution or stop to cancel.");
-    }
     protected virtual void OnEnd() {
     }
   }
