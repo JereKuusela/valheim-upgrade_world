@@ -12,7 +12,7 @@ namespace UpgradeWorld {
         Print("Error: Missing ids");
         return false;
       }
-      var invalidIds = ids.Where(id => ZNetScene.instance.GetPrefab(id) == null);
+      var invalidIds = ids.Where(id => !id.Contains("*") && ZNetScene.instance.GetPrefab(id) == null);
       if (invalidIds.Count() > 0) {
         Print("Error: Invalid entity ids " + string.Join(", ", invalidIds));
         return false;
@@ -27,17 +27,17 @@ namespace UpgradeWorld {
       if (id.EndsWith("*")) return name.StartsWith(id.Substring(0, id.Length - 2));
       return id == name;
     }
-    private HashSet<int> GetPrefabs(string id) {
+    public IEnumerable<string> GetPrefabs(string id) {
       IEnumerable<GameObject> values = ZNetScene.instance.m_namedPrefabs.Values;
       if (id.Contains("*"))
         values = values.Where(prefab => IsIncluded(id, prefab.name));
       else
         values = values.Where(prefab => prefab.name == id);
-      return values.Select(prefab => prefab.name.GetStableHashCode()).ToHashSet();
+      return values.Select(prefab => prefab.name);
     }
     protected IEnumerable<ZDO> GetZDOs(string id, FiltererParameters args) {
-      var codes = GetPrefabs(id);
-      var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => codes.Contains(zdo.GetPrefab()));
+      var code = id.GetStableHashCode();
+      var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => code == zdo.GetPrefab());
       return FilterZdos(zdos, args);
     }
     protected IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.FilterZdos(zdos);

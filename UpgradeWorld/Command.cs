@@ -105,12 +105,12 @@ namespace UpgradeWorld {
         if (CheckUnhandled(args, extra))
           new CountBiomes(args.Context, frequency, parameters);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
-      new Terminal.ConsoleCommand("count_entities", "[showzero] [...ids] [...args] - Counts amounts of given entities. If no ids given then counts all entities.", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("count_entities", "[all] [...ids] [...args] - Counts amounts of given entities. If no ids given then counts all entities.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
         var ids = Helper.ParseFiltererArgs(args.Args, parameters);
-        ids = Helper.ParseFlag(ids, "showzero", out var showZero);
+        ids = Helper.ParseFlag(ids, "all", out var showAll);
         if (ids.Count() == 0)
-          new CountAllEntities(args.Context, showZero, parameters);
+          new CountAllEntities(args.Context, showAll, parameters);
         else
           new CountEntities(args.Context, ids, parameters);
       }, onlyServer: true, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());

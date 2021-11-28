@@ -9,5 +9,3 @@
 - command to change entity params
 - command to filter entity by attribute
 - command to enable/disable locations
-
-TESTED UP TO count_biomes, print should be localized (no , as decimals).

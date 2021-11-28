@@ -1,6 +1,6 @@
 # Upgrade world
 
-This single player mod allows regenerating or adding new content to already explored areas.
+This single player tool includes console commands which can add new content to already explored areas.
 
 For dedicated servers, open the world in single player.
 
@@ -10,7 +10,7 @@ Always back up your world before making any changes!
 
 - Place tar pits on already explored areas.
 - Reroll chest loots to have onion seeds on already explored areas.
-- Completely regenerate Mistlands.
+- Completely regenerate Mistlands (with new or legacy content).
 - Remove any object from the game world.
 - Generate the whole world without having to physically go anywhere.
 - Explore/hide parts of the map (unfortunately only for the current character).
@@ -27,9 +27,9 @@ Always back up your world before making any changes!
 1. Back up your world!
 2. Install the mod.
 3. Load the world.
-4. Open console with F5. write upgrade and use tab to cycle through available options.
-5. Wait.
-6. Check that your bases are ok (especially if in Plains).
+4. Open console with F5, write upgrade and use tab to cycle through available options.
+5. Write start to execute and wait until tue operation completes.
+6. Verify that your bases are ok (should be because of the automatic base detection).
 7. If not, restore back up. read more detailed instructions and go back to the first step.
 8. Uninstall the mod.
 9. Enjoy the new stuff!
@@ -64,13 +64,13 @@ Overview of available commands (remember that tab key can be used for autocomple
 
 Performs a predefined upgrade operation. Available operations are tarpits, onions and mistlands.
 
-Examples
+Examples:
 - upgrade tarpits: Places tar pits to already explored areas.
 - upgrade onions: Rerolls already generated and unlooted mountain chests.
 - upgrade new_mistlands: Fully regenerates mistlands biomes.
 - upgrade old_mistlands: Fully regenerates mistlands biomes with the legacy content (webs, etc.).
 
-## destroy [..args]
+## destroy [...args]
 
 Destroys zones which allows the world generator to regenerate them when visited.
 
@@ -79,7 +79,7 @@ Examples:
 - destroy 5000 0 0 : Destroying areas after 5000 meters from the world center.
 - destroy 3 -3 zones ignorebase: Destroy a single zone at indices 3,-3 to fix any local issues.
 
-## generate [..args]
+## generate [...args]
 
 Generates zones which allows pregenerating the world without having to move there physically.
 
@@ -107,11 +107,11 @@ Example:
 Counts amounts of biomes. Frequency determines in meters how often the biome is checked. Result it also printed to the player.log file.
 
 Example:
-- count_biomes 5000 0 0: Counts only biomes after 5000 meters from the world center.
+- count_biomes 100 5000 0 0: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
 
-## count_entities [showzero] [...ids] [...args]
+## count_entities [all] [...ids] [...args]
 
-Counts amounts of given entities. If no ids given then counts all entities. All entities are listed with the flag "showzero". Result is also printed to the player.log file.
+Counts amounts of given entities. If no ids given then counts all entities. All entities are listed with the flag "all". Result is also printed to the player.log file.
 
 Wildcards are also supported.
 
@@ -119,14 +119,24 @@ Examples:
 - count_entities Spawner_\*: Counts all creature spawnpoints.
 - count_entities \*\_wall\*\_: Counts all walls structures.
 
-
 ## list_entities [...ids] [...args]
 
 Lists given entities showing their position and biome. Result is also printed to the player.log file.
 
+Example:
+- list_entities VikingShip Karve Raft: Lists coordinates of all ships.
+
 ## remove_entities [...ids] [...args]
 
-Removes entities. Recommended to use count_entities to verify the parameters.
+Removes entities.
+
+If you already know the entity id, use "count_entities" to ensure you are only removing what needed. If too many entities are returned, use a shorter distance until you get the right amount. Then use the remove command to remove them.
+
+If you don't know the id, use "count_entities" without specifying the id to find the entity. If too many entities are returned, use a shorter distance until you find it. Then use remove command to remove it.
+
+Examples:
+- remove_entities StatueCorgi: Removes all corgi statues.
+- remove_entities Spawner_\* -200: Removes all creature spawnpoints within 200 meters.
 
 ## reveal_position [x] [y] [distance=0]
 
@@ -152,14 +162,6 @@ Experimental. Changes the world time by in-game days while also updating entitie
 
 Verbose mode prints how many data entries were affected.
 
-## remove_pins [x] [y] [distance=0]
-
-Removes map from the map at a given position to a given distance.
-
-## redistribute
-
-Runs the "genloc" command without needing devcommands enabled. This can be used to redistribute locations after destroying zones.
-
 ## set_vegetation [disable] [...ids]
 
 Enables vegetation for the world generator, affecting any forced (with "generate" command) or natural generation. Disables vegetation with the "disable" flag.
@@ -174,10 +176,13 @@ Examples:
 
 Revert vegetation generation back to the original.
 
+## distribute
+
+Runs the "genloc" command without needing devcommands enabled. This can be used to redistribute locations after destroying zones.
 
 ## start
 
-Zone based commands don't exeute instantly but instead print the amount of zones being affected. This command can be then used to start executing.
+Zone based commands don't exeute instantly but instead print the zones being affected. This command can be then used to start executing.
 
 ## stop
 
@@ -208,13 +213,27 @@ Examples:
 - Setting "300,500,500,0|1000,2000,500,0" to custom points would protect areas at coordinates 300,500 and 1000,2000 within 500 meters.
 - Setting "300,500,0,100" to custom points would only operate near coordinates 300,500 witin 100 meters.
 
-# Removing entities
-
-If you already know the entity id, use "count id" to ensure you are only removing what needed. If too many entities are returned, use a shorter distance until you get the right amount. Then use the remove command to remove them.
-
-If you don't know the id, use "count_all" with a right distance to find the entity. Then use remove command to remove it.
-
 # How it works
+
+## Glossary
+
+- Generated area: The world generator generates up to 500 meters from places any player has visited (usually abour 350 meters). This is much bigger area than what gets revelead on the minimap.
+- Location: Special places like rune stones, dungeon entrances or abandoned houses that are placed to the world by the world generator.
+- Zone: The world is split to tiles of 64 m x 64 m size. This is the granularity of the world generation. See https://valheim.fandom.com/wiki/Zones for more info.
+
+## Destroy
+
+1. Removes all objects from a zone (including player placed structures).
+2. If the zone has a location, marks the location as unplaced (to allow redistributing it).
+3. Marks the zone as ungenerated.  Visiting the zone will regenerate like it were at start of the game.
+4. Locations are not automatically redistributed. Use "redistribute" command (otherwise you get the same locations as before).
+5. Visiting zones will regenerate them.
+
+Portals in the loaded area won't be automatically disconnected but relogging fixes that.
+
+## Generate
+
+1. Calls the generating function for each zone.
 
 ## Place locations
 
@@ -228,25 +247,28 @@ If you don't know the id, use "count_all" with a right distance to find the enti
 2. If the chest is in a loaded area, remove all items and roll loot.
 3. Otherwise remove all items and set the chest as "not rolled yet" so that the loot is rolled when the chest is loaded. This is done directly by modifying the save file without actually loading the chest.
 
-## Destroy
+## Count biomes
 
-1. Removes all objects from a zone (including player placed structures).
-2. If the zone has a location, marks the location as unplaced (to allow redistributing it).
-3. Marks the zone as ungenerated.  Visiting the zone will regenerate like it were at start of the game.
-4. Locations are not automatically redistributed. Use "redistribute" command (otherwise you get the same locations as before).
-5. Visiting zones will regenerate them.
+1. Checks from the map which biome is at each position.
 
-Portals in the loaded area won't be automatically disconnected but relogging fixes that.
+The map returns the exact biome information. This is slightly different than what the minimap shows as it will show the average biome.
 
-## Generate:
+## Count/list/remove entities
 
-Calls the generating function for each zone.
+1. Uses the available id list (same what spawn command uses) to resolve wildcards.
+2. Directly counts entities from the save file data without loading them to the world.
+3. Biome is the exact biome like with count biomes.
+
+This can result in entities near biome edges showing "wrong" biome because the generation code uses the average biome.
 
 ## Change time/day
 
-The main issue with changing the time is that many entities store the current time to their data. This causes issue when going back in the time as many things freeze until the time has passed back to the original. For example preventing enemies from spawning.
+1. Changes the world time like the skiptime command.
+2. Changes the time data values of entities to match the new time.
+3. When moving the time forward, this prevents the time skip (plants don't grow instantly, smelters don't work faster, etc.).
+4. When moving the time backward, this prevents things getting stuck (plants, smelters, enemy spawning, etc. won't progress until back to the original time).
 
-So after changing the time, the command also updates the following data values (if their value is not 0):
+Following data values are updated if their value is not 0:
 - For general enemy spawning, all data values of the zone control entity are updated. Each of these data values affect spawning of a one enemy type.
 - "spawntime" for offspring growth timer and also for ship build timer (but unlikely to use the command when constructing a ship).
 - "SpawnTime" for item drop despawn timer.
@@ -261,13 +283,6 @@ So after changing the time, the command also updates the following data values (
 - "TameLastFeeding" for animal hunger timer.
 
 Affected data values can be configured but recommended to keep them as it is. 
-
-
-# Glossary
-
-- Generated area: The world generator generates up to 500 meters from places any player has visited. This is much bigger area than what gets revelead on the minimap.
-- Location: Special places like rune stones, dungeon entrances or abandoned houses that are placed to the world by the world generator.
-- Zone: The world is split to tiles of 64 m x 64 m size. This is the granularity of the world generation. See https://valheim.fandom.com/wiki/Zones for more info.
 
 # Changelog
 

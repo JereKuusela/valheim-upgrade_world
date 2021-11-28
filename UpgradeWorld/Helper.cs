@@ -49,7 +49,7 @@ namespace UpgradeWorld {
       }
       var numbers = allNumbers.Take(range == null ? 3 : 2);
       // Add back unused numbers.
-      other.ToList().AddRange(allNumbers.Skip(numbers.Count()).Select(arg => arg.ToString()));
+      other.ToList().AddRange(allNumbers.Skip(numbers.Count()).Select(arg => arg.ToString(CultureInfo.InvariantCulture)));
       if (numbers.Count() == 0 && parameters.MeasureWithZones) {
         var zone = ZoneSystem.instance.GetZone(Player.m_localPlayer.transform.position);
         parameters.X = zone.x;

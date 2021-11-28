@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace UpgradeWorld {
         }
       }
       float total = biomes.Values.Sum();
-      var text = biomes.Select(kvp => kvp.Key + ": " + kvp.Value + "/" + total + " (" + (kvp.Value / total).ToString("P2") + ")");
+      var text = biomes.Select(kvp => kvp.Key + ": " + kvp.Value + "/" + total + " (" + (kvp.Value / total).ToString("P2", CultureInfo.InvariantCulture) + ")");
       Log(text);
     }
   }

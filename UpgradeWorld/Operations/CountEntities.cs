@@ -9,7 +9,8 @@ namespace UpgradeWorld {
         Count(ids, args);
     }
     private void Count(IEnumerable<string> ids, FiltererParameters args) {
-      var texts = ids.Select(id => {
+      var prefabs = ids.Select(GetPrefabs).Aggregate((acc, list) => acc.Concat(list));
+      var texts = prefabs.Select(id => {
         var count = GetZDOs(id, args).Count();
         return id + ": " + count;
       });

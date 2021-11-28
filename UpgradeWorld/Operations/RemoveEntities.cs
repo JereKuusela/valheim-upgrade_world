@@ -9,7 +9,8 @@ namespace UpgradeWorld {
         Remove(ids, args);
     }
     private void Remove(IEnumerable<string> ids, FiltererParameters args) {
-      var texts = ids.Select(id => {
+      var prefabs = ids.Select(GetPrefabs).Aggregate((acc, list) => acc.Concat(list));
+      var texts = prefabs.Select(id => {
         var zdos = GetZDOs(id, args);
         foreach (var zdo in zdos) ZDOMan.instance.DestroyZDO(zdo);
         return "Removed " + zdos.Count() + " of " + id + ".";

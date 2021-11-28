@@ -8,7 +8,7 @@ namespace UpgradeWorld {
       Context = context;
     }
     public void Print(string value, bool addDot = true) {
-      if (addDot && !value.EndsWith("")) value += ".";
+      if (addDot && !value.EndsWith(".")) value += ".";
       if (Context) Context.AddString(value);
     }
     protected void Log(IEnumerable<string> values) {

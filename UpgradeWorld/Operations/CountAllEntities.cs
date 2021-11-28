@@ -4,10 +4,10 @@ using System.Linq;
 namespace UpgradeWorld {
   /// <summary>Counts the amounts of entities.</summary>
   public class CountAllEntities : EntityOperation {
-    public CountAllEntities(Terminal context, bool showZero, FiltererParameters args) : base(context) {
-      Count(showZero, args);
+    public CountAllEntities(Terminal context, bool showAll, FiltererParameters args) : base(context) {
+      Count(showAll, args);
     }
-    private void Count(bool showZero, FiltererParameters args) {
+    private void Count(bool showAll, FiltererParameters args) {
       var counts = new Dictionary<int, int>();
       var zdos = FilterZdos(ZDOMan.instance.m_objectsByID.Values, args);
       foreach (var zdo in zdos) {
@@ -19,7 +19,7 @@ namespace UpgradeWorld {
         var code = id.GetStableHashCode();
         if (counts.ContainsKey(code)) {
           return id + ": " + counts[code];
-        } else if (showZero) {
+        } else if (showAll) {
           return id + ": 0";
         }
         return "";
