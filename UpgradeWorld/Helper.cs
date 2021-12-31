@@ -31,7 +31,7 @@ namespace UpgradeWorld {
     }
     public static IEnumerable<string> ParseFiltererArgs(IEnumerable<string> args, FiltererParameters parameters) {
       var parsed = ParseArgs(args, 1);
-      parsed = ParseFlag(parsed, "includebases", out parameters.IncludePlayerBases);
+      parsed = ParseNamedInt(parsed, "safezones", ref parameters.SafeZones);
       parsed = ParseFlag(parsed, "zones", out parameters.MeasureWithZones);
       parsed = ParseFlag(parsed, "noedges", out parameters.NoEdges);
       parsed = ParseFlag(parsed, "force", out parameters.ForceStart);
@@ -122,6 +122,23 @@ namespace UpgradeWorld {
     public static IEnumerable<string> ParseFlag(IEnumerable<string> parameters, string flag, out bool value) {
       value = parameters.FirstOrDefault(arg => arg.ToLower() == flag) != null;
       return parameters.Where(arg => arg.ToLower() != flag);
+    }
+    public static IEnumerable<string> ParseNamedInt(IEnumerable<string> parameters, string key, ref int value) {
+      var arg = parameters.FirstOrDefault(arg => arg.ToLower().StartsWith(key + "="));
+      if (arg != null && arg != "") {
+        var split = arg.Split('=');
+        if (split.Length > 0 && ParseInt(split[1], out var number))
+          value = number;
+      }
+      return parameters.Where(arg => !arg.ToLower().StartsWith(key + "="));
+    }
+
+    public static void RemoveZDO(ZDO zdo) {
+      if (ZNetScene.instance.m_instances.TryGetValue(zdo, out var view)) {
+        ZNetScene.instance.Destroy(view.gameObject);
+      } else if (zdo.IsOwner()) {
+        ZDOMan.instance.DestroyZDO(zdo);
+      }
     }
   }
 }

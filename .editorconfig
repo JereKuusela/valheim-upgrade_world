@@ -8,3 +8,5 @@ csharp_style_var_for_built_in_types = true:silent
 csharp_style_var_when_type_is_apparent = true:silent
 csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
+dotnet_style_coalesce_expression = false
+dotnet_style_prefer_conditional_expression_over_return = true:suggestion

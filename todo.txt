@@ -9,3 +9,5 @@
 - command to change entity params
 - command to filter entity by attribute
 - command to enable/disable locations
+
+- show distance from the player on the map

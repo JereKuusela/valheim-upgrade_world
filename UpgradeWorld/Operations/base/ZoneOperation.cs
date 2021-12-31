@@ -33,6 +33,7 @@ namespace UpgradeWorld {
         var zone = ZonesToUpgrade[ZoneIndex];
         var success = ExecuteZone(zone);
         MoveToNextZone(success);
+        if (!success) break;
       }
       UpdateConsole();
       if (ZoneIndex >= ZonesToUpgrade.Length) {

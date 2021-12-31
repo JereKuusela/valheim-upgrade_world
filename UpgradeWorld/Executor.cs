@@ -28,7 +28,10 @@ namespace UpgradeWorld {
       DoExecute = false;
     }
     public static void Execute() {
-      if (operations.Count == 0) return;
+      if (operations.Count == 0) {
+        DoExecute = false;
+        return;
+      }
       if (!DoExecute && !Settings.AutoStart && !operations[0].AutoStart) {
         if (PrintInit) operations[operations.Count - 1].Print("Use start to begin execution or stop to cancel.");
         PrintInit = false;
@@ -36,10 +39,8 @@ namespace UpgradeWorld {
       }
       if (operations[0].Execute())
         operations.RemoveAt(0);
-      if (operations.Count == 0) {
+      if (operations.Count == 0)
         DoClean();
-        DoExecute = false;
-      }
     }
   }
 }

@@ -40,8 +40,8 @@ namespace UpgradeWorld {
       new Terminal.ConsoleCommand("generate", "[...args] - Generates zones which allows pregenerating the world without having to move there physically.", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
         var extra = Helper.ParseFiltererArgs(args.Args, parameters);
-        parameters.TargetZones = TargetZones.Generated;
-        parameters.IncludePlayerBases = true;
+        parameters.TargetZones = TargetZones.Ungenerated;
+        parameters.SafeZones = 0;
         if (CheckUnhandled(args, extra))
           Executor.AddOperation(new Generate(args.Context, parameters));
       }, onlyServer: true, optionsFetcher: () => Helper.AvailableBiomes);
@@ -70,7 +70,7 @@ namespace UpgradeWorld {
         // TODO: Should validate location ids / provide parameter list.
         Executor.AddOperation(new DistributeLocations(ids, parameters.ForceStart, args.Context));
         Executor.AddOperation(new PlaceLocations(args.Context, !noClearing, parameters));
-      }, onlyServer: true);
+      }, onlyServer: true, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
       new Terminal.ConsoleCommand("reroll_chests", "[chest_name] [...item_ids] [...args] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
         var extra = Helper.ParseFiltererArgs(args.Args, parameters);
@@ -156,6 +156,36 @@ namespace UpgradeWorld {
           return;
         }
         new ChangeTime(args.Context, time * EnvMan.instance.m_dayLengthSec);
+      }, onlyServer: true);
+      new Terminal.ConsoleCommand("set_time", "[seconds] - Changes time while updating entities.", delegate (Terminal.ConsoleEventArgs args) {
+        if (args.Args.Count() == 0) {
+          args.Context.AddString("Error: Missing seconds.");
+          return;
+        }
+        if (!Helper.ParseInt(args[1], out var time)) {
+          args.Context.AddString("Error: Invalid format for seconds.");
+          return;
+        }
+        if (args.Args.Count() > 2) {
+          args.Context.AddString("Error: Too many parameters.");
+          return;
+        }
+        new SetTime(args.Context, time);
+      }, onlyServer: true);
+      new Terminal.ConsoleCommand("set_day", "[day] - Changes day while updating entities.", delegate (Terminal.ConsoleEventArgs args) {
+        if (args.Args.Count() == 0) {
+          args.Context.AddString("Error: Missing day.");
+          return;
+        }
+        if (!Helper.ParseInt(args[1], out var time)) {
+          args.Context.AddString("Error: Invalid format for day.");
+          return;
+        }
+        if (args.Args.Count() > 2) {
+          args.Context.AddString("Error: Too many parameters.");
+          return;
+        }
+        new SetTime(args.Context, time * EnvMan.instance.m_dayLengthSec);
       }, onlyServer: true);
       new Terminal.ConsoleCommand("set_vegetation", "[...ids] [disable] - Enables/disables vegetation for the world generator.", delegate (Terminal.ConsoleEventArgs args) {
         var ids = Helper.ParseArgs(args.Args, 1);

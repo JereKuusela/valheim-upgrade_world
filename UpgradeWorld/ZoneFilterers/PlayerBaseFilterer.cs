@@ -5,10 +5,10 @@ namespace UpgradeWorld {
   ///<summary>Filters zones based on whether they include a player base item.</summary>
   public class PlayerBaseFilterer : ZoneFilterer {
     public HashSet<Vector2i> ExcludedZones = new HashSet<Vector2i>();
-    public PlayerBaseFilterer() {
+    public PlayerBaseFilterer(int size) {
+      var adjacent = size - 1;
       var ids = Settings.SafeZoneItems;
-      var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => ids.Contains(zdo.GetPrefab()));
-      var adjacent = Settings.SafeZoneSize;
+      var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => ids.Contains(zdo.GetPrefab()) && zdo.GetLong("creator") != 0L);
       foreach (var zdo in zdos) {
         var zone = ZoneSystem.instance.GetZone(zdo.GetPosition());
         for (var i = -adjacent; i <= adjacent; i++) {

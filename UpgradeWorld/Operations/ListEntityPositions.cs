@@ -10,7 +10,7 @@ namespace UpgradeWorld {
     }
     private void ListPositions(IEnumerable<string> ids, FiltererParameters args) {
       var texts = ids.Select(id => {
-        return GetZDOs(id, args).Select(zdo => id + ": " + zdo.GetPosition().ToString("F0") + " " + WorldGenerator.instance.GetBiome(zdo.GetPosition()));
+        return GetZDOs(id, args).Select(zdo => id + " (" + zdo.m_uid + "): " + zdo.GetPosition().ToString("F0") + " " + WorldGenerator.instance.GetBiome(zdo.GetPosition()));
       }).Aggregate((acc, list) => acc.Concat(list));
       Log(texts);
     }

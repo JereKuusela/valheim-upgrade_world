@@ -36,6 +36,8 @@ Always back up your world before making any changes!
 
 This mod also adds current coordinates (and zone index) to the minimaps which should help using the commands and setting up the config.
 
+Note: The default base detection is very conservative. Single workbenches, campfires, etc. will exclude a significant area around them, unless configured otherwise.
+
 # Parameters
 
 Effective usage of this tool requires understanding the general parameters that are used to filter out affected zones and entities. Following parameters are available to most commands:
@@ -44,7 +46,7 @@ Effective usage of this tool requires understanding the general parameters that 
 - Minimum and maximum distance as a range "min-max". Either of the values can be omitted for either "min" or "-max".
 - Center position as two parameters "x" and "z" (y coordinate is used the altitude).
 - Flag "noedges" to only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
-- Flag "includebases" to skip automatic player base detection. Can be permanently turned on from the config.
+- Parameter "safezones=value" to set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
 - Flag "zones" to change distance and position parameters to be zone based. "x" and "z" are zone indices. "min" and "max" determine how many adjacent zones are included.
 - Flag "force" to automatically execute the command. Can be permanently turned on from the config.
 
@@ -52,7 +54,7 @@ Examples:
 - command mistlands: Affects zones which have Mistlands biome at any of their corners.
 - command 5000 0 0: Affects zones which are 5000 meters away from the world center.
 - command 3000-5000 0 0: Affects zones which are from 3000 to 5000 meters away from the world center.
-- command 3 -3 zones includebases: Affects the zone at indices 3,-3 even if it has player base structures.
+- command 3 -3 zones safezones=0: Affects the zone at indices 3,-3 even if it has major structures.
 - command zones: Affects the current zone at the player's position.
 - command blackforest ocean -1000 noedges: Affects zones that only have Black Forest or Ocean at their corners and that are up to 1000 meters away from the player.
 
@@ -285,6 +287,22 @@ Following data values are updated if their value is not 0:
 Affected data values can be configured but recommended to keep them as it is. 
 
 # Changelog
+
+- v1.6.0:
+	- Fixed upgrade tarpits command needing to be used twice.
+
+- v1.5.0:
+	- Fixed non-player placed items also counting as player bases (for example in Fuling villages).
+	- Added autocomplete to place_locations command.
+	- Added new commands to set specific world time (instead of a relative value).
+	- More graceful entity removing.
+	- Changed parameter "includebases" to "safezones" which allows setting the player base safe zone size (instead of only enable/disable).
+	- Chests added to the default list of major structures (won't affect existing configs).
+	- Changed player base safe zone value handling (0 is disable, 1 is current zone, etc.)
+	- Renamed player base safe zone size config setting to ensure the new default value is used.
+	- Fixed generate command targeting only generated zones instead of ungenerated zones.
+	- Fixed generate command forcing player base detection (now disables it).
+	- Fixed start command causing the next command to execute instantly if used without any pending operations.
 
 - v1.4.0:
 	- Operation split to instant and delayed operations. Delayed operations print some initial output but require start command to execute.

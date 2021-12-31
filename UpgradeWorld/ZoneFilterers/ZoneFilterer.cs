@@ -15,7 +15,7 @@ namespace UpgradeWorld {
     public float MinDistance = 0;
     public float MaxDistance = 0;
     public bool MeasureWithZones = false;
-    public bool IncludePlayerBases = false;
+    public int SafeZones = Settings.SafeZoneSize;
     public TargetZones TargetZones = TargetZones.Generated;
     public bool IsBiomeValid(Heightmap.Biome biome) => Biomes.Count() == 0 || Biomes.Contains(biome);
     public bool IsBiomeValid(Vector3 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos));
@@ -79,8 +79,11 @@ namespace UpgradeWorld {
         else
           str += " that have " + string.Join(", ", Biomes);
       }
-      if (IncludePlayerBases)
+      var size = 1 + (SafeZones - 1) * 2;
+      if (SafeZones <= 0)
         str += " without player base detection";
+      else
+        str += " with player base detection (" + size + "x" + size + " safe zones)";
       return str;
     }
   }
@@ -90,7 +93,7 @@ namespace UpgradeWorld {
       filters.Add(new TargetZonesFilterer(args.TargetZones));
       filters.Add(new BiomeFilterer(args.Biomes, !args.NoEdges));
       filters.Add(new ConfigFilterer());
-      if (!args.IncludePlayerBases) filters.Add(new PlayerBaseFilterer());
+      if (args.SafeZones > 0) filters.Add(new PlayerBaseFilterer(args.SafeZones));
       if (args.MeasureWithZones) filters.Add(new ZoneDistanceFilterer(new Vector2i((int)args.X, (int)args.Y), (int)args.MinDistance, (int)args.MaxDistance));
       else filters.Add(new DistanceFilterer(new Vector3(args.X, 0, args.Y), args.MinDistance, args.MaxDistance));
       return filters;

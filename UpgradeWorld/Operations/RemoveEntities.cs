@@ -12,7 +12,7 @@ namespace UpgradeWorld {
       var prefabs = ids.Select(GetPrefabs).Aggregate((acc, list) => acc.Concat(list));
       var texts = prefabs.Select(id => {
         var zdos = GetZDOs(id, args);
-        foreach (var zdo in zdos) ZDOMan.instance.DestroyZDO(zdo);
+        foreach (var zdo in zdos) Helper.RemoveZDO(zdo);
         return "Removed " + zdos.Count() + " of " + id + ".";
       });
       Log(texts);

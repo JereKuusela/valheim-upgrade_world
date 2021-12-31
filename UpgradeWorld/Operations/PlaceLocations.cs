@@ -1,37 +1,36 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace UpgradeWorld {
   public class PlaceLocations : ZoneOperation {
 
     private bool ClearLocationAreas = true;
+    private int Placed = 0;
     public PlaceLocations(Terminal context, bool clearLocationAreas, FiltererParameters args) : base(context, args.ForceStart) {
       Operation = "Place locations";
       ClearLocationAreas = clearLocationAreas;
       args.TargetZones = TargetZones.Generated;
       InitString = args.Print("Place locations at");
-      Filterers = FiltererFactory.Create(args).Append(new LocationFilterer());
+      Filterers = FiltererFactory.Create(args);
+      ZonesPerUpdate = 100;
     }
     protected override bool ExecuteZone(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
+      var locations = zoneSystem.m_locationInstances;
+      if (!locations.ContainsKey(zone)) return true;
+      var location = locations[zone];
+      if (location.m_placed) return true;
       if (zoneSystem.IsZoneLoaded(zone)) {
-        var locations = zoneSystem.m_locationInstances;
-        if (locations.TryGetValue(zone, out var location))
-          PlaceLocation(zone, location);
-        else {
-          Print("ERROR: Missing location");
-          Failed++;
-        }
+        PlaceLocation(zone, location);
+        Placed++;
         return true;
       }
       zoneSystem.PokeLocalZone(zone);
       return false;
     }
     protected override void OnEnd() {
-      var placed = ZonesToUpgrade.Length - Failed;
       var text = Operation + " completed.";
-      if (Settings.Verbose) text += " " + placed + " locations placed.";
+      if (Settings.Verbose) text += " " + Placed + " locations placed.";
       if (Failed > 0) text += " " + Failed + " errors.";
       Print(text);
     }

@@ -13,6 +13,7 @@ namespace UpgradeWorld {
 
     protected override bool ExecuteZone(Vector2i zone) {
       var zoneSystem = ZoneSystem.instance;
+      var scene = ZNetScene.instance;
       var sectorObjects = new List<ZDO>();
       ZDOMan.instance.FindObjects(zone, sectorObjects);
       foreach (var zdo in sectorObjects) {
@@ -20,9 +21,8 @@ namespace UpgradeWorld {
           continue;
         }
         var position = zdo.GetPosition();
-        if (zoneSystem.GetZone(position) == zone) {
-          ZDOMan.instance.RemoveFromSector(zdo, zone);
-        }
+        if (zoneSystem.GetZone(position) == zone)
+          Helper.RemoveZDO(zdo);
       }
       var locations = zoneSystem.m_locationInstances;
       if (locations.TryGetValue(zone, out var location)) {
