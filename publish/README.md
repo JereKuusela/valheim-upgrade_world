@@ -288,6 +288,9 @@ Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
 
+- v1.7.0:
+	- Fixed graceful entity removing being bit too graceful (not working in all situations).
+
 - v1.6.0:
 	- Fixed upgrade tarpits command needing to be used twice.
 

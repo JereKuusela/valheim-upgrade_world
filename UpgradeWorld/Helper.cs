@@ -136,7 +136,9 @@ namespace UpgradeWorld {
     public static void RemoveZDO(ZDO zdo) {
       if (ZNetScene.instance.m_instances.TryGetValue(zdo, out var view)) {
         ZNetScene.instance.Destroy(view.gameObject);
-      } else if (zdo.IsOwner()) {
+      } else {
+        if (!zdo.IsOwner())
+          zdo.SetOwner(ZDOMan.instance.GetMyID());
         ZDOMan.instance.DestroyZDO(zdo);
       }
     }
