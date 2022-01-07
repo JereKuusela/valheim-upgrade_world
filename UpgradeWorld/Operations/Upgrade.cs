@@ -34,7 +34,7 @@ namespace UpgradeWorld {
           Print("Error: This operation doesn't support extra parameters " + string.Join(", ", extra));
           return;
         }
-        new RerollChests("TreasureChest_mountains", new string[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, args, Context);
+        new RerollChests("TreasureChest_mountains", new string[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, false, args, Context);
       } else if (type == "new_mistlands") {
         if (args.Biomes.Count() > 0) {
           Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));

@@ -8,22 +8,23 @@ namespace UpgradeWorld {
       "TreasureChest_blackforest", "TreasureChest_fCrypt", "TreasureChest_forestcrypt", "TreasureChest_heath",
       "TreasureChest_meadows", "TreasureChest_meadows_buried","TreasureChest_mountains", "TreasureChest_plains_stone",
       "TreasureChest_sunkencrypt", "TreasureChest_swamp", "TreasureChest_trollcave", "shipwreck_karve_chest",
-      "loot_chest_wood", "loot_chest_stone" }.OrderBy(item => item).ToList();
+      "loot_chest_wood", "loot_chest_stone", "*" }.OrderBy(item => item).ToList();
     private HashSet<string> AllowedItems;
-    public RerollChests(string id, IEnumerable<string> allowedItems, FiltererParameters args, Terminal context) : base(context) {
+    public RerollChests(string chestId, IEnumerable<string> allowedItems, bool looted, FiltererParameters args, Terminal context) : base(context) {
       AllowedItems = allowedItems.Select(Helper.Normalize).ToHashSet();
-      Reroll(id, args);
+      Reroll(chestId, looted, args);
     }
 
-    private void Reroll(string id, FiltererParameters args) {
+    private void Reroll(string chestId, bool looted, FiltererParameters args) {
+      var chestIds = chestId == "*" ? ChestsNames.Where(name => name != "*") : new List<string>() { chestId };
       var totalChests = 0;
-      var rolledChests = 0; ;
-      var prefab = ZNetScene.instance.GetPrefab(id);
-      if (prefab == null || prefab.GetComponent<Container>() == null) {
+      var rolledChests = 0;
+      var prefabs = chestIds.ToDictionary(id => id.GetStableHashCode(), id => ZNetScene.instance.GetPrefab(id));
+      if (prefabs.Values.Any(prefab => prefab == null || prefab.GetComponent<Container>() == null)) {
         Print("Error: Invalid chest ID.");
         return;
       }
-      var zdos = GetZDOs(id, args);
+      var zdos = chestIds.Select(name => GetZDOs(name, args)).Aggregate(new List<ZDO>(), (acc, value) => { acc.AddRange(value); return acc; });
       foreach (var zdo in zdos) {
         totalChests++;
         if (!zdo.GetBool("addedDefaultItems", false)) {
@@ -36,17 +37,17 @@ namespace UpgradeWorld {
         if (obj) {
           inventory = obj.GetComponent<Container>().GetInventory();
         } else {
-          var container = prefab.GetComponent<Container>();
+          var container = prefabs[zdo.GetPrefab()].GetComponent<Container>();
           inventory = new Inventory(container.m_name, container.m_bkg, container.m_width, container.m_height);
           var loadPackage = new ZPackage(zdo.GetString("items", ""));
           inventory.Load(loadPackage);
         }
-        if (inventory.GetAllItems().Count == 0) {
+        if (inventory.GetAllItems().Count == 0 && !looted) {
           if (Settings.Verbose)
             Print("Skipping a chest: Already looted.");
           continue;
         }
-        if (!inventory.GetAllItems().All(IsValid)) continue;
+        if (AllowedItems.Count > 0 && !inventory.GetAllItems().All(IsValid)) continue;
         rolledChests++;
         inventory.RemoveAll();
         if (obj) {

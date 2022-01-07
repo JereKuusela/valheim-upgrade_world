@@ -71,16 +71,17 @@ namespace UpgradeWorld {
         Executor.AddOperation(new DistributeLocations(ids, parameters.ForceStart, args.Context));
         Executor.AddOperation(new PlaceLocations(args.Context, !noClearing, parameters));
       }, onlyServer: true, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
-      new Terminal.ConsoleCommand("reroll_chests", "[chest_name] [...item_ids] [...args] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", delegate (Terminal.ConsoleEventArgs args) {
+      new Terminal.ConsoleCommand("reroll_chests", "[chest_name] [looted] [...item_ids] [...args] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", delegate (Terminal.ConsoleEventArgs args) {
         var parameters = new FiltererParameters();
         var extra = Helper.ParseFiltererArgs(args.Args, parameters);
+        extra = Helper.ParseFlag(extra, "looted", out var looted);
         if (extra.Count() == 0) {
           args.Context.AddString("Error: Missing chest name.");
           return;
         }
         var chestName = extra.First();
         var ids = extra.Skip(1);
-        new RerollChests(chestName, ids, parameters, args.Context);
+        new RerollChests(chestName, ids, looted, parameters, args.Context);
       }, onlyServer: true, optionsFetcher: () => RerollChests.ChestsNames);
       new Terminal.ConsoleCommand("start", "- Starts execution of operations.", delegate (Terminal.ConsoleEventArgs args) {
         Executor.DoExecute = true;

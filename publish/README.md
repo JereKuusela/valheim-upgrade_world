@@ -95,14 +95,17 @@ Distributes unplaced locations to already explored areas and then places them to
 
 Normally this command (or the similar genloc command) won't do anything because the locations will be generated the same way. However if a new update adds new locations or the world generating otherwise changes this causes changed to the world.
 
-## reroll_chests [chest name] [...item_ids] [...args]
+## reroll_chests [chest name] [looted] [...item_ids] [...args]
 
-Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Empty (looted) chests won't be rerolled.
+Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests.
+
+Empty (looted) chests are only rerolled with "looted" flag.
 
 Item ids can be used to detect and prevent rerolling chests which players are using to store items.
 
 Example:
 - reroll_chests TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds: Rerolls mountain treasure chests which only have naturally occurring items.
+- reroll_chests * looted 1500 0 0: Rerolls all chests which are 1500 meters away from the world center.
 
 ## count_biomes [frequency] [...args]
 
@@ -154,13 +157,25 @@ Removes map from the map at a given position to a given distance.
 
 ## change_time [seconds]
 
-Experimental. Changes the world time by real life seconds while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
+Changes the world time by real life seconds while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
 
 Verbose mode prints how many data entries were affected.
 
 ## change_day [day]
 
-Experimental. Changes the world time by in-game days while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
+Changes the world time by in-game days while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
+
+Verbose mode prints how many data entries were affected.
+
+## set_time [seconds]
+
+Sets the world time to real life seconds while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
+
+Verbose mode prints how many data entries were affected.
+
+## set_day [day]
+
+Sets the world time to in-game days while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
 
 Verbose mode prints how many data entries were affected.
 
@@ -288,13 +303,18 @@ Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
 
-- v1.7.0:
+- v1.8:
+  - Fixed reroll_chests not working without giving any valid items.
+	- Added reroll_chests to support all chests.
+	- Added "looted" flag to reroll_chests to also reroll empty chests.
+
+- v1.7:
 	- Fixed graceful entity removing being bit too graceful (not working in all situations).
 
-- v1.6.0:
+- v1.6:
 	- Fixed upgrade tarpits command needing to be used twice.
 
-- v1.5.0:
+- v1.5:
 	- Fixed non-player placed items also counting as player bases (for example in Fuling villages).
 	- Added autocomplete to place_locations command.
 	- Added new commands to set specific world time (instead of a relative value).
@@ -307,7 +327,7 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Fixed generate command forcing player base detection (now disables it).
 	- Fixed start command causing the next command to execute instantly if used without any pending operations.
 
-- v1.4.0:
+- v1.4:
 	- Operation split to instant and delayed operations. Delayed operations print some initial output but require start command to execute.
 	- Added setting to force start operations without having to use the start command. Added parameter to force start commands.
 	- Removed query command as obsolete.
@@ -326,7 +346,7 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Added command to toggle the verbose mode.
 	- Improved output.
 
-- v1.3.0:
+- v1.3:
 	- Regeneration commands renamed to destroy to make the effect more clear.
 	- Destroy all command now requires biomes as a parameter (replacing the config setting and making harder to accidentally nuke the whole world).
 	- New commands for generating areas without having to physically go there.
@@ -348,15 +368,15 @@ Affected data values can be configured but recommended to keep them as it is.
 	- New setting to filter zones too close to the player (effectively creating a safe zone around the player).
 	- Many settings removed as obsolete.
 
-- v1.2.0:
+- v1.2:
 	- Added coordinates to minimaps.
 	- Added option to also regenerate loaded zones,
 	- Renamed nuke command.
 	- Added new commands for a targeted regeneration.
 
-- v1.1.0:
+- v1.1:
 	- Commands now work from the chat.
 	- Console is now enabled by default.
 
-- v1.0.0:
+- v1.0:
 	- Initial release

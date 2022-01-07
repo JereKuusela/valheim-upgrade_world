@@ -65,7 +65,7 @@ namespace UpgradeWorld {
         var zdoPosition = zdo.GetPosition();
         var delta = position - zdoPosition;
         delta.y = 0;
-        if (delta.magnitude < distance) ZDOMan.instance.DestroyZDO(zdo);
+        if (delta.magnitude < distance) Helper.RemoveZDO(zdo);
       }
     }
   }
