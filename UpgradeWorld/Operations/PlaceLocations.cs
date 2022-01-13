@@ -41,32 +41,13 @@ namespace UpgradeWorld {
       var root = zoneSystem.m_zones[zone].m_root;
       var zonePos = ZoneSystem.instance.GetZonePos(zone);
       var heightmap = Zones.GetHeightmap(root);
-      ClearAreaForLocation(zone, location);
+      if (ClearLocationAreas)
+        Helper.ClearAreaForLocation(zone, location);
       var clearAreas = new List<ZoneSystem.ClearArea>();
       spawnedObjects.Clear();
       zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Full, spawnedObjects);
       if (Settings.Verbose)
         Print("Location " + location.m_location.m_prefabName + " placed at " + zone.ToString());
-    }
-    /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
-    private void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
-      if (ClearLocationAreas && location.m_location.m_location.m_clearArea)
-        ClearZDOsWithinDistance(zone, location.m_position, location.m_location.m_exteriorRadius);
-    }
-
-    /// <summary>Clears entities too close to a given position.</summary>
-    private void ClearZDOsWithinDistance(Vector2i zone, Vector3 position, float distance) {
-      var sectorObjects = new List<ZDO>();
-      ZDOMan.instance.FindObjects(zone, sectorObjects);
-      foreach (var zdo in sectorObjects) {
-        if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid)
-          continue;
-
-        var zdoPosition = zdo.GetPosition();
-        var delta = position - zdoPosition;
-        delta.y = 0;
-        if (delta.magnitude < distance) Helper.RemoveZDO(zdo);
-      }
     }
   }
 }

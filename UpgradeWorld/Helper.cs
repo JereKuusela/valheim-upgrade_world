@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using UnityEngine;
 
 namespace UpgradeWorld {
   public static class Helper {
@@ -134,12 +135,31 @@ namespace UpgradeWorld {
     }
 
     public static void RemoveZDO(ZDO zdo) {
+      if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid) return;
       if (!zdo.IsOwner())
         zdo.SetOwner(ZDOMan.instance.GetMyID());
       if (ZNetScene.instance.m_instances.TryGetValue(zdo, out var view))
         ZNetScene.instance.Destroy(view.gameObject);
       else
         ZDOMan.instance.DestroyZDO(zdo);
+    }
+
+    /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
+    public static void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
+      if (location.m_location.m_location.m_clearArea)
+        ClearZDOsWithinDistance(zone, location.m_position, location.m_location.m_exteriorRadius);
+    }
+
+    /// <summary>Clears entities too close to a given position.</summary>
+    public static void ClearZDOsWithinDistance(Vector2i zone, Vector3 position, float distance) {
+      var sectorObjects = new List<ZDO>();
+      ZDOMan.instance.FindObjects(zone, sectorObjects);
+      foreach (var zdo in sectorObjects) {
+        var zdoPosition = zdo.GetPosition();
+        var delta = position - zdoPosition;
+        delta.y = 0;
+        if (delta.magnitude < distance) Helper.RemoveZDO(zdo);
+      }
     }
   }
 }
