@@ -11,10 +11,6 @@ namespace UpgradeWorld {
         "onions",
         "new_mistlands",
         "old_mistlands",
-        "EVA_1.3",
-        "EVA_1.3_locations_only",
-        "mountain_caves",
-        "EVA_1.4"
       };
     }
     public Upgrade(Terminal context, string type, IEnumerable<string> extra, FiltererParameters args) : base(context) {

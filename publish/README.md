@@ -304,15 +304,13 @@ Affected data values can be configured but recommended to keep them as it is.
 # Changelog
 
 - v1.9:
-  - Fixed change_time and change_day being able to put negative timestamp to entities.
+	- Fixed change_time and change_day being able to put negative timestamp to entities.
 	- Fixed change_time, change_day, set_time and set_day being able to set the time negative.
 	- Fixed set_time and set_day setting entity timestamps to the given value instead of using the time difference like change_time and change_day to.
 	- Added better icon. Thanks Azumatt!
-	- Added upgrade command for mountain caves (bit guesswork).
-	- Added upgrade command for Epic Loot Additions mod.
 
 - v1.8:
-  - Fixed reroll_chests not working without giving any valid items.
+	- Fixed reroll_chests not working without giving any valid items.
 	- Added reroll_chests to support all chests.
 	- Added "looted" flag to reroll_chests to also reroll empty chests.
 

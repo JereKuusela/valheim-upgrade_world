@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace UpgradeWorld {
-  /// <summary>Removes given entity ids within a given distance.</summary>
+  /// <summary>WIP. Removes given entity ids within a given distance.</summary>
   public class RemoveLocations : EntityOperation {
     public RemoveLocations(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context) {
       if (Validate(ids))
