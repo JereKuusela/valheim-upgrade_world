@@ -11,6 +11,7 @@ namespace UpgradeWorld {
         "onions",
         "new_mistlands",
         "old_mistlands",
+        "mountain_caves"
       };
     }
     public Upgrade(Terminal context, string type, IEnumerable<string> extra, FiltererParameters args) : base(context) {
@@ -25,7 +26,7 @@ namespace UpgradeWorld {
       type = type.ToLower();
       if (type == "mountain_caves") {
         extra = Helper.ParseFlag(extra, "noclearing", out var noClearing);
-        Executor.AddOperation(new DistributeLocations(new string[] { "MountainCave01" }, false, Context));
+        Executor.AddOperation(new DistributeLocations(new string[] { "MountainCave02" }, false, Context));
         Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
       } else if (type == "tarpits") {
         extra = Helper.ParseFlag(extra, "noclearing", out var noClearing);

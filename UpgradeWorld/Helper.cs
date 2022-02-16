@@ -146,7 +146,7 @@ namespace UpgradeWorld {
 
     /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
     public static void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
-      if (location.m_location.m_location.m_clearArea)
+      if (true || location.m_location.m_location.m_clearArea)
         ClearZDOsWithinDistance(zone, location.m_position, location.m_location.m_exteriorRadius);
     }
 

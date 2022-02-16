@@ -67,6 +67,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 Performs a predefined upgrade operation. Available operations are tarpits, onions and mistlands.
 
 Examples:
+- upgrade mountain_caves: Places mountain caves to already explored areas.
 - upgrade tarpits: Places tar pits to already explored areas.
 - upgrade onions: Rerolls already generated and unlooted mountain chests.
 - upgrade new_mistlands: Fully regenerates mistlands biomes.
@@ -302,6 +303,9 @@ Following data values are updated if their value is not 0:
 Affected data values can be configured but recommended to keep them as it is. 
 
 # Changelog
+
+- v1.10:
+	- Adds a new upgrade command for mountain caves.
 
 - v1.9:
 	- Fixed change_time and change_day being able to put negative timestamp to entities.

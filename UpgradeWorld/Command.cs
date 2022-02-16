@@ -67,7 +67,6 @@ namespace UpgradeWorld {
           args.Context.AddString("Error: Missing location ids.");
           return;
         }
-        // TODO: Should validate location ids / provide parameter list.
         Executor.AddOperation(new DistributeLocations(ids, parameters.ForceStart, args.Context));
         Executor.AddOperation(new PlaceLocations(args.Context, !noClearing, parameters));
       }, onlyServer: true, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
