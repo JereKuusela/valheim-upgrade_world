@@ -61,10 +61,10 @@ namespace UpgradeWorld {
         else
           str += " meters";
         str += " away from the ";
-        if (X == Player.m_localPlayer.transform.position.x && Y == Player.m_localPlayer.transform.position.z)
-          str += "player";
-        else if (X == 0 && Y == 0)
+        if (X == 0 && Y == 0)
           str += "world center";
+        else if (X == Helper.GetLocalPosition().x && Y == Helper.GetLocalPosition().z)
+          str += "player";
         else if (MeasureWithZones)
           str += "zone " + X + "," + Y;
         else
@@ -93,9 +93,9 @@ namespace UpgradeWorld {
       filters.Add(new TargetZonesFilterer(args.TargetZones));
       filters.Add(new BiomeFilterer(args.Biomes, !args.NoEdges));
       filters.Add(new ConfigFilterer());
-      if (args.SafeZones > 0) filters.Add(new PlayerBaseFilterer(args.SafeZones));
       if (args.MeasureWithZones) filters.Add(new ZoneDistanceFilterer(new Vector2i((int)args.X, (int)args.Y), (int)args.MinDistance, (int)args.MaxDistance));
       else filters.Add(new DistanceFilterer(new Vector3(args.X, 0, args.Y), args.MinDistance, args.MaxDistance));
+      if (args.SafeZones > 0) filters.Add(new PlayerBaseFilterer(args.SafeZones));
       return filters;
     }
   }

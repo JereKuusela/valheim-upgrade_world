@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UpgradeWorld {
   /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
@@ -16,10 +17,9 @@ namespace UpgradeWorld {
       var scene = ZNetScene.instance;
       var sectorObjects = new List<ZDO>();
       ZDOMan.instance.FindObjects(zone, sectorObjects);
+      var players = ZNet.instance.m_players.Select(player => player.m_characterID).ToHashSet();
       foreach (var zdo in sectorObjects) {
-        if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid) {
-          continue;
-        }
+        if (players.Contains(zdo.m_uid)) continue;
         var position = zdo.GetPosition();
         if (zoneSystem.GetZone(position) == zone)
           Helper.RemoveZDO(zdo);

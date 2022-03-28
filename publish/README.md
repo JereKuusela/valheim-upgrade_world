@@ -80,7 +80,7 @@ Destroys zones which allows the world generator to regenerate them when visited.
 Examples:
 - destroy mistlands: Destryoing a biome.
 - destroy 5000 0 0 : Destroying areas after 5000 meters from the world center.
-- destroy 3 -3 zones ignorebase: Destroy a single zone at indices 3,-3 to fix any local issues.
+- destroy 3 -3 zones safezones=0: Destroy a single zone at indices 3,-3 to fix any local issues.
 
 ## generate [...args]
 
@@ -303,6 +303,10 @@ Following data values are updated if their value is not 0:
 Affected data values can be configured but recommended to keep them as it is. 
 
 # Changelog
+
+- v1.11:
+	- Adds proper server side checks to prevent running commands as the client.
+	- Adds a better player detection to avoid destroying players on multiplayer.
 
 - v1.10:
 	- Adds a new upgrade command for mountain caves.

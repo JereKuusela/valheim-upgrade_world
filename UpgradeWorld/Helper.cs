@@ -8,7 +8,7 @@ namespace UpgradeWorld {
     public static string Normalize(string value) => value.Trim().ToLower();
     public static string JoinRows(IEnumerable<string> values) => string.Join(", ", values);
 
-    public static bool ParseInt(string arg, out int number) => int.TryParse(arg, NumberStyles.Integer, CultureInfo.InvariantCulture, out number);
+    public static int ParseInt(string arg, int defaultValue = 0) => int.TryParse(arg, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) ? number : defaultValue;
     public static bool TryParseFloat(string arg, out float number) => float.TryParse(arg, NumberStyles.Float, CultureInfo.InvariantCulture, out number);
     public static bool IsFloat(string arg) => float.TryParse(arg, NumberStyles.Float, CultureInfo.InvariantCulture, out var _);
     public static float ParseFloat(string arg) => float.Parse(arg, NumberStyles.Float, CultureInfo.InvariantCulture);
@@ -32,6 +32,20 @@ namespace UpgradeWorld {
     }
     public static IEnumerable<string> ParseFiltererArgs(IEnumerable<string> args, FiltererParameters parameters) {
       var parsed = ParseArgs(args, 1);
+      /*var unused = new List<string>();
+      foreach (var par in parsed) {
+        var split = par.Split('=');
+        var name = split[0];
+        if (name == "zones") parameters.MeasureWithZones = true;
+        else if (name == "noedges") parameters.NoEdges = true;
+        else if (name == "force") parameters.ForceStart = true;
+        else if (split.Length > 1) {
+          var value = split[1];
+          if (name == "safezones") parameters.SafeZones = ParseInt(value, 2);
+          else if (name == "x") parameters.X = ParseInt(value, 0);
+          else if (name == "y") parameters.Y = ParseInt(value, 0);
+        } else unused.Add(par);
+      }*/
       parsed = ParseNamedInt(parsed, "safezones", ref parameters.SafeZones);
       parsed = ParseFlag(parsed, "zones", out parameters.MeasureWithZones);
       parsed = ParseFlag(parsed, "noedges", out parameters.NoEdges);
@@ -52,7 +66,7 @@ namespace UpgradeWorld {
       // Add back unused numbers.
       other.ToList().AddRange(allNumbers.Skip(numbers.Count()).Select(arg => arg.ToString(CultureInfo.InvariantCulture)));
       if (numbers.Count() == 0 && parameters.MeasureWithZones) {
-        var zone = ZoneSystem.instance.GetZone(Player.m_localPlayer.transform.position);
+        var zone = ZoneSystem.instance.GetZone(Helper.GetLocalPosition());
         parameters.X = zone.x;
         parameters.Y = zone.y;
       }
@@ -69,19 +83,21 @@ namespace UpgradeWorld {
           parameters.Y = numbers.Last();
         } else {
           if (parameters.MeasureWithZones) {
-            var zone = ZoneSystem.instance.GetZone(Player.m_localPlayer.transform.position);
+            var zone = ZoneSystem.instance.GetZone(Helper.GetLocalPosition());
             parameters.X = zone.x;
             parameters.Y = zone.y;
           } else {
-            parameters.X = Player.m_localPlayer.transform.position.x;
-            parameters.Y = Player.m_localPlayer.transform.position.z;
+            parameters.X = Helper.GetLocalPosition().x;
+            parameters.Y = Helper.GetLocalPosition().z;
 
           }
         }
       }
       if (numbers.Count() == 2) {
-        parameters.MinDistance = 0;
-        parameters.MaxDistance = 0;
+        if (range == null) {
+          parameters.MinDistance = 0;
+          parameters.MaxDistance = 0;
+        }
         parameters.X = numbers.First();
         parameters.Y = numbers.Last();
       }
@@ -128,8 +144,7 @@ namespace UpgradeWorld {
       var arg = parameters.FirstOrDefault(arg => arg.ToLower().StartsWith(key + "="));
       if (arg != null && arg != "") {
         var split = arg.Split('=');
-        if (split.Length > 0 && ParseInt(split[1], out var number))
-          value = number;
+        if (split.Length > 0) value = ParseInt(split[1], value);
       }
       return parameters.Where(arg => !arg.ToLower().StartsWith(key + "="));
     }
@@ -146,7 +161,7 @@ namespace UpgradeWorld {
 
     /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
     public static void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
-      if (true || location.m_location.m_location.m_clearArea)
+      if (location.m_location.m_location.m_clearArea)
         ClearZDOsWithinDistance(zone, location.m_position, location.m_location.m_exteriorRadius);
     }
 
@@ -160,6 +175,11 @@ namespace UpgradeWorld {
         delta.y = 0;
         if (delta.magnitude < distance) Helper.RemoveZDO(zdo);
       }
+    }
+    /// <summary>Wraps the local player position for safe use..</summary>
+    public static Vector3 GetLocalPosition() {
+      if (Player.m_localPlayer) return Player.m_localPlayer.transform.position;
+      return Vector3.zero;
     }
   }
 }
