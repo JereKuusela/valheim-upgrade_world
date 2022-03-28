@@ -14,6 +14,8 @@ namespace UpgradeWorld {
   public static class Settings {
     public static ConfigEntry<bool> configVerbose;
     public static bool Verbose => configVerbose.Value;
+    public static ConfigEntry<bool> configPreventDoubleZNetView;
+    public static bool PreventDoubleZNetView => configPreventDoubleZNetView.Value;
     public static ConfigEntry<bool> configAutoStart;
     public static bool AutoStart => configAutoStart.Value;
     public static ConfigEntry<float> configPlayerSafeDistance;
@@ -34,7 +36,8 @@ namespace UpgradeWorld {
 
     public static void Init(ConfigFile config) {
       var section = "1. General";
-      configVerbose = config.Bind(section, "Verbose output", false, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
+      configVerbose = config.Bind(section, "Verbose output", true, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
+      configPreventDoubleZNetView = config.Bind(section, "Prevent double ZNet view", true, "Some bugged objects keep duplicating and corrupting the save. This prevents that from happening which allows removing these objects.");
       configAutoStart = config.Bind(section, "Automatic start", false, "If true, operations start automatically without having to use the start command.");
       configPlayerSafeDistance = config.Bind(section, "Safe distance around the player", 0f, "Zones within this distance won't be changed.");
       configCustomPoints = config.Bind(section, "Custom points", "", "List of coordinates and ranges to filter zones. Format: x1,z1,min1,max1,comment1|x2,z2,min2,max2,comment2|...");

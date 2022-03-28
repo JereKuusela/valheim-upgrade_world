@@ -40,7 +40,7 @@ Note: The default base detection is very conservative. Single workbenches, campf
 
 # Parameters
 
-Effective usage of this tool requires understanding the general parameters that are used to filter out affected zones and entities. Following parameters are available to most commands:
+Advanced usage of this tool requires understanding the general parameters that are used to filter out affected zones and entities. Following parameters are available to most commands:
 
 - Biome names to only include those biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
 - Minimum and maximum distance as a range "min-max". Either of the values can be omitted for either "min" or "-max".
@@ -223,6 +223,7 @@ Filtering options in the config:
 Other settings are:
 
 - Verbose output: Prints more output which gives a better understanding how the mod operators. However this can spoil things of your world.
+- Prevent double ZNet view: Some bugged objects keep duplicating and corrupting the save. This prevents that from happening which allows removing these objects.
 - Automatic start: Starts commands automatically without having to use the start command. This allows using the commands more easily but can lead to more mistakes.
 - Operations per update: How many zones are destroyed per Unity update. Can be useful if destroying large parts of a world, but recommended to keep it as it is.
 
@@ -307,6 +308,8 @@ Affected data values can be configured but recommended to keep them as it is.
 - v1.11:
 	- Adds proper server side checks to prevent running commands as the client.
 	- Adds a better player detection to avoid destroying players on multiplayer.
+	- Adds a new setting for preventing double ZNetViews.
+	- Fixes minimap coordinates conficlicting with other mods.
 
 - v1.10:
 	- Adds a new upgrade command for mountain caves.

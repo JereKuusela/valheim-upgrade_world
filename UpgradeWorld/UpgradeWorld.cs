@@ -22,4 +22,17 @@ namespace UpgradeWorld {
       __result = true;
     }
   }
+  [HarmonyPatch(typeof(ZNetView), "Awake")]
+  public class PreventDoubleZNetView {
+    public static bool Prefix(ZNetView __instance) {
+      if (!Settings.PreventDoubleZNetView) return true;
+      if (ZNetView.m_forceDisableInit || ZDOMan.instance == null) return true;
+      if (ZNetView.m_useInitZDO && ZNetView.m_initZDO == null) {
+        ZLog.LogWarning($"Fixing double ZNetView for {__instance.gameObject.name}. Use 'remove_entities' command to remove these objects.");
+        UnityEngine.Object.Destroy(__instance);
+        return false;
+      }
+      return true;
+    }
+  }
 }
