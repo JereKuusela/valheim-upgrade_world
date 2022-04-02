@@ -1,74 +1,72 @@
 using System.Collections.Generic;
 using System.Linq;
-
-namespace UpgradeWorld {
-  /// <summary>Rerolls given chests.</summary>
-  public class RerollChests : EntityOperation {
-    public static List<string> ChestsNames = new List<string>() {
+namespace UpgradeWorld;
+/// <summary>Rerolls given chests.</summary>
+public class RerollChests : EntityOperation {
+  public static List<string> ChestsNames = new List<string> {
       "TreasureChest_blackforest", "TreasureChest_fCrypt", "TreasureChest_forestcrypt", "TreasureChest_heath",
       "TreasureChest_meadows", "TreasureChest_meadows_buried","TreasureChest_mountains", "TreasureChest_plains_stone",
       "TreasureChest_sunkencrypt", "TreasureChest_swamp", "TreasureChest_trollcave", "shipwreck_karve_chest",
       "loot_chest_wood", "loot_chest_stone", "*" }.OrderBy(item => item).ToList();
-    private HashSet<string> AllowedItems;
-    public RerollChests(string chestId, IEnumerable<string> allowedItems, bool looted, FiltererParameters args, Terminal context) : base(context) {
-      AllowedItems = allowedItems.Select(Helper.Normalize).ToHashSet();
-      Reroll(chestId, looted, args);
-    }
+  private HashSet<string> AllowedItems;
+  public RerollChests(string chestId, IEnumerable<string> allowedItems, bool looted, FiltererParameters args, Terminal context) : base(context) {
+    AllowedItems = allowedItems.Select(Helper.Normalize).ToHashSet();
+    Reroll(chestId, looted, args);
+  }
 
-    private void Reroll(string chestId, bool looted, FiltererParameters args) {
-      var chestIds = chestId == "*" ? ChestsNames.Where(name => name != "*") : new List<string>() { chestId };
-      var totalChests = 0;
-      var rolledChests = 0;
-      var prefabs = chestIds.ToDictionary(id => id.GetStableHashCode(), id => ZNetScene.instance.GetPrefab(id));
-      if (prefabs.Values.Any(prefab => prefab == null || prefab.GetComponent<Container>() == null)) {
-        Print("Error: Invalid chest ID.");
-        return;
-      }
-      var zdos = chestIds.Select(name => GetZDOs(name, args)).Aggregate(new List<ZDO>(), (acc, value) => { acc.AddRange(value); return acc; });
-      foreach (var zdo in zdos) {
-        totalChests++;
-        if (!zdo.GetBool("addedDefaultItems", false)) {
-          if (Settings.Verbose)
-            Print("Skipping a chest: Drops already unrolled.");
-          continue;
-        }
-        var obj = ZNetScene.instance.FindInstance(zdo);
-        Inventory inventory;
-        if (obj) {
-          inventory = obj.GetComponent<Container>().GetInventory();
-        } else {
-          var container = prefabs[zdo.GetPrefab()].GetComponent<Container>();
-          inventory = new Inventory(container.m_name, container.m_bkg, container.m_width, container.m_height);
-          var loadPackage = new ZPackage(zdo.GetString("items", ""));
-          inventory.Load(loadPackage);
-        }
-        if (inventory.GetAllItems().Count == 0 && !looted) {
-          if (Settings.Verbose)
-            Print("Skipping a chest: Already looted.");
-          continue;
-        }
-        if (AllowedItems.Count > 0 && !inventory.GetAllItems().All(IsValid)) continue;
-        rolledChests++;
-        inventory.RemoveAll();
-        if (obj) {
-          obj.GetComponent<Container>().AddDefaultItems();
-        } else {
-          zdo.Set("addedDefaultItems", false);
-          var savePackage = new ZPackage();
-          inventory.Save(savePackage);
-          zdo.Set("items", savePackage.GetBase64());
-        }
-      }
-      if (Settings.Verbose)
-        Print("Chests rerolled (" + rolledChests + " of " + totalChests + ").");
-      else
-        Print("Chests rerolled.");
+  private void Reroll(string chestId, bool looted, FiltererParameters args) {
+    var chestIds = chestId == "*" ? ChestsNames.Where(name => name != "*") : new List<string> { chestId };
+    var totalChests = 0;
+    var rolledChests = 0;
+    var prefabs = chestIds.ToDictionary(id => id.GetStableHashCode(), id => ZNetScene.instance.GetPrefab(id));
+    if (prefabs.Values.Any(prefab => prefab == null || prefab.GetComponent<Container>() == null)) {
+      Print("Error: Invalid chest ID.");
+      return;
     }
-    private bool IsValid(ItemDrop.ItemData item) {
-      var isValid = AllowedItems.Contains(Helper.Normalize(item.m_dropPrefab.name));
-      if (Settings.Verbose && !isValid)
-        Print("Skipping a chest: Extra item " + item.m_dropPrefab.name + ".");
-      return isValid;
+    var zdos = chestIds.Select(name => GetZDOs(name, args)).Aggregate(new List<ZDO>(), (acc, value) => { acc.AddRange(value); return acc; });
+    foreach (var zdo in zdos) {
+      totalChests++;
+      if (!zdo.GetBool("addedDefaultItems", false)) {
+        if (Settings.Verbose)
+          Print("Skipping a chest: Drops already unrolled.");
+        continue;
+      }
+      var obj = ZNetScene.instance.FindInstance(zdo);
+      Inventory inventory;
+      if (obj) {
+        inventory = obj.GetComponent<Container>().GetInventory();
+      } else {
+        var container = prefabs[zdo.GetPrefab()].GetComponent<Container>();
+        inventory = new(container.m_name, container.m_bkg, container.m_width, container.m_height);
+        ZPackage loadPackage = new(zdo.GetString("items", ""));
+        inventory.Load(loadPackage);
+      }
+      if (inventory.GetAllItems().Count == 0 && !looted) {
+        if (Settings.Verbose)
+          Print("Skipping a chest: Already looted.");
+        continue;
+      }
+      if (AllowedItems.Count > 0 && !inventory.GetAllItems().All(IsValid)) continue;
+      rolledChests++;
+      inventory.RemoveAll();
+      if (obj) {
+        obj.GetComponent<Container>().AddDefaultItems();
+      } else {
+        zdo.Set("addedDefaultItems", false);
+        ZPackage savePackage = new();
+        inventory.Save(savePackage);
+        zdo.Set("items", savePackage.GetBase64());
+      }
     }
+    if (Settings.Verbose)
+      Print("Chests rerolled (" + rolledChests + " of " + totalChests + ").");
+    else
+      Print("Chests rerolled.");
+  }
+  private bool IsValid(ItemDrop.ItemData item) {
+    var isValid = AllowedItems.Contains(Helper.Normalize(item.m_dropPrefab.name));
+    if (Settings.Verbose && !isValid)
+      Print("Skipping a chest: Extra item " + item.m_dropPrefab.name + ".");
+    return isValid;
   }
 }

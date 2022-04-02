@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net4.8</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BepInEx.dll">
