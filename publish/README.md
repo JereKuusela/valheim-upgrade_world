@@ -308,6 +308,8 @@ Affected data values can be configured but recommended to keep them as it is.
 - v1.11:
 	- Adds proper server side checks to prevent running commands as the client.
 	- Adds support for running the commands as the dedicated server (with Server Devcommands).
+	- Adds a new command `regenerate_locations` to destroy and place locations at the same place.
+	- Adds a new command `remove_locations` to destroy placed and unplaced locations.
 	- Adds a better player detection to avoid destroying players on multiplayer.
 	- Adds a new setting for preventing double ZNetViews.
 	- Fixes minimap coordinates conficlicting with other mods.

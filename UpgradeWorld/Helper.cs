@@ -159,8 +159,8 @@ public static class Helper {
   }
 
   /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
-  public static void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
-    if (location.m_location.m_location.m_clearArea)
+  public static void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location, bool force = false) {
+    if (location.m_location.m_location.m_clearArea || force)
       ClearZDOsWithinDistance(zone, location.m_position, location.m_location.m_exteriorRadius);
   }
 
@@ -172,7 +172,7 @@ public static class Helper {
       var zdoPosition = zdo.GetPosition();
       var delta = position - zdoPosition;
       delta.y = 0;
-      if (delta.magnitude < distance) Helper.RemoveZDO(zdo);
+      if (zdoPosition.y > 4000f || delta.magnitude < distance) Helper.RemoveZDO(zdo);
     }
   }
   /// <summary>Wraps the local player position for safe use..</summary>

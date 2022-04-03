@@ -18,7 +18,7 @@ public abstract class EntityOperation : BaseOperation {
     }
     return true;
   }
-  private bool IsIncluded(string id, string name) {
+  private static bool IsIncluded(string id, string name) {
     if (id.StartsWith("*") && id.EndsWith("*")) {
       return name.Contains(id.Substring(1, id.Length - 3));
     }
@@ -26,7 +26,7 @@ public abstract class EntityOperation : BaseOperation {
     if (id.EndsWith("*")) return name.StartsWith(id.Substring(0, id.Length - 2));
     return id == name;
   }
-  public IEnumerable<string> GetPrefabs(string id) {
+  public static IEnumerable<string> GetPrefabs(string id) {
     IEnumerable<GameObject> values = ZNetScene.instance.m_namedPrefabs.Values;
     if (id.Contains("*"))
       values = values.Where(prefab => IsIncluded(id, prefab.name));
@@ -34,10 +34,10 @@ public abstract class EntityOperation : BaseOperation {
       values = values.Where(prefab => prefab.name == id);
     return values.Select(prefab => prefab.name);
   }
-  protected IEnumerable<ZDO> GetZDOs(string id, FiltererParameters args) {
+  public static IEnumerable<ZDO> GetZDOs(string id, FiltererParameters args) {
     var code = id.GetStableHashCode();
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => code == zdo.GetPrefab());
     return FilterZdos(zdos, args);
   }
-  protected IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.FilterZdos(zdos);
+  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.FilterZdos(zdos);
 }

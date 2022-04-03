@@ -8,6 +8,8 @@ public abstract class ZoneOperation : ExecutedOperation {
   protected Vector2i[] ZonesToUpgrade;
   protected int ZonesPerUpdate = 1;
   protected int ZoneIndex = 0;
+  ///<summary>Some operations can be done outside the zone loading logic.</summary>
+  protected int PreOperated = 0;
   protected IEnumerable<ZoneFilterer> Filterers;
   protected ZoneOperation(Terminal context, bool autoStart) : base(context, autoStart) {
     ZonesToUpgrade = Zones.GetWorldZones();
@@ -55,11 +57,11 @@ public abstract class ZoneOperation : ExecutedOperation {
   }
   private void UpdateConsole() {
     if (Settings.Verbose) {
-      var totalString = ZonesToUpgrade.Length.ToString();
-      var updatedString = ZoneIndex.ToString().PadLeft(totalString.Length, '0');
+      var totalString = (ZonesToUpgrade.Length + PreOperated).ToString();
+      var updatedString = (ZoneIndex + PreOperated).ToString().PadLeft(totalString.Length, '0');
       PrintOnce(Operation + ": " + updatedString + "/" + totalString, false);
     } else {
-      var percent = Math.Min(100, ZonesToUpgrade.Length == 0 ? 100 : (int)Math.Floor(100.0 * ZoneIndex / ZonesToUpgrade.Length));
+      var percent = Math.Min(100, ZonesToUpgrade.Length == 0 ? 100 : (int)Math.Floor(100.0 * (ZoneIndex + PreOperated) / (ZonesToUpgrade.Length + PreOperated)));
       PrintOnce(Operation + ": " + percent + "%", false);
     }
   }

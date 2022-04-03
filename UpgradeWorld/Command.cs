@@ -80,6 +80,26 @@ public static class Commands {
       Executor.AddOperation(new DistributeLocations(ids, parameters.ForceStart, args.Context));
       Executor.AddOperation(new PlaceLocations(args.Context, !noClearing, parameters));
     }, onlyServer: true, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
+    new Terminal.ConsoleCommand("remove_locations", "[...location_ids] [...args] - Removes given location ids.", (Terminal.ConsoleEventArgs args) => {
+      if (!IsServer(args.Context)) return;
+      FiltererParameters parameters = new();
+      var ids = Helper.ParseFiltererArgs(args.Args, parameters);
+      if (ids.Count() == 0) {
+        args.Context.AddString("Error: Missing location ids.");
+        return;
+      }
+      Executor.AddOperation(new RemoveLocations(args.Context, ids, parameters));
+    }, onlyServer: true, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
+    new Terminal.ConsoleCommand("regenerate_locations", "[...location_ids] [...args] - Regenerates given location ids.", (Terminal.ConsoleEventArgs args) => {
+      if (!IsServer(args.Context)) return;
+      FiltererParameters parameters = new();
+      var ids = Helper.ParseFiltererArgs(args.Args, parameters);
+      if (ids.Count() == 0) {
+        args.Context.AddString("Error: Missing location ids.");
+        return;
+      }
+      Executor.AddOperation(new RegenerateLocations(args.Context, ids, parameters));
+    }, onlyServer: true, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
     new Terminal.ConsoleCommand("reroll_chests", "[chest_name] [looted] [...item_ids] [...args] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", (Terminal.ConsoleEventArgs args) => {
       if (!IsServer(args.Context)) return;
       FiltererParameters parameters = new();
