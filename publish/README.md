@@ -310,6 +310,7 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Adds support for running the commands as the dedicated server (with Server Devcommands).
 	- Adds a new command `regenerate_locations` to destroy and place locations at the same place.
 	- Adds a new command `remove_locations` to destroy placed and unplaced locations.
+	- Adds new upgrade types for Epic Valheim Additions (`EVA_1.3+1.4`, `EVA_1.3+1.4_locations_only` and `EVA_1.4`).
 	- Adds a better player detection to avoid destroying players on multiplayer.
 	- Adds a new setting for preventing double ZNetViews.
 	- Fixes minimap coordinates conficlicting with other mods.

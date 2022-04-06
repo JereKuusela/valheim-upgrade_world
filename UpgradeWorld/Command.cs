@@ -61,12 +61,12 @@ public static class Commands {
       FiltererParameters parameters = new();
       var extra = Helper.ParseFiltererArgs(args.Args, parameters);
       var selectedType = "";
-      foreach (var type in Upgrade.GetTypes()) {
+      foreach (var type in Upgrade.Types) {
         extra = Helper.ParseFlag(extra, type, out var found);
         if (found) selectedType = type;
       }
       new Upgrade(args.Context, selectedType, extra, parameters);
-    }, onlyServer: true, optionsFetcher: Upgrade.GetTypes);
+    }, onlyServer: true, optionsFetcher: () => Upgrade.Types);
 
     new Terminal.ConsoleCommand("place_locations", "[...location_ids] [noclearing] [...args] - Places given location ids to already generated zones.", (Terminal.ConsoleEventArgs args) => {
       if (!IsServer(args.Context)) return;

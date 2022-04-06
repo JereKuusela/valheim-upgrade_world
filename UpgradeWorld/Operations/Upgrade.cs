@@ -3,17 +3,21 @@ using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Predefined upgrade operations</summary>
 public class Upgrade : BaseOperation {
-  public static List<string> GetTypes() => new()
+  public static List<string> Types = new()
   {
     "tarpits",
     "onions",
     "new_mistlands",
     "old_mistlands",
-    "mountain_caves"
+    "mountain_caves",
+    "EVA_1.3+1.4",
+    "EVA_1.3+1.4_locations_only",
+    "EVA_1.4"
   };
 
   public Upgrade(Terminal context, string type, IEnumerable<string> extra, FiltererParameters args) : base(context) {
     AddOperations(type, extra, args);
+    Types.Sort();
   }
 
   private void AddOperations(string type, IEnumerable<string> extra, FiltererParameters args) {
@@ -81,6 +85,7 @@ public class Upgrade : BaseOperation {
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
     } else if (type == "EVA_1.4") {
       extra = Helper.ParseFlag(extra, "noclearing", out var noClearing);
+      Executor.AddOperation(new RemoveLocations(Context, new[] { "SvartalfrQueenAltar" }, args));
       Executor.AddOperation(new DistributeLocations(new[] { "SvartalfrQueenAltar_New" }, false, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
     } else
