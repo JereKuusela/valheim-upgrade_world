@@ -1,14 +1,12 @@
-# Upgrade world
+# Upgrade World
 
-This single player tool includes console commands which can add new content to already explored areas.
-
-For dedicated servers, open the world in single player.
+This tool includes console commands to add new content to already explored areas (and more).
 
 Always back up your world before making any changes!
 
 # Things you can do
 
-- Place tar pits on already explored areas.
+- Place tar pits and mountain caves on already explored areas.
 - Reroll chest loots to have onion seeds on already explored areas.
 - Completely regenerate Mistlands (with new or legacy content).
 - Remove any object from the game world.
@@ -18,9 +16,13 @@ Always back up your world before making any changes!
 # Manual Installation:
 
 1. Install the [BepInExPack Valheim](https://valheim.thunderstore.io/package/denikson/BepInExPack_Valheim).
-2. Download the latest zip.
-3. Extract it in the \<GameDirectory\>\BepInEx\plugins\ folder.
-4. Optionally also install the [Configuration manager](https://github.com/BepInEx/BepInEx.ConfigurationManager/releases/tag/v16.4).
+2. Install this mod by extracting the DLL file to the \<GameDirectory\>\BepInEx\plugins\ folder.
+3. Optionally install the [Configuration manager](https://github.com/BepInEx/BepInEx.ConfigurationManager/releases/tag/v16.4).
+4. For dedicated servers, install this mod and Server Devcommands also on the server.
+
+
+For dedicated servers, open the world in single player or install the mod on the server with Server Devcommands mod.
+
 
 # Quick instructions:
 

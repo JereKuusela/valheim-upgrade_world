@@ -31,6 +31,8 @@ public static class Settings {
   public static IEnumerable<string> TimeBasedDataNames => configTimeBasedDataNames.Value.Split(',').Select(name => name.Trim());
   public static ConfigEntry<string> configZoneControlId;
   public static string ZoneControlId => configZoneControlId.Value.Trim();
+  public static ConfigEntry<string> configRootUsers;
+  public static HashSet<string> RootUsers => configRootUsers.Value.Split(',').Select(s => s.Trim()).Where(s => s != "").ToHashSet();
 
   public static void Init(ConfigFile config) {
     var section = "1. General";
@@ -41,6 +43,7 @@ public static class Settings {
     configCustomPoints = config.Bind(section, "Custom points", "", "List of coordinates and ranges to filter zones. Format: x1,z1,min1,max1,comment1|x2,z2,min2,max2,comment2|...");
     configSafeZoneItems = config.Bind(section, "Safe zone items", "blastfurnace,bonfire,charcoal_kiln,fermenter,fire_pit,forge,guard_stone,hearth,piece_artisanstation,piece_bed02,piece_brazierceiling01,piece_groundtorch,piece_groundtorch_blue,piece_groundtorch_green,piece_groundtorch_wood,piece_oven,piece_spinningwheel,piece_stonecutter,piece_walltorch,piece_workbench,portal,portal_wood,smelter,windmill,piece_chest,piece_chest_blackmetal,piece_chest_private,piece_chest_treasure,piece_chest_wood", "List of entity names that prevent zones being modified.");
     configSafeZoneSize = config.Bind(section, "Safe zones", 2, "0 = disable, 1 = only the zone, 2 = 3x3 zones, 3 = 5x5 zones, etc.");
+    configRootUsers = config.Bind(section, "Root users", "", "SteamIDs that can execute commands on servers. If not set, then all admins can execute commands.");
 
     configDestroysPerUpdate = config.Bind("2. Destroying", "Operations per update", 100, "How many zones are destroyed per Unity update.");
     configTimeBasedDataNames = config.Bind("3. Change time/day", "Time based data names", "spawntime,lastTime,SpawnTime,StartTime,alive_time,spawn_time,picked_time,plantTime,pregnant,TameLastFeeding", "Names of the data values that should be updated with the new time. Changing these is NOT recommended.");
