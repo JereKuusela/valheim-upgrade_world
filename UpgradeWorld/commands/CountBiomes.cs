@@ -14,6 +14,10 @@ public class CountBiomesCommand {
         args.Context.AddString("Error: Frequency has wrong format.");
         return;
       }
+      if (pars.Zone.HasValue) {
+        args.Context.AddString("Error: <color=yellow>zone</color> is not supported.");
+        return;
+      }
       pars.Unhandled.RemoveAt(0);
       if (pars.Valid(args.Context))
         new CountBiomes(args.Context, frequency, pars);

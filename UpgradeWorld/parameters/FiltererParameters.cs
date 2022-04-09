@@ -7,12 +7,9 @@ public class FiltererParameters {
   public bool NoEdges = false;
   public bool ForceStart = false;
   public Vector2? Pos = null;
-  public Vector2Int? Zone = null;
-  public float X = 0;
-  public float Y = 0;
+  public Vector2i? Zone = null;
   public float MinDistance = 0;
   public float MaxDistance = 0;
-  public bool MeasureWithZones = false;
   public int SafeZones = Settings.SafeZoneSize;
   public TargetZones TargetZones = TargetZones.Generated;
   public List<string> Unhandled = new();
@@ -72,13 +69,13 @@ public class FiltererParameters {
       zdos = zdos.Where(zdo => IsBiomeValid(zdo.GetPosition()));
     if (NoEdges)
       zdos = zdos.Where(zdo => WorldGenerator.instance.GetBiomeArea(zdo.GetPosition()) == Heightmap.BiomeArea.Median);
-    if (MeasureWithZones) {
-      Vector2i zone = new((int)X, (int)Y);
+    if (Zone.HasValue) {
+      var zone = Zone.Value;
       var min = (int)MinDistance;
       var max = (int)MaxDistance;
       zdos = zdos.Where(zdo => Zones.IsWithin(zone, ZoneSystem.instance.GetZone(zdo.GetPosition()), min, max));
     } else {
-      Vector3 position = new(X, 0, Y);
+      Vector3 position = new(Pos.Value.x, 0, Pos.Value.y);
       if (MinDistance > 0)
         zdos = zdos.Where(zdo => Utils.DistanceXZ(zdo.GetPosition(), position) >= MinDistance);
       if (MaxDistance > 0)
@@ -88,8 +85,11 @@ public class FiltererParameters {
   }
 
   public override string ToString() {
+    var position = "";
+    if (Zone.HasValue) position = $"{Zone.Value.x} {Zone.Value.y}";
+    if (Pos.HasValue) position = $"{Pos.Value.x} {Pos.Value.y}";
     var texts = new[]{
-        "Position: " + X + " " + Y,
+        "Position: " + position,
         "Distance: " + MinDistance + " " + MaxDistance,
         "Biomes: " + string.Join(", ", Biomes)
       };
@@ -102,21 +102,21 @@ public class FiltererParameters {
       if (MinDistance > 0) str += " more than " + MinDistance;
       if (MinDistance > 0 && MaxDistance > 0) str += " and ";
       if (MaxDistance > 0) str += " less than " + MaxDistance;
-      if (MeasureWithZones)
+      if (Zone.HasValue)
         str += " zones";
       else
         str += " meters";
       str += " away from the ";
-      if (X == 0 && Y == 0)
+      if (Zone.HasValue)
+        str += "zone " + Zone.Value.x + "," + Zone.Value.y;
+      else if (Pos.Value.x == 0 && Pos.Value.y == 0)
         str += "world center";
-      else if (X == Helper.GetLocalPosition().x && Y == Helper.GetLocalPosition().z)
+      else if (Pos.Value.x == Helper.GetLocalPosition().x && Pos.Value.y == Helper.GetLocalPosition().z)
         str += "player";
-      else if (MeasureWithZones)
-        str += "zone " + X + "," + Y;
       else
-        str += "coordinates " + X + "," + Y;
-    } else if (MeasureWithZones)
-      str += " the zone " + X + "," + Y;
+        str += "coordinates " + Pos.Value.x + "," + Pos.Value.y;
+    } else if (Zone.HasValue)
+      str += " the zone " + Zone.Value.x + "," + Zone.Value.y;
     else
       str += " all zones";
     if (Biomes.Count > 0) {

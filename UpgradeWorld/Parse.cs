@@ -13,9 +13,9 @@ public class Parse {
     return vector;
   }
 
-  public static Vector2Int Zone(string arg) {
+  public static Vector2i Zone(string arg) {
     var values = Split(arg).ToArray();
-    Vector2Int vector = new();
+    Vector2i vector = new();
     if (values.Length > 0) vector.x = Int(values[0]);
     if (values.Length > 1) vector.y = Int(values[1]);
     return vector;
@@ -59,13 +59,5 @@ public class Parse {
   public static IEnumerable<string> Flag(IEnumerable<string> parameters, string flag, out bool value) {
     value = parameters.FirstOrDefault(arg => arg.ToLower() == flag) != null;
     return parameters.Where(arg => arg.ToLower() != flag);
-  }
-  public static IEnumerable<string> NamedInt(IEnumerable<string> parameters, string key, ref int value) {
-    var arg = parameters.FirstOrDefault(arg => arg.ToLower().StartsWith(key + "="));
-    if (arg != null && arg != "") {
-      var split = arg.Split('=');
-      if (split.Length > 0) value = Int(split[1], value);
-    }
-    return parameters.Where(arg => !arg.ToLower().StartsWith(key + "="));
   }
 }

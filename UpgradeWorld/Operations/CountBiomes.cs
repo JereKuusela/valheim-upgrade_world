@@ -19,7 +19,7 @@ public class CountBiomes : BaseOperation {
         var distance = new Vector2(x, y).magnitude;
         if (distance < args.MinDistance) continue;
         if (distance > args.MaxDistance) continue;
-        var biome = WorldGenerator.instance.GetBiome(args.X + x, args.Y + y);
+        var biome = WorldGenerator.instance.GetBiome(args.Pos.Value.x + x, args.Pos.Value.y + y);
         if (!args.IsBiomeValid(biome)) continue;
         if (!biomes.ContainsKey(biome)) biomes[biome] = 0;
         biomes[biome]++;

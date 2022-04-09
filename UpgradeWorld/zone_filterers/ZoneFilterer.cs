@@ -12,8 +12,8 @@ public static class FiltererFactory {
     filters.Add(new TargetZonesFilterer(args.TargetZones));
     filters.Add(new BiomeFilterer(args.Biomes, !args.NoEdges));
     filters.Add(new ConfigFilterer());
-    if (args.MeasureWithZones) filters.Add(new ZoneDistanceFilterer(new((int)args.X, (int)args.Y), (int)args.MinDistance, (int)args.MaxDistance));
-    else filters.Add(new DistanceFilterer(new(args.X, 0, args.Y), args.MinDistance, args.MaxDistance));
+    if (args.Zone.HasValue) filters.Add(new ZoneDistanceFilterer(args.Zone.Value, (int)args.MinDistance, (int)args.MaxDistance));
+    else if (args.Pos.HasValue) filters.Add(new DistanceFilterer(new(args.Pos.Value.x, 0, args.Pos.Value.y), args.MinDistance, args.MaxDistance));
     if (args.SafeZones > 0) filters.Add(new PlayerBaseFilterer(args.SafeZones));
     return filters;
   }
