@@ -27,11 +27,11 @@ public class Upgrade : BaseOperation {
     }
     type = type.ToLower();
     if (type == "mountain_caves") {
-      extra = Helper.ParseFlag(extra, "noclearing", out var noClearing);
+      extra = Parse.Flag(extra, "noclearing", out var noClearing);
       Executor.AddOperation(new DistributeLocations(new[] { "MountainCave02" }, false, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
     } else if (type == "tarpits") {
-      extra = Helper.ParseFlag(extra, "noclearing", out var noClearing);
+      extra = Parse.Flag(extra, "noclearing", out var noClearing);
       Executor.AddOperation(new DistributeLocations(new[] { "TarPit1" }, false, Context));
       Executor.AddOperation(new DistributeLocations(new[] { "TarPit2" }, false, Context));
       Executor.AddOperation(new DistributeLocations(new[] { "TarPit3" }, false, Context));
@@ -75,7 +75,7 @@ public class Upgrade : BaseOperation {
       Executor.AddOperation(new DistributeLocations(new[] { "Vegvisir_Jotunn" }, false, Context));
       Executor.AddOperation(new DistributeLocations(new[] { "Vegvisir_SvartalfrQueen" }, false, Context));
     } else if (type == "EVA_1.3+1.4_locations_only") {
-      extra = Helper.ParseFlag(extra, "noclearing", out var noClearing);
+      extra = Parse.Flag(extra, "noclearing", out var noClearing);
       Executor.AddOperation(new DistributeLocations(new[] { "BlazingDamnedOneAltar" }, false, Context));
       Executor.AddOperation(new DistributeLocations(new[] { "JotunnAltar" }, false, Context));
       Executor.AddOperation(new DistributeLocations(new[] { "SvartalfrQueenAltar_New" }, false, Context));
@@ -84,7 +84,7 @@ public class Upgrade : BaseOperation {
       Executor.AddOperation(new DistributeLocations(new[] { "Vegvisir_SvartalfrQueen" }, false, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
     } else if (type == "EVA_1.4") {
-      extra = Helper.ParseFlag(extra, "noclearing", out var noClearing);
+      extra = Parse.Flag(extra, "noclearing", out var noClearing);
       Executor.AddOperation(new RemoveLocations(Context, new[] { "SvartalfrQueenAltar" }, args));
       Executor.AddOperation(new DistributeLocations(new[] { "SvartalfrQueenAltar_New" }, false, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));

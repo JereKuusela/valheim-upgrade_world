@@ -8,7 +8,6 @@ public class UpgradeWorld : BaseUnityPlugin {
     Settings.Init(Config);
     Harmony harmony = new("valheim.jere.upgrade_world");
     harmony.PatchAll();
-    Commands.Init();
   }
   public void Update() {
     Executor.Execute();
@@ -32,5 +31,32 @@ public class PreventDoubleZNetView {
       return false;
     }
     return true;
+  }
+}
+[HarmonyPatch(typeof(Terminal), "InitTerminal")]
+public class SetCommands {
+  public static void Postfix() {
+    new ChangeDayCommand();
+    new ChangeTimeCommand();
+    new CountBiomesCommand();
+    new CountEntitiesCommand();
+    new DestroyCommand();
+    new DistributeCommand();
+    new GenerateCommand();
+    new HidePositionCommand();
+    new ListEntitiesCommand();
+    new PlaceLocationsCommand();
+    new RegenerateLocationsCommand();
+    new RemoveEntitiesCommand();
+    new RemoveLocationsCommand();
+    new RemovePinsCommand();
+    new RerollChestsCommand();
+    new RevealPositionCommand();
+    new SetDayCommand();
+    new SetTimeCommand();
+    new SetVegetationCommand();
+    new StartStopCommand();
+    new UpgradeCommand();
+    new VerboseCommand();
   }
 }
