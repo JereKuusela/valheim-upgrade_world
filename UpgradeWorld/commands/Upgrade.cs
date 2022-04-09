@@ -2,6 +2,10 @@ using System.Linq;
 namespace UpgradeWorld;
 public class UpgradeCommand {
   public UpgradeCommand() {
+    CommandWrapper.Register("upgrade", (int index) => {
+      if (index == 0) return Upgrade.Types;
+      return FiltererParameters.Parameters;
+    }, FiltererParameters.GetAutoComplete());
     new Terminal.ConsoleCommand("upgrade", "[operation] [...args] - Performs a predefined upgrade operation.", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       FiltererParameters pars = new(args);

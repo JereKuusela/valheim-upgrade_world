@@ -2,6 +2,10 @@ using System.Linq;
 namespace UpgradeWorld;
 public class SetTimeCommand {
   public SetTimeCommand() {
+    CommandWrapper.Register("set_time", (int index) => {
+      if (index == 0) return CommandWrapper.Info("The amount of seconds to set the time.");
+      return null;
+    });
     new Terminal.ConsoleCommand("set_time", "[seconds] - Changes time while updating entities.", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       if (args.Args.Count() == 0) {

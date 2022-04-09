@@ -2,6 +2,10 @@ using System.Linq;
 namespace UpgradeWorld;
 public class ChangeDayCommand {
   public ChangeDayCommand() {
+    CommandWrapper.Register("change_day", (int index) => {
+      if (index == 0) return CommandWrapper.Info("Amount of days to go forward or backward.");
+      return null;
+    });
     new Terminal.ConsoleCommand("change_day", "[day] - Changes day while updating entities.", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       if (args.Args.Count() == 0) {

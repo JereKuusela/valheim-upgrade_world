@@ -2,6 +2,10 @@ using System.Linq;
 namespace UpgradeWorld;
 public class SetDayCommand {
   public SetDayCommand() {
+    CommandWrapper.Register("set_day", (int index) => {
+      if (index == 0) return CommandWrapper.Info("The day to set the time.");
+      return null;
+    });
     new Terminal.ConsoleCommand("set_day", "[day] - Changes day while updating entities.", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       if (args.Args.Count() == 0) {

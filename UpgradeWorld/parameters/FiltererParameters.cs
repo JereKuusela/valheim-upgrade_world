@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System;
 namespace UpgradeWorld;
 public class FiltererParameters {
   public HashSet<Heightmap.Biome> Biomes = new();
@@ -20,7 +21,7 @@ public class FiltererParameters {
   public FiltererParameters(Terminal.ConsoleEventArgs args) {
     foreach (var par in args.Args.Skip(1).ToArray()) {
       var split = par.Split('=');
-      var name = split[0];
+      var name = split[0].ToLower();
       if (name == "noedges") NoEdges = true;
       else if (name == "force") ForceStart = true;
       else if (split.Length > 1) {
@@ -131,5 +132,28 @@ public class FiltererParameters {
     else
       str += " with player base detection (" + size + "x" + size + " safe zones)";
     return str;
+  }
+  public static List<string> Parameters = new() {
+    "pos", "zone", "biomes", "min", "minDistance", "max", "maxDistance", "distance", "force", "noEdges", "safeZones"
+  };
+  public static Dictionary<string, Func<int, List<string>>> GetAutoComplete() {
+    return new() {
+      { "pos", (int index) => CommandWrapper.Pos("pos", "Coordinates for the center point. If not given, player's position is used", index)},
+      { "zone", (int index) => CommandWrapper.Pos("zone" , "Indices for the center zone", index) },
+      { "biomes", (int index) => Helper.AvailableBiomes },
+      { "min", (int index) => index == 0 ? CommandWrapper.Info("min=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
+      { "minDistance", (int index) => index == 0 ? CommandWrapper.Info("minDistance=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
+      { "max", (int index) => index == 0 ? CommandWrapper.Info("max=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
+      { "maxDistance", (int index) => index == 0 ? CommandWrapper.Info("maxDistance=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
+      { "safeZones", (int index) => index == 0 ? CommandWrapper.Info("safezones=<color=yellow>amount</color> | The size of protected areas around player base structures.") : null },
+      { "force", (int index) => CommandWrapper.Flag("force", "Starts the operation instantly") },
+      { "noEdges", (int index) => CommandWrapper.Flag("noedges", "Excludes zones with multiple biomes") },
+      { "distance", (int index) => {
+          if (index == 0) return CommandWrapper.Info("distance=<color=yellow>min</color>,max | Minimum distance from the center point / zone.");
+          if (index == 1) return CommandWrapper.Info("distance=min,<color=yellow>max</color> | Maximum distance from the center point / zone.");
+          return null;
+        }
+      }
+    };
   }
 }

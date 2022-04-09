@@ -1,13 +1,19 @@
 ﻿using BepInEx;
+using BepInEx.Logging;
 using HarmonyLib;
 namespace UpgradeWorld;
 [BepInPlugin("valheim.jere.upgrade_world", "UpgradeWorld", "1.11.0.0")]
 public class UpgradeWorld : BaseUnityPlugin {
-
+  public static ManualLogSource Log;
   public void Awake() {
+    Log = Logger;
     Settings.Init(Config);
     Harmony harmony = new("valheim.jere.upgrade_world");
     harmony.PatchAll();
+  }
+  public void Start() {
+    CommandWrapper.Init();
+    FiltererParameters.Parameters.Sort();
   }
   public void Update() {
     Executor.Execute();

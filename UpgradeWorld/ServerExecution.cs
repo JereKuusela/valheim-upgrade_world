@@ -17,9 +17,11 @@ public class ServerExecution {
 
   ///<summary>Sends command to the server so that it can be executed there.</summary>
   public static void Send(string command) {
+    if (!ZNet.instance) return;
     var server = ZNet.instance.GetServerRPC();
+    if (server == null) return;
     Console.instance.AddString("Sending command: " + command);
-    if (server != null) server.Invoke(RPC_Command, new[] { command });
+    server.Invoke(RPC_Command, new[] { command });
   }
   ///<summary>Sends command to the server so that it can be executed there.</summary>
   public static void Send(IEnumerable<string> args) => Send(string.Join(" ", args));

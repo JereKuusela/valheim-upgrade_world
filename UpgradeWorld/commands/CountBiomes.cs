@@ -1,17 +1,20 @@
-using System.Linq;
 namespace UpgradeWorld;
 public class CountBiomesCommand {
   public CountBiomesCommand() {
-    new Terminal.ConsoleCommand("count_biomes", "[frequency] [...args] - Counts amounts of biomes with given meters of frequency.", (Terminal.ConsoleEventArgs args) => {
+    CommandWrapper.Register("count_biomes", (int index) => {
+      if (index == 0) return CommandWrapper.Info("How precisely the biome is checked (meters). Lower value increases precision but takes longer to measure.");
+      return FiltererParameters.Parameters;
+    }, FiltererParameters.GetAutoComplete());
+    new Terminal.ConsoleCommand("count_biomes", "[precision] [...args] - Counts amounts of biomes with given meters of frequency.", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       FiltererParameters pars = new(args);
-      var frequency = 100f;
+      var precision = 100f;
       if (pars.Unhandled.Count < 1) {
-        args.Context.AddString("Error: Missing frequency.");
+        args.Context.AddString("Error: Missing precision.");
         return;
       }
-      if (!Parse.TryFloat(pars.Unhandled[0], out frequency)) {
-        args.Context.AddString("Error: Frequency has wrong format.");
+      if (!Parse.TryFloat(pars.Unhandled[0], out precision)) {
+        args.Context.AddString("Error: Precision has wrong format.");
         return;
       }
       if (pars.Zone.HasValue) {
@@ -20,7 +23,7 @@ public class CountBiomesCommand {
       }
       pars.Unhandled.RemoveAt(0);
       if (pars.Valid(args.Context))
-        new CountBiomes(args.Context, frequency, pars);
+        new CountBiomes(args.Context, precision, pars);
     }, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
   }
 }
