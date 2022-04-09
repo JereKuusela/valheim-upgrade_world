@@ -4,16 +4,15 @@ public class RerollChestsCommand {
   public RerollChestsCommand() {
     new Terminal.ConsoleCommand("reroll_chests", "[chest_name] [looted] [...item_ids] [...args] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
-      FiltererParameters parameters = new();
-      var extra = Parse.FiltererArgs(args.Args, parameters);
-      extra = Parse.Flag(extra, "looted", out var looted);
-      if (extra.Count() == 0) {
+      IdParameters pars = new(args);
+      pars.Ids = Parse.Flag(pars.Ids, "looted", out var looted).ToList();
+      if (pars.Ids.Count() == 0) {
         args.Context.AddString("Error: Missing chest name.");
         return;
       }
-      var chestName = extra.First();
-      var ids = extra.Skip(1);
-      new RerollChests(chestName, ids, looted, parameters, args.Context);
+      var chestName = pars.Ids.First();
+      var ids = pars.Ids.Skip(1);
+      new RerollChests(chestName, ids, looted, pars, args.Context);
     }, optionsFetcher: () => RerollChests.ChestsNames);
   }
 }
