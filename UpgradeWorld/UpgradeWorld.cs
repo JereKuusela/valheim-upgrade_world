@@ -49,15 +49,12 @@ public class SetCommands {
     new DestroyCommand();
     new DistributeCommand();
     new GenerateCommand();
-    new HidePositionCommand();
     new ListEntitiesCommand();
     new PlaceLocationsCommand();
     new RegenerateLocationsCommand();
     new RemoveEntitiesCommand();
     new RemoveLocationsCommand();
-    new RemovePinsCommand();
     new RerollChestsCommand();
-    new RevealPositionCommand();
     new SetDayCommand();
     new SetTimeCommand();
     new SetVegetationCommand();

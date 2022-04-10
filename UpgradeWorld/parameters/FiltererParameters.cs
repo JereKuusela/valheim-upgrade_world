@@ -138,8 +138,8 @@ public class FiltererParameters {
   };
   public static Dictionary<string, Func<int, List<string>>> GetAutoComplete() {
     return new() {
-      { "pos", (int index) => CommandWrapper.Pos("pos", "Coordinates for the center point. If not given, player's position is used", index)},
-      { "zone", (int index) => CommandWrapper.Pos("zone" , "Indices for the center zone", index) },
+      { "pos", (int index) => CommandWrapper.XZ("pos", "Coordinates for the center point. If not given, player's position is used", index)},
+      { "zone", (int index) => CommandWrapper.XZ("zone" , "Indices for the center zone", index) },
       { "biomes", (int index) => Helper.AvailableBiomes },
       { "min", (int index) => index == 0 ? CommandWrapper.Info("min=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
       { "minDistance", (int index) => index == 0 ? CommandWrapper.Info("minDistance=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },

@@ -26,36 +26,6 @@ public class Parse {
   public static bool IsFloat(string arg) => float.TryParse(arg, NumberStyles.Float, CultureInfo.InvariantCulture, out var _);
   public static float Float(string arg) => float.Parse(arg, NumberStyles.Float, CultureInfo.InvariantCulture);
   public static IEnumerable<string> Split(string value) => value.Split(',').Select(arg => arg.Trim()).Where(arg => arg != "");
-
-
-  public static bool IncludedArgs(Terminal.ConsoleEventArgs args, out float x, out float z, out float distance) {
-    x = 0;
-    z = 0;
-    distance = 0;
-    if (args.Length < 2) {
-      args.Context.AddString("Error: Missing coordinate X");
-      return false;
-    }
-    if (args.Length < 3) {
-      args.Context.AddString("Error: Missing coordinate Z");
-      return false;
-    }
-    if (!TryFloat(args[1], out x)) {
-      args.Context.AddString("Error: Invalid format for X coordinate.");
-      return false;
-    }
-    if (!TryFloat(args[2], out z)) {
-      args.Context.AddString("Error: Invalid format for Z coordinate.");
-      return false;
-    }
-    if (args.Length > 3) {
-      if (!TryFloat(args[3], out distance)) {
-        args.Context.AddString("Error: Invalid format for distance.");
-        return false;
-      }
-    }
-    return true;
-  }
   public static IEnumerable<string> Flag(IEnumerable<string> parameters, string flag, out bool value) {
     value = parameters.FirstOrDefault(arg => arg.ToLower() == flag) != null;
     return parameters.Where(arg => arg.ToLower() != flag);

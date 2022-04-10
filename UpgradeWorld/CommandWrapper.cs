@@ -30,23 +30,13 @@ public static class CommandWrapper {
     if (ServerDevcommands == null) return;
     GetMethod(Type(), "Register", new[] { typeof(string), typeof(Func<int, List<string>>), typeof(Dictionary<string, Func<int, List<string>>>) }).Invoke(null, new object[] { command, action, named });
   }
-  public static List<string> Scale(string description, int index) {
-    if (ServerDevcommands == null) return null;
-    return GetMethod(InfoType(), "Scale", new[] { typeof(string), typeof(int) }).Invoke(null, new object[] { description, index }) as List<string>;
-  }
-  public static List<string> FRU(string description, int index) {
-    if (ServerDevcommands == null) return null;
-    return GetMethod(InfoType(), "FRU", new[] { typeof(string), typeof(int) }).Invoke(null, new object[] { description, index }) as List<string>;
-  }
-
   public static List<string> Info(string value) {
     if (ServerDevcommands == null) return null;
     return GetMethod(InfoType(), "Create", new[] { typeof(string) }).Invoke(null, new[] { value }) as List<string>;
   }
-  public static List<string> Pos(string name, string description, int index) {
-    if (index == 0) return Info($"{name}=<color=yellow>x</color>,z | {description}.");
-    if (index == 1) return Info($"{name}=x,<color=yellow>z</color> | {description}.");
-    return null;
+  public static List<string> XZ(string name, string description, int index) {
+    if (ServerDevcommands == null) return null;
+    return GetMethod(InfoType(), "XZ", new[] { typeof(string), typeof(string), typeof(int) }).Invoke(null, new object[] { name, description, index }) as List<string>;
   }
   public static List<string> Flag(string name, string description) {
     if (ServerDevcommands == null) return null;

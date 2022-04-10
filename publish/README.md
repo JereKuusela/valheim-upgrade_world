@@ -11,7 +11,6 @@ Always back up your world before making any changes!
 - Completely regenerate Mistlands (with new or legacy content).
 - Remove any object from the game world.
 - Generate the whole world without having to physically go anywhere.
-- Explore/hide parts of the map (unfortunately only for the current character).
 
 # Manual Installation:
 
@@ -20,9 +19,7 @@ Always back up your world before making any changes!
 3. Optionally install the [Configuration manager](https://github.com/BepInEx/BepInEx.ConfigurationManager/releases/tag/v16.4).
 4. For dedicated servers, install this mod and Server Devcommands also on the server.
 
-
 For dedicated servers, open the world in single player or install the mod on the server with Server Devcommands mod.
-
 
 # Quick instructions:
 
@@ -146,18 +143,6 @@ Examples:
 - remove_entities StatueCorgi: Removes all corgi statues.
 - remove_entities Spawner_\* -200: Removes all creature spawnpoints within 200 meters.
 
-## reveal_position [x] [y] [distance=0]
-
-Explores the map at a given position to a given distance.
-
-## hide_position [x] [y] [distance=0]
-
-Hides the map at a given position to a given distance.
-
-## remove_pins [x] [y] [distance=0]
-
-Removes map from the map at a given position to a given distance.
-
 ## change_time [seconds]
 
 Changes the world time by real life seconds while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
@@ -217,6 +202,7 @@ Toggles the verbose mode which prints more information when enabled. Can also be
 The config can be found in the \<GameDirectory\>\BepInEx\config\ folder after the first start up.
 
 Filtering options in the config:
+
 - Safe zone items: List of items used for the automatic player base detection. By default includes structures that have the player base effect.
 - How many adjacent zones are included in the safe zone: Size of the player base protection. Default value 1 means 3x3 zones per player base structure to ensure proper coverage. Value -1 can be used to disable the player base detection.
 - Safe distance around the player: Excludes zones that are too close to the players (in meters). All commands allow specifying the minimum distance so using this setting is not really needed.
@@ -230,7 +216,6 @@ Other settings are:
 - Operations per update: How many zones are destroyed per Unity update. Can be useful if destroying large parts of a world, but recommended to keep it as it is.
 
 Examples:
-
 - Setting "300,500,500,0|1000,2000,500,0" to custom points would protect areas at coordinates 300,500 and 1000,2000 within 500 meters.
 - Setting "300,500,0,100" to custom points would only operate near coordinates 300,500 witin 100 meters.
 
@@ -246,7 +231,7 @@ Examples:
 
 1. Removes all objects from a zone (including player placed structures).
 2. If the zone has a location, marks the location as unplaced (to allow redistributing it).
-3. Marks the zone as ungenerated.  Visiting the zone will regenerate like it were at start of the game.
+3. Marks the zone as ungenerated. Visiting the zone will regenerate like it were at start of the game.
 4. Locations are not automatically redistributed. Use "redistribute" command (otherwise you get the same locations as before).
 5. Visiting zones will regenerate them.
 
@@ -290,6 +275,7 @@ This can result in entities near biome edges showing "wrong" biome because the g
 4. When moving the time backward, this prevents things getting stuck (plants, smelters, enemy spawning, etc. won't progress until back to the original time).
 
 Following data values are updated if their value is not 0:
+
 - For general enemy spawning, all data values of the zone control entity are updated. Each of these data values affect spawning of a one enemy type.
 - "spawntime" for offspring growth timer and also for ship build timer (but unlikely to use the command when constructing a ship).
 - "SpawnTime" for item drop despawn timer.
@@ -303,11 +289,11 @@ Following data values are updated if their value is not 0:
 - "pregrant" for breeding timers.
 - "TameLastFeeding" for animal hunger timer.
 
-Affected data values can be configured but recommended to keep them as it is. 
+Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
 
-- v1.11:
+- v1.11
 	- Adds proper server side checks to prevent running commands as the client.
 	- Adds support for running the commands as the dedicated server (with Server Devcommands).
 	- Adds a new command `regenerate_locations` to destroy and place locations at the same place.
@@ -315,29 +301,31 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Adds new upgrade types for Epic Valheim Additions (`EVA_1.3+1.4`, `EVA_1.3+1.4_locations_only` and `EVA_1.4`).
 	- Adds a better player detection to avoid destroying players on multiplayer.
 	- Adds a new setting for preventing double ZNetViews.
+	- Adds better autocomplete when using Server Devcommands mod.
+	- Removes commands `reveal_map`, `hide_map` and `remove_pins` as obsolete (moved to Server Devcommands mod).
 	- Fixes minimap coordinates conficlicting with other mods.
 
-- v1.10:
+- v1.10
 	- Adds a new upgrade command for mountain caves.
 
-- v1.9:
+- v1.9
 	- Fixed change_time and change_day being able to put negative timestamp to entities.
 	- Fixed change_time, change_day, set_time and set_day being able to set the time negative.
 	- Fixed set_time and set_day setting entity timestamps to the given value instead of using the time difference like change_time and change_day to.
 	- Added better icon. Thanks Azumatt!
 
-- v1.8:
+- v1.8
 	- Fixed reroll_chests not working without giving any valid items.
 	- Added reroll_chests to support all chests.
 	- Added "looted" flag to reroll_chests to also reroll empty chests.
 
-- v1.7:
+- v1.7
 	- Fixed graceful entity removing being bit too graceful (not working in all situations).
 
-- v1.6:
+- v1.6
 	- Fixed upgrade tarpits command needing to be used twice.
 
-- v1.5:
+- v1.5
 	- Fixed non-player placed items also counting as player bases (for example in Fuling villages).
 	- Added autocomplete to place_locations command.
 	- Added new commands to set specific world time (instead of a relative value).
@@ -350,7 +338,7 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Fixed generate command forcing player base detection (now disables it).
 	- Fixed start command causing the next command to execute instantly if used without any pending operations.
 
-- v1.4:
+- v1.4
 	- Operation split to instant and delayed operations. Delayed operations print some initial output but require start command to execute.
 	- Added setting to force start operations without having to use the start command. Added parameter to force start commands.
 	- Removed query command as obsolete.
@@ -369,7 +357,7 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Added command to toggle the verbose mode.
 	- Improved output.
 
-- v1.3:
+- v1.3
 	- Regeneration commands renamed to destroy to make the effect more clear.
 	- Destroy all command now requires biomes as a parameter (replacing the config setting and making harder to accidentally nuke the whole world).
 	- New commands for generating areas without having to physically go there.
@@ -384,22 +372,22 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Upgrade command now has a second parameter to determine the operation.
 	- New upgrade command for generating onion seeds.
 	- New upgrade command for regenerating Mistlands.
-	- New setting to disable area clearing when placing locations..
+	- New setting to disable area clearing when placing locations.
 	- Improved area clearing when placing locations.
 	- Added setting for verbose mode, default output is now very minimal to not include any spoilers.
 	- Improved output for all commands.
 	- New setting to filter zones too close to the player (effectively creating a safe zone around the player).
 	- Many settings removed as obsolete.
 
-- v1.2:
+- v1.2
 	- Added coordinates to minimaps.
 	- Added option to also regenerate loaded zones,
 	- Renamed nuke command.
 	- Added new commands for a targeted regeneration.
 
-- v1.1:
+- v1.1
 	- Commands now work from the chat.
 	- Console is now enabled by default.
 
-- v1.0:
+- v1.0
 	- Initial release
