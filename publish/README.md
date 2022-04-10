@@ -11,15 +11,15 @@ Always back up your world before making any changes!
 - Completely regenerate Mistlands (with new or legacy content).
 - Remove any object from the game world.
 - Generate the whole world without having to physically go anywhere.
+- Manually regenerate areas or dungeons.
 
 # Manual Installation:
 
 1. Install the [BepInExPack Valheim](https://valheim.thunderstore.io/package/denikson/BepInExPack_Valheim).
-2. Install this mod by extracting the DLL file to the \<GameDirectory\>\BepInEx\plugins\ folder.
-3. Optionally install the [Configuration manager](https://github.com/BepInEx/BepInEx.ConfigurationManager/releases/tag/v16.4).
-4. For dedicated servers, install this mod and Server Devcommands also on the server.
-
-For dedicated servers, open the world in single player or install the mod on the server with Server Devcommands mod.
+2. Download the zip and extract the DLL file to the \<GameDirectory\>\BepInEx\plugins\ folder.
+3. For dedicated servers, install this mod also on the server.
+4. Optionally install the [Configuration manager](https://github.com/BepInEx/BepInEx.ConfigurationManager/releases/tag/v16.4).
+5. Optionally install the [Server Devcommands]() for better autocomplete.
 
 # Quick instructions:
 
@@ -37,25 +37,33 @@ This mod also adds current coordinates (and zone index) to the minimaps which sh
 
 Note: The default base detection is very conservative. Single workbenches, campfires, etc. will exclude a significant area around them, unless configured otherwise.
 
+# Dedicated servers
+
+By default, all admins can execute commands of this mod.
+
+If you wish to restrict this, edit the config file and add Steam IDs to the root users setting (separated by ,). After that only those users can execute commands.
+
 # Parameters
 
-Advanced usage of this tool requires understanding the general parameters that are used to filter out affected zones and entities. Following parameters are available to most commands:
+Most commands allow fine-tuning the affected area. Following parameters are available:
 
-- Biome names to only include those biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
-- Minimum and maximum distance as a range "min-max". Either of the values can be omitted for either "min" or "-max".
-- Center position as two parameters "x" and "z" (y coordinate is used the altitude).
-- Flag "noedges" to only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
-- Parameter "safezones=value" to set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
-- Flag "zones" to change distance and position parameters to be zone based. "x" and "z" are zone indices. "min" and "max" determine how many adjacent zones are included.
-- Flag "force" to automatically execute the command. Can be permanently turned on from the config.
+- `biomes=biome1,biome2,...`: Only includes given biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
+- `pos=x,z`: Position of the center. If not given, player's position is used. Default distance is all of the map.
+- `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
+- `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
+- `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
+- `distance=min,max`: Short-hand for setting both distances.
+- `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
+- `safeZones=distance`: Set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
+- `force`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
 
 Examples:
-- command mistlands: Affects zones which have Mistlands biome at any of their corners.
-- command 5000 0 0: Affects zones which are 5000 meters away from the world center.
-- command 3000-5000 0 0: Affects zones which are from 3000 to 5000 meters away from the world center.
-- command 3 -3 zones safezones=0: Affects the zone at indices 3,-3 even if it has major structures.
-- command zones: Affects the current zone at the player's position.
-- command blackforest ocean -1000 noedges: Affects zones that only have Black Forest or Ocean at their corners and that are up to 1000 meters away from the player.
+- `[command] biomes=mistlands`: Affects zones which have Mistlands biome at any of their corners.
+- `[command] pos=0,0 min=5000`: Affects zones which are 5000 meters away from the world center.
+- `[command] pos=0,0 distance=3000,5000`: Affects zones which are from 3000 to 5000 meters away from the world center.
+- `[command] zone=3,-3 safeZones=0`: Affects the zone at indices 3,-3 even if it has major structures.
+- `[command] zone`: Affects the current zone at the player's position.
+- `[command] biomes=blackforest,ocean max=1000 noEdges`: Affects zones that only have Black Forest or Ocean at their corners and that are up to 1000 meters away from the player.
 
 # Commands
 
@@ -66,28 +74,28 @@ Overview of available commands (remember that tab key can be used for autocomple
 Performs a predefined upgrade operation. Available operations are tarpits, onions and mistlands.
 
 Examples:
-- upgrade mountain_caves: Places mountain caves to already explored areas.
-- upgrade tarpits: Places tar pits to already explored areas.
-- upgrade onions: Rerolls already generated and unlooted mountain chests.
-- upgrade new_mistlands: Fully regenerates mistlands biomes.
-- upgrade old_mistlands: Fully regenerates mistlands biomes with the legacy content (webs, etc.).
+- `upgrade mountain_caves`: Places mountain caves to already explored areas.
+- `upgrade tarpits`: Places tar pits to already explored areas.
+- `upgrade onions`: Rerolls already generated and unlooted mountain chests.
+- `upgrade new_mistlands`: Fully regenerates mistlands biomes.
+- `upgrade old_mistlands`: Fully regenerates mistlands biomes with the legacy content (webs, etc.).
 
 ## destroy [...args]
 
 Destroys zones which allows the world generator to regenerate them when visited.
 
 Examples:
-- destroy mistlands: Destryoing a biome.
-- destroy 5000 0 0 : Destroying areas after 5000 meters from the world center.
-- destroy 3 -3 zones safezones=0: Destroy a single zone at indices 3,-3 to fix any local issues.
+- `destroy biomes=mistlands`: Destroying a biome.
+- `destroy min=5000 pos=0,0`: Destroying areas after 5000 meters from the world center.
+- `destroy zone=3,-3 safeZones=0`: Destroy a single zone at indices 3,-3 to fix any local issues.
 
 ## generate [...args]
 
 Generates zones which allows pregenerating the world without having to move there physically.
 
 Examples:
-- generate: To generate the entire world (takes hours) and then use count_entities command to check how many of each entity exists.
-- generate: To generate the entire world (takes hours) and then use remove_entities for modifications.
+- `generate`: To generate the entire world (takes hours) and then use `count_entities` command to check how many of each entity exists.
+- `generate`: To generate the entire world (takes hours) and then use `remove_entities` for modifications.
 
 ## place_locations [noclearing] [...location_ids] [...args]
 
@@ -104,15 +112,15 @@ Empty (looted) chests are only rerolled with "looted" flag.
 Item ids can be used to detect and prevent rerolling chests which players are using to store items.
 
 Example:
-- reroll_chests TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds: Rerolls mountain treasure chests which only have naturally occurring items.
-- reroll_chests * looted 1500 0 0: Rerolls all chests which are 1500 meters away from the world center.
+- `reroll_chests TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds`: Rerolls mountain treasure chests which only have naturally occurring items.
+- `reroll_chests * looted min=1500 pos=0,0`: Rerolls all chests which are 1500 meters away from the world center.
 
 ## count_biomes [frequency] [...args]
 
 Counts amounts of biomes. Frequency determines in meters how often the biome is checked. Result it also printed to the player.log file.
 
 Example:
-- count_biomes 100 5000 0 0: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
+- `count_biomes 100 min=5000 pos=0,0`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
 
 ## count_entities [all] [...ids] [...args]
 
@@ -121,15 +129,15 @@ Counts amounts of given entities. If no ids given then counts all entities. All 
 Wildcards are also supported.
 
 Examples:
-- count_entities Spawner_\*: Counts all creature spawnpoints.
-- count_entities \*\_wall\*\_: Counts all walls structures.
+- `count_entities Spawner_\*`: Counts all creature spawnpoints.
+- `count_entities \*\_wall\*\_`: Counts all walls structures.
 
 ## list_entities [...ids] [...args]
 
 Lists given entities showing their position and biome. Result is also printed to the player.log file.
 
 Example:
-- list_entities VikingShip Karve Raft: Lists coordinates of all ships.
+- `list_entities VikingShip,Karve,Raft`: Lists coordinates of all ships.
 
 ## remove_entities [...ids] [...args]
 
@@ -140,8 +148,8 @@ If you already know the entity id, use "count_entities" to ensure you are only r
 If you don't know the id, use "count_entities" without specifying the id to find the entity. If too many entities are returned, use a shorter distance until you find it. Then use remove command to remove it.
 
 Examples:
-- remove_entities StatueCorgi: Removes all corgi statues.
-- remove_entities Spawner_\* -200: Removes all creature spawnpoints within 200 meters.
+- `remove_entities StatueCorgi`: Removes all corgi statues.
+- `remove_entities Spawner_\* max=200`: Removes all creature spawnpoints within 200 meters.
 
 ## change_time [seconds]
 
@@ -174,8 +182,8 @@ Enables vegetation for the world generator, affecting any forced (with "generate
 Tab key can be used to autocomplete available prefab ids.
 
 Examples:
-- set_vegetation disable BlueberryBush: Disables generation of blueberry bushes.
-- set_vegetation vertical_web horizontal_web tunnel_web: Enables webs to generate in Mistlands.
+- `set_vegetation disable BlueberryBush`: Disables generation of blueberry bushes.
+- `set_vegetation vertical_web horizontal_web tunnel_web`: Enables webs to generate in Mistlands.
 
 ## reset_vegetation
 
@@ -183,11 +191,11 @@ Revert vegetation generation back to the original.
 
 ## distribute
 
-Runs the "genloc" command without needing devcommands enabled. This can be used to redistribute locations after destroying zones.
+Runs the `genloc` command without needing devcommands enabled. This can be used to redistribute locations after destroying zones.
 
 ## start
 
-Zone based commands don't exeute instantly but instead print the zones being affected. This command can be then used to start executing.
+Most commands don't exeute instantly but instead print the zones being affected. This command can be then used to start executing.
 
 ## stop
 
@@ -295,7 +303,7 @@ Affected data values can be configured but recommended to keep them as it is.
 
 - v1.11
 	- Adds support for executing commands on dedicated servers.
-  - Adds a new setting to authorize certain users to execute commands (by default all admins can execute).
+	- Adds a new setting to authorize certain users to execute commands (by default all admins can execute).
 	- Adds a new command `regenerate_locations` to destroy and place locations at the same place.
 	- Adds a new command `remove_locations` to destroy placed and unplaced locations.
 	- Adds new upgrade types for Epic Valheim Additions (`EVA_1.3+1.4`, `EVA_1.3+1.4_locations_only` and `EVA_1.4`).
