@@ -294,8 +294,8 @@ Affected data values can be configured but recommended to keep them as it is.
 # Changelog
 
 - v1.11
-	- Adds proper server side checks to prevent running commands as the client.
-	- Adds support for running the commands as the dedicated server (with Server Devcommands).
+	- Adds support for executing commands on dedicated servers.
+  - Adds a new setting to authorize certain users to execute commands (by default all admins can execute).
 	- Adds a new command `regenerate_locations` to destroy and place locations at the same place.
 	- Adds a new command `remove_locations` to destroy placed and unplaced locations.
 	- Adds new upgrade types for Epic Valheim Additions (`EVA_1.3+1.4`, `EVA_1.3+1.4_locations_only` and `EVA_1.4`).

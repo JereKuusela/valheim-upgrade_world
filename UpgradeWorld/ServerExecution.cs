@@ -49,7 +49,7 @@ public class ServerExecution {
     RedirectOutput.Target = null;
   }
   static void Postfix(ZNet __instance, ZRpc rpc) {
-    if (__instance.IsServer()) {
+    if (__instance.IsDedicated()) {
       rpc.Register<string>(RPC_Command, new(RPC_Do_Command));
     }
   }

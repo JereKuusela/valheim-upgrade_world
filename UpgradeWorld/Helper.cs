@@ -65,8 +65,14 @@ public static class Helper {
     return true;
   }
   public static bool IsServer(Terminal.ConsoleEventArgs args) {
-    if (!ZNet.instance || !ZNet.instance.IsServer()) {
+    var isServer = ZNet.instance && ZNet.instance.IsServer();
+    if (!isServer) {
       ServerExecution.Send(args);
+      return false;
+    }
+    var isDedicated = ZNet.instance && ZNet.instance.IsDedicated();
+    if (isDedicated && RedirectOutput.Target == null) {
+      args.Context.AddString("Error: Dedicated server is not allowed to execute commands.");
       return false;
     }
     return true;
