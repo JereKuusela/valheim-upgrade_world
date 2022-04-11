@@ -15,6 +15,9 @@
     <Reference Include="UnityEngine.CoreModule.dll">
       <HintPath>..\Libs\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule.dll">
+      <HintPath>..\Libs\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.InputLegacyModule.dll">
       <HintPath>..\Libs\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>

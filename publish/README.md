@@ -222,7 +222,7 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Adds better autocomplete when using Server Devcommands mod.
 	- Renames most commands to be more intuitive to use.
 	- Removes commands `reveal_map`, `hide_map` and `remove_pins` as obsolete (moved to Server Devcommands mod).
-	- Fixes minimap coordinates conficlicting with other mods.
+	- Fixes map and minimap coordinates conflicting with other mods.
 
 - v1.10
 	- Adds a new upgrade command for mountain caves.
