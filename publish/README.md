@@ -128,6 +128,9 @@ Other settings are:
 - Prevent double ZNet view: Some bugged objects keep duplicating and corrupting the save. This prevents that from happening which allows removing these objects.
 - Automatic start: Starts commands automatically without having to use the start command. This allows using the commands more easily but can lead to more mistakes.
 - Operations per update: How many zones are destroyed per Unity update. Can be useful if destroying large parts of a world, but recommended to keep it as it is.
+- Show map coordinates: If true, shows coordinates and distance on the big map.
+- Show minimap coordinates: If true, shows coordinates on the minimap.
+- Root users: SteamIds that are allowed to execute commands. If not set, all admins can use the commands.
 
 Examples:
 - Setting "300,500,500,0|1000,2000,500,0" to custom points would protect areas at coordinates 300,500 and 1000,2000 within 500 meters.
