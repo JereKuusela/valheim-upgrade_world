@@ -1,12 +1,12 @@
 using System.Linq;
 namespace UpgradeWorld;
-public class PlaceVegetationCommand {
-  public PlaceVegetationCommand() {
-    CommandWrapper.Register("place_vegetation", (int index) => {
+public class VegetationAddCommand {
+  public VegetationAddCommand() {
+    CommandWrapper.Register("vegetation_add", (int index) => {
       if (index == 0) return SetVegetation.GetIds();
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("place_vegetation", "[...vegetation_ids] [...args] - Places given vegetation ids to already generated zones.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("vegetation_add", "[id1,id2,...] [...args] - Adds vegetation to generated areas.", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       IdParameters pars = new(args);
       if (pars.Valid(args.Context))

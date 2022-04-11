@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Lists positon and biome of each entity.</summary>
-public class ListEntityPositions : EntityOperation {
-  public ListEntityPositions(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context) {
+public class ListObjectPositions : EntityOperation {
+  public ListObjectPositions(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context) {
     if (Validate(ids))
       ListPositions(ids, args);
   }

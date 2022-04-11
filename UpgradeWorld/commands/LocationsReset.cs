@@ -1,12 +1,12 @@
 using System.Linq;
 namespace UpgradeWorld;
-public class RegenerateLocationsCommand {
-  public RegenerateLocationsCommand() {
-    CommandWrapper.Register("regenerate_locations", (int index) => {
+public class LocationsResetCommand {
+  public LocationsResetCommand() {
+    CommandWrapper.Register("locations_reset", (int index) => {
       if (index == 0) return CommandWrapper.LocationIds();
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("regenerate_locations", "[...location_ids] [...args] - Regenerates given location ids.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("locations_reset", "[id1,id2,...] [...args] - Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout.", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       IdParameters pars = new(args);
       if (pars.Valid(args.Context))

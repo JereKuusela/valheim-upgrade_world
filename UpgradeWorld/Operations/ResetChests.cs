@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Rerolls given chests.</summary>
-public class RerollChests : EntityOperation {
+public class ResetChests : EntityOperation {
   public static List<string> ChestsNames = new List<string> {
       "TreasureChest_blackforest", "TreasureChest_fCrypt", "TreasureChest_forestcrypt", "TreasureChest_heath",
       "TreasureChest_meadows", "TreasureChest_meadows_buried","TreasureChest_mountains", "TreasureChest_plains_stone",
       "TreasureChest_sunkencrypt", "TreasureChest_swamp", "TreasureChest_trollcave", "shipwreck_karve_chest",
       "loot_chest_wood", "loot_chest_stone", "*" }.OrderBy(item => item).ToList();
   private HashSet<string> AllowedItems;
-  public RerollChests(string chestId, IEnumerable<string> allowedItems, bool looted, FiltererParameters args, Terminal context) : base(context) {
+  public ResetChests(string chestId, IEnumerable<string> allowedItems, bool looted, FiltererParameters args, Terminal context) : base(context) {
     AllowedItems = allowedItems.Select(Helper.Normalize).ToHashSet();
     Reroll(chestId, looted, args);
   }

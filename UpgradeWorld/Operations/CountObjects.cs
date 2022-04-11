@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Counts the amounts of given entities.</summary>
-public class CountEntities : EntityOperation {
-  public CountEntities(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context) {
+public class CountObjects : EntityOperation {
+  public CountObjects(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context) {
     if (Validate(ids))
       Count(ids, args);
   }

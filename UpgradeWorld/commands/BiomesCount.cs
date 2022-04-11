@@ -1,11 +1,11 @@
 namespace UpgradeWorld;
-public class CountBiomesCommand {
-  public CountBiomesCommand() {
-    CommandWrapper.Register("count_biomes", (int index) => {
+public class BiomesCountCommand {
+  public BiomesCountCommand() {
+    CommandWrapper.Register("biomes_count", (int index) => {
       if (index == 0) return CommandWrapper.Info("How precisely the biome is checked (meters). Lower value increases precision but takes longer to measure.");
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("count_biomes", "[precision] [...args] - Counts amounts of biomes with given meters of frequency.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("biomes_count", "[precision] [...args] - Counts biomes by sampling points with a given precision (meters).", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       FiltererParameters pars = new(args);
       var precision = 100f;

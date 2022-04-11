@@ -1,11 +1,10 @@
-using UnityEngine;
 namespace UpgradeWorld;
-public class GenerateCommand {
-  public GenerateCommand() {
-    CommandWrapper.Register("generate", (int index) => {
+public class ZonesGenerateCommand {
+  public ZonesGenerateCommand() {
+    CommandWrapper.Register("zones_generate", (int index) => {
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("generate", "[...args] - Generates zones which allows pregenerating the world without having to move there physically.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("zones_generate", "[...args] - Pre-generates areas without having to visit them.", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       FiltererParameters pars = new(args);
       pars.TargetZones = TargetZones.Ungenerated;

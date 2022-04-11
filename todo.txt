@@ -1,13 +1,9 @@
 - visualize exclusion points (cylinders?)
 - visualize which zones are included (draw zone corners without overlap)
 
-- regenerate_location ???: nukes only a location (removes everything within exterior and respawns?)
-
 - Command to find entities by component (some common ones like container, structure, creature).
  * This is slow so do a list operation.
 - command to replace entities with another
 - command to change entity params
 - command to filter entity by attribute
 - command to enable/disable locations
-
-- show distance from the player on the map

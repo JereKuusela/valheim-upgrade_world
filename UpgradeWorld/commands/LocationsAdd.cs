@@ -1,12 +1,12 @@
 using System.Linq;
 namespace UpgradeWorld;
-public class PlaceLocationsCommand {
-  public PlaceLocationsCommand() {
-    CommandWrapper.Register("place_locations", (int index) => {
+public class LocationsAddCommand {
+  public LocationsAddCommand() {
+    CommandWrapper.Register("locations_add", (int index) => {
       if (index == 0) return CommandWrapper.LocationIds();
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("place_locations", "[...location_ids] [noclearing] [...args] - Places given location ids to already generated zones.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("locations_add", "[...location_ids] [noclearing] [...args] - Adds missing locations to generated areas.", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       IdParameters pars = new(args);
       pars.Ids = Parse.Flag(pars.Ids, "noclearing", out var noClearing).ToList();

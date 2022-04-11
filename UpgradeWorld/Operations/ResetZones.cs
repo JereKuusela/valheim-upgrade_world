@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
-public class Destroy : ZoneOperation {
-  public Destroy(Terminal context, FiltererParameters args) : base(context, args.ForceStart) {
+public class ResetZones : ZoneOperation {
+  public ResetZones(Terminal context, FiltererParameters args) : base(context, args.ForceStart) {
     Operation = "Destroy";
     ZonesPerUpdate = Settings.DestroysPerUpdate;
     args.TargetZones = TargetZones.Generated;

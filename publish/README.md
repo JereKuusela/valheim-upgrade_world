@@ -56,154 +56,60 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
 - `safeZones=distance`: Set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
 - `force`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
-
-Examples:
-- `[command] biomes=mistlands`: Affects zones which have Mistlands biome at any of their corners.
-- `[command] pos=0,0 min=5000`: Affects zones which are 5000 meters away from the world center.
-- `[command] pos=0,0 distance=3000,5000`: Affects zones which are from 3000 to 5000 meters away from the world center.
-- `[command] zone=3,-3 safeZones=0`: Affects the zone at indices 3,-3 even if it has major structures.
-- `[command] zone`: Affects the current zone at the player's position.
-- `[command] biomes=blackforest,ocean max=1000 noEdges`: Affects zones that only have Black Forest or Ocean at their corners and that are up to 1000 meters away from the player.
+- `chance=percentage`: Makes a single operation to be applied randomly. Only works for some commands.
 
 # Commands
 
 Overview of available commands (remember that tab key can be used for autocomplete / cycle through options):
 
-## upgrade [operation] [...args]
-
-Performs a predefined upgrade operation. Available operations are tarpits, onions and mistlands.
+- `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
+- `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests. Empty (looted) chests are only rerolled with "looted" flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items.
+- `locations_add [id1,id2,...] [noclearing] [...args]`: Adds locations to already explored areas. With `noclearing`, the location area is not cleared of existing objects.
+- `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used).
+- `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout.
+- `objects_count [all] [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all entities. All entities are listed with the flag "all". Result is also printed to the player.log file. Wildcards are also supported.
+- `objects_list [id1,id2,...] [...args]`: Lists objects showing their position and biome. Result is also printed to the player.log file.
+- `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `count_objects` to check that you don't remove too much.
+- `start`: Most commands don't execute instantly but instead print the zones being affected. This command can be then used to start executing.
+- `stop`: Stops the current execution and clears any pending command.
+- `time_change [seconds]`: Changes the world time and updates object timestamps.
+- `time_change_day [days]`: Changes the world time and updates object timestamps.
+- `time_set [seconds]`: Sets the world time and updates object timestamps.
+- `time_set_day [days]`: Sets the world time and updates object timestamps.
+- `upgrade [operation] [...args]`: Short-hand for using common operations (mainly to add new content).
+- `vegetation_default`: Restored the default vegetation for the world generator.
+- `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas.
+- `vegetation_disable [id1,id2,...]`: Disables vegetation for the world generator, affecting any forced (with "generate" command) or natural generation.
+- `vegetation_enable [id1,id2,...]`: Enables vegetation for the world generator, affecting any forced (with "generate" command) or natural generation.
+- `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas.
+- `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
+- `zones_generate [...args]`: Pre-generates areas without having to visit them.
+- `zones_reset [...args]`: Destroys areas making them ungenerated. These areas will be generated when visited. Can be also used to reduce save file size.
 
 Examples:
+- `biomes_count 100 min=5000 pos=0,0`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
+- `chests_reset TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds`: Rerolls mountain treasure chests which only have naturally occurring items.
+- `chests_reset * looted min=1500 pos=0,0`: Resets all chests which are 1500 meters away from the world center.
+- `locations_remove Meteorite`: Removes all flametal ores.
+- `locations_reset SunkenCrypt4,Crypt2,Crypt3,Crypt4,MountainCave02,TrollCave02`: To regenerate dungeons. Some entraces will randomly rotate which will also randomize the dungeon layout.
+- `objects_count Spawner_\*`: Counts all creature spawnpoints.
+- `objects_count \*\_wall\*\_`: Counts all walls structures.
+- `objects_list VikingShip,Karve,Raft`: Lists coordinates of all ships.
+- `objects_remove FirTree chance=33`: Removes 33% of Fir Trees.
+- `objects_remove StatueCorgi`: Removes all corgi statues.
+- `objects_remove Spawner_\* max=200`: Removes all creature spawnpoints within 200 meters.
 - `upgrade mountain_caves`: Places mountain caves to already explored areas.
 - `upgrade tarpits`: Places tar pits to already explored areas.
 - `upgrade onions`: Rerolls already generated and unlooted mountain chests.
 - `upgrade new_mistlands`: Fully regenerates mistlands biomes.
 - `upgrade old_mistlands`: Fully regenerates mistlands biomes with the legacy content (webs, etc.).
-
-## destroy [...args]
-
-Destroys zones which allows the world generator to regenerate them when visited.
-
-Examples:
-- `destroy biomes=mistlands`: Destroying a biome.
-- `destroy min=5000 pos=0,0`: Destroying areas after 5000 meters from the world center.
-- `destroy zone=3,-3 safeZones=0`: Destroy a single zone at indices 3,-3 to fix any local issues.
-
-## generate [...args]
-
-Generates zones which allows pregenerating the world without having to move there physically.
-
-Examples:
-- `generate`: To generate the entire world (takes hours) and then use `count_entities` command to check how many of each entity exists.
-- `generate`: To generate the entire world (takes hours) and then use `remove_entities` for modifications.
-
-## place_locations [noclearing] [...location_ids] [...args]
-
-Distributes unplaced locations to already explored areas and then places them to the world. With "noclearing" flag, the area under placed location is not cleared of existing entities.
-
-Normally this command (or the similar genloc command) won't do anything because the locations will be generated the same way. However if a new update adds new locations or the world generating otherwise changes this causes changed to the world.
-
-## reroll_chests [chest name] [looted] [...item_ids] [...args]
-
-Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests.
-
-Empty (looted) chests are only rerolled with "looted" flag.
-
-Item ids can be used to detect and prevent rerolling chests which players are using to store items.
-
-Example:
-- `reroll_chests TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds`: Rerolls mountain treasure chests which only have naturally occurring items.
-- `reroll_chests * looted min=1500 pos=0,0`: Rerolls all chests which are 1500 meters away from the world center.
-
-## count_biomes [frequency] [...args]
-
-Counts amounts of biomes. Frequency determines in meters how often the biome is checked. Result it also printed to the player.log file.
-
-Example:
-- `count_biomes 100 min=5000 pos=0,0`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
-
-## count_entities [all] [...ids] [...args]
-
-Counts amounts of given entities. If no ids given then counts all entities. All entities are listed with the flag "all". Result is also printed to the player.log file.
-
-Wildcards are also supported.
-
-Examples:
-- `count_entities Spawner_\*`: Counts all creature spawnpoints.
-- `count_entities \*\_wall\*\_`: Counts all walls structures.
-
-## list_entities [...ids] [...args]
-
-Lists given entities showing their position and biome. Result is also printed to the player.log file.
-
-Example:
-- `list_entities VikingShip,Karve,Raft`: Lists coordinates of all ships.
-
-## remove_entities [...ids] [...args]
-
-Removes entities.
-
-If you already know the entity id, use "count_entities" to ensure you are only removing what needed. If too many entities are returned, use a shorter distance until you get the right amount. Then use the remove command to remove them.
-
-If you don't know the id, use "count_entities" without specifying the id to find the entity. If too many entities are returned, use a shorter distance until you find it. Then use remove command to remove it.
-
-Examples:
-- `remove_entities StatueCorgi`: Removes all corgi statues.
-- `remove_entities Spawner_\* max=200`: Removes all creature spawnpoints within 200 meters.
-
-## change_time [seconds]
-
-Changes the world time by real life seconds while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
-
-Verbose mode prints how many data entries were affected.
-
-## change_day [day]
-
-Changes the world time by in-game days while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
-
-Verbose mode prints how many data entries were affected.
-
-## set_time [seconds]
-
-Sets the world time to real life seconds while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
-
-Verbose mode prints how many data entries were affected.
-
-## set_day [day]
-
-Sets the world time to in-game days while also updating entities so that they keep their progression. This ensures that enemy spawning and structures won't break when going back in the time.
-
-Verbose mode prints how many data entries were affected.
-
-## set_vegetation [disable] [...ids]
-
-Enables vegetation for the world generator, affecting any forced (with "generate" command) or natural generation. Disables vegetation with the "disable" flag.
-
-Tab key can be used to autocomplete available prefab ids.
-
-Examples:
-- `set_vegetation disable BlueberryBush`: Disables generation of blueberry bushes.
-- `set_vegetation vertical_web horizontal_web tunnel_web`: Enables webs to generate in Mistlands.
-
-## reset_vegetation
-
-Revert vegetation generation back to the original.
-
-## distribute
-
-Runs the `genloc` command without needing devcommands enabled. This can be used to redistribute locations after destroying zones.
-
-## start
-
-Most commands don't exeute instantly but instead print the zones being affected. This command can be then used to start executing.
-
-## stop
-
-Stops execution of commands and removes any pending commands.
-
-## verbose
-
-Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
+- `vegetation_disable BlueberryBush`: Disables generation of blueberry bushes.
+- `vegetation_enable vertical_web horizontal_web tunnel_web`: Enables webs to generate in Mistlands.
+- `zones_generate`: To generate the entire world (takes hours) and then use `count_entities` command to check how many of each entity exists.
+- `zones_generate`: To generate the entire world (takes hours) and then use `remove_entities` for modifications.
+- `zones_reset biomes=mistlands`: Destroying a biome.
+- `zones_reset min=5000 pos=0,0`: Destroying areas after 5000 meters from the world center.
+- `zones_reset zone=3,-3 safeZones=0`: Destroy a single zone at indices 3,-3 to fix any local issues.
 
 # Configuration
 
@@ -235,7 +141,7 @@ Examples:
 - Location: Special places like rune stones, dungeon entrances or abandoned houses that are placed to the world by the world generator.
 - Zone: The world is split to tiles of 64 m x 64 m size. This is the granularity of the world generation. See https://valheim.fandom.com/wiki/Zones for more info.
 
-## Destroy
+## Resetting zones
 
 1. Removes all objects from a zone (including player placed structures).
 2. If the zone has a location, marks the location as unplaced (to allow redistributing it).
@@ -245,29 +151,29 @@ Examples:
 
 Portals in the loaded area won't be automatically disconnected but relogging fixes that.
 
-## Generate
+## Generating zone
 
 1. Calls the generating function for each zone.
 
-## Place locations
+## Adding locations
 
 1. Runs a modified genloc command which allows redistributing unplaced locations to already generated areas.
 2. Skip zones that didn't get a new location.
 3. For each redistributed location, destroy everything within the location exterior radius and place the location to the world.
 
-## Reroll chests
+## Resetting chests
 
 1. Gets all chests from the save file. Filters chests that are empty (looted or loot not rolled yet) or include a wrong item (to not replace manually put items).
 2. If the chest is in a loaded area, remove all items and roll loot.
 3. Otherwise remove all items and set the chest as "not rolled yet" so that the loot is rolled when the chest is loaded. This is done directly by modifying the save file without actually loading the chest.
 
-## Count biomes
+## Counting biomes
 
 1. Checks from the map which biome is at each position.
 
 The map returns the exact biome information. This is slightly different than what the minimap shows as it will show the average biome.
 
-## Count/list/remove entities
+## Counting/listing/removing objects
 
 1. Uses the available id list (same what spawn command uses) to resolve wildcards.
 2. Directly counts entities from the save file data without loading them to the world.
@@ -275,7 +181,7 @@ The map returns the exact biome information. This is slightly different than wha
 
 This can result in entities near biome edges showing "wrong" biome because the generation code uses the average biome.
 
-## Change time/day
+## Changing time/day
 
 1. Changes the world time like the skiptime command.
 2. Changes the time data values of entities to match the new time.
@@ -304,13 +210,14 @@ Affected data values can be configured but recommended to keep them as it is.
 - v1.11
 	- Adds support for executing commands on dedicated servers.
 	- Adds a new setting to authorize certain users to execute commands (by default all admins can execute).
-	- Adds a new command `regenerate_locations` to destroy and place locations at the same place.
-	- Adds a new command `remove_locations` to destroy placed and unplaced locations.
+	- Adds a new command `locations_reset` to destroy and place locations at the same place.
+	- Adds a new command `locations_remove` to destroy placed and unplaced locations.
 	- Adds new upgrade types for Epic Valheim Additions (`EVA_1.3+1.4`, `EVA_1.3+1.4_locations_only` and `EVA_1.4`).
 	- Adds a better player detection to avoid destroying players on multiplayer.
 	- Adds a new setting for preventing double ZNetViews.
 	- Adds new settings for map and minimap coordinates.
 	- Adds better autocomplete when using Server Devcommands mod.
+	- Renames most commands to be more intuitive to use.
 	- Removes commands `reveal_map`, `hide_map` and `remove_pins` as obsolete (moved to Server Devcommands mod).
 	- Fixes minimap coordinates conficlicting with other mods.
 

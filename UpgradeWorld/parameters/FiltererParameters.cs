@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System;
 namespace UpgradeWorld;
 public class FiltererParameters {
   public HashSet<Heightmap.Biome> Biomes = new();
@@ -11,6 +11,7 @@ public class FiltererParameters {
   public Vector2i? Zone = null;
   public float MinDistance = 0;
   public float MaxDistance = 0;
+  public float Chance = 1f;
   public int SafeZones = Settings.SafeZoneSize;
   public TargetZones TargetZones = TargetZones.Generated;
   public List<string> Unhandled = new();
@@ -31,6 +32,7 @@ public class FiltererParameters {
         else if (name == "zone") Zone = Parse.Zone(value);
         else if (name == "min" | name == "mindistance") MinDistance = Parse.Float(value);
         else if (name == "max" | name == "maxdistance") MaxDistance = Parse.Float(value);
+        else if (name == "chance") Chance = Parse.Float(value) / 100f;
         else if (name == "distance") {
           var distance = Parse.Pos(value);
           MinDistance = distance.x;
@@ -134,7 +136,7 @@ public class FiltererParameters {
     return str;
   }
   public static List<string> Parameters = new() {
-    "pos", "zone", "biomes", "min", "minDistance", "max", "maxDistance", "distance", "force", "noEdges", "safeZones"
+    "pos", "zone", "biomes", "min", "minDistance", "max", "maxDistance", "distance", "force", "noEdges", "safeZones", "chance"
   };
   public static Dictionary<string, Func<int, List<string>>> GetAutoComplete() {
     return new() {
@@ -146,6 +148,7 @@ public class FiltererParameters {
       { "max", (int index) => index == 0 ? CommandWrapper.Info("max=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
       { "maxDistance", (int index) => index == 0 ? CommandWrapper.Info("maxDistance=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
       { "safeZones", (int index) => index == 0 ? CommandWrapper.Info("safezones=<color=yellow>amount</color> | The size of protected areas around player base structures.") : null },
+      { "chance", (int index) => index == 0 ? CommandWrapper.Info("chance=<color=yellow>percentage</color> (from 0 to 100) | The chance of a single operation being done.") : null },
       { "force", (int index) => CommandWrapper.Flag("force", "Starts the operation instantly") },
       { "noEdges", (int index) => CommandWrapper.Flag("noedges", "Excludes zones with multiple biomes") },
       { "distance", (int index) => {
@@ -155,5 +158,10 @@ public class FiltererParameters {
         }
       }
     };
+  }
+  private System.Random random = new();
+  public bool Roll() {
+    if (Chance >= 1f) return true;
+    return random.NextDouble() < Chance;
   }
 }

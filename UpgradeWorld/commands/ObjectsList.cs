@@ -1,16 +1,15 @@
-using System.Linq;
 namespace UpgradeWorld;
-public class RemoveEntitiesCommand {
-  public RemoveEntitiesCommand() {
-    CommandWrapper.Register("remove_entities", (int index) => {
+public class ObjectsListCommand {
+  public ObjectsListCommand() {
+    CommandWrapper.Register("objects_list", (int index) => {
       if (index == 0) return CommandWrapper.ObjectIds();
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("remove_entities", "[...ids] [...args] - Removes entities.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("objects_list", "[id1,id2,...] [...args] - Lists objects showing their position and biome.", (Terminal.ConsoleEventArgs args) => {
       if (!Helper.IsServer(args)) return;
       IdParameters pars = new(args);
       if (pars.Valid(args.Context))
-        new RemoveEntities(args.Context, pars.Ids, pars);
+        new ListObjectPositions(args.Context, pars.Ids, pars);
     }, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
   }
 }

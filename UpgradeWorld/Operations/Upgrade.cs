@@ -41,14 +41,14 @@ public class Upgrade : BaseOperation {
         Print("Error: This operation doesn't support extra parameters " + string.Join(", ", extra));
         return;
       }
-      new RerollChests("TreasureChest_mountains", new[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, false, args, Context);
+      new ResetChests("TreasureChest_mountains", new[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, false, args, Context);
     } else if (type == "new_mistlands") {
       if (args.Biomes.Count() > 0) {
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
         return;
       }
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
-      Executor.AddOperation(new Destroy(Context, args));
+      Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new DistributeLocations(new string[] { }, false, Context));
     } else if (type == "old_mistlands") {
       if (args.Biomes.Count() > 0) {
@@ -57,7 +57,7 @@ public class Upgrade : BaseOperation {
       }
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
       new SetVegetation(Context, true, false, new[] { "HugeRoot1", "SwampTree2_darkland", "Pinetree_01", "FirTree_small_dead", "vertical_web", "horizontal_web", "tunnel_web", "stubbe", "Skull1", "Skull2", "Rock_3", "Rock_4" });
-      Executor.AddOperation(new Destroy(Context, args));
+      Executor.AddOperation(new ResetZones(Context, args));
       args.TargetZones = TargetZones.All;
       Executor.AddOperation(new Generate(Context, args));
       Executor.AddCleanUp(() => new ResetVegetation(Context));
@@ -67,7 +67,7 @@ public class Upgrade : BaseOperation {
         return;
       }
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Plains, Heightmap.Biome.DeepNorth, Heightmap.Biome.Mistlands, Heightmap.Biome.AshLands };
-      Executor.AddOperation(new Destroy(Context, args));
+      Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new DistributeLocations(new[] { "BlazingDamnedOneAltar" }, false, Context));
       Executor.AddOperation(new DistributeLocations(new[] { "JotunnAltar" }, false, Context));
       Executor.AddOperation(new DistributeLocations(new[] { "SvartalfrQueenAltar_New" }, false, Context));

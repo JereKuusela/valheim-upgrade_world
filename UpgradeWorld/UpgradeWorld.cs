@@ -41,27 +41,28 @@ public class PreventDoubleZNetView {
 }
 [HarmonyPatch(typeof(Terminal), "InitTerminal")]
 public class SetCommands {
-  public static void Postfix() {
-    new ChangeDayCommand();
-    new ChangeTimeCommand();
-    new CountBiomesCommand();
-    new CountEntitiesCommand();
-    new DestroyCommand();
-    new DistributeCommand();
-    new GenerateCommand();
-    new ListEntitiesCommand();
-    new PlaceLocationsCommand();
-    new RegenerateLocationsCommand();
-    new RemoveEntitiesCommand();
-    new RemoveLocationsCommand();
-    new RerollChestsCommand();
-    new SetDayCommand();
-    new SetTimeCommand();
-    new SetVegetationCommand();
+  public static void Postfix(Terminal __instance) {
+    new TimeChangeCommand();
+    new BiomesCountCommand();
+    new ObjectsCountCommand();
+    new ZonesResetCommand();
+    new ZonesGenerateCommand();
+    new ObjectsListCommand();
+    new LocationsAddCommand();
+    new LocationsResetCommand();
+    new ObjectsRemoveCommand();
+    new LocationsRemoveCommand();
+    new ChestsResetCommand();
+    new TimeSetCommand();
+    new VegetationSetCommands();
     new StartStopCommand();
     new UpgradeCommand();
     new VerboseCommand();
-    new ResetVegetationCommand();
-    new PlaceVegetationCommand();
+    new VegetationResetCommand();
+    new VegetationAddCommand();
+    if (Terminal.commands.TryGetValue("genloc", out var genloc)) {
+      genloc.IsCheat = false;
+      genloc.OnlyServer = false;
+    }
   }
 }
