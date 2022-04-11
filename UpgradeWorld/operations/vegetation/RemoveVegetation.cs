@@ -6,10 +6,17 @@ public class RemoveVegetation : ZoneOperation {
   protected int Removed = 0;
   private HashSet<int> Ids = new();
   public RemoveVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.ForceStart) {
+    ZonesPerUpdate = Settings.DestroysPerUpdate;
     Operation = "Remove vegetation";
+    InitString = args.Print("Remove vegetation at");
     args.TargetZones = TargetZones.Generated;
     Filterers = FiltererFactory.Create(args);
     Ids = ids.Select(id => id.GetStableHashCode()).ToHashSet();
+    // Automatically clean up fractions as well.
+    foreach (var id in ids) {
+      if (ZNetScene.instance.GetPrefab(id + "_frac"))
+        Ids.Add((id + "_frac").GetStableHashCode());
+    }
   }
   protected override bool ExecuteZone(Vector2i zone) {
     Remove(zone);
@@ -20,13 +27,12 @@ public class RemoveVegetation : ZoneOperation {
     List<ZDO> zdos = new();
     ZDOMan.instance.FindObjects(zone, zdos);
     foreach (var zdo in zdos) {
-      if (!Ids.Contains(zdo.GetPrefab())) return;
+      if (!Ids.Contains(zdo.GetPrefab())) continue;
       Helper.RemoveZDO(zdo);
       Removed++;
     }
   }
   protected override void OnEnd() {
-    base.OnEnd();
     var text = Operation + " completed.";
     if (Settings.Verbose) text += $" {Removed} vegetations removed.";
     if (Failed > 0) text += " " + Failed + " errors.";

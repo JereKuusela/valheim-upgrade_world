@@ -4,10 +4,15 @@ public abstract class ExecutedOperation : BaseOperation {
   protected int Attempts = 0;
   protected int Failed = 0;
   public bool AutoStart = false;
+  public bool First = true;
   protected ExecutedOperation(Terminal context, bool autoStart) : base(context) {
     AutoStart = autoStart;
   }
   public bool Execute() {
+    if (First) {
+      OnStart();
+      First = false;
+    }
     Attempts++;
     var ret = OnExecute();
     if (ret) OnEnd();
@@ -20,6 +25,8 @@ public abstract class ExecutedOperation : BaseOperation {
       Print(output);
   }
   protected abstract string OnInit();
+  protected virtual void OnStart() {
+  }
   protected virtual void OnEnd() {
   }
 }

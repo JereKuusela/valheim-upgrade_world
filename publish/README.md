@@ -309,6 +309,7 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Adds new upgrade types for Epic Valheim Additions (`EVA_1.3+1.4`, `EVA_1.3+1.4_locations_only` and `EVA_1.4`).
 	- Adds a better player detection to avoid destroying players on multiplayer.
 	- Adds a new setting for preventing double ZNetViews.
+	- Adds new settings for map and minimap coordinates.
 	- Adds better autocomplete when using Server Devcommands mod.
 	- Removes commands `reveal_map`, `hide_map` and `remove_pins` as obsolete (moved to Server Devcommands mod).
 	- Fixes minimap coordinates conficlicting with other mods.

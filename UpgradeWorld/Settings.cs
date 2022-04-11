@@ -11,6 +11,10 @@ public struct FilterPoint {
   public float max;
 }
 public static class Settings {
+  public static ConfigEntry<bool> configMapCoordinates;
+  public static bool MapCoordinates => configMapCoordinates.Value;
+  public static ConfigEntry<bool> configMiniMapCoordinates;
+  public static bool MiniMapCoordinates => configMiniMapCoordinates.Value;
   public static ConfigEntry<bool> configVerbose;
   public static bool Verbose => configVerbose.Value;
   public static ConfigEntry<bool> configPreventDoubleZNetView;
@@ -44,12 +48,14 @@ public static class Settings {
     configSafeZoneItems = config.Bind(section, "Safe zone items", "blastfurnace,bonfire,charcoal_kiln,fermenter,fire_pit,forge,guard_stone,hearth,piece_artisanstation,piece_bed02,piece_brazierceiling01,piece_groundtorch,piece_groundtorch_blue,piece_groundtorch_green,piece_groundtorch_wood,piece_oven,piece_spinningwheel,piece_stonecutter,piece_walltorch,piece_workbench,portal,portal_wood,smelter,windmill,piece_chest,piece_chest_blackmetal,piece_chest_private,piece_chest_treasure,piece_chest_wood", "List of entity names that prevent zones being modified.");
     configSafeZoneSize = config.Bind(section, "Safe zones", 2, "0 = disable, 1 = only the zone, 2 = 3x3 zones, 3 = 5x5 zones, etc.");
     configRootUsers = config.Bind(section, "Root users", "", "SteamIDs that can execute commands on servers. If not set, then all admins can execute commands.");
+    configMapCoordinates = config.Bind(section, "Show map coordinates", true, "The map shows coordinates on hover.");
+    configMiniMapCoordinates = config.Bind(section, "Show minimap coordinates", true, "The minimap shows player coordinates.");
 
     configDestroysPerUpdate = config.Bind("2. Destroying", "Operations per update", 100, "How many zones are destroyed per Unity update.");
     configTimeBasedDataNames = config.Bind("3. Change time/day", "Time based data names", "spawntime,lastTime,SpawnTime,StartTime,alive_time,spawn_time,picked_time,plantTime,pregnant,TameLastFeeding", "Names of the data values that should be updated with the new time. Changing these is NOT recommended.");
     configZoneControlId = config.Bind("3. Change time/day", "Zone control name", "_ZoneCtrl", "Name of the zone control entity which controls the enemy spawning. Changing these is NOT recommended.");
-
   }
+
   /// <summary>Returns points and ranges to filter zones.</summary>
   public static FilterPoint[] GetFilterPoints() {
     var points = CustomPoints.Length > 0 ? CustomPoints.Split('|').Select(pointStr => {

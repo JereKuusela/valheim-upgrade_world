@@ -1,12 +1,14 @@
 using System.Collections.Generic;
+using HarmonyLib;
 using UnityEngine;
 namespace UpgradeWorld;
 ///<summary>Runs the vegetation placement code for the filtered zones.</summary>
 public class PlaceVegetation : VegetationOperation {
-  protected int Added = 0;
   public PlaceVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args) {
     Operation = "Place vegetation";
+    InitString = args.Print("Place vegetation at");
     args.TargetZones = TargetZones.Generated;
+    Filterers = FiltererFactory.Create(args);
     New = GetWithOnlyIds(ids, true);
   }
   protected override bool ExecuteZone(Vector2i zone) {
@@ -18,12 +20,17 @@ public class PlaceVegetation : VegetationOperation {
     zs.PokeLocalZone(zone);
     return false;
   }
+  protected override void OnStart() {
+    CountNewEntities.Counter = 0;
+  }
+
   protected override void OnEnd() {
     base.OnEnd();
     var text = Operation + " completed.";
-    if (Settings.Verbose) text += $" {Added} vegetations placed.";
+    if (Settings.Verbose) text += $" {CountNewEntities.Counter} vegetations placed.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
+    CountNewEntities.Counter = 0;
   }
   private List<ZoneSystem.ClearArea> GetClearAreas(Vector2i zone) {
     List<ZoneSystem.ClearArea> clearAreas = new();
@@ -43,6 +50,13 @@ public class PlaceVegetation : VegetationOperation {
     var clearAreas = GetClearAreas(zone);
     spawnedObjects.Clear();
     zs.PlaceVegetation(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Full, spawnedObjects);
-    Added += spawnedObjects.Count;
+  }
+}
+
+[HarmonyPatch(typeof(ZDOMan), nameof(ZDOMan.CreateNewZDO), new[] { typeof(ZDOID), typeof(Vector3) })]
+public class CountNewEntities {
+  public static int Counter = 0;
+  static void Prefix() {
+    Counter++;
   }
 }

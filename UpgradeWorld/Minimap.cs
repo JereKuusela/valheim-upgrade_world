@@ -4,6 +4,7 @@ namespace UpgradeWorld;
 [HarmonyPatch(typeof(Minimap), nameof(Minimap.UpdateBiome))]
 public class Minimap_ShowPos {
   static void Prefix(Minimap __instance) {
+    if (!Settings.MiniMapCoordinates) return;
     __instance.m_biomeNameSmall.text = Localization.instance.Localize("$biome_" + __instance.m_biome.ToString().ToLower());
   }
   private static void AddText(UnityEngine.UI.Text input, string text) {
@@ -11,6 +12,7 @@ public class Minimap_ShowPos {
     input.text = $"\n\n{input.text}{text}";
   }
   static void Postfix(Minimap __instance, Player player) {
+    if (!Settings.MiniMapCoordinates && !Settings.MapCoordinates) return;
     var mode = __instance.m_mode;
     var position = player.transform.position;
     if (mode == Minimap.MapMode.Large) {
