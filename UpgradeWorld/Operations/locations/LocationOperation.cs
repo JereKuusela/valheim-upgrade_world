@@ -7,7 +7,6 @@ public abstract class LocationOperation : ZoneOperation {
   public LocationOperation(Terminal context, FiltererParameters args) : base(context, args.ForceStart) {
     args.TargetZones = TargetZones.Generated;
     Filterers = FiltererFactory.Create(args);
-    ZonesPerUpdate = 100;
   }
   protected override bool ExecuteZone(Vector2i zone) {
     var zoneSystem = ZoneSystem.instance;

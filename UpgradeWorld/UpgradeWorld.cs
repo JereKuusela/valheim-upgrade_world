@@ -61,5 +61,7 @@ public class SetCommands {
     new StartStopCommand();
     new UpgradeCommand();
     new VerboseCommand();
+    new ResetVegetationCommand();
+    new PlaceVegetationCommand();
   }
 }

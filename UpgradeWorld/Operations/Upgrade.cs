@@ -56,7 +56,7 @@ public class Upgrade : BaseOperation {
         return;
       }
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
-      new SetVegetation(Context, true, new[] { "HugeRoot1", "SwampTree2_darkland", "Pinetree_01", "FirTree_small_dead", "vertical_web", "horizontal_web", "tunnel_web", "stubbe", "Skull1", "Skull2", "Rock_3", "Rock_4" });
+      new SetVegetation(Context, true, false, new[] { "HugeRoot1", "SwampTree2_darkland", "Pinetree_01", "FirTree_small_dead", "vertical_web", "horizontal_web", "tunnel_web", "stubbe", "Skull1", "Skull2", "Rock_3", "Rock_4" });
       Executor.AddOperation(new Destroy(Context, args));
       args.TargetZones = TargetZones.All;
       Executor.AddOperation(new Generate(Context, args));

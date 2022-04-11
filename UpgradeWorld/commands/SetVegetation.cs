@@ -11,7 +11,7 @@ public class SetVegetationCommand {
         args.Context.AddString("Error: No entity ids given.");
         return;
       }
-      new SetVegetation(args.Context, !disable, ids);
+      new SetVegetation(args.Context, !disable, false, ids);
     }, optionsFetcher: SetVegetation.GetIds);
     CommandWrapper.RegisterEmpty("reset_vegetation");
     new Terminal.ConsoleCommand("reset_vegetation", "- Resets vegetation generation to the default.", (Terminal.ConsoleEventArgs args) => {
