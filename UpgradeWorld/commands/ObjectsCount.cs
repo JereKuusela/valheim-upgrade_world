@@ -10,7 +10,7 @@ public class ObjectsCountCommand {
       IdParameters pars = new(args);
       pars.Ids = Parse.Flag(pars.Ids, "all", out var showAll).ToList();
       if (!pars.Valid(args.Context)) return;
-      if (!Helper.IsServer(args)) return;
+      if (Helper.IsClient(args)) return;
       if (pars.Ids.Count() == 0)
         new CountAllObjects(args.Context, showAll, pars);
       else

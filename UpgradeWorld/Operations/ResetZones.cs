@@ -4,10 +4,10 @@ namespace UpgradeWorld;
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
 public class ResetZones : ZoneOperation {
   public ResetZones(Terminal context, FiltererParameters args) : base(context, args.Start) {
-    Operation = "Destroy";
+    Operation = "Reset";
     ZonesPerUpdate = Settings.DestroysPerUpdate;
     args.TargetZones = TargetZones.Generated;
-    InitString = args.Print("Destroy");
+    InitString = args.Print("Reset");
     Filterers = FiltererFactory.Create(args);
   }
 
@@ -35,9 +35,9 @@ public class ResetZones : ZoneOperation {
   protected override void OnEnd() {
     var destroyed = ZonesToUpgrade.Length - Failed;
     var text = Operation + " completed.";
-    if (Settings.Verbose) text += " " + destroyed + " zones destroyed.";
+    if (Settings.Verbose) text += " " + destroyed + " zones reseted.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
-    Print("Run distribute or genloc command to re-distribute the location instances (if needed).");
+    Print("Run genloc command to re-distribute the location instances (if needed).");
   }
 }

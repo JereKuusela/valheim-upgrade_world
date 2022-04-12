@@ -4,9 +4,9 @@ namespace UpgradeWorld;
 ///<summary>Destroys and places given locations.</summary>
 public class RegenerateLocations : LocationOperation {
   public RegenerateLocations(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context, args) {
-    Operation = "Regenerate locations";
-    InitString = args.Print("Regenerate locations at");
-    Verb = "regenerated";
+    Operation = "Reset locations";
+    InitString = args.Print("Reset locations at");
+    Verb = "reseted";
     Filterers = Filterers.Append(new LocationFilterer(ids));
   }
 
@@ -16,7 +16,7 @@ public class RegenerateLocations : LocationOperation {
     ZoneSystem.instance.m_locationInstances[zone] = location;
     PlaceLocation(zone, location, true, true);
     if (Settings.Verbose)
-      Print("Location " + location.m_location.m_prefabName + " regenerated at " + zone.ToString());
+      Print("Location " + location.m_location.m_prefabName + " reseted at " + zone.ToString());
     return true;
   }
 }

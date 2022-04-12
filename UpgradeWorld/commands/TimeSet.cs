@@ -20,7 +20,7 @@ public class TimeSetCommand {
         Helper.Print(args.Context, "Error: Too many parameters.");
         return;
       }
-      if (!Helper.IsServer(args)) return;
+      if (Helper.IsClient(args)) return;
       new SetTime(args.Context, time);
     });
     CommandWrapper.Register("time_set_day", (int index) => {
@@ -41,7 +41,7 @@ public class TimeSetCommand {
         Helper.Print(args.Context, "Error: Too many parameters.");
         return;
       }
-      if (!Helper.IsServer(args)) return;
+      if (Helper.IsClient(args)) return;
       new SetTime(args.Context, time * EnvMan.instance.m_dayLengthSec);
     });
   }

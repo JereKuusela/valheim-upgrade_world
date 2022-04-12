@@ -9,7 +9,7 @@ public class ZonesGenerateCommand {
       pars.TargetZones = TargetZones.Ungenerated;
       pars.SafeZones = 0;
       if (!pars.Valid(args.Context)) return;
-      if (!Helper.IsServer(args)) return;
+      if (Helper.IsClient(args)) return;
       Executor.AddOperation(new Generate(args.Context, pars));
     }, optionsFetcher: () => Helper.AvailableBiomes);
   }

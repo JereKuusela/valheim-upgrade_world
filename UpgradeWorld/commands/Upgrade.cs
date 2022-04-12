@@ -14,7 +14,7 @@ public class UpgradeCommand {
         if (found) selectedType = type;
       }
       if (!pars.Valid(args.Context)) return;
-      if (!Helper.IsServer(args)) return;
+      if (Helper.IsClient(args)) return;
       new Upgrade(args.Context, selectedType, pars.Unhandled, pars);
     }, optionsFetcher: () => Upgrade.Types);
   }

@@ -15,7 +15,7 @@ public class ChestsResetCommand {
       }
       var chestName = pars.Ids.First();
       var ids = pars.Ids.Skip(1);
-      if (!Helper.IsServer(args)) return;
+      if (Helper.IsClient(args)) return;
       new ResetChests(chestName, ids, looted, pars, args.Context);
     }, optionsFetcher: () => ResetChests.ChestsNames);
   }

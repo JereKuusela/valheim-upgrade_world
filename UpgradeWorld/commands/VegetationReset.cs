@@ -9,7 +9,7 @@ public class VegetationResetCommand {
     new Terminal.ConsoleCommand("vegetation_reset", "[id1,id2,...] [...args] - Removes and adds vegetation to generated areas.", (Terminal.ConsoleEventArgs args) => {
       IdParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
-      if (!Helper.IsServer(args)) return;
+      if (Helper.IsClient(args)) return;
       Executor.AddOperation(new RemoveVegetation(args.Context, pars.Ids.ToHashSet(), pars));
       Executor.AddOperation(new PlaceVegetation(args.Context, pars.Ids.ToHashSet(), pars));
     }, optionsFetcher: () => SetVegetation.GetIds());

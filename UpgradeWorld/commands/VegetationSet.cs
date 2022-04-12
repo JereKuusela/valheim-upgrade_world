@@ -9,7 +9,7 @@ public class VegetationSetCommands {
         Helper.Print(args.Context, "Error: No ids given.");
         return;
       }
-      if (!Helper.IsServer(args)) return;
+      if (Helper.IsClient(args)) return;
       new SetVegetation(args.Context, true, false, ids);
     }, optionsFetcher: SetVegetation.GetIds);
     CommandWrapper.Register("vegetation_disable", (int index) => SetVegetation.GetIds());
@@ -19,7 +19,7 @@ public class VegetationSetCommands {
         Helper.Print(args.Context, "Error: No ids given.");
         return;
       }
-      if (!Helper.IsServer(args)) return;
+      if (Helper.IsClient(args)) return;
       new SetVegetation(args.Context, false, false, ids);
     }, optionsFetcher: SetVegetation.GetIds);
     CommandWrapper.RegisterEmpty("vegetation_default");
@@ -28,7 +28,7 @@ public class VegetationSetCommands {
         Helper.Print(args.Context, "Error: No parameters expected.");
         return;
       }
-      if (!Helper.IsServer(args)) return;
+      if (Helper.IsClient(args)) return;
       new ResetVegetation(args.Context);
     });
   }

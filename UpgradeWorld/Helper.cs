@@ -26,6 +26,7 @@ public static class Helper {
 
   public static void RemoveZDO(ZDO zdo) {
     if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid) return;
+    if (ZNet.instance.m_peers.Any(peer => peer.m_characterID == zdo.m_uid)) return;
     if (!zdo.IsOwner())
       zdo.SetOwner(ZDOMan.instance.GetMyID());
     if (ZNetScene.instance.m_instances.TryGetValue(zdo, out var view))
@@ -69,18 +70,18 @@ public static class Helper {
     }
     return true;
   }
-  public static bool IsServer(Terminal.ConsoleEventArgs args) {
+  public static bool IsClient(Terminal.ConsoleEventArgs args) {
     var isServer = ZNet.instance && ZNet.instance.IsServer();
     if (!isServer) {
       ServerExecution.Send(args);
-      return false;
+      return true;
     }
     var isDedicated = ZNet.instance && ZNet.instance.IsDedicated();
     if (isDedicated && ServerExecution.User == null) {
       Helper.Print(args.Context, "Error: Dedicated server is not allowed to directly execute any commands.");
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
   public static void Print(Terminal terminal, ZRpc user, string value) {
     if (ZNet.m_isServer && user != null) {

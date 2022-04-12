@@ -60,6 +60,8 @@ public class SetCommands {
     new VerboseCommand();
     new VegetationResetCommand();
     new VegetationAddCommand();
+    new SavingCommands();
+    new BackupCommand();
     if (Terminal.commands.TryGetValue("genloc", out var genloc)) {
       genloc.IsCheat = false;
       genloc.OnlyServer = false;

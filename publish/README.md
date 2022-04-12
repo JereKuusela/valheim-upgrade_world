@@ -61,6 +61,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 
 Overview of available commands (remember that tab key can be used for autocomplete / cycle through options):
 
+- `backup`: Saves the game with a timestamped file name.
 - `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
 - `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items.
 - `locations_add [id1,id2,...] [noclearing] [...args]`: Adds locations to already explored areas. With `noclearing`, the location area is not cleared of existing objects.
@@ -69,6 +70,8 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `objects_count [all] [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. All objects are listed with the flag `all`. Result is also printed to the player.log file. Wildcards are also supported.
 - `objects_list [id1,id2,...] [...args]`: Lists objects showing their position and biome. Result is also printed to the player.log file.
 - `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `count_objects` to check that you don't remove too much.
+- `save_disable`: Disables world saving. But still a good idea to make backups.
+- `save_enable`: Enables world saving.
 - `start`: Most commands don't execute instantly but instead print the zones being affected. This command can be then used to start executing.
 - `stop`: Stops the current execution and clears any pending command.
 - `time_change [seconds]`: Changes the world time and updates object timestamps.
@@ -210,6 +213,8 @@ Affected data values can be configured but recommended to keep them as it is.
 # Changelog
 
 - v1.12
+	- Adds a new command `backup` to backup the world.
+	- Adds a new command `save_disable` and `save_enable` to disable or enable world saving.
 	- Adds support for automatic player position when executing commands on dedicated servers.
 	- Improves output when executing commands on dedicated servers.
 	- Fixes `start` and `stop` commands not being sent to the server.

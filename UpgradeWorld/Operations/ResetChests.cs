@@ -17,7 +17,7 @@ public class ResetChests : EntityOperation {
   private void Reroll(string chestId, bool looted, FiltererParameters args) {
     var chestIds = chestId == "*" ? ChestsNames.Where(name => name != "*") : new List<string> { chestId };
     var totalChests = 0;
-    var rolledChests = 0;
+    var resetedChests = 0;
     var prefabs = chestIds.ToDictionary(id => id.GetStableHashCode(), id => ZNetScene.instance.GetPrefab(id));
     if (prefabs.Values.Any(prefab => prefab == null || prefab.GetComponent<Container>() == null)) {
       Print("Error: Invalid chest ID.");
@@ -47,7 +47,7 @@ public class ResetChests : EntityOperation {
         continue;
       }
       if (AllowedItems.Count > 0 && !inventory.GetAllItems().All(IsValid)) continue;
-      rolledChests++;
+      resetedChests++;
       inventory.RemoveAll();
       if (obj) {
         obj.GetComponent<Container>().AddDefaultItems();
@@ -59,9 +59,9 @@ public class ResetChests : EntityOperation {
       }
     }
     if (Settings.Verbose)
-      Print("Chests rerolled (" + rolledChests + " of " + totalChests + ").");
+      Print("Chests reseted (" + resetedChests + " of " + totalChests + ").");
     else
-      Print("Chests rerolled.");
+      Print("Chests reseted.");
   }
   private bool IsValid(ItemDrop.ItemData item) {
     var isValid = AllowedItems.Contains(Helper.Normalize(item.m_dropPrefab.name));
