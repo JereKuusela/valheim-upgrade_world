@@ -7,37 +7,37 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BepInEx.dll">
-      <HintPath>..\Libs\BepinEx.dll</HintPath>
+      <HintPath>..\..\Libs\BepinEx.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.dll">
-      <HintPath>..\Libs\UnityEngine.dll</HintPath>
+      <HintPath>..\..\Libs\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule.dll">
-      <HintPath>..\Libs\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\Libs\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule.dll">
-      <HintPath>..\Libs\UnityEngine.TextRenderingModule.dll</HintPath>
+      <HintPath>..\..\Libs\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule.dll">
-      <HintPath>..\Libs\UnityEngine.InputLegacyModule.dll</HintPath>
+      <HintPath>..\..\Libs\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI.dll">
-      <HintPath>..\Libs\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\Libs\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="0Harmony.dll">
-      <HintPath>..\Libs\0Harmony.dll</HintPath>
+      <HintPath>..\..\Libs\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Harmony.dll">
-      <HintPath>..\Libs\BepInEx.Harmony.dll</HintPath>
+      <HintPath>..\..\Libs\BepInEx.Harmony.dll</HintPath>
     </Reference>
     <Reference Include="assembly_valheim_publicized.dll">
-      <HintPath>..\Libs\assembly_valheim_publicized.dll</HintPath>
+      <HintPath>..\..\Libs\assembly_valheim_publicized.dll</HintPath>
     </Reference>
     <Reference Include="assembly_utils_publicized.dll">
-      <HintPath>..\Libs\assembly_utils_publicized.dll</HintPath>
+      <HintPath>..\..\Libs\assembly_utils_publicized.dll</HintPath>
     </Reference>
     <Reference Include="assembly_guiutils_publicized.dll">
-      <HintPath>..\Libs\assembly_guiutils_publicized.dll</HintPath>
+      <HintPath>..\..\Libs\assembly_guiutils_publicized.dll</HintPath>
     </Reference>
   </ItemGroup>
 

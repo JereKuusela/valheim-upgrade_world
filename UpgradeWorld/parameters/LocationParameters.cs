@@ -10,7 +10,7 @@ public class IdParameters : FiltererParameters {
   public override bool Valid(Terminal terminal) {
     if (!base.Valid(terminal)) return false;
     if (Ids.Count() == 0) {
-      terminal.AddString("Error: Missing location ids.");
+      Helper.Print(terminal, "Error: Missing location ids.");
       return false;
     }
     return true;

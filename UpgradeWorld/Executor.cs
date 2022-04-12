@@ -4,9 +4,12 @@ namespace UpgradeWorld;
 public static class Executor {
   private static List<ExecutedOperation> operations = new();
   private static List<Action> cleanUps = new();
-  public static bool DoExecute = false;
+  private static bool ShouldExecute = false;
   private static bool PrintInit = false;
-
+  public static void DoExecute(ZRpc user) {
+    foreach (var operation in operations) operation.User = user;
+    ShouldExecute = true;
+  }
   public static void AddOperation(ExecutedOperation operation) {
     operation.Init();
     PrintInit = true;
@@ -23,14 +26,14 @@ public static class Executor {
   public static void RemoveOperations() {
     operations.Clear();
     DoClean();
-    DoExecute = false;
+    ShouldExecute = false;
   }
   public static void Execute() {
     if (operations.Count == 0) {
-      DoExecute = false;
+      ShouldExecute = false;
       return;
     }
-    if (!DoExecute && !Settings.AutoStart && !operations[0].AutoStart) {
+    if (!ShouldExecute && !Settings.AutoStart && !operations[0].AutoStart) {
       if (PrintInit) operations[operations.Count - 1].Print("Use start to begin execution or stop to cancel.");
       PrintInit = false;
       return;

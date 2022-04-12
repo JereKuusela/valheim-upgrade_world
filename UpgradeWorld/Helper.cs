@@ -51,15 +51,20 @@ public static class Helper {
       if (zdoPosition.y > 4000f || delta.magnitude < distance) Helper.RemoveZDO(zdo);
     }
   }
-  /// <summary>Wraps the local player position for safe use..</summary>
-  public static Vector3 GetLocalPosition() {
+  /// <summary>Returns the player's position while also handling the server-side.</summary>
+  public static Vector3 GetPlayerPosition() {
     if (Player.m_localPlayer) return Player.m_localPlayer.transform.position;
+    if (ServerExecution.User != null) {
+      var player = ZNet.instance.m_peers.Find(peer => peer.IsReady() && peer.m_socket.GetHostName() == ServerExecution.User.GetSocket().GetHostName());
+      if (player != null) return player.m_refPos;
+    }
     return Vector3.zero;
   }
-  public static Vector2i GetLocalZone() => ZoneSystem.instance.GetZone(GetLocalPosition());
+  /// <summary>Returns the player's zone while also handling the server-side.</summary>
+  public static Vector2i GetPlayerZone() => ZoneSystem.instance.GetZone(GetPlayerPosition());
   public static bool CheckUnhandled(Terminal.ConsoleEventArgs args, IEnumerable<string> extra, int handled = 0) {
     if (extra.Count() > handled) {
-      args.Context.AddString("Error: Unhandled parameters " + string.Join(", ", extra.Skip(handled)));
+      Helper.Print(args.Context, "Error: Unhandled parameters " + string.Join(", ", extra.Skip(handled)));
       return false;
     }
     return true;
@@ -71,10 +76,29 @@ public static class Helper {
       return false;
     }
     var isDedicated = ZNet.instance && ZNet.instance.IsDedicated();
-    if (isDedicated && RedirectOutput.Target == null) {
-      args.Context.AddString("Error: Dedicated server is not allowed to execute commands.");
+    if (isDedicated && ServerExecution.User == null) {
+      Helper.Print(args.Context, "Error: Dedicated server is not allowed to directly execute any commands.");
       return false;
     }
     return true;
+  }
+  public static void Print(Terminal terminal, ZRpc user, string value) {
+    if (ZNet.m_isServer && user != null) {
+      ZNet.instance.RemotePrint(user, value);
+    }
+    if (terminal) terminal.AddString(value);
+  }
+  public static void Print(Terminal terminal, string value) => Print(terminal, ServerExecution.User, value);
+
+  private static string Previous = "";
+  public static void PrintOnce(Terminal terminal, ZRpc user, string value) {
+    if (ZNet.m_isServer && user != null)
+      user.Invoke(ServerExecution.RPC_RemotePrintOnce, value);
+    if (!terminal) return;
+    if (terminal.m_chatBuffer.LastOrDefault() == value) return;
+    if (Previous != "")
+      while (terminal.m_chatBuffer.Remove(Previous)) ;
+    Previous = value;
+    Print(terminal, null, value);
   }
 }

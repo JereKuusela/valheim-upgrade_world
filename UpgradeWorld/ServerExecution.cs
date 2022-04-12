@@ -2,25 +2,16 @@ using System.Collections.Generic;
 using HarmonyLib;
 namespace UpgradeWorld;
 
-[HarmonyPatch(typeof(Terminal), nameof(Terminal.AddString), new[] { typeof(string) })]
-public class RedirectOutput {
-  public static ZRpc Target = null;
-  static void Postfix(string text) {
-    if (ZNet.m_isServer && Target != null) {
-      ZNet.instance.RemotePrint(Target, text);
-    }
-  }
-}
-
 [HarmonyPatch(typeof(ZNet), nameof(ZNet.RPC_PeerInfo))]
 public class ServerExecution {
+  public static ZRpc User = null;
 
   ///<summary>Sends command to the server so that it can be executed there.</summary>
   public static void Send(string command) {
     if (!ZNet.instance) return;
     var server = ZNet.instance.GetServerRPC();
     if (server == null) return;
-    Console.instance.AddString("Sending command: " + command);
+    Helper.Print(Console.instance, "Sending command: " + command);
     server.Invoke(RPC_Command, new[] { command });
   }
   ///<summary>Sends command to the server so that it can be executed there.</summary>
@@ -29,6 +20,7 @@ public class ServerExecution {
   public static void Send(Terminal.ConsoleEventArgs args) => Send(args.Args);
 
   public static string RPC_Command = "UpgradeWorld_Command";
+  public static string RPC_RemotePrintOnce = "UpgradeWorld_RemotePrintOnce";
   private static bool IsAllowed(ZRpc rpc, string command) {
     var zNet = ZNet.instance;
     if (!zNet.enabled) return false;
@@ -39,18 +31,22 @@ public class ServerExecution {
     if (root.Count > 0) allowed = root.Contains(host);
     else allowed = zNet.m_adminList.Contains(host);
     if (allowed) return true;
-    Console.instance.AddString("Unauthorized to use Upgrade World commands.");
+    Helper.Print(Console.instance, rpc, "Unauthorized to use Upgrade World commands.");
     return false;
   }
   private static void RPC_Do_Command(ZRpc rpc, string command) {
-    RedirectOutput.Target = rpc;
+    User = rpc;
     if (IsAllowed(rpc, command))
       Console.instance.TryRunCommand(command);
-    RedirectOutput.Target = null;
+    User = null;
+  }
+  private static void RPC_PrintOnce(ZRpc rpc, string value) {
+    Helper.PrintOnce(Console.instance, null, value);
   }
   static void Postfix(ZNet __instance, ZRpc rpc) {
-    if (__instance.IsDedicated()) {
+    if (__instance.IsDedicated())
       rpc.Register<string>(RPC_Command, new(RPC_Do_Command));
-    }
+    else
+      rpc.Register<string>(RPC_RemotePrintOnce, new(RPC_PrintOnce));
   }
 }

@@ -6,9 +6,9 @@ public class VerboseCommand {
       if (!Helper.IsServer(args)) return;
       Settings.configVerbose.Value = !Settings.Verbose;
       if (Settings.Verbose)
-        args.Context.AddString("Verbose mode enabled.");
+        Helper.Print(args.Context, "Verbose mode enabled.");
       else
-        args.Context.AddString("Verbose mode disabled.");
+        Helper.Print(args.Context, "Verbose mode disabled.");
     });
   }
 }

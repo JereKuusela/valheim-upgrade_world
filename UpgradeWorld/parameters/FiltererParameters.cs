@@ -39,32 +39,31 @@ public class FiltererParameters {
         else Unhandled.Add(par);
       } else if (name == "noedges") NoEdges = true;
       else if (name == "start") Start = true;
-      else if (name == "pos") Pos = Helper.GetLocalPosition();
-      else if (name == "zone") Zone = Helper.GetLocalZone();
+      else if (name == "zone") Zone = Helper.GetPlayerZone();
       else if (name == "force") SafeZones = 0;
       else Unhandled.Add(par);
     }
-    if (Player.m_localPlayer && !Zone.HasValue && !Pos.HasValue) {
-      var pos = Player.m_localPlayer.transform.position;
+    if (!Zone.HasValue && !Pos.HasValue) {
+      var pos = Helper.GetPlayerPosition();
       Pos = new Vector2(pos.x, pos.z);
     }
   }
 
   public virtual bool Valid(Terminal terminal) {
     if (Unhandled.Count() > 0) {
-      terminal.AddString("Error: Unhandled parameters " + string.Join(", ", Unhandled));
+      Helper.Print(terminal, "Error: Unhandled parameters " + string.Join(", ", Unhandled));
       return false;
     }
     if (Zone.HasValue && Pos.HasValue) {
-      terminal.AddString("Error: <color=yellow>pos</color> and <color=yellow>zone</color> can't be used at the same time.");
+      Helper.Print(terminal, "Error: <color=yellow>pos</color> and <color=yellow>zone</color> can't be used at the same time.");
       return false;
     }
     if (Biomes.Contains(Heightmap.Biome.None)) {
-      terminal.AddString("Error: Invalid biomes.");
+      Helper.Print(terminal, "Error: Invalid biomes.");
       return false;
     }
     if (!Zone.HasValue && !Pos.HasValue) {
-      terminal.AddString("Error: Position or zone is not defined.");
+      Helper.Print(terminal, "Error: Position or zone is not defined.");
       return false;
     }
     return true;
@@ -117,7 +116,7 @@ public class FiltererParameters {
         str += "zone " + Zone.Value.x + "," + Zone.Value.y;
       else if (Pos.Value.x == 0 && Pos.Value.y == 0)
         str += "world center";
-      else if (Pos.Value.x == Helper.GetLocalPosition().x && Pos.Value.y == Helper.GetLocalPosition().z)
+      else if (Pos.Value.x == Helper.GetPlayerPosition().x && Pos.Value.y == Helper.GetPlayerPosition().z)
         str += "player";
       else
         str += "coordinates " + Pos.Value.x + "," + Pos.Value.y;

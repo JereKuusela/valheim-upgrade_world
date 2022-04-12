@@ -7,10 +7,10 @@ public class ObjectsCountCommand {
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
     new Terminal.ConsoleCommand("objects_count", "[all] [id1,id2,...] [...args] - Counts objects. Without ids, counts all objects.", (Terminal.ConsoleEventArgs args) => {
-      if (!Helper.IsServer(args)) return;
       IdParameters pars = new(args);
       pars.Ids = Parse.Flag(pars.Ids, "all", out var showAll).ToList();
       if (!pars.Valid(args.Context)) return;
+      if (!Helper.IsServer(args)) return;
       if (pars.Ids.Count() == 0)
         new CountAllObjects(args.Context, showAll, pars);
       else

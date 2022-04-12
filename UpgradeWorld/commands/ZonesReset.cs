@@ -5,10 +5,10 @@ public class ZonesResetCommand {
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
     new Terminal.ConsoleCommand("zones_reset", "[...args] - Destroys areas making them ungenerated. These areas will be generated when visited.", (Terminal.ConsoleEventArgs args) => {
-      if (!Helper.IsServer(args)) return;
       FiltererParameters pars = new(args);
-      if (pars.Valid(args.Context))
-        Executor.AddOperation(new ResetZones(args.Context, pars));
+      if (!pars.Valid(args.Context)) return;
+      if (!Helper.IsServer(args)) return;
+      Executor.AddOperation(new ResetZones(args.Context, pars));
     }, optionsFetcher: () => FiltererParameters.Parameters);
   }
 }

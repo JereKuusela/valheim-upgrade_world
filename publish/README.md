@@ -209,6 +209,11 @@ Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
 
+- v1.12
+	- Adds support for automatic player position when executing commands on dedicated servers.
+	- Improves output when executing commands on dedicated servers.
+	- Fixes `start` and `stop` commands not being sent to the server.
+
 - v1.11
 	- Adds support for executing commands on dedicated servers.
 	- Adds a new setting to authorize certain users to execute commands (by default all admins can execute).

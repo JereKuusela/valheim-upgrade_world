@@ -6,10 +6,10 @@ public class ObjectsRemoveCommand {
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
     new Terminal.ConsoleCommand("objects_Remove", "[id1,id2,...] [...args] - Removes objects.", (Terminal.ConsoleEventArgs args) => {
-      if (!Helper.IsServer(args)) return;
       IdParameters pars = new(args);
-      if (pars.Valid(args.Context))
-        new RemoveObjects(args.Context, pars.Ids, pars);
+      if (!pars.Valid(args.Context)) return;
+      if (!Helper.IsServer(args)) return;
+      new RemoveObjects(args.Context, pars.Ids, pars);
     }, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
   }
 }
