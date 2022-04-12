@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 public class RemoveVegetation : ZoneOperation {
   protected int Removed = 0;
   private HashSet<int> Ids = new();
-  public RemoveVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.ForceStart) {
+  public RemoveVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Start) {
     ZonesPerUpdate = Settings.DestroysPerUpdate;
     Operation = "Remove vegetation";
     InitString = args.Print("Remove vegetation at");

@@ -4,7 +4,7 @@ namespace UpgradeWorld;
 public abstract class LocationOperation : ZoneOperation {
   protected int Operated = 0;
   protected string Verb = "";
-  public LocationOperation(Terminal context, FiltererParameters args) : base(context, args.ForceStart) {
+  public LocationOperation(Terminal context, FiltererParameters args) : base(context, args.Start) {
     args.TargetZones = TargetZones.Generated;
     Filterers = FiltererFactory.Create(args);
   }

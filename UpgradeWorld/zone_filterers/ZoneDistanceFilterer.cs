@@ -11,6 +11,7 @@ public class ZoneDistanceFilterer : ZoneFilterer {
     Center = center;
     MinDistance = minDistance;
     MaxDistance = maxDistance;
+    if (MaxDistance == 0 && MinDistance > 0) MaxDistance = int.MaxValue;
   }
   public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages) {
     var amount = zones.Length;
@@ -26,7 +27,7 @@ public class ZoneDistanceFilterer : ZoneFilterer {
       var withinMinY = Math.Abs(centerZone.y - zone.y) >= minDistance;
       var withinMaxX = Math.Abs(centerZone.x - zone.x) <= maxDistance;
       var withinMaxY = Math.Abs(centerZone.y - zone.y) <= maxDistance;
-      return withinMinX && withinMinY && withinMaxX && withinMaxY;
+      return (withinMinX || withinMinY) && withinMaxX && withinMaxY;
     }).ToArray();
   }
 }

@@ -1,10 +1,10 @@
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 namespace UpgradeWorld;
 public abstract class VegetationOperation : ZoneOperation {
   public bool[] Original = null;
   public bool[] New = null;
-  public VegetationOperation(Terminal context, FiltererParameters args) : base(context, args.ForceStart) {
+  public VegetationOperation(Terminal context, FiltererParameters args) : base(context, args.Start) {
     args.TargetZones = TargetZones.Generated;
     Original = GetCurrent();
   }

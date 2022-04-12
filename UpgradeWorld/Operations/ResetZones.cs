@@ -3,7 +3,7 @@ using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
 public class ResetZones : ZoneOperation {
-  public ResetZones(Terminal context, FiltererParameters args) : base(context, args.ForceStart) {
+  public ResetZones(Terminal context, FiltererParameters args) : base(context, args.Start) {
     Operation = "Destroy";
     ZonesPerUpdate = Settings.DestroysPerUpdate;
     args.TargetZones = TargetZones.Generated;

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using UnityEngine;
 namespace UpgradeWorld;
@@ -57,6 +56,7 @@ public static class Helper {
     if (Player.m_localPlayer) return Player.m_localPlayer.transform.position;
     return Vector3.zero;
   }
+  public static Vector2i GetLocalZone() => ZoneSystem.instance.GetZone(GetLocalPosition());
   public static bool CheckUnhandled(Terminal.ConsoleEventArgs args, IEnumerable<string> extra, int handled = 0) {
     if (extra.Count() > handled) {
       args.Context.AddString("Error: Unhandled parameters " + string.Join(", ", extra.Skip(handled)));

@@ -6,7 +6,7 @@ namespace UpgradeWorld;
 public class FiltererParameters {
   public HashSet<Heightmap.Biome> Biomes = new();
   public bool NoEdges = false;
-  public bool ForceStart = false;
+  public bool Start = false;
   public Vector2? Pos = null;
   public Vector2i? Zone = null;
   public float MinDistance = 0;
@@ -23,9 +23,7 @@ public class FiltererParameters {
     foreach (var par in args.Args.Skip(1).ToArray()) {
       var split = par.Split('=');
       var name = split[0].ToLower();
-      if (name == "noedges") NoEdges = true;
-      else if (name == "force") ForceStart = true;
-      else if (split.Length > 1) {
+      if (split.Length > 1) {
         var value = split[1];
         if (name == "safezones") SafeZones = Parse.Int(value, 2);
         else if (name == "pos") Pos = Parse.Pos(value);
@@ -39,7 +37,12 @@ public class FiltererParameters {
           MaxDistance = distance.y;
         } else if (name == "biomes") Biomes = Parse.Biomes(value);
         else Unhandled.Add(par);
-      } else Unhandled.Add(par);
+      } else if (name == "noedges") NoEdges = true;
+      else if (name == "start") Start = true;
+      else if (name == "pos") Pos = Helper.GetLocalPosition();
+      else if (name == "zone") Zone = Helper.GetLocalZone();
+      else if (name == "force") SafeZones = 0;
+      else Unhandled.Add(par);
     }
     if (Player.m_localPlayer && !Zone.HasValue && !Pos.HasValue) {
       var pos = Player.m_localPlayer.transform.position;
@@ -102,9 +105,9 @@ public class FiltererParameters {
     var str = operation;
     if (MinDistance > 0 || MaxDistance > 0) {
       str += " zones";
-      if (MinDistance > 0) str += " more than " + MinDistance;
-      if (MinDistance > 0 && MaxDistance > 0) str += " and ";
-      if (MaxDistance > 0) str += " less than " + MaxDistance;
+      if (MinDistance > 0) str += " more than " + (MinDistance - 1);
+      if (MinDistance > 0 && MaxDistance > 0) str += " and";
+      if (MaxDistance > 0) str += " less than " + (MaxDistance + 1);
       if (Zone.HasValue)
         str += " zones";
       else
@@ -136,7 +139,7 @@ public class FiltererParameters {
     return str;
   }
   public static List<string> Parameters = new() {
-    "pos", "zone", "biomes", "min", "minDistance", "max", "maxDistance", "distance", "force", "noEdges", "safeZones", "chance"
+    "pos", "zone", "biomes", "min", "minDistance", "max", "maxDistance", "distance", "start", "noEdges", "safeZones", "chance", "force"
   };
   public static Dictionary<string, Func<int, List<string>>> GetAutoComplete() {
     return new() {
@@ -149,7 +152,8 @@ public class FiltererParameters {
       { "maxDistance", (int index) => index == 0 ? CommandWrapper.Info("maxDistance=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
       { "safeZones", (int index) => index == 0 ? CommandWrapper.Info("safezones=<color=yellow>amount</color> | The size of protected areas around player base structures.") : null },
       { "chance", (int index) => index == 0 ? CommandWrapper.Info("chance=<color=yellow>percentage</color> (from 0 to 100) | The chance of a single operation being done.") : null },
-      { "force", (int index) => CommandWrapper.Flag("force", "Starts the operation instantly") },
+      { "start", (int index) => CommandWrapper.Flag("start", "Starts the operation instantly") },
+      { "force", (int index) => CommandWrapper.Flag("force", "Disables the player base detection") },
       { "noEdges", (int index) => CommandWrapper.Flag("noedges", "Excludes zones with multiple biomes") },
       { "distance", (int index) => {
           if (index == 0) return CommandWrapper.Info("distance=<color=yellow>min</color>,max | Minimum distance from the center point / zone.");

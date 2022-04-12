@@ -30,6 +30,7 @@ public static class Zones {
   public static int Distance(Vector2i a, Vector2i b) => Math.Max(Math.Abs(a.x - b.x), Math.Abs(a.y - b.y));
   public static bool IsWithin(Vector2i a, Vector2i b, int min, int max) {
     var distance = Distance(a, b);
-    return distance >= min && (max == 0 || distance <= max);
+    if (max == 0 && min > 0) max = int.MaxValue;
+    return distance >= min && distance <= max;
   }
 }

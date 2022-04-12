@@ -11,7 +11,7 @@ public class LocationsAddCommand {
       IdParameters pars = new(args);
       pars.Ids = Parse.Flag(pars.Ids, "noclearing", out var noClearing).ToList();
       if (!pars.Valid(args.Context)) return;
-      Executor.AddOperation(new DistributeLocations(pars.Ids, pars.ForceStart, args.Context));
+      Executor.AddOperation(new DistributeLocations(pars.Ids, pars.Start, args.Context));
       Executor.AddOperation(new PlaceLocations(args.Context, !noClearing, pars));
     }, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
   }

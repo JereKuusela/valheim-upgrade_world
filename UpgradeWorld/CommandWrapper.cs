@@ -7,7 +7,7 @@ public static class CommandWrapper {
   public static Assembly ServerDevcommands = null;
   public static void Init() {
     if (Chainloader.PluginInfos.TryGetValue("valheim.jerekuusela.server_devcommands", out var info)) {
-      if (info.Metadata.Version.Major == 1 && info.Metadata.Version.Minor < 13) {
+      if (info.Metadata.Version.Major == 1 && info.Metadata.Version.Minor < 15) {
         UpgradeWorld.Log.LogWarning($"Server devcommands v{info.Metadata.Version.Major}.{info.Metadata.Version.Minor} is outdated. Please update for better command instructions!");
       } else {
         ServerDevcommands = info.Instance.GetType().Assembly;

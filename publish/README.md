@@ -19,19 +19,17 @@ Always back up your world before making any changes!
 2. Download the zip and extract the DLL file to the \<GameDirectory\>\BepInEx\plugins\ folder.
 3. For dedicated servers, install this mod also on the server.
 4. Optionally install the [Configuration manager](https://github.com/BepInEx/BepInEx.ConfigurationManager/releases/tag/v16.4).
-5. Optionally install the [Server Devcommands]() for better autocomplete.
+5. Optionally install the [Server Devcommands](https://valheim.thunderstore.io/package/JereKuusela/Server_devcommands/) for better autocomplete.
 
 # Quick instructions:
 
 1. Back up your world!
-2. Install the mod.
-3. Load the world.
-4. Open console with F5, write upgrade and use tab to cycle through available options.
-5. Write start to execute and wait until tue operation completes.
-6. Verify that your bases are ok (should be because of the automatic base detection).
-7. If not, restore back up. read more detailed instructions and go back to the first step.
-8. Uninstall the mod.
-9. Enjoy the new stuff!
+2. Install the mod and load the world.
+3. Open console with F5, write `upgrade` and use tab to cycle through available options.
+4. Write `start` to execute and wait until tue operation completes.
+5. Verify that your bases are ok (should be because of the automatic base detection).
+6. If not, restore back up. read more detailed instructions and go back to the first step.
+7. Uninstall the mod and enjoy the new stuff!
 
 This mod also adds current coordinates (and zone index) to the minimaps which should help using the commands and setting up the config.
 
@@ -48,26 +46,27 @@ If you wish to restrict this, edit the config file and add Steam IDs to the root
 Most commands allow fine-tuning the affected area. Following parameters are available:
 
 - `biomes=biome1,biome2,...`: Only includes given biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
-- `pos=x,z`: Position of the center. If not given, player's position is used. Default distance is all of the map.
-- `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
-- `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
-- `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
+- `chance=percentage`: Makes a single operation to be applied randomly. Only works for some commands.
 - `distance=min,max`: Short-hand for setting both distances.
+- `force`: Disables player base detection (same as `safeZones=0`).
+- `pos=x,z`: Position of the center. If not given, player's position is used. Default distance is all of the map.
+- `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
+- `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
 - `safeZones=distance`: Set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
-- `force`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
-- `chance=percentage`: Makes a single operation to be applied randomly. Only works for some commands.
+- `start`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
+- `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
 
 # Commands
 
 Overview of available commands (remember that tab key can be used for autocomplete / cycle through options):
 
 - `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
-- `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests. Empty (looted) chests are only rerolled with "looted" flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items.
+- `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items.
 - `locations_add [id1,id2,...] [noclearing] [...args]`: Adds locations to already explored areas. With `noclearing`, the location area is not cleared of existing objects.
 - `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used).
 - `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout.
-- `objects_count [all] [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all entities. All entities are listed with the flag "all". Result is also printed to the player.log file. Wildcards are also supported.
+- `objects_count [all] [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. All objects are listed with the flag `all`. Result is also printed to the player.log file. Wildcards are also supported.
 - `objects_list [id1,id2,...] [...args]`: Lists objects showing their position and biome. Result is also printed to the player.log file.
 - `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `count_objects` to check that you don't remove too much.
 - `start`: Most commands don't execute instantly but instead print the zones being affected. This command can be then used to start executing.
@@ -79,8 +78,8 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `upgrade [operation] [...args]`: Short-hand for using common operations (mainly to add new content).
 - `vegetation_default`: Restored the default vegetation for the world generator.
 - `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas.
-- `vegetation_disable [id1,id2,...]`: Disables vegetation for the world generator, affecting any forced (with "generate" command) or natural generation.
-- `vegetation_enable [id1,id2,...]`: Enables vegetation for the world generator, affecting any forced (with "generate" command) or natural generation.
+- `vegetation_disable [id1,id2,...]`: Disables vegetation for the world generator, affecting any forced (with `generate` command) or natural generation.
+- `vegetation_enable [id1,id2,...]`: Enables vegetation for the world generator, affecting any forced (with `generate` command) or natural generation.
 - `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas.
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
 - `zones_generate [...args]`: Pre-generates areas without having to visit them.
@@ -105,8 +104,8 @@ Examples:
 - `upgrade old_mistlands`: Fully regenerates mistlands biomes with the legacy content (webs, etc.).
 - `vegetation_disable BlueberryBush`: Disables generation of blueberry bushes.
 - `vegetation_enable vertical_web horizontal_web tunnel_web`: Enables webs to generate in Mistlands.
-- `zones_generate`: To generate the entire world (takes hours) and then use `count_entities` command to check how many of each entity exists.
-- `zones_generate`: To generate the entire world (takes hours) and then use `remove_entities` for modifications.
+- `zones_generate`: To generate the entire world (takes hours) and then use `objects_count` command to check how many of each object exists.
+- `zones_generate`: To generate the entire world (takes hours) and then use `objects_remove` for modifications.
 - `zones_reset biomes=mistlands`: Destroying a biome.
 - `zones_reset min=5000 pos=0,0`: Destroying areas after 5000 meters from the world center.
 - `zones_reset zone=3,-3 safeZones=0`: Destroy a single zone at indices 3,-3 to fix any local issues.
@@ -154,7 +153,7 @@ Examples:
 
 Portals in the loaded area won't be automatically disconnected but relogging fixes that.
 
-## Generating zone
+## Generating zones
 
 1. Calls the generating function for each zone.
 
@@ -179,21 +178,21 @@ The map returns the exact biome information. This is slightly different than wha
 ## Counting/listing/removing objects
 
 1. Uses the available id list (same what spawn command uses) to resolve wildcards.
-2. Directly counts entities from the save file data without loading them to the world.
+2. Directly counts objects from the save file data without loading them to the world.
 3. Biome is the exact biome like with count biomes.
 
-This can result in entities near biome edges showing "wrong" biome because the generation code uses the average biome.
+This can result in objects near biome edges showing "wrong" biome because the generation code uses the average biome.
 
 ## Changing time/day
 
 1. Changes the world time like the skiptime command.
-2. Changes the time data values of entities to match the new time.
+2. Changes the time data values of objects to match the new time.
 3. When moving the time forward, this prevents the time skip (plants don't grow instantly, smelters don't work faster, etc.).
 4. When moving the time backward, this prevents things getting stuck (plants, smelters, enemy spawning, etc. won't progress until back to the original time).
 
 Following data values are updated if their value is not 0:
 
-- For general enemy spawning, all data values of the zone control entity are updated. Each of these data values affect spawning of a one enemy type.
+- For general enemy spawning, all data values of the zone control objects are updated. Each of these data values affect spawning of a one enemy type.
 - "spawntime" for offspring growth timer and also for ship build timer (but unlikely to use the command when constructing a ship).
 - "SpawnTime" for item drop despawn timer.
 - "lastTime" for beehive and fireplace progressing.
@@ -222,6 +221,8 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Adds new settings for map and minimap coordinates.
 	- Adds better autocomplete when using Server Devcommands mod.
 	- Renames most commands to be more intuitive to use.
+	- Renames the parameter `force` to `start`.
+	- Adds a new parameter `force` to disable the player base detection.
 	- Removes commands `reveal_map`, `hide_map` and `remove_pins` as obsolete (moved to Server Devcommands mod).
 	- Fixes map and minimap coordinates conflicting with other mods.
 
@@ -229,9 +230,9 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Adds a new upgrade command for mountain caves.
 
 - v1.9
-	- Fixed change_time and change_day being able to put negative timestamp to entities.
+	- Fixed change_time and change_day being able to put negative timestamp to objects.
 	- Fixed change_time, change_day, set_time and set_day being able to set the time negative.
-	- Fixed set_time and set_day setting entity timestamps to the given value instead of using the time difference like change_time and change_day to.
+	- Fixed set_time and set_day setting object timestamps to the given value instead of using the time difference like change_time and change_day to.
 	- Added better icon. Thanks Azumatt!
 
 - v1.8
@@ -240,7 +241,7 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Added "looted" flag to reroll_chests to also reroll empty chests.
 
 - v1.7
-	- Fixed graceful entity removing being bit too graceful (not working in all situations).
+	- Fixed graceful object removing being bit too graceful (not working in all situations).
 
 - v1.6
 	- Fixed upgrade tarpits command needing to be used twice.
@@ -249,7 +250,7 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Fixed non-player placed items also counting as player bases (for example in Fuling villages).
 	- Added autocomplete to place_locations command.
 	- Added new commands to set specific world time (instead of a relative value).
-	- More graceful entity removing.
+	- More graceful object removing.
 	- Changed parameter "includebases" to "safezones" which allows setting the player base safe zone size (instead of only enable/disable).
 	- Chests added to the default list of major structures (won't affect existing configs).
 	- Changed player base safe zone value handling (0 is disable, 1 is current zone, etc.)
@@ -267,12 +268,12 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Added general argument system (same set of basic arguments for most commands).
 	- Merged all destroy commands to a single command.
 	- Merged all generate commands to a single command.
-	- Merged entity counting commands to a single command.
+	- Merged object counting commands to a single command.
 	- Added a new command to count biomes.
-	- Added new command to change world time (while also updating entities).
-	- Added new command to list each entity and their position.
+	- Added new command to change world time (while also updating objects).
+	- Added new command to list each object and their position.
 	- Added automatic player base detection.
-	- Count, remove and list entities support wildcards.
+	- Count, remove and list objects support wildcards.
 	- Added setting to enable/disable verbose mode.
 	- Added command to toggle the verbose mode.
 	- Improved output.
@@ -281,9 +282,9 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Regeneration commands renamed to destroy to make the effect more clear.
 	- Destroy all command now requires biomes as a parameter (replacing the config setting and making harder to accidentally nuke the whole world).
 	- New commands for generating areas without having to physically go there.
-	- New command for counting amount of entities.
-	- New command for counting all entities.
-	- New command to remove entities.
+	- New command for counting amount of objects.
+	- New command for counting all objects.
+	- New command to remove objects.
 	- New command to place any unplaced locations (replacing one of the config settings).
 	- New command to reroll any chest.
 	- New command to explore a part of the map.
