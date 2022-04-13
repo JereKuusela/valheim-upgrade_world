@@ -79,7 +79,7 @@ public class FiltererParameters {
       var min = (int)MinDistance;
       var max = (int)MaxDistance;
       zdos = zdos.Where(zdo => Zones.IsWithin(zone, ZoneSystem.instance.GetZone(zdo.GetPosition()), min, max));
-    } else {
+    } else if (Pos.HasValue) {
       Vector3 position = new(Pos.Value.x, 0, Pos.Value.y);
       if (MinDistance > 0)
         zdos = zdos.Where(zdo => Utils.DistanceXZ(zdo.GetPosition(), position) >= MinDistance);
@@ -114,11 +114,11 @@ public class FiltererParameters {
       str += " away from the ";
       if (Zone.HasValue)
         str += "zone " + Zone.Value.x + "," + Zone.Value.y;
-      else if (Pos.Value.x == 0 && Pos.Value.y == 0)
+      else if (Pos.HasValue && Pos.Value.x == 0 && Pos.Value.y == 0)
         str += "world center";
-      else if (Pos.Value.x == Helper.GetPlayerPosition().x && Pos.Value.y == Helper.GetPlayerPosition().z)
+      else if (Pos.HasValue && Pos.Value.x == Helper.GetPlayerPosition().x && Pos.Value.y == Helper.GetPlayerPosition().z)
         str += "player";
-      else
+      else if (Pos.HasValue)
         str += "coordinates " + Pos.Value.x + "," + Pos.Value.y;
     } else if (Zone.HasValue)
       str += " the zone " + Zone.Value.x + "," + Zone.Value.y;
@@ -140,7 +140,7 @@ public class FiltererParameters {
   public static List<string> Parameters = new() {
     "pos", "zone", "biomes", "min", "minDistance", "max", "maxDistance", "distance", "start", "noEdges", "safeZones", "chance", "force"
   };
-  public static Dictionary<string, Func<int, List<string>>> GetAutoComplete() {
+  public static Dictionary<string, Func<int, List<string>?>> GetAutoComplete() {
     return new() {
       { "pos", (int index) => CommandWrapper.XZ("pos", "Coordinates for the center point. If not given, player's position is used", index)},
       { "zone", (int index) => CommandWrapper.XZ("zone" , "Indices for the center zone", index) },

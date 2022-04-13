@@ -5,7 +5,7 @@ public interface ZoneFilterer {
 }
 
 public static class FiltererFactory {
-  public static IEnumerable<ZoneFilterer> Create(FiltererParameters args) {
+  public static List<ZoneFilterer> Create(FiltererParameters args) {
     List<ZoneFilterer> filters = new();
     filters.Add(new TargetZonesFilterer(args.TargetZones));
     filters.Add(new BiomeFilterer(args.Biomes, !args.NoEdges));

@@ -11,7 +11,7 @@ public class VegetationResetCommand {
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       Executor.AddOperation(new RemoveVegetation(args.Context, pars.Ids.ToHashSet(), pars));
-      Executor.AddOperation(new PlaceVegetation(args.Context, pars.Ids.ToHashSet(), pars));
+      Executor.AddOperation(new AddVegetation(args.Context, pars.Ids.ToHashSet(), pars));
     }, optionsFetcher: () => SetVegetation.GetIds());
   }
 }

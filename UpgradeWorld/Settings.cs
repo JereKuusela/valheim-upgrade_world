@@ -10,6 +10,7 @@ public struct FilterPoint {
   public float min;
   public float max;
 }
+#nullable disable
 public static class Settings {
   public static ConfigEntry<bool> configMapCoordinates;
   public static bool MapCoordinates => configMapCoordinates.Value;

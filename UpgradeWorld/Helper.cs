@@ -83,7 +83,7 @@ public static class Helper {
     }
     return false;
   }
-  public static void Print(Terminal terminal, ZRpc user, string value) {
+  public static void Print(Terminal terminal, ZRpc? user, string value) {
     if (ZNet.m_isServer && user != null) {
       ZNet.instance.RemotePrint(user, value);
     }
@@ -92,7 +92,7 @@ public static class Helper {
   public static void Print(Terminal terminal, string value) => Print(terminal, ServerExecution.User, value);
 
   private static string Previous = "";
-  public static void PrintOnce(Terminal terminal, ZRpc user, string value) {
+  public static void PrintOnce(Terminal terminal, ZRpc? user, string value) {
     if (ZNet.m_isServer && user != null)
       user.Invoke(ServerExecution.RPC_RemotePrintOnce, value);
     if (!terminal) return;

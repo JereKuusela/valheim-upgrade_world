@@ -6,7 +6,7 @@ public static class Executor {
   private static List<Action> cleanUps = new();
   private static bool ShouldExecute = false;
   private static bool PrintInit = false;
-  public static void DoExecute(ZRpc user) {
+  public static void DoExecute(ZRpc? user) {
     foreach (var operation in operations) operation.User = user;
     ShouldExecute = true;
   }

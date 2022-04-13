@@ -3,13 +3,12 @@ using HarmonyLib;
 using UnityEngine;
 namespace UpgradeWorld;
 ///<summary>Runs the vegetation placement code for the filtered zones.</summary>
-public class PlaceVegetation : VegetationOperation {
-  public PlaceVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args) {
+public class AddVegetation : VegetationOperation {
+  public AddVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, ids, args) {
     Operation = "Add vegetation";
     InitString = args.Print("Add vegetation at");
     args.TargetZones = TargetZones.Generated;
     Filterers = FiltererFactory.Create(args);
-    New = GetWithOnlyIds(ids, true);
   }
   protected override bool ExecuteZone(Vector2i zone) {
     var zs = ZoneSystem.instance;
@@ -21,6 +20,7 @@ public class PlaceVegetation : VegetationOperation {
     return false;
   }
   protected override void OnStart() {
+    base.OnStart();
     CountNewEntities.Counter = 0;
   }
 

@@ -11,6 +11,7 @@ public class CountBiomes : BaseOperation {
   }
 
   private void Count(float frequency, FiltererParameters args) {
+    if (!args.Pos.HasValue) return;
     if (args.MaxDistance == 0) args.MaxDistance = 10500f;
     Dictionary<Heightmap.Biome, int> biomes = new();
     var start = -(float)Math.Ceiling(args.MaxDistance / frequency) * frequency;

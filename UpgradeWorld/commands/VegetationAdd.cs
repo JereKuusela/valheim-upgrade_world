@@ -10,7 +10,7 @@ public class VegetationAddCommand {
       IdParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new PlaceVegetation(args.Context, pars.Ids.ToHashSet(), pars));
+      Executor.AddOperation(new AddVegetation(args.Context, pars.Ids.ToHashSet(), pars));
     }, optionsFetcher: () => SetVegetation.GetIds());
   }
 }

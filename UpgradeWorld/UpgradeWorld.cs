@@ -4,6 +4,7 @@ using HarmonyLib;
 namespace UpgradeWorld;
 [BepInPlugin("valheim.jere.upgrade_world", "UpgradeWorld", "1.12.0.0")]
 public class UpgradeWorld : BaseUnityPlugin {
+#nullable disable
   public static ManualLogSource Log;
   public void Awake() {
     Log = Logger;
@@ -62,6 +63,7 @@ public class SetCommands {
     new VegetationAddCommand();
     new SavingCommands();
     new BackupCommand();
+    new VegetationExportCommand();
     if (Terminal.commands.TryGetValue("genloc", out var genloc)) {
       genloc.IsCheat = false;
       genloc.OnlyServer = false;

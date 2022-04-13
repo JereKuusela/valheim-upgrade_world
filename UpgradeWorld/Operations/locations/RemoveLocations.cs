@@ -9,7 +9,7 @@ public class RemoveLocations : LocationOperation {
     InitString = args.Print("Remove locations at");
     Verb = "removed";
     Ids = ids;
-    Filterers = Filterers.Append(new LocationFilterer(ids));
+    Filterers = Filterers.Append(new LocationFilterer(ids)).ToList();
   }
 
   ///<summary>Removes locations from ungenerated zones.</summary>

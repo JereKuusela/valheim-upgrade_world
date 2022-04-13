@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net4.8</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BepInEx.dll">
@@ -14,6 +14,9 @@
     </Reference>
     <Reference Include="UnityEngine.CoreModule.dll">
       <HintPath>..\..\Libs\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule.dll">
+      <HintPath>..\..\Libs\UnityEngine.JSONSerializeModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule.dll">
       <HintPath>..\..\Libs\UnityEngine.TextRenderingModule.dll</HintPath>
@@ -40,5 +43,4 @@
       <HintPath>..\..\Libs\assembly_guiutils_publicized.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>

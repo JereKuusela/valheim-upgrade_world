@@ -1,3 +1,4 @@
+using System;
 namespace UpgradeWorld;
 ///<summary>Base class for all operations that need execution. Provides the execution logic.</summary>
 public abstract class ExecutedOperation : BaseOperation {
@@ -9,14 +10,20 @@ public abstract class ExecutedOperation : BaseOperation {
     AutoStart = autoStart;
   }
   public bool Execute() {
-    if (First) {
-      OnStart();
-      First = false;
+    try {
+      if (First) {
+        OnStart();
+        First = false;
+      }
+      Attempts++;
+      var ret = OnExecute();
+      if (ret) OnEnd();
+      return ret;
+    } catch (InvalidOperationException e) {
+      Helper.Print(Context, User, e.Message);
+      OnEnd();
+      return true;
     }
-    Attempts++;
-    var ret = OnExecute();
-    if (ret) OnEnd();
-    return ret;
   }
   protected abstract bool OnExecute();
   public void Init() {

@@ -4,7 +4,7 @@ namespace UpgradeWorld;
 
 [HarmonyPatch(typeof(ZNet), nameof(ZNet.RPC_PeerInfo))]
 public class ServerExecution {
-  public static ZRpc User = null;
+  public static ZRpc? User = null;
 
   ///<summary>Sends command to the server so that it can be executed there.</summary>
   public static void Send(string command) {

@@ -10,7 +10,7 @@ public abstract class ZoneOperation : ExecutedOperation {
   protected int ZoneIndex = 0;
   ///<summary>Some operations can be done outside the zone loading logic.</summary>
   protected int PreOperated = 0;
-  protected IEnumerable<ZoneFilterer> Filterers;
+  protected List<ZoneFilterer> Filterers = new();
   protected ZoneOperation(Terminal context, bool autoStart) : base(context, autoStart) {
     ZonesToUpgrade = Zones.GetWorldZones();
   }
