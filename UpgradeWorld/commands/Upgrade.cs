@@ -10,7 +10,7 @@ public class UpgradeCommand {
       FiltererParameters pars = new(args);
       var selectedType = "";
       foreach (var type in Upgrade.Types) {
-        pars.Unhandled = Parse.Flag(pars.Unhandled, type, out var found).ToList();
+        pars.Unhandled = Parse.Flag(pars.Unhandled, type.ToLower(), out var found).ToList();
         if (found) selectedType = type;
       }
       if (!pars.Valid(args.Context)) return;

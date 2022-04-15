@@ -6,7 +6,7 @@ public class RemoveLocations : LocationOperation {
   IEnumerable<string> Ids;
   public RemoveLocations(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context, args) {
     Operation = "Remove locations";
-    InitString = args.Print("Remove locations at");
+    InitString = args.Print($"Remove locations{Helper.IdString(ids)} from");
     Verb = "removed";
     Ids = ids;
     Filterers = Filterers.Append(new LocationFilterer(ids)).ToList();

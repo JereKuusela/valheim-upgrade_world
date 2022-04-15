@@ -3,8 +3,8 @@ namespace UpgradeWorld;
 public class PlaceLocations : LocationOperation {
   private bool ClearLocationAreas = false;
   public PlaceLocations(Terminal context, bool clearLocationAreas, FiltererParameters args) : base(context, args) {
-    Operation = "Add locations";
-    InitString = args.Print("Add locations at");
+    Operation = "Add missing locations";
+    InitString = args.Print("Add missing locations to");
     Verb = "added";
     ClearLocationAreas = clearLocationAreas;
   }

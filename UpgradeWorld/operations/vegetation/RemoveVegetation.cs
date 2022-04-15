@@ -8,7 +8,7 @@ public class RemoveVegetation : ZoneOperation {
   public RemoveVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Start) {
     ZonesPerUpdate = Settings.DestroysPerUpdate;
     Operation = "Remove vegetation";
-    InitString = args.Print("Remove vegetation at");
+    InitString = args.Print($"Remove vegetation{Helper.IdString(ids)} from");
     args.TargetZones = TargetZones.Generated;
     Filterers = FiltererFactory.Create(args);
     Ids = ids.Select(id => id.GetStableHashCode()).ToHashSet();

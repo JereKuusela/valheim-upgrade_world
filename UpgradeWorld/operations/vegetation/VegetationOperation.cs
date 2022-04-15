@@ -11,8 +11,8 @@ public abstract class VegetationOperation : ZoneOperation {
   }
   protected override void OnStart() {
     OriginalVegetation = ZoneSystem.instance.m_vegetation;
-    if (VegetationData.Load())
-      Helper.Print(Context, User, $"{ZoneSystem.instance.m_vegetation.Count} vegetations loaded from vegetation.json");
+    //if (VegetationData.Load())
+    //  Helper.Print(Context, User, $"{ZoneSystem.instance.m_vegetation.Count} vegetations loaded from vegetation.json");
     Original = GetCurrent();
     Set(GetWithOnlyIds(Ids, true));
   }

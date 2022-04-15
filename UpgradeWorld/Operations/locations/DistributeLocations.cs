@@ -11,7 +11,7 @@ public class DistributeLocations : ExecutedOperation {
   }
   protected override bool OnExecute() {
     if (Attempts == 1) {
-      Print("Redistributing locations" + GetLocationString() + ". This may take a while...");
+      Print($"Redistributing locations{Helper.IdString(Ids)}. This may take a while...");
       return false;
     } else {
       DistributedIds = Ids.Select(id => id.ToLower());
@@ -30,6 +30,6 @@ public class DistributeLocations : ExecutedOperation {
   }
 
   protected override string OnInit() {
-    return "Redistribute locations" + GetLocationString() + "to old areas.";
+    return "Redistribute locations" + GetLocationString() + "to all areas.";
   }
 }

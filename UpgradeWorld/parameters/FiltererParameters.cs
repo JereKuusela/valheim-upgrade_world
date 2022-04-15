@@ -101,9 +101,14 @@ public class FiltererParameters {
     return string.Join("\n", texts);
   }
   public string Print(string operation) {
-    var str = operation;
+    var str = operation + " ";
+    if (Biomes.Count > 0) {
+      str += string.Join(", ", Biomes);
+      if (NoEdges)
+        str += " (excluding biome edges)";
+    } else
+      str += "zones";
     if (MinDistance > 0 || MaxDistance > 0) {
-      str += " zones";
       if (MinDistance > 0) str += " more than " + (MinDistance - 1);
       if (MinDistance > 0 && MaxDistance > 0) str += " and";
       if (MaxDistance > 0) str += " less than " + (MaxDistance + 1);
@@ -121,20 +126,12 @@ public class FiltererParameters {
       else if (Pos.HasValue)
         str += "coordinates " + Pos.Value.x + "," + Pos.Value.y;
     } else if (Zone.HasValue)
-      str += " the zone " + Zone.Value.x + "," + Zone.Value.y;
-    else
-      str += " all zones";
-    if (Biomes.Count > 0) {
-      if (NoEdges)
-        str += " that only have " + string.Join(", ", Biomes);
-      else
-        str += " that have " + string.Join(", ", Biomes);
-    }
+      str += " at index " + Zone.Value.x + "," + Zone.Value.y;
     var size = 1 + (SafeZones - 1) * 2;
     if (SafeZones <= 0)
-      str += " without player base detection";
+      str += ". No player base detection.";
     else
-      str += " with player base detection (" + size + "x" + size + " safe zones)";
+      str += ". Player base detection (" + size + "x" + size + " safe zones).";
     return str;
   }
   public static List<string> Parameters = new() {

@@ -10,9 +10,7 @@ public class Upgrade : BaseOperation {
     "new_mistlands",
     "old_mistlands",
     "mountain_caves",
-    "EVA_1.3+1.4",
-    "EVA_1.3+1.4_locations_only",
-    "EVA_1.4"
+    "EVA"
   };
 
   public Upgrade(Terminal context, string type, IEnumerable<string> extra, FiltererParameters args) : base(context) {
@@ -61,33 +59,21 @@ public class Upgrade : BaseOperation {
       args.TargetZones = TargetZones.All;
       Executor.AddOperation(new Generate(Context, args));
       Executor.AddCleanUp(() => new ResetVegetation(Context));
-    } else if (type == "EVA_1.3+1.4") {
+    } else if (type == "eva") {
       if (args.Biomes.Count() > 0) {
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
         return;
       }
+      extra = Parse.Flag(extra, "noclearing", out var noClearing);
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Plains, Heightmap.Biome.DeepNorth, Heightmap.Biome.Mistlands, Heightmap.Biome.AshLands };
-      Executor.AddOperation(new ResetZones(Context, args));
-      Executor.AddOperation(new DistributeLocations(new[] { "BlazingDamnedOneAltar" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "JotunnAltar" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "SvartalfrQueenAltar_New" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "Vegvisir_BlazingDamnedOne" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "Vegvisir_Jotunn" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "Vegvisir_SvartalfrQueen" }, false, Context));
-    } else if (type == "EVA_1.3+1.4_locations_only") {
-      extra = Parse.Flag(extra, "noclearing", out var noClearing);
-      Executor.AddOperation(new DistributeLocations(new[] { "BlazingDamnedOneAltar" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "JotunnAltar" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "SvartalfrQueenAltar_New" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "Vegvisir_BlazingDamnedOne" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "Vegvisir_Jotunn" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "Vegvisir_SvartalfrQueen" }, false, Context));
-      Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
-    } else if (type == "EVA_1.4") {
-      extra = Parse.Flag(extra, "noclearing", out var noClearing);
+      var safeZones = args.SafeZones;
+      args.SafeZones = 0;
       Executor.AddOperation(new RemoveLocations(Context, new[] { "SvartalfrQueenAltar" }, args));
-      Executor.AddOperation(new DistributeLocations(new[] { "SvartalfrQueenAltar_New" }, false, Context));
+      args.SafeZones = safeZones;
+      Executor.AddOperation(new DistributeLocations(new[] { "BlazingDamnedOneAltar", "JotunnAltar", "SvartalfrQueenAltar_New", "Vegvisir_BlazingDamnedOne", "Vegvisir_Jotunn", "Vegvisir_SvartalfrQueen" }, false, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
+      Executor.AddOperation(new RemoveVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
+      Executor.AddOperation(new AddVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
     } else
       Print("Error: Invalid upgrade type");
   }

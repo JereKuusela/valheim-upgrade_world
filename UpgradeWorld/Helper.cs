@@ -102,4 +102,8 @@ public static class Helper {
     Previous = value;
     Print(terminal, null, value);
   }
+  public static string IdString(IEnumerable<string> ids) {
+    if (ids.Count() == 0) return "";
+    return " " + Helper.JoinRows(ids);
+  }
 }

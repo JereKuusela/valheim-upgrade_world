@@ -212,6 +212,11 @@ Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
 
+- v1.13
+	- Improves command output.
+	- Merges EVA upgrade commands to a single command.
+	- Fixes EVA upgrade command failintg to start.
+
 - v1.12
 	- Adds a new command `backup` to backup the world.
 	- Adds a new command `save_disable` and `save_enable` to disable or enable world saving.
