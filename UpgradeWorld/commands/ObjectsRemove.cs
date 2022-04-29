@@ -6,7 +6,7 @@ public class ObjectsRemoveCommand {
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
     new Terminal.ConsoleCommand("objects_Remove", "[id1,id2,...] [...args] - Removes objects.", (Terminal.ConsoleEventArgs args) => {
-      IdParameters pars = new(args);
+      RequiredIdParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       new RemoveObjects(args.Context, pars.Ids, pars);

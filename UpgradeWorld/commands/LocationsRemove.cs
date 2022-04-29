@@ -7,7 +7,7 @@ public class LocationsRemoveCommand {
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
     new Terminal.ConsoleCommand("locations_remove", "[id1,id2,...] [...args] -  Removes locations and prevents new ones from appearing (until a command like 'genloc' or 'locations_add' is used).", (Terminal.ConsoleEventArgs args) => {
-      IdParameters pars = new(args);
+      RequiredIdParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       Executor.AddOperation(new RemoveLocations(args.Context, pars.Ids, pars));

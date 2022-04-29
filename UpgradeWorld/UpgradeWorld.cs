@@ -2,7 +2,7 @@
 using BepInEx.Logging;
 using HarmonyLib;
 namespace UpgradeWorld;
-[BepInPlugin("valheim.jere.upgrade_world", "UpgradeWorld", "1.13.0.0")]
+[BepInPlugin("valheim.jere.upgrade_world", "UpgradeWorld", "1.14.0.0")]
 public class UpgradeWorld : BaseUnityPlugin {
 #nullable disable
   public static ManualLogSource Log;

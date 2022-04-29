@@ -14,7 +14,9 @@ public abstract class VegetationOperation : ZoneOperation {
     //if (VegetationData.Load())
     //  Helper.Print(Context, User, $"{ZoneSystem.instance.m_vegetation.Count} vegetations loaded from vegetation.json");
     Original = GetCurrent();
-    Set(GetWithOnlyIds(Ids, true));
+    // No parameter -> all vegetation.
+    if (Ids.Count > 0)
+      Set(GetWithOnlyIds(Ids, true));
   }
   protected override void OnEnd() {
     Set(Original);

@@ -6,7 +6,7 @@ public class ObjectsListCommand {
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
     new Terminal.ConsoleCommand("objects_list", "[id1,id2,...] [...args] - Lists objects showing their position and biome.", (Terminal.ConsoleEventArgs args) => {
-      IdParameters pars = new(args);
+      RequiredIdParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       new ListObjectPositions(args.Context, pars.Ids, pars);

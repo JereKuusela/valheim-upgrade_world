@@ -11,6 +11,9 @@ public class RemoveVegetation : ZoneOperation {
     InitString = args.Print($"Remove vegetation{Helper.IdString(ids)} from");
     args.TargetZones = TargetZones.Generated;
     Filterers = FiltererFactory.Create(args);
+    // No parameter -> all vegetation.
+    if (ids.Count == 0)
+      ids = ZoneSystem.instance.m_vegetation.Select(veg => veg.m_prefab.name).ToHashSet();
     Ids = ids.Select(id => id.GetStableHashCode()).ToHashSet();
     // Automatically clean up fractions as well.
     foreach (var id in ids) {

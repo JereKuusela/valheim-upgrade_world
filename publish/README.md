@@ -80,10 +80,10 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `time_set_day [days]`: Sets the world time and updates object timestamps.
 - `upgrade [operation] [...args]`: Short-hand for using common operations (mainly to add new content).
 - `vegetation_default`: Restored the default vegetation for the world generator.
-- `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas.
+- `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation.
 - `vegetation_disable [id1,id2,...]`: Disables vegetation for the world generator, affecting any forced (with `generate` command) or natural generation.
 - `vegetation_enable [id1,id2,...]`: Enables vegetation for the world generator, affecting any forced (with `generate` command) or natural generation.
-- `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas.
+- `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation.
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
 - `zones_generate [...args]`: Pre-generates areas without having to visit them.
 - `zones_reset [...args]`: Destroys areas making them ungenerated. These areas will be generated when visited. Can be also used to reduce save file size.
@@ -107,6 +107,7 @@ Examples:
 - `upgrade old_mistlands`: Fully regenerates mistlands biomes with the legacy content (webs, etc.).
 - `vegetation_disable BlueberryBush`: Disables generation of blueberry bushes.
 - `vegetation_enable vertical_web horizontal_web tunnel_web`: Enables webs to generate in Mistlands.
+- `vegetation_reset biome=Meadows force`: Resets all vegetation in Meadows, including areas with player bases.
 - `zones_generate`: To generate the entire world (takes hours) and then use `objects_count` command to check how many of each object exists.
 - `zones_generate`: To generate the entire world (takes hours) and then use `objects_remove` for modifications.
 - `zones_reset biomes=mistlands`: Destroying a biome.
@@ -211,6 +212,9 @@ Following data values are updated if their value is not 0:
 Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
+
+- v1.14
+	- Changes the `vegetation_add` and `vegetation_reset` to work with all vegetation when ids are not given.
 
 - v1.13
 	- Improves command output.
