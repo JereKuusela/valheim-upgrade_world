@@ -25,6 +25,11 @@ public class ResetChests : EntityOperation {
     }
     var zdos = chestIds.Select(name => GetZDOs(name, args)).Aggregate(new List<ZDO>(), (acc, value) => { acc.AddRange(value); return acc; });
     foreach (var zdo in zdos) {
+      if (!args.Roll()) {
+        if (Settings.Verbose)
+          Print("Skipping a chest: Random roll.");
+        continue;
+      }
       totalChests++;
       if (!zdo.GetBool("addedDefaultItems", false)) {
         if (Settings.Verbose)

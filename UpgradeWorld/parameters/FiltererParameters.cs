@@ -159,7 +159,7 @@ public class FiltererParameters {
       }
     };
   }
-  private System.Random random = new();
+  public static System.Random random = new();
   public bool Roll() {
     if (Chance >= 1f) return true;
     return random.NextDouble() < Chance;

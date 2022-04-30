@@ -18,6 +18,7 @@ public class RemoveLocations : LocationOperation {
     var locationObjects = Ids.Select(id => id.GetStableHashCode()).ToHashSet();
     var unplacedZones = zs.m_locationInstances.Where(kvp => !kvp.Value.m_placed).Where(kvp => locationObjects.Contains(kvp.Value.m_location.m_prefabName.GetStableHashCode())).Select(kvp => kvp.Key).ToHashSet();
     foreach (var zone in unplacedZones) {
+      if (!Args.Roll()) continue;
       PreOperated++;
       if (!zs.m_locationInstances.TryGetValue(zone, out var location)) continue;
       if (Settings.Verbose)

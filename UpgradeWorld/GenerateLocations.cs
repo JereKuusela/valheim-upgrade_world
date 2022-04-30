@@ -20,7 +20,7 @@ public class ClearNonPlacedLocations {
     if (DistributeLocations.DistributedIds.Count() > 0) {
       Dictionary<Vector2i, ZoneSystem.LocationInstance> dictionary = new();
       foreach (var keyValuePair in __instance.m_locationInstances) {
-        if (keyValuePair.Value.m_placed || !DistributeLocations.DistributedIds.Contains(keyValuePair.Value.m_location.m_prefabName.ToLower())) {
+        if (keyValuePair.Value.m_placed || !DistributeLocations.IsIncluded(keyValuePair.Value.m_location)) {
           dictionary.Add(keyValuePair.Key, keyValuePair.Value);
         }
       }
@@ -33,7 +33,5 @@ public class ClearNonPlacedLocations {
 // Optimization to only run generation code for affected locations.
 [HarmonyPatch(typeof(ZoneSystem), nameof(ZoneSystem.GenerateLocations), new[] { typeof(ZoneSystem.ZoneLocation) })]
 public class GenerateLocations {
-  static bool Prefix(ZoneSystem.ZoneLocation location) {
-    return DistributeLocations.DistributedIds.Count() == 0 || DistributeLocations.DistributedIds.Contains(location.m_prefabName.ToLower());
-  }
+  static bool Prefix(ZoneSystem.ZoneLocation location) => DistributeLocations.IsIncluded(location);
 }

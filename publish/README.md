@@ -46,7 +46,7 @@ If you wish to restrict this, edit the config file and add Steam IDs to the root
 Most commands allow fine-tuning the affected area. Following parameters are available:
 
 - `biomes=biome1,biome2,...`: Only includes given biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
-- `chance=percentage`: Makes a single operation to be applied randomly. Only works for some commands.
+- `chance=percentage`: Makes a single operation to be applied randomly.
 - `distance=min,max`: Short-hand for setting both distances.
 - `force`: Disables player base detection (same as `safeZones=0`).
 - `pos=x,z`: Position of the center. If not given, player's position is used. Default distance is all of the map.
@@ -63,10 +63,10 @@ Overview of available commands (remember that tab key can be used for autocomple
 
 - `backup`: Saves the game with a timestamped file name.
 - `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
-- `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items.
-- `locations_add [id1,id2,...] [noclearing] [...args]`: Adds locations to already explored areas. With `noclearing`, the location area is not cleared of existing objects.
-- `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used).
-- `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout.
+- `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items. `chance` determines how many of the chests are reseted.
+- `locations_add [id1,id2,...] [noclearing] [...args]`: Adds locations to already explored areas. With `noclearing`, the location area is not cleared of existing objects. `chance` determines how many of the locations are added.
+- `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used). `chance` determines how many of the locations are removed.
+- `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout. `chance` determines how many of the locations are reseted.
 - `objects_count [all] [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. All objects are listed with the flag `all`. Result is also printed to the player.log file. Wildcards are also supported.
 - `objects_list [id1,id2,...] [...args]`: Lists objects showing their position and biome. Result is also printed to the player.log file.
 - `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `count_objects` to check that you don't remove too much.
@@ -80,13 +80,13 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `time_set_day [days]`: Sets the world time and updates object timestamps.
 - `upgrade [operation] [...args]`: Short-hand for using common operations (mainly to add new content).
 - `vegetation_default`: Restored the default vegetation for the world generator.
-- `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation.
+- `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation. `chance` directly scales the min and max amounts (bigger values work too).
 - `vegetation_disable [id1,id2,...]`: Disables vegetation for the world generator, affecting any forced (with `generate` command) or natural generation.
 - `vegetation_enable [id1,id2,...]`: Enables vegetation for the world generator, affecting any forced (with `generate` command) or natural generation.
-- `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation.
+- `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation. `chance` determines how many of the vegetation are removed and directly scales the min and max amounts.
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
 - `zones_generate [...args]`: Pre-generates areas without having to visit them.
-- `zones_reset [...args]`: Destroys areas making them ungenerated. These areas will be generated when visited. Can be also used to reduce save file size.
+- `zones_reset [...args]`: Destroys areas making them ungenerated. These areas will be generated when visited. Can be also used to reduce save file size. `chance` determines how many of the zones are reseted.
 
 Examples:
 - `biomes_count 100 min=5000 pos=0,0`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
@@ -214,6 +214,7 @@ Affected data values can be configured but recommended to keep them as it is.
 # Changelog
 
 - v1.14
+	- Adds the`chance` parameter to most commands.
 	- Changes the `vegetation_add` and `vegetation_reset` to work with all vegetation when ids are not given.
 
 - v1.13

@@ -4,11 +4,12 @@ namespace UpgradeWorld;
 public abstract class LocationOperation : ZoneOperation {
   protected int Operated = 0;
   protected string Verb = "";
-  public LocationOperation(Terminal context, FiltererParameters args) : base(context, args.Start) {
+  public LocationOperation(Terminal context, FiltererParameters args) : base(context, args) {
     args.TargetZones = TargetZones.Generated;
     Filterers = FiltererFactory.Create(args);
   }
   protected override bool ExecuteZone(Vector2i zone) {
+    if (Attempts == 0 && !Args.Roll()) return true;
     var zoneSystem = ZoneSystem.instance;
     var locations = zoneSystem.m_locationInstances;
     if (!locations.TryGetValue(zone, out var location)) return true;

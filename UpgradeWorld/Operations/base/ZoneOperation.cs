@@ -10,9 +10,11 @@ public abstract class ZoneOperation : ExecutedOperation {
   protected int ZoneIndex = 0;
   ///<summary>Some operations can be done outside the zone loading logic.</summary>
   protected int PreOperated = 0;
+  protected FiltererParameters Args;
   protected List<ZoneFilterer> Filterers = new();
-  protected ZoneOperation(Terminal context, bool autoStart) : base(context, autoStart) {
+  protected ZoneOperation(Terminal context, FiltererParameters args) : base(context, args.Start) {
     ZonesToUpgrade = Zones.GetWorldZones();
+    Args = args;
   }
   protected string InitString = "";
   protected override string OnInit() {

@@ -5,6 +5,12 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <Target Name="CopyDLL" AfterTargets="Build">
+    <Copy
+      SourceFiles="$(TargetDir)$(ProjectName).dll"
+      DestinationFolder="$(ProjectDir)\..\..\Libs" />
+    <Message Text="Copied to Libs folder." Importance="High" />
+  </Target>
   <ItemGroup>
     <Reference Include="BepInEx.dll">
       <HintPath>..\..\Libs\BepinEx.dll</HintPath>

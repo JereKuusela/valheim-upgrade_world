@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
@@ -5,23 +6,42 @@ namespace UpgradeWorld;
 public class DistributeLocations : ExecutedOperation {
   public static IEnumerable<string> DistributedIds = new string[0];
   private IEnumerable<string> Ids = new string[0];
-  public static bool PlaceToAlreadyGenerated => DistributedIds.Count() > 0;
-  public DistributeLocations(IEnumerable<string> ids, bool autoStart, Terminal context) : base(context, autoStart) {
+  public float Chance = 1f;
+  public int Added = 0;
+  public static bool PlaceToAlreadyGenerated = false;
+  public DistributeLocations(IEnumerable<string> ids, bool autoStart, float chance, Terminal context) : base(context, autoStart) {
     Ids = ids;
+    Chance = chance;
   }
+  public static bool IsIncluded(ZoneSystem.ZoneLocation location) => DistributedIds.Count() == 0 || DistributedIds.Contains(location.m_prefabName.ToLower());
   protected override bool OnExecute() {
     if (Attempts == 1) {
       Print($"Redistributing locations{Helper.IdString(Ids)}. This may take a while...");
       return false;
     } else {
+      PlaceToAlreadyGenerated = true;
       DistributedIds = Ids.Select(id => id.ToLower());
+      var before = ZoneSystem.instance.m_locationInstances.Count;
       ZoneSystem.instance.GenerateLocations();
+      if (Chance < 1f) {
+        ZoneSystem.instance.m_locationInstances = ZoneSystem.instance.m_locationInstances
+          .Where(kvp => kvp.Value.m_placed || !IsIncluded(kvp.Value.m_location) || FiltererParameters.random.NextDouble() < Chance)
+          .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+      }
+      Added = ZoneSystem.instance.m_locationInstances.Count - before;
+      PlaceToAlreadyGenerated = false;
       DistributedIds = new string[0];
       return true;
     }
   }
   protected override void OnEnd() {
-    Print("Locations" + GetLocationString() + "distributed.");
+    if (Settings.Verbose) {
+      if (Added >= 0)
+        Print($"{Added} locations{GetLocationString()}added.");
+      else
+        Print($"{Math.Abs(Added)} locations{GetLocationString()}removed.");
+    } else
+      Print($"Locations{GetLocationString()}added.");
   }
 
   private string GetLocationString() {

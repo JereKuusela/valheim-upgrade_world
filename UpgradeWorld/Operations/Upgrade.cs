@@ -26,20 +26,20 @@ public class Upgrade : BaseOperation {
     type = type.ToLower();
     if (type == "mountain_caves") {
       extra = Parse.Flag(extra, "noclearing", out var noClearing);
-      Executor.AddOperation(new DistributeLocations(new[] { "MountainCave02" }, false, Context));
+      Executor.AddOperation(new DistributeLocations(new[] { "MountainCave02" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
     } else if (type == "tarpits") {
       extra = Parse.Flag(extra, "noclearing", out var noClearing);
-      Executor.AddOperation(new DistributeLocations(new[] { "TarPit1" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "TarPit2" }, false, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "TarPit3" }, false, Context));
+      Executor.AddOperation(new DistributeLocations(new[] { "TarPit1" }, args.Start, args.Chance, Context));
+      Executor.AddOperation(new DistributeLocations(new[] { "TarPit2" }, args.Start, args.Chance, Context));
+      Executor.AddOperation(new DistributeLocations(new[] { "TarPit3" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
     } else if (type == "onions") {
       if (extra.Count() > 0) {
         Print("Error: This operation doesn't support extra parameters " + string.Join(", ", extra));
         return;
       }
-      new ResetChests("TreasureChest_mountains", new[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, false, args, Context);
+      new ResetChests("TreasureChest_mountains", new[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, args.Start, args, Context);
     } else if (type == "new_mistlands") {
       if (args.Biomes.Count() > 0) {
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
@@ -47,7 +47,7 @@ public class Upgrade : BaseOperation {
       }
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
       Executor.AddOperation(new ResetZones(Context, args));
-      Executor.AddOperation(new DistributeLocations(new string[] { }, false, Context));
+      Executor.AddOperation(new DistributeLocations(new string[] { }, args.Start, args.Chance, Context));
     } else if (type == "old_mistlands") {
       if (args.Biomes.Count() > 0) {
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
@@ -70,7 +70,7 @@ public class Upgrade : BaseOperation {
       args.SafeZones = 0;
       Executor.AddOperation(new RemoveLocations(Context, new[] { "SvartalfrQueenAltar" }, args));
       args.SafeZones = safeZones;
-      Executor.AddOperation(new DistributeLocations(new[] { "BlazingDamnedOneAltar", "JotunnAltar", "SvartalfrQueenAltar_New", "Vegvisir_BlazingDamnedOne", "Vegvisir_Jotunn", "Vegvisir_SvartalfrQueen" }, false, Context));
+      Executor.AddOperation(new DistributeLocations(new[] { "BlazingDamnedOneAltar", "JotunnAltar", "SvartalfrQueenAltar_New", "Vegvisir_BlazingDamnedOne", "Vegvisir_Jotunn", "Vegvisir_SvartalfrQueen" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
       Executor.AddOperation(new RemoveVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
       Executor.AddOperation(new AddVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));

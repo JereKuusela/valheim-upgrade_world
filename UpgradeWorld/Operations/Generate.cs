@@ -3,7 +3,7 @@ namespace UpgradeWorld;
 /// <summary>Generates zones.</summary>
 public class Generate : ZoneOperation {
   private List<ZoneSystem.ZoneVegetation> OriginalVegetation = new();
-  public Generate(Terminal context, FiltererParameters args) : base(context, args.Start) {
+  public Generate(Terminal context, FiltererParameters args) : base(context, args) {
     Operation = "Generate";
     InitString = args.Print("Generate");
     Filterers = FiltererFactory.Create(args);
