@@ -23,7 +23,7 @@ public class Minimap_ShowPos {
   }
   private static string GetText(Vector3 position) {
     var zone = ZoneSystem.instance.GetZone(position);
-    var positionText = "x: " + position.x.ToString("F0") + " y: " + position.y.ToString("F0") + " z: " + position.z.ToString("F0");
+    var positionText = "x: " + position.x.ToString("F0") + " z: " + position.z.ToString("F0") + " y: " + position.y.ToString("F0");
     var zoneText = "zone: " + zone.x + "/" + zone.y;
     return $"\n{zoneText}\n{positionText}";
   }
@@ -39,7 +39,7 @@ public class Minimap_ShowPos {
       CleanUp(__instance.m_biomeNameLarge, PreviousLargeText);
       PreviousLargeText = "";
     }
-    var position = player.transform.position;
+    var position = GameCamera.InFreeFly() && Utils.GetMainCamera() ? Utils.GetMainCamera().transform.position : player.transform.position;
     if (mode == Minimap.MapMode.Small && Settings.MiniMapCoordinates) {
       var text = GetText(position);
       AddText(__instance.m_biomeNameSmall, text);

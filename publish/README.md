@@ -216,6 +216,8 @@ Affected data values can be configured but recommended to keep them as it is.
 - v1.14
 	- Adds the`chance` parameter to most commands.
 	- Changes the `vegetation_add` and `vegetation_reset` to work with all vegetation when ids are not given.
+	- Changes the map coordinates to be x,z,y instead of x,y,z (like in many commands).
+	- Changes the map coordinates to show free fly position.
 
 - v1.13
 	- Improves command output.
