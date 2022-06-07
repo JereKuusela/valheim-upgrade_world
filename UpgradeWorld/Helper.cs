@@ -77,8 +77,8 @@ public static class Helper {
       return true;
     }
     var isDedicated = ZNet.instance && ZNet.instance.IsDedicated();
-    if (isDedicated && ServerExecution.User == null) {
-      Helper.Print(args.Context, "Error: Dedicated server is not allowed to directly execute any commands.");
+    if (!Settings.DedicatedServerExecution && isDedicated && ServerExecution.User == null) {
+      Helper.Print(args.Context, "Error: Dedicated server is not allowed to directly execute any commands (can be configured).");
       return true;
     }
     return false;

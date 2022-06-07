@@ -134,6 +134,7 @@ Other settings are:
 - Show map coordinates: If true, shows coordinates and distance on the big map.
 - Show minimap coordinates: If true, shows coordinates on the minimap.
 - Root users: SteamIds that are allowed to execute commands. If not set, all admins can use the commands.
+- Dedicated server execution: If enabled, the dedicated server can directly use the commands. This may allow some mods to bypass the root users restriction (for example Server Devcommands mod).
 
 Examples:
 - Setting "300,500,500,0|1000,2000,500,0" to custom points would protect areas at coordinates 300,500 and 1000,2000 within 500 meters.
@@ -215,6 +216,7 @@ Affected data values can be configured but recommended to keep them as it is.
 
 - v1.14
 	- Adds the`chance` parameter to most commands.
+	- Adds a new setting to allow the dedicated server to directly execute commands (other mods may need this).
 	- Changes the `vegetation_add` and `vegetation_reset` to work with all vegetation when ids are not given.
 	- Changes the map coordinates to be x,z,y instead of x,y,z (like in many commands).
 	- Changes the map coordinates to show free fly position.

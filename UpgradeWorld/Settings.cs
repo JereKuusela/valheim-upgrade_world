@@ -12,6 +12,8 @@ public struct FilterPoint {
 }
 #nullable disable
 public static class Settings {
+  public static ConfigEntry<bool> configDedicatedServerExecution;
+  public static bool DedicatedServerExecution => configDedicatedServerExecution.Value;
   public static ConfigEntry<bool> configMapCoordinates;
   public static bool MapCoordinates => configMapCoordinates.Value;
   public static ConfigEntry<bool> configMiniMapCoordinates;
@@ -41,6 +43,7 @@ public static class Settings {
 
   public static void Init(ConfigFile config) {
     var section = "1. General";
+    configDedicatedServerExecution = config.Bind(section, "Dedicated server execution", false, "If enabled, some other mods may allow executing commands on the dedicated server .");
     configVerbose = config.Bind(section, "Verbose output", true, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
     configPreventDoubleZNetView = config.Bind(section, "Prevent double ZNet view", true, "Some bugged objects keep duplicating and corrupting the save. This prevents that from happening which allows removing these objects.");
     configAutoStart = config.Bind(section, "Automatic start", false, "If true, operations start automatically without having to use the start command.");
