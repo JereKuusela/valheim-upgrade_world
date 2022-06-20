@@ -2,14 +2,18 @@
 using BepInEx.Logging;
 using HarmonyLib;
 namespace UpgradeWorld;
-[BepInPlugin("valheim.jere.upgrade_world", "UpgradeWorld", "1.14.0.0")]
+[BepInPlugin(GUID, NAME, VERSION)]
 public class UpgradeWorld : BaseUnityPlugin {
+  const string GUID = "upgrade_world";
+  const string NAME = "Upgrade World";
+  const string VERSION = "1.14";
 #nullable disable
   public static ManualLogSource Log;
+#nullable enable
   public void Awake() {
     Log = Logger;
     Settings.Init(Config);
-    Harmony harmony = new("valheim.jere.upgrade_world");
+    Harmony harmony = new(GUID);
     harmony.PatchAll();
   }
   public void Start() {

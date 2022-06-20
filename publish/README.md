@@ -116,7 +116,7 @@ Examples:
 
 # Configuration
 
-The config can be found in the \<GameDirectory\>\BepInEx\config\ folder after the first start up.
+The config can be found in the \<GameDirectory\>\BepInEx\config\upgrade_world.cfg folder after the first start up.
 
 Filtering options in the config:
 
@@ -220,6 +220,8 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Changes the `vegetation_add` and `vegetation_reset` to work with all vegetation when ids are not given.
 	- Changes the map coordinates to be x,z,y instead of x,y,z (like in many commands).
 	- Changes the map coordinates to show free fly position.
+	- Changes the mod GUID which resets configuration.
+	- Fixes the `backup` command to work with the new save system (always saves to the local folder).
 
 - v1.13
 	- Improves command output.

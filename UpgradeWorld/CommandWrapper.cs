@@ -6,8 +6,17 @@ namespace UpgradeWorld;
 #nullable disable
 public static class CommandWrapper {
   public static Assembly ServerDevcommands = null;
+  const string GUID_LEGACY = "valheim.jerekuusela.server_devcommands";
+  const string GUID = "server_devcommands";
   public static void Init() {
-    if (Chainloader.PluginInfos.TryGetValue("valheim.jerekuusela.server_devcommands", out var info)) {
+    if (Chainloader.PluginInfos.TryGetValue(GUID_LEGACY, out var info)) {
+      if (info.Metadata.Version.Major == 1 && info.Metadata.Version.Minor < 15) {
+        UpgradeWorld.Log.LogWarning($"Server devcommands v{info.Metadata.Version.Major}.{info.Metadata.Version.Minor} is outdated. Please update for better command instructions!");
+      } else {
+        ServerDevcommands = info.Instance.GetType().Assembly;
+      }
+    }
+    if (Chainloader.PluginInfos.TryGetValue(GUID, out info)) {
       if (info.Metadata.Version.Major == 1 && info.Metadata.Version.Minor < 15) {
         UpgradeWorld.Log.LogWarning($"Server devcommands v{info.Metadata.Version.Major}.{info.Metadata.Version.Minor} is outdated. Please update for better command instructions!");
       } else {
