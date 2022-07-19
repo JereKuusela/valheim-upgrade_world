@@ -4,6 +4,8 @@ This tool includes console commands to add new content to already explored areas
 
 Always back up your world before making any changes!
 
+Install on the admin client and on the server (modding [guide](https://youtu.be/WfvA5a5tNHo)).
+
 # Things you can do
 
 - Place tar pits and mountain caves on already explored areas.
@@ -12,14 +14,6 @@ Always back up your world before making any changes!
 - Remove any object from the game world.
 - Generate the whole world without having to physically go anywhere.
 - Manually regenerate areas or dungeons.
-
-# Manual Installation:
-
-1. Install the [BepInExPack Valheim](https://valheim.thunderstore.io/package/denikson/BepInExPack_Valheim).
-2. Download the zip and extract the DLL file to the \<GameDirectory\>\BepInEx\plugins\ folder.
-3. For dedicated servers, install this mod also on the server.
-4. Optionally install the [Configuration manager](https://github.com/BepInEx/BepInEx.ConfigurationManager/releases/tag/v16.4).
-5. Optionally install the [Server Devcommands](https://valheim.thunderstore.io/package/JereKuusela/Server_devcommands/) for better autocomplete.
 
 # Quick instructions:
 
@@ -87,6 +81,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
 - `zones_generate [...args]`: Pre-generates areas without having to visit them.
 - `zones_reset [...args]`: Destroys areas making them ungenerated. These areas will be generated when visited. Can be also used to reduce save file size. `chance` determines how many of the zones are reseted.
+- `zones_restore [...args]`: Adds missing zone control objects (responsible for random spawns).
 
 Examples:
 - `biomes_count 100 min=5000 pos=0,0`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
@@ -213,6 +208,10 @@ Following data values are updated if their value is not 0:
 Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
+
+- v1.15
+	- Adds a new operation `zones_restore` to add missing zone control objects.
+	- Fixes `locations_add` possibly removing the zone control object (which handles random spawns).
 
 - v1.14
 	- Adds the`chance` parameter to most commands.

@@ -6,7 +6,7 @@ namespace UpgradeWorld;
 public class UpgradeWorld : BaseUnityPlugin {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.14";
+  const string VERSION = "1.15";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -67,6 +67,7 @@ public class SetCommands {
     new VegetationAddCommand();
     new SavingCommands();
     new BackupCommand();
+    new ZonesRestoreCommand();
     //new VegetationExportCommand();
     if (Terminal.commands.TryGetValue("genloc", out var genloc)) {
       genloc.IsCheat = false;
