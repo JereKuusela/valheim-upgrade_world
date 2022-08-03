@@ -15,8 +15,11 @@ public class RemoveLocations : LocationOperation {
   ///<summary>Removes locations from ungenerated zones.</summary>
   protected override bool OnExecute() {
     var zs = ZoneSystem.instance;
-    var locationObjects = Ids.Select(id => id.GetStableHashCode()).ToHashSet();
-    var unplacedZones = zs.m_locationInstances.Where(kvp => !kvp.Value.m_placed).Where(kvp => locationObjects.Contains(kvp.Value.m_location.m_prefabName.GetStableHashCode())).Select(kvp => kvp.Key).ToHashSet();
+    Args.TargetZones = TargetZones.Ungenerated;
+    var filterers = FiltererFactory.Create(Args);
+    filterers = filterers.Append(new LocationFilterer(Ids)).ToList();
+    List<string> messages = new();
+    var unplacedZones = filterers.Aggregate(Zones.GetWorldZones(), (zones, filterer) => filterer.FilterZones(zones, ref messages));
     foreach (var zone in unplacedZones) {
       if (!Args.Roll()) continue;
       PreOperated++;

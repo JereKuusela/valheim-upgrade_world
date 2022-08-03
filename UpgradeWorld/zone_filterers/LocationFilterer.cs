@@ -10,7 +10,7 @@ public class LocationFilterer : ZoneFilterer {
   public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages) {
     var locationObjects = Ids.Select(id => id.GetStableHashCode()).ToHashSet();
     var zs = ZoneSystem.instance;
-    var instances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed);
+    var instances = zs.m_locationInstances.Where(kvp => true);
     if (!Ids.Contains("*"))
       instances = instances.Where(kvp => locationObjects.Contains(kvp.Value.m_location.m_prefabName.GetStableHashCode()));
     var includedZones = instances.Select(kvp => kvp.Key).ToHashSet();

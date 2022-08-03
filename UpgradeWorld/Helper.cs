@@ -48,8 +48,8 @@ public static class Helper {
     ZDOMan.instance.FindObjects(zone, sectorObjects);
     var scene = ZNetScene.instance;
     foreach (var zdo in sectorObjects) {
-      var prefab = zdo.GetPrefab();
-      if (scene.GetPrefab(prefab).name.StartsWith("_", StringComparison.Ordinal)) continue;
+      var prefab = scene.GetPrefab(zdo.GetPrefab());
+      if (prefab && prefab.name.StartsWith("_", StringComparison.Ordinal)) continue;
       var zdoPosition = zdo.GetPosition();
       var delta = position - zdoPosition;
       delta.y = 0;
