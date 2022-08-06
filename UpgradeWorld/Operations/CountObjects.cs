@@ -1,18 +1,24 @@
 using System.Collections.Generic;
 using System.Linq;
+using Service;
+
 namespace UpgradeWorld;
 /// <summary>Counts the amounts of given entities.</summary>
 public class CountObjects : EntityOperation {
-  public CountObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context) {
-    if (Validate(ids))
-      Count(ids, args);
+  public CountObjects(Terminal context, List<string> ids, DataParameters args, Range<int> countRange) : base(context) {
+    Count(ids, args, countRange);
   }
-  private void Count(IEnumerable<string> ids, DataParameters args) {
-    var prefabs = ids.Select(GetPrefabs).Aggregate((acc, list) => acc.Concat(list));
+  private void Count(List<string> ids, DataParameters args, Range<int> countRange) {
+    if (ids.Count == 0) ids.Add("*");
+    var prefabs = ids.SelectMany(GetPrefabs).ToHashSet();
+    var total = 0;
     var texts = prefabs.Select(id => {
       var count = GetZDOs(id, args).Count();
-      return id + ": " + count;
-    });
+      if (count < countRange.Min || count >= countRange.Max) return "";
+      total += count;
+      return $"{id}: {count}";
+    }).Where(s => s != "").ToArray();
+    texts = texts.Prepend($"Total: {total}").ToArray();
     Log(texts);
   }
 }

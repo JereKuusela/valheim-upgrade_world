@@ -1,6 +1,6 @@
-# valheim-esp
+# valheim-upgrade_world
 
-This project is an utility mod to game called Valheim.
+This project is a tool mod to a game called Valheim.
 
 To compile, you need to manually add correct libraries to Libs folder. Check project file for needed ones.
 

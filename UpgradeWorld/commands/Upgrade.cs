@@ -1,4 +1,5 @@
-using System.Linq;
+using Service;
+
 namespace UpgradeWorld;
 public class UpgradeCommand {
   public UpgradeCommand() {
@@ -10,8 +11,7 @@ public class UpgradeCommand {
       FiltererParameters pars = new(args);
       var selectedType = "";
       foreach (var type in Upgrade.Types) {
-        pars.Unhandled = Parse.Flag(pars.Unhandled, type.ToLower(), out var found).ToList();
-        if (found) selectedType = type;
+        if (Parse.Flag(pars.Unhandled, type.ToLower())) selectedType = type;
       }
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;

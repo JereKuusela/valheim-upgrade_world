@@ -1,4 +1,6 @@
 using System.Linq;
+using Service;
+
 namespace UpgradeWorld;
 public class LocationsAddCommand {
   public LocationsAddCommand() {
@@ -7,7 +9,7 @@ public class LocationsAddCommand {
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
     new Terminal.ConsoleCommand("locations_add", "[...location_ids] [noclearing] [...args] - Adds missing locations to generated areas.", (Terminal.ConsoleEventArgs args) => {
-      RequiredIdParameters pars = new(args);
+      IdParameters pars = new(args, true);
       pars.Ids = Parse.Flag(pars.Ids, "noclearing", out var noClearing).ToList();
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;

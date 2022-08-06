@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Service;
+
 namespace UpgradeWorld;
 /// <summary>Predefined upgrade operations</summary>
 public class Upgrade : BaseOperation {
@@ -13,23 +15,23 @@ public class Upgrade : BaseOperation {
     "EVA"
   };
 
-  public Upgrade(Terminal context, string type, IEnumerable<string> extra, FiltererParameters args) : base(context) {
+  public Upgrade(Terminal context, string type, Dictionary<string, string> extra, FiltererParameters args) : base(context) {
     AddOperations(type, extra, args);
     Types.Sort();
   }
 
-  private void AddOperations(string type, IEnumerable<string> extra, FiltererParameters args) {
+  private void AddOperations(string type, Dictionary<string, string> extra, FiltererParameters args) {
     if (type == null || type == "") {
       Print("Error: Missing upgrade type");
       return;
     }
     type = type.ToLower();
     if (type == "mountain_caves") {
-      extra = Parse.Flag(extra, "noclearing", out var noClearing);
+      var noClearing = Parse.Flag(extra, "noclearing");
       Executor.AddOperation(new DistributeLocations(new[] { "MountainCave02" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
     } else if (type == "tarpits") {
-      extra = Parse.Flag(extra, "noclearing", out var noClearing);
+      var noClearing = Parse.Flag(extra, "noclearing");
       Executor.AddOperation(new DistributeLocations(new[] { "TarPit1" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new DistributeLocations(new[] { "TarPit2" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new DistributeLocations(new[] { "TarPit3" }, args.Start, args.Chance, Context));
@@ -64,7 +66,7 @@ public class Upgrade : BaseOperation {
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
         return;
       }
-      extra = Parse.Flag(extra, "noclearing", out var noClearing);
+      var noClearing = Parse.Flag(extra, "noclearing");
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Plains, Heightmap.Biome.DeepNorth, Heightmap.Biome.Mistlands, Heightmap.Biome.AshLands };
       var safeZones = args.SafeZones;
       args.SafeZones = 0;

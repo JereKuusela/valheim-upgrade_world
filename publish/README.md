@@ -4,7 +4,7 @@ This tool includes console commands to add new content to already explored areas
 
 Always back up your world before making any changes!
 
-Install on the admin client and on the server (modding [guide](https://youtu.be/WfvA5a5tNHo)).
+Install on the admin client and on the server (modding [guide](https://youtu.be/L9ljm2eKLrk)).
 
 # Things you can do
 
@@ -41,12 +41,14 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 
 - `biomes=biome1,biome2,...`: Only includes given biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
 - `chance=percentage`: Makes a single operation to be applied randomly.
-- `distance=min,max`: Short-hand for setting both distances.
+- `count=min-max`: Filters objects by their amount. Only applies to `objects_count`.
+- `distance=min-max`: Short-hand for setting both distances.
 - `force`: Disables player base detection (same as `safeZones=0`).
-- `pos=x,z`: Position of the center. If not given, player's position is used. Default distance is all of the map.
+- `level=min-max`: Filters objects by their creature level. Only applies to `objects_*` commands.
 - `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
+- `pos=x,z`: Position of the center. If not given, player's position is used. Default distance is all of the map.
 - `safeZones=distance`: Set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
 - `start`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
 - `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
@@ -61,7 +63,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `locations_add [id1,id2,...] [noclearing] [...args]`: Adds locations to already explored areas. With `noclearing`, the location area is not cleared of existing objects. `chance` determines how many of the locations are added.
 - `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used). `chance` determines how many of the locations are removed.
 - `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout. `chance` determines how many of the locations are reseted.
-- `objects_count [all] [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. All objects are listed with the flag `all`. Result is also printed to the player.log file. Wildcards are also supported.
+- `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. All objects are listed with the flag `all`. Result is also printed to the player.log file. Wildcards are also supported.
 - `objects_list [id1,id2,...] [...args]`: Lists objects showing their position and biome. Result is also printed to the player.log file.
 - `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `count_objects` to check that you don't remove too much.
 - `save_disable`: Disables world saving. But still a good idea to make backups.
@@ -210,6 +212,10 @@ Affected data values can be configured but recommended to keep them as it is.
 # Changelog
 
 - v1.16
+	- Adds total amount to the `objects_count` command output.
+	- Adds a new parameter `level` to the `objects_*` commands to filter by creature level.
+	- Adds a new parameter `count` to the `objects_count` command to filter by object count.
+	- Removes the `all` parameter from the `objects_count` command as obsolete.
 	- Fixes `locations_remove` not using filters for unplaced locations.
 	- Fixes error when trying to clear unknown objects.
 

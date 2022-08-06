@@ -1,3 +1,6 @@
+using System.Linq;
+using Service;
+
 namespace UpgradeWorld;
 public class BiomesCountCommand {
   public BiomesCountCommand() {
@@ -12,7 +15,7 @@ public class BiomesCountCommand {
         Helper.Print(args.Context, "Error: Missing precision.");
         return;
       }
-      if (!Parse.TryFloat(pars.Unhandled[0], out precision)) {
+      if (!Parse.TryFloat(pars.Unhandled.First().Key, out precision)) {
         Helper.Print(args.Context, "Error: Precision has wrong format.");
         return;
       }
@@ -20,7 +23,7 @@ public class BiomesCountCommand {
         Helper.Print(args.Context, "Error: <color=yellow>zone</color> is not supported.");
         return;
       }
-      pars.Unhandled.RemoveAt(0);
+      pars.Unhandled.Remove(pars.Unhandled.First().Key);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       new CountBiomes(args.Context, precision, pars);

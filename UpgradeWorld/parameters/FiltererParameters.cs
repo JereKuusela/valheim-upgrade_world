@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Service;
 using UnityEngine;
 namespace UpgradeWorld;
 public class FiltererParameters {
@@ -14,7 +15,7 @@ public class FiltererParameters {
   public float Chance = 1f;
   public int SafeZones = Settings.SafeZoneSize;
   public TargetZones TargetZones = TargetZones.Generated;
-  public List<string> Unhandled = new();
+  public Dictionary<string, string> Unhandled = new();
   public bool IsBiomeValid(Heightmap.Biome biome) => Biomes.Count() == 0 || Biomes.Contains(biome);
   public bool IsBiomeValid(Vector3 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos));
   public bool IsBiomeValid(Vector2 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos.x, pos.y));
@@ -45,23 +46,22 @@ public class FiltererParameters {
         else if (name == "max" | name == "maxdistance") MaxDistance = Parse.Float(value);
         else if (name == "chance") Chance = Parse.Float(value) / 100f;
         else if (name == "distance") {
-          var distance = Parse.Pos(value);
-          MinDistance = distance.x;
-          MaxDistance = distance.y;
+          var distance = Parse.FloatRange(value);
+          MinDistance = distance.Min;
+          MaxDistance = distance.Max;
         } else if (name == "biomes") Biomes = Parse.Biomes(value);
-        else Unhandled.Add(par);
+        else Unhandled.Add(split[0], split[1]);
       } else if (name == "noedges") NoEdges = true;
       else if (name == "start") Start = true;
       else if (name == "zone") Zone = Helper.GetPlayerZone();
       else if (name == "force") SafeZones = 0;
-      else Unhandled.Add(par);
+      else Unhandled.Add(split[0], "");
     }
     if (!Zone.HasValue && !Pos.HasValue) {
       var pos = Helper.GetPlayerPosition();
       Pos = new Vector2(pos.x, pos.z);
     }
   }
-
   public virtual bool Valid(Terminal terminal) {
     if (Unhandled.Count() > 0) {
       Helper.Print(terminal, "Error: Unhandled parameters " + string.Join(", ", Unhandled));
