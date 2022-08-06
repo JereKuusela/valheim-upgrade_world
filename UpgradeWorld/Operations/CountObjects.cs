@@ -3,11 +3,11 @@ using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Counts the amounts of given entities.</summary>
 public class CountObjects : EntityOperation {
-  public CountObjects(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context) {
+  public CountObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context) {
     if (Validate(ids))
       Count(ids, args);
   }
-  private void Count(IEnumerable<string> ids, FiltererParameters args) {
+  private void Count(IEnumerable<string> ids, DataParameters args) {
     var prefabs = ids.Select(GetPrefabs).Aggregate((acc, list) => acc.Concat(list));
     var texts = prefabs.Select(id => {
       var count = GetZDOs(id, args).Count();

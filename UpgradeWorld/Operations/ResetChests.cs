@@ -9,12 +9,12 @@ public class ResetChests : EntityOperation {
       "TreasureChest_sunkencrypt", "TreasureChest_swamp", "TreasureChest_trollcave", "shipwreck_karve_chest",
       "loot_chest_wood", "loot_chest_stone", "*" }.OrderBy(item => item).ToList();
   private HashSet<string> AllowedItems;
-  public ResetChests(string chestId, IEnumerable<string> allowedItems, bool looted, FiltererParameters args, Terminal context) : base(context) {
+  public ResetChests(string chestId, IEnumerable<string> allowedItems, bool looted, DataParameters args, Terminal context) : base(context) {
     AllowedItems = allowedItems.Select(Helper.Normalize).ToHashSet();
     Reroll(chestId, looted, args);
   }
 
-  private void Reroll(string chestId, bool looted, FiltererParameters args) {
+  private void Reroll(string chestId, bool looted, DataParameters args) {
     var chestIds = chestId == "*" ? ChestsNames.Where(name => name != "*") : new List<string> { chestId };
     var totalChests = 0;
     var resetedChests = 0;

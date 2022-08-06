@@ -3,10 +3,10 @@ using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Counts the amounts of entities.</summary>
 public class CountAllObjects : EntityOperation {
-  public CountAllObjects(Terminal context, bool showAll, FiltererParameters args) : base(context) {
+  public CountAllObjects(Terminal context, bool showAll, DataParameters args) : base(context) {
     Count(showAll, args);
   }
-  private void Count(bool showAll, FiltererParameters args) {
+  private void Count(bool showAll, DataParameters args) {
     Dictionary<int, int> counts = new();
     var zdos = FilterZdos(ZDOMan.instance.m_objectsByID.Values, args);
     foreach (var zdo in zdos) {

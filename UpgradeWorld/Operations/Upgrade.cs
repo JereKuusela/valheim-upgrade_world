@@ -39,7 +39,7 @@ public class Upgrade : BaseOperation {
         Print("Error: This operation doesn't support extra parameters " + string.Join(", ", extra));
         return;
       }
-      new ResetChests("TreasureChest_mountains", new[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, args.Start, args, Context);
+      new ResetChests("TreasureChest_mountains", new[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, args.Start, new(args), Context);
     } else if (type == "new_mistlands") {
       if (args.Biomes.Count() > 0) {
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));

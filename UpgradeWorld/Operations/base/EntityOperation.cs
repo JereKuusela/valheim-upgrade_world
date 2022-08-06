@@ -34,10 +34,10 @@ public abstract class EntityOperation : BaseOperation {
       values = values.Where(prefab => prefab.name == id);
     return values.Select(prefab => prefab.name);
   }
-  public static IEnumerable<ZDO> GetZDOs(string id, FiltererParameters args) {
+  public static IEnumerable<ZDO> GetZDOs(string id, DataParameters args) {
     var code = id.GetStableHashCode();
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => code == zdo.GetPrefab());
     return FilterZdos(zdos, args);
   }
-  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.FilterZdos(zdos);
+  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, DataParameters args) => args.FilterZdos(zdos);
 }

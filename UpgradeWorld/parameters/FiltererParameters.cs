@@ -19,6 +19,19 @@ public class FiltererParameters {
   public bool IsBiomeValid(Vector3 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos));
   public bool IsBiomeValid(Vector2 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos.x, pos.y));
 
+  public FiltererParameters(FiltererParameters pars) {
+    Biomes = pars.Biomes;
+    NoEdges = pars.NoEdges;
+    Start = pars.Start;
+    Pos = pars.Pos;
+    Zone = pars.Zone;
+    MinDistance = pars.MinDistance;
+    MaxDistance = pars.MaxDistance;
+    Chance = pars.Chance;
+    SafeZones = pars.SafeZones;
+    TargetZones = pars.TargetZones;
+    Unhandled = pars.Unhandled;
+  }
   public FiltererParameters(Terminal.ConsoleEventArgs args) {
     foreach (var par in args.Args.Skip(1).ToArray()) {
       var split = par.Split('=');
@@ -69,7 +82,7 @@ public class FiltererParameters {
     return true;
   }
 
-  public IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos) {
+  public virtual IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos) {
     if (Biomes.Count() > 0)
       zdos = zdos.Where(zdo => IsBiomeValid(zdo.GetPosition()));
     if (NoEdges)

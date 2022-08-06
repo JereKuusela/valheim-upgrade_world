@@ -3,8 +3,43 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 namespace UpgradeWorld;
+
+public class Range<T> {
+  public T Min;
+  public T Max;
+  public Range(T value) {
+    Min = value;
+    Max = value;
+  }
+  public Range(T min, T max) {
+    Min = min;
+    Max = max;
+  }
+}
+
 public class Parse {
+  private static Range<string> TryRange(string arg) {
+    var range = arg.Split('-').ToList();
+    if (range.Count > 1 && range[0] == "") {
+      range[0] = "-" + range[1];
+      range.RemoveAt(1);
+    }
+    if (range.Count > 2 && range[1] == "") {
+      range[1] = "-" + range[2];
+      range.RemoveAt(2);
+    }
+    if (range.Count == 1) return new(range[0]);
+    else return new(range[0], range[1]);
+  }
   public static int Int(string arg, int defaultValue = 0) => int.TryParse(arg, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) ? number : defaultValue;
+  public static Range<int> TryIntRange(string arg, int defaultValue = 0) {
+    var range = TryRange(arg);
+    return new(Int(range.Min, defaultValue), Int(range.Max, defaultValue));
+  }
+  public static Range<int> TryIntRange(string[] args, int index, int defaultValue = 0) {
+    if (args.Length <= index) return new(defaultValue);
+    return TryIntRange(args[index], defaultValue);
+  }
   public static Vector2 Pos(string arg) {
     var values = Split(arg).ToArray();
     Vector2 vector = new();
