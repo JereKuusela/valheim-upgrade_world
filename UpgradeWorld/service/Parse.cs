@@ -251,6 +251,7 @@ public static class Parse {
   }
   public static bool Flag(Dictionary<string, string> parameters, string flag) {
     var key = parameters.Keys.FirstOrDefault(key => key.ToLower() == flag.ToLower());
+    if (key == null) return false;
     return parameters.Remove(key);
   }
 

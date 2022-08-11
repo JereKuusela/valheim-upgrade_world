@@ -211,6 +211,9 @@ Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
 
+- v1.17
+	- Fixes `upgrade` command not working.
+
 - v1.16
 	- Adds total amount to the `objects_count` command output.
 	- Adds a new parameter `level` to the `objects_*` commands to filter by creature level.
@@ -236,12 +239,5 @@ Affected data values can be configured but recommended to keep them as it is.
 	- Improves command output.
 	- Merges EVA upgrade commands to a single command.
 	- Fixes EVA upgrade command failintg to start.
-
-- v1.12
-	- Adds a new command `backup` to backup the world.
-	- Adds a new command `save_disable` and `save_enable` to disable or enable world saving.
-	- Adds support for automatic player position when executing commands on dedicated servers.
-	- Improves output when executing commands on dedicated servers.
-	- Fixes `start` and `stop` commands not being sent to the server.
 
 Thanks for Azumatt for the icon!
