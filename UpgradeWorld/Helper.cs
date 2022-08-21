@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -49,7 +48,7 @@ public static class Helper {
     var scene = ZNetScene.instance;
     foreach (var zdo in sectorObjects) {
       var prefab = scene.GetPrefab(zdo.GetPrefab());
-      if (prefab && prefab.name.StartsWith("_", StringComparison.Ordinal)) continue;
+      if (prefab && prefab.name == Settings.ZoneControlId) continue;
       var zdoPosition = zdo.GetPosition();
       var delta = position - zdoPosition;
       delta.y = 0;

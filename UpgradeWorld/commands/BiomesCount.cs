@@ -27,6 +27,6 @@ public class BiomesCountCommand {
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       new CountBiomes(args.Context, precision, pars);
-    }, optionsFetcher: () => ZNetScene.instance.GetPrefabNames());
+    });
   }
 }

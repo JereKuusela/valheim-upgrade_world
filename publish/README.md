@@ -211,6 +211,9 @@ Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
 
+- v1.18
+	- Fixes `locations_*` commands not working.
+
 - v1.17
 	- Fixes `upgrade` command not working.
 

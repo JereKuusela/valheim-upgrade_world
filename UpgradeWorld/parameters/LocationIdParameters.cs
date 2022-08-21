@@ -3,12 +3,12 @@ using System.Linq;
 using Service;
 
 namespace UpgradeWorld;
-public class IdParameters : FiltererParameters {
+public class LocationIdParameters : FiltererParameters {
   public List<string> Ids = new();
   public bool RequireId;
-  public IdParameters(FiltererParameters pars) : base(pars) {
+  public LocationIdParameters(FiltererParameters pars) : base(pars) {
   }
-  public IdParameters(Terminal.ConsoleEventArgs args, bool requireId) : base(args) {
+  public LocationIdParameters(Terminal.ConsoleEventArgs args, bool requireId) : base(args) {
     RequireId = requireId;
   }
   public override bool Valid(Terminal terminal) {
@@ -19,13 +19,13 @@ public class IdParameters : FiltererParameters {
       Helper.Print(terminal, "Error: Missing ids.");
       return false;
     }
-    var invalidIds = Ids.Where(id => !id.Contains("*") && ZNetScene.instance.GetPrefab(id) == null);
+    var invalidIds = Ids.Where(id => !id.Contains("*") && ZoneSystem.instance.GetLocation(id) == null);
     if (invalidIds.Count() > 0) {
-      Helper.Print(terminal, "Error: Invalid entity ids " + string.Join(", ", invalidIds));
+      Helper.Print(terminal, "Error: Invalid locations ids " + string.Join(", ", invalidIds));
       return false;
     }
     return true;
   }
-  public IdParameters(Terminal.ConsoleEventArgs args) : base(args) {
+  public LocationIdParameters(Terminal.ConsoleEventArgs args) : base(args) {
   }
 }
