@@ -7,7 +7,6 @@ public interface ZoneFilterer {
 public static class FiltererFactory {
   public static List<ZoneFilterer> Create(FiltererParameters args) {
     List<ZoneFilterer> filters = new();
-    filters.Add(new TargetZonesFilterer(args.TargetZones));
     filters.Add(new BiomeFilterer(args.Biomes, !args.NoEdges));
     filters.Add(new ConfigFilterer());
     if (args.Zone.HasValue) filters.Add(new ZoneDistanceFilterer(args.Zone.Value, (int)args.MinDistance, (int)args.MaxDistance));

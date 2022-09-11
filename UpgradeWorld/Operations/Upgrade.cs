@@ -9,8 +9,7 @@ public class Upgrade : BaseOperation {
   {
     "tarpits",
     "onions",
-    "new_mistlands",
-    "old_mistlands",
+    "mistlands",
     "mountain_caves",
     "EVA"
   };
@@ -32,35 +31,22 @@ public class Upgrade : BaseOperation {
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
     } else if (type == "tarpits") {
       var noClearing = Parse.Flag(extra, "noclearing");
-      Executor.AddOperation(new DistributeLocations(new[] { "TarPit1" }, args.Start, args.Chance, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "TarPit2" }, args.Start, args.Chance, Context));
-      Executor.AddOperation(new DistributeLocations(new[] { "TarPit3" }, args.Start, args.Chance, Context));
+      Executor.AddOperation(new DistributeLocations(new[] { "TarPit1", "TarPit2", "TarPit3" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
     } else if (type == "onions") {
       if (extra.Count() > 0) {
         Print("Error: This operation doesn't support extra parameters " + string.Join(", ", extra));
         return;
       }
-      new ResetChests("TreasureChest_mountains", new[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, args.Start, new(args), Context);
-    } else if (type == "new_mistlands") {
+      new ResetChests(new[] { "TreasureChest_mountains" }, new[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, args.Start, new(args), Context);
+    } else if (type == "mistlands") {
       if (args.Biomes.Count() > 0) {
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
         return;
       }
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
       Executor.AddOperation(new ResetZones(Context, args));
-      Executor.AddOperation(new DistributeLocations(new string[] { }, args.Start, args.Chance, Context));
-    } else if (type == "old_mistlands") {
-      if (args.Biomes.Count() > 0) {
-        Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
-        return;
-      }
-      args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
-      new SetVegetation(Context, true, false, new[] { "HugeRoot1", "SwampTree2_darkland", "Pinetree_01", "FirTree_small_dead", "vertical_web", "horizontal_web", "tunnel_web", "stubbe", "Skull1", "Skull2", "Rock_3", "Rock_4" });
-      Executor.AddOperation(new ResetZones(Context, args));
-      args.TargetZones = TargetZones.All;
-      Executor.AddOperation(new Generate(Context, args));
-      Executor.AddCleanUp(() => new ResetVegetation(Context));
+      Executor.AddOperation(new DistributeLocations(new string[0], args.Start, args.Chance, Context));
     } else if (type == "eva") {
       if (args.Biomes.Count() > 0) {
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));

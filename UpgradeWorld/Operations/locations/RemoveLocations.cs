@@ -2,42 +2,65 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Destroys given locations.</summary>
-public class RemoveLocations : LocationOperation {
-  IEnumerable<string> Ids;
-  public RemoveLocations(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context, args) {
-    Operation = "Remove locations";
-    InitString = args.Print($"Remove locations{Helper.IdString(ids)} from");
-    Verb = "removed";
-    Ids = ids;
-    Filterers = Filterers.Append(new LocationFilterer(ids)).ToList();
+public class RemoveLocations : ExecutedOperation {
+  HashSet<string> Ids;
+  FiltererParameters Args;
+  public RemoveLocations(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context, args.Start) {
+    Args = new(args);
+    Args.TargetZones = TargetZones.All;
+    Ids = ids.ToHashSet();
   }
+  private int LocationProxyHash = "LocationProxy".GetStableHashCode();
+  private int LocationHash = "location".GetStableHashCode();
 
-  ///<summary>Removes locations from ungenerated zones.</summary>
-  protected override bool OnExecute() {
+  private int RemovePlaced() {
     var zs = ZoneSystem.instance;
-    Args.TargetZones = TargetZones.Ungenerated;
+    var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => LocationProxyHash == zdo.GetPrefab());
+    zdos = Args.FilterZdos(zdos);
+    var removed = 0;
+    foreach (var zdo in zdos) {
+      if (!Args.Roll()) continue;
+      var zone = zs.GetZone(zdo.GetPosition());
+      var name = "???";
+      if (zs.m_locationsByHash.TryGetValue(zdo.GetInt(LocationHash), out var location)) {
+        name = location.m_prefabName;
+        if (Ids.Count > 0 && !Ids.Contains(name)) continue;
+        Helper.ClearZDOsWithinDistance(zone, zdo.GetPosition(), location.m_location.m_exteriorRadius);
+      } else
+        Helper.RemoveZDO(zdo);
+      removed++;
+      zs.m_locationInstances.Remove(zone);
+      if (Settings.Verbose)
+        Print($"Location {name} removed at {zone.ToString()}.");
+    }
+    return removed;
+
+  }
+  private int RemoveUnplaced() {
+    var zs = ZoneSystem.instance;
     var filterers = FiltererFactory.Create(Args);
     filterers = filterers.Append(new LocationFilterer(Ids)).ToList();
     List<string> messages = new();
-    var unplacedZones = filterers.Aggregate(Zones.GetWorldZones(), (zones, filterer) => filterer.FilterZones(zones, ref messages));
+    var unplacedZones = filterers.Aggregate(Zones.GetZones(TargetZones.All), (zones, filterer) => filterer.FilterZones(zones, ref messages));
+    var removed = 0;
     foreach (var zone in unplacedZones) {
       if (!Args.Roll()) continue;
-      PreOperated++;
       if (!zs.m_locationInstances.TryGetValue(zone, out var location)) continue;
+      removed++;
       if (Settings.Verbose)
         Print("Location " + location.m_location.m_prefabName + " removed at " + zone.ToString());
-      Operated++;
       zs.m_locationInstances.Remove(zone);
     }
-    return base.OnExecute();
+    return removed;
   }
 
-  ///<summary>Removes locations from generated zones.</summary>
-  protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
-    if (location.m_placed) Helper.ClearAreaForLocation(zone, location, true);
-    ZoneSystem.instance.m_locationInstances.Remove(zone);
-    if (Settings.Verbose)
-      Print("Location " + location.m_location.m_prefabName + " removed at " + zone.ToString());
+  protected override bool OnExecute() {
+    var removed = RemovePlaced() + RemoveUnplaced();
+    Print($"Removed {removed} locations.");
     return true;
+  }
+
+  protected override string OnInit() {
+    return Args.Print($"Remove locations{Helper.LocationIdString(Ids)} from");
   }
 }

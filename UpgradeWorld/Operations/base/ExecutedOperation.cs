@@ -15,8 +15,8 @@ public abstract class ExecutedOperation : BaseOperation {
         OnStart();
         First = false;
       }
-      Attempts++;
       var ret = OnExecute();
+      Attempts++;
       if (ret) OnEnd();
       return ret;
     } catch (InvalidOperationException e) {

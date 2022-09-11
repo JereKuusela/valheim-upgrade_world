@@ -12,7 +12,7 @@ public class CountBiomes : BaseOperation {
 
   private void Count(float frequency, FiltererParameters args) {
     if (!args.Pos.HasValue) return;
-    if (args.MaxDistance == 0) args.MaxDistance = 10500f;
+    if (args.MaxDistance == 0) args.MaxDistance = Settings.WorldRadius;
     Dictionary<Heightmap.Biome, int> biomes = new();
     var start = -(float)Math.Ceiling(args.MaxDistance / frequency) * frequency;
     for (var x = start; x <= args.MaxDistance; x += frequency) {
@@ -27,7 +27,7 @@ public class CountBiomes : BaseOperation {
       }
     }
     float total = biomes.Values.Sum();
-    var text = biomes.Select(kvp => kvp.Key + ": " + kvp.Value + "/" + total + " (" + (kvp.Value / total).ToString("P2", CultureInfo.InvariantCulture) + ")");
-    Log(text);
+    var text = biomes.OrderBy(kvp => Enum.GetName(typeof(Heightmap.Biome), kvp.Key)).Select(kvp => Enum.GetName(typeof(Heightmap.Biome), kvp.Key) + ": " + kvp.Value + "/" + total + " (" + (kvp.Value / total).ToString("P2", CultureInfo.InvariantCulture) + ")");
+    Print(string.Join("\n", text));
   }
 }

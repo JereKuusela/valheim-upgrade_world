@@ -5,19 +5,23 @@ using Service;
 namespace UpgradeWorld;
 /// <summary>Rerolls given chests.</summary>
 public class ResetChests : EntityOperation {
-  public static List<string> ChestsNames = new List<string> {
-      "TreasureChest_blackforest", "TreasureChest_fCrypt", "TreasureChest_forestcrypt", "TreasureChest_heath",
-      "TreasureChest_meadows", "TreasureChest_meadows_buried","TreasureChest_mountains", "TreasureChest_plains_stone",
-      "TreasureChest_sunkencrypt", "TreasureChest_swamp", "TreasureChest_trollcave", "shipwreck_karve_chest",
-      "loot_chest_wood", "loot_chest_stone", "*" }.OrderBy(item => item).ToList();
+  private static List<string> chestNames = new();
   private HashSet<string> AllowedItems;
-  public ResetChests(string chestId, IEnumerable<string> allowedItems, bool looted, DataParameters args, Terminal context) : base(context) {
+  public ResetChests(string[] chestIds, IEnumerable<string> allowedItems, bool looted, DataParameters args, Terminal context) : base(context) {
     AllowedItems = allowedItems.Select(Helper.Normalize).ToHashSet();
-    Reroll(chestId, looted, args);
+    Reroll(chestIds, looted, args);
   }
-
-  private void Reroll(string chestId, bool looted, DataParameters args) {
-    var chestIds = chestId == "*" ? ChestsNames.Where(name => name != "*") : new List<string> { chestId };
+  public static List<string> ChestNames() {
+    if (chestNames.Count == 0) {
+      chestNames = ZNetScene.instance.m_prefabs.Where(prefab => {
+        if (prefab.GetComponent<Container>() is { } container)
+          return !container.m_defaultItems.IsEmpty();
+        return false;
+      }).Select(obj => obj.name).OrderBy(item => item).ToList();
+    }
+    return chestNames;
+  }
+  private void Reroll(string[] chestIds, bool looted, DataParameters args) {
     var totalChests = 0;
     var resetedChests = 0;
     var prefabs = chestIds.ToDictionary(id => id.GetStableHashCode(), id => ZNetScene.instance.GetPrefab(id));

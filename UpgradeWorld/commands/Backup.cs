@@ -5,7 +5,7 @@ public class BackupCommand {
   public static string Timestamp = "";
   public BackupCommand() {
     CommandWrapper.RegisterEmpty("backup");
-    new Terminal.ConsoleCommand("backup", "- Saves the world with a timestamped filename.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("backup", "- Saves the world with a timestamped filename.", (args) => {
       if (Helper.IsClient(args)) return;
       Timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss");
       Helper.Print(args.Context, $"Backing up to {ZNet.m_world.GetDBPath()}");

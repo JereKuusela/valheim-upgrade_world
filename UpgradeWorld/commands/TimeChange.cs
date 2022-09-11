@@ -8,7 +8,7 @@ public class TimeChangeCommand {
       if (index == 0) return CommandWrapper.Info("Amount of seconds to go forward or backward.");
       return null;
     });
-    new Terminal.ConsoleCommand("time_change", "[seconds] - Changes the world time and updates object timestamps.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("time_change", "[seconds] - Changes the world time and updates object timestamps.", (args) => {
       if (args.Args.Count() == 0) {
         Helper.Print(args.Context, "Error: Missing seconds.");
         return;
@@ -29,7 +29,7 @@ public class TimeChangeCommand {
       if (index == 0) return CommandWrapper.Info("Amount of days to go forward or backward.");
       return null;
     });
-    new Terminal.ConsoleCommand("time_change_day", "[days] - Changes the world time and updates object timestamps.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("time_change_day", "[days] - Changes the world time and updates object timestamps.", (args) => {
       if (args.Args.Count() == 0) {
         Helper.Print(args.Context, "Error: Missing day.");
         return;

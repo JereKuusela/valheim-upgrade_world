@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+
 namespace UpgradeWorld;
+
 // Location generation only places them on ungenerated zones. Skipping this check allows upgrading existing zones.
 [HarmonyPatch(typeof(ZoneSystem), nameof(ZoneSystem.IsZoneGenerated))]
 public class IsZoneGenerated {

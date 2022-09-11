@@ -5,7 +5,7 @@ public class ZonesRestoreCommand {
       if (index == 0) return CommandWrapper.LocationIds();
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("zones_restore", "[...args] - Restores missing zone control objects.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("zones_restore", "[...args] - Restores missing zone control objects.", (args) => {
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;

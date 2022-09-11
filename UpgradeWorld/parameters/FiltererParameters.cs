@@ -4,6 +4,11 @@ using System.Linq;
 using Service;
 using UnityEngine;
 namespace UpgradeWorld;
+public enum TargetZones {
+  Generated,
+  Ungenerated,
+  All
+}
 public class FiltererParameters {
   public HashSet<Heightmap.Biome> Biomes = new();
   public bool NoEdges = false;
@@ -116,7 +121,7 @@ public class FiltererParameters {
   public string Print(string operation) {
     var str = operation + " ";
     if (Biomes.Count > 0) {
-      str += string.Join(", ", Biomes);
+      str += string.Join(", ", Biomes.Select(biome => Enum.GetName(typeof(Heightmap.Biome), biome)));
       if (NoEdges)
         str += " (excluding biome edges)";
     } else
@@ -154,7 +159,7 @@ public class FiltererParameters {
     return new() {
       { "pos", (int index) => CommandWrapper.XZ("pos", "Coordinates for the center point. If not given, player's position is used", index)},
       { "zone", (int index) => CommandWrapper.XZ("zone" , "Indices for the center zone", index) },
-      { "biomes", (int index) => Helper.AvailableBiomes },
+      { "biomes", (int index) => Enum.GetNames(typeof(Heightmap.Biome)).ToList() },
       { "min", (int index) => index == 0 ? CommandWrapper.Info("min=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
       { "minDistance", (int index) => index == 0 ? CommandWrapper.Info("minDistance=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
       { "max", (int index) => index == 0 ? CommandWrapper.Info("max=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },

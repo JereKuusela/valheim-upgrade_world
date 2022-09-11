@@ -8,7 +8,7 @@ public class BiomesCountCommand {
       if (index == 0) return CommandWrapper.Info("How precisely the biome is checked (meters). Lower value increases precision but takes longer to measure.");
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("biomes_count", "[precision] [...args] - Counts biomes by sampling points with a given precision (meters).", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("biomes_count", "[precision] [...args] - Counts biomes by sampling points with a given precision (meters).", (args) => {
       FiltererParameters pars = new(args);
       var precision = 100f;
       if (pars.Unhandled.Count < 1) {

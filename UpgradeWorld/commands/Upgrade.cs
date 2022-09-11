@@ -7,7 +7,7 @@ public class UpgradeCommand {
       if (index == 0) return Upgrade.Types;
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("upgrade", "[operation] [...args] - Performs a predefined upgrade operation.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("upgrade", "[operation] [...args] - Performs a predefined upgrade operation.", (args) => {
       FiltererParameters pars = new(args);
       var selectedType = "";
       foreach (var type in Upgrade.Types) {

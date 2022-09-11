@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 public abstract class VegetationOperation : ZoneOperation {
+  public static List<string> GetIds() {
+    return ZoneSystem.instance.m_vegetation.Select(veg => veg.m_prefab.name).Distinct().ToList();
+  }
   public HashSet<string> Ids = new();
   private List<ZoneSystem.ZoneVegetation> OriginalVegetation = new();
   public VegetationOperation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args) {
@@ -11,9 +14,6 @@ public abstract class VegetationOperation : ZoneOperation {
   protected override void OnStart() {
     OriginalVegetation = ZoneSystem.instance.m_vegetation;
     ZoneSystem.instance.m_vegetation = ZoneSystem.instance.m_vegetation.Select(veg => veg.Clone()).ToList();
-    //if (VegetationData.Load())
-    //  Helper.Print(Context, User, $"{ZoneSystem.instance.m_vegetation.Count} vegetations loaded from vegetation.json");
-    // No parameter -> all vegetation.
     if (Args.Chance != 1f) ApplyChance(Args.Chance);
     if (Ids.Count > 0)
       Set(GetWithOnlyIds(Ids, true));

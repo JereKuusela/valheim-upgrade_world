@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 namespace UpgradeWorld;
@@ -13,14 +12,20 @@ public static class Zones {
   private static Vector2i[] Sort(Vector2i[] zones) {
     return zones.OrderBy(zone => zone.Magnitude()).ToArray();
   }
-  private static int WORLD_LIMIT = 165;
+  public static Vector2i[] GetZones(TargetZones zones) {
+    if (zones == TargetZones.All) return GetWorldZones();
+    var zs = ZoneSystem.instance;
+    if (zones == TargetZones.Generated) return Sort(zs.m_generatedZones.ToArray());
+    return Sort(GetWorldZones().Where(zone => !zs.m_generatedZones.Contains(zone)).ToArray());
+  }
   // Returns an array of all ungenerated zones.
-  public static Vector2i[] GetWorldZones() {
-    var zoneSystem = ZoneSystem.instance;
-    List<Vector2i> zones = new();
-    for (var i = -WORLD_LIMIT; i <= WORLD_LIMIT; i++) {
-      for (var j = -WORLD_LIMIT; j <= WORLD_LIMIT; j++) {
-        if (i * i + j * j > WORLD_LIMIT * WORLD_LIMIT) continue;
+  private static Vector2i[] GetWorldZones() {
+    var zs = ZoneSystem.instance;
+    var zones = zs.m_generatedZones.ToHashSet();
+    var limit = (int)Math.Ceiling((float)Settings.WorldRadius / zs.m_zoneSize);
+    for (var i = -limit; i <= limit; i++) {
+      for (var j = -limit; j <= limit; j++) {
+        if (i * i + j * j > limit * limit) continue;
         zones.Add(new(i, j));
       }
     }

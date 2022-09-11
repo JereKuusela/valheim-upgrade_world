@@ -13,7 +13,7 @@ public abstract class ZoneOperation : ExecutedOperation {
   protected FiltererParameters Args;
   protected List<ZoneFilterer> Filterers = new();
   protected ZoneOperation(Terminal context, FiltererParameters args) : base(context, args.Start) {
-    ZonesToUpgrade = Zones.GetWorldZones();
+    ZonesToUpgrade = Zones.GetZones(args.TargetZones);
     Args = args;
   }
   protected string InitString = "";

@@ -11,11 +11,7 @@ public class AddLocations : ZoneOperation {
     var zoneSystem = ZoneSystem.instance;
     var locations = zoneSystem.m_locationInstances;
     if (zoneSystem.IsZoneLoaded(zone)) {
-      locations[zone] = new ZoneSystem.LocationInstance()
-      {
-        m_placed = false
-      };
-      //Operated++;
+      locations[zone] = new() { m_placed = false };
       return true;
     }
     zoneSystem.PokeLocalZone(zone);

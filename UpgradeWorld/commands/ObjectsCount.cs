@@ -5,7 +5,7 @@ public class ObjectsCountCommand {
       if (index == 0) return CommandWrapper.ObjectIds();
       return CountParameters.Parameters;
     }, CountParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("objects_count", "[id1,id2,...] [...args] - Counts objects.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("objects_count", "[id1,id2,...] [...args] - Counts objects.", (args) => {
       CountParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;

@@ -10,7 +10,7 @@ Install on the admin client and on the server (modding [guide](https://youtu.be/
 
 - Place tar pits and mountain caves on already explored areas.
 - Reroll chest loots to have onion seeds on already explored areas.
-- Completely regenerate Mistlands (with new or legacy content).
+- Completely regenerate Mistlands.
 - Remove any object from the game world.
 - Generate the whole world without having to physically go anywhere.
 - Manually regenerate areas or dungeons.
@@ -77,10 +77,8 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `upgrade [operation] [...args]`: Short-hand for using common operations (mainly to add new content).
 - `vegetation_default`: Restored the default vegetation for the world generator.
 - `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation. `chance` directly scales the min and max amounts (bigger values work too).
-- `vegetation_disable [id1,id2,...]`: Disables vegetation for the world generator, affecting any forced (with `generate` command) or natural generation.
-- `vegetation_enable [id1,id2,...]`: Enables vegetation for the world generator, affecting any forced (with `generate` command) or natural generation.
-- `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation. `chance` determines how many of the vegetation are removed and directly scales the min and max amounts.
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
+- `world_reset [...args]`: Resets locations and zones.
 - `zones_generate [...args]`: Pre-generates areas without having to visit them.
 - `zones_reset [...args]`: Destroys areas making them ungenerated. These areas will be generated when visited. Can be also used to reduce save file size. `chance` determines how many of the zones are reseted.
 - `zones_restore [...args]`: Adds missing zone control objects (responsible for random spawns).
@@ -100,11 +98,7 @@ Examples:
 - `upgrade mountain_caves`: Places mountain caves to already explored areas.
 - `upgrade tarpits`: Places tar pits to already explored areas.
 - `upgrade onions`: Rerolls already generated and unlooted mountain chests.
-- `upgrade new_mistlands`: Fully regenerates mistlands biomes.
-- `upgrade old_mistlands`: Fully regenerates mistlands biomes with the legacy content (webs, etc.).
-- `vegetation_disable BlueberryBush`: Disables generation of blueberry bushes.
-- `vegetation_enable vertical_web horizontal_web tunnel_web`: Enables webs to generate in Mistlands.
-- `vegetation_reset biome=Meadows force`: Resets all vegetation in Meadows, including areas with player bases.
+- `upgrade mistlands`: Fully regenerates mistlands biomes.
 - `zones_generate`: To generate the entire world (takes hours) and then use `objects_count` command to check how many of each object exists.
 - `zones_generate`: To generate the entire world (takes hours) and then use `objects_remove` for modifications.
 - `zones_reset biomes=mistlands`: Destroying a biome.
@@ -132,6 +126,7 @@ Other settings are:
 - Show minimap coordinates: If true, shows coordinates on the minimap.
 - Root users: SteamIds that are allowed to execute commands. If not set, all admins can use the commands.
 - Dedicated server execution: If enabled, the dedicated server can directly use the commands. This may allow some mods to bypass the root users restriction (for example Server Devcommands mod).
+- World size: Max radius for operations (if using a mod to change the world size or need to affect areas outside the play area).
 
 Examples:
 - Setting "300,500,500,0|1000,2000,500,0" to custom points would protect areas at coordinates 300,500 and 1000,2000 within 500 meters.
@@ -210,6 +205,16 @@ Following data values are updated if their value is not 0:
 Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
+
+- v1.19
+	- Adds support for custom biomes from Expand World mod.
+	- Adds a new setting `world_radius` to support bigger worlds from Expand World mod.
+	- Adds support for all locations to `locations_*` commands (when no ids are given).
+	- Adds a new command `world_reset` to reset both locations and zones.
+	- Improves the `chests_reset` command to work with modded chests.
+	- Improves the performance of `locations_remove`.
+	- Improves the Mistlands upgrade command to also regenerate locations.
+	- Removes vegetation altering commands as obsolete (use Expand World mod).
 
 - v1.18
 	- Fixes `locations_*` commands not working.

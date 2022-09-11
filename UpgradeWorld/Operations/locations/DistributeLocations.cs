@@ -1,55 +1,63 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Distributes given location ids to already generated zones.</summary>
 public class DistributeLocations : ExecutedOperation {
-  public static IEnumerable<string> DistributedIds = new string[0];
-  private IEnumerable<string> Ids = new string[0];
+  public static string[] DistributedIds = new string[0];
+  private string[] Ids = new string[0];
   public float Chance = 1f;
   public int Added = 0;
+  private int Total = 0;
   public static bool PlaceToAlreadyGenerated = false;
-  public DistributeLocations(IEnumerable<string> ids, bool autoStart, float chance, Terminal context) : base(context, autoStart) {
+  public DistributeLocations(string[] ids, bool autoStart, float chance, Terminal context) : base(context, autoStart) {
     Ids = ids;
+    if (Ids.Length == 0)
+      Ids = ZoneSystem.instance.m_locations.Select(loc => loc.m_prefabName).ToArray();
     Chance = chance;
   }
-  public static bool IsIncluded(ZoneSystem.ZoneLocation location) => DistributedIds.Count() == 0 || DistributedIds.Contains(location.m_prefabName.ToLower());
+  public static bool IsIncluded(ZoneSystem.ZoneLocation location) => DistributedIds.Count() == 0 || DistributedIds.Contains(location.m_prefabName);
   protected override bool OnExecute() {
-    if (Attempts == 1) {
-      Print($"Redistributing locations{Helper.IdString(Ids)}. This may take a while...");
+    // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
+    if (Attempts == 0) {
+      if (Settings.Verbose)
+        Print($"Redistributing locations {Ids[Attempts]}. This may take a while...");
+      else
+        Print($"Redistributing locations. This may take a while...");
       return false;
-    } else {
+    }
+    if (Attempts <= Ids.Length) {
       PlaceToAlreadyGenerated = true;
-      DistributedIds = Ids.Select(id => id.ToLower());
-      var before = ZoneSystem.instance.m_locationInstances.Count;
-      ZoneSystem.instance.GenerateLocations();
+      DistributedIds = new string[] { Ids[Attempts - 1] };
+      if (Settings.Verbose && Attempts < Ids.Length)
+        Print($"Redistributing locations {Ids[Attempts]}. This may take a while...");
+      var zs = ZoneSystem.instance;
+      var before = zs.m_locationInstances.Count;
+      zs.GenerateLocations();
       if (Chance < 1f) {
-        ZoneSystem.instance.m_locationInstances = ZoneSystem.instance.m_locationInstances
+        zs.m_locationInstances = zs.m_locationInstances
           .Where(kvp => kvp.Value.m_placed || !IsIncluded(kvp.Value.m_location) || FiltererParameters.random.NextDouble() < Chance)
           .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
       }
-      Added = ZoneSystem.instance.m_locationInstances.Count - before;
+      Total += zs.m_locationInstances.Where(kvp => IsIncluded(kvp.Value.m_location)).Count();
+      Added += zs.m_locationInstances.Count - before;
       PlaceToAlreadyGenerated = false;
       DistributedIds = new string[0];
-      return true;
+      return false;
     }
+    return true;
   }
   protected override void OnEnd() {
     if (Settings.Verbose) {
       if (Added >= 0)
-        Print($"{Added} locations{GetLocationString()}added.");
+        Print($"{Added} locations{Helper.LocationIdString(Ids)} added (total amount: {Total}).");
       else
-        Print($"{Math.Abs(Added)} locations{GetLocationString()}removed.");
+        Print($"{Math.Abs(Added)} locations{Helper.LocationIdString(Ids)} removed (total amount: {Total}).");
     } else
-      Print($"Locations{GetLocationString()}added.");
+      Print($"Locations{Helper.LocationIdString(Ids)} added.");
   }
 
-  private string GetLocationString() {
-    if (Ids.Count() == 0) return " ";
-    return " " + Helper.JoinRows(Ids) + " ";
-  }
 
   protected override string OnInit() {
-    return "Redistribute locations" + GetLocationString() + "to all areas.";
+    return $"Redistribute locations{Helper.LocationIdString(Ids)} to all areas.";
   }
 }

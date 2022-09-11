@@ -3,6 +3,7 @@ using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
 public class ResetZones : ZoneOperation {
+
   public ResetZones(Terminal context, FiltererParameters args) : base(context, args) {
     Operation = "Reset";
     ZonesPerUpdate = Settings.DestroysPerUpdate;
@@ -39,6 +40,5 @@ public class ResetZones : ZoneOperation {
     if (Settings.Verbose) text += " " + Reseted + " zones reseted.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
-    Print("Run genloc command to re-distribute the location instances (if needed).");
   }
 }

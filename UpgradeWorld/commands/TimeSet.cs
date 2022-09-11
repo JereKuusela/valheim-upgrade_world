@@ -8,7 +8,7 @@ public class TimeSetCommand {
       if (index == 0) return CommandWrapper.Info("The amount of seconds to set the time.");
       return null;
     });
-    new Terminal.ConsoleCommand("time_set", "[seconds] - Sets the world time and updates object timestamps.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("time_set", "[seconds] - Sets the world time and updates object timestamps.", (args) => {
       if (args.Args.Count() == 0) {
         Helper.Print(args.Context, "Error: Missing seconds.");
         return;
@@ -29,7 +29,7 @@ public class TimeSetCommand {
       if (index == 0) return CommandWrapper.Info("The day to set the time.");
       return null;
     });
-    new Terminal.ConsoleCommand("time_set_day", "[days] - Sets the world time and updates object timestamps.", (Terminal.ConsoleEventArgs args) => {
+    new Terminal.ConsoleCommand("time_set_day", "[days] - Sets the world time and updates object timestamps.", (args) => {
       if (args.Args.Count() == 0) {
         Helper.Print(args.Context, "Error: Missing day.");
         return;

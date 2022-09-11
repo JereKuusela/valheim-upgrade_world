@@ -6,7 +6,7 @@ namespace UpgradeWorld;
 public class AddVegetation : VegetationOperation {
   public AddVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, ids, args) {
     Operation = "Add vegetation";
-    InitString = args.Print($"Add vegetation{Helper.IdString(ids)} to");
+    InitString = args.Print($"Add vegetation{Helper.LocationIdString(ids)} to");
     args.TargetZones = TargetZones.Generated;
     Filterers = FiltererFactory.Create(args);
   }

@@ -11,7 +11,7 @@ public class LocationFilterer : ZoneFilterer {
     var locationObjects = Ids.Select(id => id.GetStableHashCode()).ToHashSet();
     var zs = ZoneSystem.instance;
     var instances = zs.m_locationInstances.Where(kvp => true);
-    if (!Ids.Contains("*"))
+    if (locationObjects.Count > 0)
       instances = instances.Where(kvp => locationObjects.Contains(kvp.Value.m_location.m_prefabName.GetStableHashCode()));
     var includedZones = instances.Select(kvp => kvp.Key).ToHashSet();
     var amount = zones.Length;
