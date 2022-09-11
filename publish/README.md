@@ -75,8 +75,8 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `time_set [seconds]`: Sets the world time and updates object timestamps.
 - `time_set_day [days]`: Sets the world time and updates object timestamps.
 - `upgrade [operation] [...args]`: Short-hand for using common operations (mainly to add new content).
-- `vegetation_default`: Restored the default vegetation for the world generator.
 - `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation. `chance` directly scales the min and max amounts (bigger values work too).
+- `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation. `chance` determines how many of the vegetation are removed and directly scales the min and max amounts.
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
 - `world_reset [...args]`: Resets locations and zones.
 - `zones_generate [...args]`: Pre-generates areas without having to visit them.
@@ -99,6 +99,7 @@ Examples:
 - `upgrade tarpits`: Places tar pits to already explored areas.
 - `upgrade onions`: Rerolls already generated and unlooted mountain chests.
 - `upgrade mistlands`: Fully regenerates mistlands biomes.
+- `vegetation_reset biome=Meadows force`: Resets all vegetation in Meadows, including areas with player bases
 - `zones_generate`: To generate the entire world (takes hours) and then use `objects_count` command to check how many of each object exists.
 - `zones_generate`: To generate the entire world (takes hours) and then use `objects_remove` for modifications.
 - `zones_reset biomes=mistlands`: Destroying a biome.
