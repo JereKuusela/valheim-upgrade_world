@@ -10,6 +10,7 @@ public class ListObjectPositions : EntityOperation {
     var texts = ids.Select(id => {
       return GetZDOs(id, args).Select(zdo => id + " (" + zdo.m_uid + "): " + zdo.GetPosition().ToString("F0") + " " + WorldGenerator.instance.GetBiome(zdo.GetPosition()));
     }).Aggregate((acc, list) => acc.Concat(list));
-    Log(texts);
+    if (args.Log) Log(texts);
+    else Print(texts, false);
   }
 }

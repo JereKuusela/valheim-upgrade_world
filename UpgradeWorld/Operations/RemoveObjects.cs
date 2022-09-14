@@ -8,6 +8,7 @@ public class RemoveObjects : EntityOperation {
   }
   private void Remove(IEnumerable<string> ids, DataParameters args) {
     var prefabs = ids.SelectMany(GetPrefabs);
+    var total = 0;
     var texts = prefabs.Select(id => {
       var zdos = GetZDOs(id, args);
       var removed = 0;
@@ -16,8 +17,11 @@ public class RemoveObjects : EntityOperation {
         removed++;
         Helper.RemoveZDO(zdo);
       }
+      total += removed;
       return "Removed " + removed + " of " + id + ".";
     });
-    Log(texts);
+    texts = texts.Prepend($"Total: {total}").ToArray();
+    if (args.Log) Log(texts);
+    else Print(texts, false);
   }
 }

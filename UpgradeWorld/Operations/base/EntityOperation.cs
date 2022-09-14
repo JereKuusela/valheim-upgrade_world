@@ -9,11 +9,11 @@ public abstract class EntityOperation : BaseOperation {
   }
   private static bool IsIncluded(string id, string name) {
     if (id == "*") return true;
-    if (id.StartsWith("*", StringComparison.Ordinal) && id.EndsWith("*", StringComparison.Ordinal)) {
-      return name.Contains(id.Substring(1, id.Length - 3));
+    if (id.StartsWith("*", StringComparison.Ordinal) && id.EndsWith("*", StringComparison.OrdinalIgnoreCase)) {
+      return name.Contains(id.Substring(1, id.Length - 2));
     }
-    if (id.StartsWith("*", StringComparison.Ordinal)) return name.EndsWith(id.Substring(1));
-    if (id.EndsWith("*", StringComparison.Ordinal)) return name.StartsWith(id.Substring(0, id.Length - 2));
+    if (id.StartsWith("*", StringComparison.Ordinal)) return name.EndsWith(id.Substring(1), StringComparison.OrdinalIgnoreCase);
+    if (id.EndsWith("*", StringComparison.Ordinal)) return name.StartsWith(id.Substring(0, id.Length - 1), StringComparison.OrdinalIgnoreCase);
     return id == name;
   }
   public static List<string> GetPrefabs(string id) {
@@ -21,7 +21,7 @@ public abstract class EntityOperation : BaseOperation {
     if (id.Contains("*"))
       values = values.Where(prefab => IsIncluded(id, prefab.name));
     else
-      values = values.Where(prefab => prefab.name == id);
+      values = values.Where(prefab => string.Equals(prefab.name, id, StringComparison.OrdinalIgnoreCase));
     return values.Select(prefab => prefab.name).ToList();
   }
   public static IEnumerable<ZDO> GetZDOs(string id, DataParameters args) {

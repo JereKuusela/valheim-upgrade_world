@@ -15,6 +15,9 @@ public abstract class BaseOperation {
   protected void Log(IEnumerable<string> values) {
     ZLog.Log("\n" + string.Join("\n", values));
   }
+  protected void Print(IEnumerable<string> values, bool addDot = true) {
+    foreach (var s in values) Print(s, addDot);
+  }
   protected void PrintOnce(string value, bool addDot = true) {
     if (addDot && !value.EndsWith(".")) value += ".";
     Helper.PrintOnce(Context, User, value);

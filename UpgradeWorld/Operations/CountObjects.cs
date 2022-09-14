@@ -19,6 +19,7 @@ public class CountObjects : EntityOperation {
       return $"{id}: {count}";
     }).Where(s => s != "").ToArray();
     texts = texts.Prepend($"Total: {total}").ToArray();
-    Log(texts);
+    if (args.Log) Log(texts);
+    else Print(texts, false);
   }
 }

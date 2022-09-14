@@ -45,6 +45,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `distance=min-max`: Short-hand for setting both distances.
 - `force`: Disables player base detection (same as `safeZones=0`).
 - `level=min-max`: Filters objects by their creature level. Only applies to `objects_*` commands.
+- `log`: Object commands print to the log file instead of the console.
 - `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
@@ -63,9 +64,9 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `locations_add [id1,id2,...] [noclearing] [...args]`: Adds locations to already explored areas. With `noclearing`, the location area is not cleared of existing objects. `chance` determines how many of the locations are added.
 - `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used). `chance` determines how many of the locations are removed.
 - `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout. `chance` determines how many of the locations are reseted.
-- `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. All objects are listed with the flag `all`. Result is also printed to the player.log file. Wildcards are also supported.
-- `objects_list [id1,id2,...] [...args]`: Lists objects showing their position and biome. Result is also printed to the player.log file.
-- `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `count_objects` to check that you don't remove too much.
+- `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. Parameter `count=1` can be used to exclude non-existing objects.
+- `objects_list [id1,id2,...] [...args]`: Lists objects showing their position and biome.
+- `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `objects_count` to check that you don't remove too much.
 - `save_disable`: Disables world saving. But still a good idea to make backups.
 - `save_enable`: Enables world saving.
 - `start`: Most commands don't execute instantly but instead print the zones being affected. This command can be then used to start executing.
@@ -206,6 +207,11 @@ Following data values are updated if their value is not 0:
 Affected data values can be configured but recommended to keep them as it is.
 
 # Changelog
+
+- v1.20
+	- Adds a new parameter `log` to the  `objects_count`, `objects_list` and `objects_remove` commands to print to the log file.
+	- Changes `objects_count`, `objects_list` and `objects_remove` to print to the console.
+	- Changes ids of the `objects_count`, `objects_list` and `objects_remove` commands to be case insensitive.
 
 - v1.19
 	- Adds support for custom biomes from Expand World mod.
