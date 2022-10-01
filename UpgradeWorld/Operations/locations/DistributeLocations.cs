@@ -3,7 +3,6 @@ using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Distributes given location ids to already generated zones.</summary>
 public class DistributeLocations : ExecutedOperation {
-  public static string[] DistributedIds = new string[0];
   private string[] Ids = new string[0];
   public float Chance = 1f;
   public int Added = 0;
@@ -15,7 +14,6 @@ public class DistributeLocations : ExecutedOperation {
       Ids = ZoneSystem.instance.m_locations.Select(loc => loc.m_prefabName).ToArray();
     Chance = chance;
   }
-  public static bool IsIncluded(ZoneSystem.ZoneLocation location) => DistributedIds.Count() == 0 || DistributedIds.Contains(location.m_prefabName);
   protected override bool OnExecute() {
     // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
     if (Attempts == 0) {
@@ -27,24 +25,35 @@ public class DistributeLocations : ExecutedOperation {
     }
     if (Attempts <= Ids.Length) {
       PlaceToAlreadyGenerated = true;
-      DistributedIds = new string[] { Ids[Attempts - 1] };
+      var zs = ZoneSystem.instance;
+      var id = Ids[Attempts - 1];
+      var location = zs.m_locations.FirstOrDefault(location => location.m_prefabName == id);
+      if (location == null) return false;
+      // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
       if (Settings.Verbose && Attempts < Ids.Length)
         Print($"Redistributing locations {Ids[Attempts]}. This may take a while...");
-      var zs = ZoneSystem.instance;
       var before = zs.m_locationInstances.Count;
-      zs.GenerateLocations();
+      ClearUnplaced(id);
+      zs.GenerateLocations(location);
       if (Chance < 1f) {
         zs.m_locationInstances = zs.m_locationInstances
-          .Where(kvp => kvp.Value.m_placed || !IsIncluded(kvp.Value.m_location) || FiltererParameters.random.NextDouble() < Chance)
+          .Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefabName != id || FiltererParameters.random.NextDouble() < Chance)
           .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
       }
-      Total += zs.m_locationInstances.Where(kvp => IsIncluded(kvp.Value.m_location)).Count();
+      Total += Count(id);
       Added += zs.m_locationInstances.Count - before;
       PlaceToAlreadyGenerated = false;
-      DistributedIds = new string[0];
       return false;
     }
     return true;
+  }
+  private void ClearUnplaced(string id) {
+    var zs = ZoneSystem.instance;
+    zs.m_locationInstances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefabName != id).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+  }
+  private int Count(string id) {
+    var zs = ZoneSystem.instance;
+    return zs.m_locationInstances.Where(kvp => kvp.Value.m_location.m_prefabName == id).Count();
   }
   protected override void OnEnd() {
     if (Settings.Verbose) {

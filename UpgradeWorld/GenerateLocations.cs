@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using HarmonyLib;
 
 namespace UpgradeWorld;
@@ -15,25 +13,4 @@ public class IsZoneGenerated {
     return true;
   }
 }
-// Optimization to only remove placement from affected locations.
-[HarmonyPatch(typeof(ZoneSystem), nameof(ZoneSystem.ClearNonPlacedLocations))]
-public class ClearNonPlacedLocations {
-  static bool Prefix(ZoneSystem __instance) {
-    if (DistributeLocations.DistributedIds.Count() > 0) {
-      Dictionary<Vector2i, ZoneSystem.LocationInstance> dictionary = new();
-      foreach (var keyValuePair in __instance.m_locationInstances) {
-        if (keyValuePair.Value.m_placed || !DistributeLocations.IsIncluded(keyValuePair.Value.m_location)) {
-          dictionary.Add(keyValuePair.Key, keyValuePair.Value);
-        }
-      }
-      __instance.m_locationInstances = dictionary;
-      return false;
-    }
-    return true;
-  }
-}
-// Optimization to only run generation code for affected locations.
-[HarmonyPatch(typeof(ZoneSystem), nameof(ZoneSystem.GenerateLocations), new[] { typeof(ZoneSystem.ZoneLocation) })]
-public class GenerateLocations {
-  static bool Prefix(ZoneSystem.ZoneLocation location) => DistributeLocations.IsIncluded(location);
-}
+
