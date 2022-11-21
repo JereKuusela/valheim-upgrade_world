@@ -3,39 +3,48 @@ using BepInEx.Logging;
 using HarmonyLib;
 namespace UpgradeWorld;
 [BepInPlugin(GUID, NAME, VERSION)]
-public class UpgradeWorld : BaseUnityPlugin {
+public class UpgradeWorld : BaseUnityPlugin
+{
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
   const string VERSION = "1.20";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
-  public void Awake() {
+  public void Awake()
+  {
     Log = Logger;
     Settings.Init(Config);
     new Harmony(GUID).PatchAll();
   }
-  public void Start() {
+  public void Start()
+  {
     CommandWrapper.Init();
     FiltererParameters.Parameters.Sort();
   }
-  public void Update() {
+  public void Update()
+  {
     Executor.Execute();
   }
 }
 
 [HarmonyPatch(typeof(Console), nameof(Console.IsConsoleEnabled))]
-public class IsConsoleEnabled {
-  static void Postfix(ref bool __result) {
+public class IsConsoleEnabled
+{
+  static void Postfix(ref bool __result)
+  {
     __result = true;
   }
 }
 [HarmonyPatch(typeof(ZNetView), nameof(ZNetView.Awake))]
-public class PreventDoubleZNetView {
-  static bool Prefix(ZNetView __instance) {
+public class PreventDoubleZNetView
+{
+  static bool Prefix(ZNetView __instance)
+  {
     if (!Settings.PreventDoubleZNetView) return true;
     if (ZNetView.m_forceDisableInit || ZDOMan.instance == null) return true;
-    if (ZNetView.m_useInitZDO && ZNetView.m_initZDO == null) {
+    if (ZNetView.m_useInitZDO && ZNetView.m_initZDO == null)
+    {
       ZLog.LogWarning($"Preventing double ZNetView for {__instance.gameObject.name}. Use 'remove_entities' command to remove these objects.");
       UnityEngine.Object.Destroy(__instance);
       return false;
@@ -44,8 +53,10 @@ public class PreventDoubleZNetView {
   }
 }
 [HarmonyPatch(typeof(Terminal), "InitTerminal")]
-public class SetCommands {
-  public static void Postfix(Terminal __instance) {
+public class SetCommands
+{
+  public static void Postfix(Terminal __instance)
+  {
     new TimeChangeCommand();
     new BiomesCountCommand();
     new ObjectsCountCommand();
@@ -67,7 +78,8 @@ public class SetCommands {
     new BackupCommand();
     new WorldResetCommand();
     new ZonesRestoreCommand();
-    if (Terminal.commands.TryGetValue("genloc", out var genloc)) {
+    if (Terminal.commands.TryGetValue("genloc", out var genloc))
+    {
       genloc.IsCheat = false;
       genloc.OnlyServer = false;
     }

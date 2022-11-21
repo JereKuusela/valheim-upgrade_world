@@ -2,12 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Filters zones based on whether they have given locations.</summary>
-public class LocationFilterer : ZoneFilterer {
+public class LocationFilterer : ZoneFilterer
+{
   private IEnumerable<string> Ids;
-  public LocationFilterer(IEnumerable<string> ids) {
+  public LocationFilterer(IEnumerable<string> ids)
+  {
     Ids = ids;
   }
-  public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages) {
+  public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
+  {
     var locationObjects = Ids.Select(id => id.GetStableHashCode()).ToHashSet();
     var zs = ZoneSystem.instance;
     var instances = zs.m_locationInstances.Where(kvp => true);

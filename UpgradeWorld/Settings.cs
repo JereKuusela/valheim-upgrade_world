@@ -4,14 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
 namespace UpgradeWorld;
-public struct FilterPoint {
+public struct FilterPoint
+{
   public float x;
   public float y;
   public float min;
   public float max;
 }
 #nullable disable
-public static class Settings {
+public static class Settings
+{
   public static ConfigEntry<bool> configDedicatedServerExecution;
   public static bool DedicatedServerExecution => configDedicatedServerExecution.Value;
   public static ConfigEntry<bool> configMapCoordinates;
@@ -40,10 +42,13 @@ public static class Settings {
   public static IEnumerable<string> TimeBasedDataNames => configTimeBasedDataNames.Value.Split(',').Select(name => name.Trim());
   public static ConfigEntry<string> configZoneControlId;
   public static string ZoneControlId => configZoneControlId.Value.Trim();
+  public static ConfigEntry<string> configTerrainCompilerId;
+  public static string TerrainCompilerId => configTerrainCompilerId.Value.Trim();
   public static ConfigEntry<string> configRootUsers;
   public static HashSet<string> RootUsers => configRootUsers.Value.Split(',').Select(s => s.Trim()).Where(s => s != "").ToHashSet();
 
-  public static void Init(ConfigFile config) {
+  public static void Init(ConfigFile config)
+  {
     var section = "1. General";
     configDedicatedServerExecution = config.Bind(section, "Dedicated server execution", false, "If enabled, some other mods may allow executing commands on the dedicated server .");
     configVerbose = config.Bind(section, "Verbose output", true, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
@@ -60,12 +65,15 @@ public static class Settings {
 
     configDestroysPerUpdate = config.Bind("2. Destroying", "Operations per update", 100, "How many zones are destroyed per Unity update.");
     configTimeBasedDataNames = config.Bind("3. Change time/day", "Time based data names", "spawntime,lastTime,SpawnTime,StartTime,alive_time,spawn_time,picked_time,plantTime,pregnant,TameLastFeeding", "Names of the data values that should be updated with the new time. Changing these is NOT recommended.");
-    configZoneControlId = config.Bind("3. Change time/day", "Zone control name", "_ZoneCtrl", "Name of the zone control entity which controls the enemy spawning. Changing these is NOT recommended.");
+    configZoneControlId = config.Bind("4. Other", "Zone control name", "_ZoneCtrl", "Name of the zone control entity which controls the enemy spawning. Changing these is NOT recommended.");
+    configTerrainCompilerId = config.Bind("4. Other", "Terain compiler name", "_TerrainCompiler", "Name of the terrain compiler keeping track of terrain edits. Changing these is NOT recommended.");
   }
 
   /// <summary>Returns points and ranges to filter zones.</summary>
-  public static FilterPoint[] GetFilterPoints() {
-    var points = CustomPoints.Length > 0 ? CustomPoints.Split('|').Select(pointStr => {
+  public static FilterPoint[] GetFilterPoints()
+  {
+    var points = CustomPoints.Length > 0 ? CustomPoints.Split('|').Select(pointStr =>
+    {
       var parts = pointStr.Split(',');
       FilterPoint point = new()
       {

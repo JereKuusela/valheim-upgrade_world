@@ -3,11 +3,14 @@ using System.Linq;
 using UnityEngine;
 namespace UpgradeWorld;
 ///<summary>Filters zones based on the config (filter points + player safe range).</summary>
-public class ConfigFilterer : ZoneFilterer {
-  public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages) {
+public class ConfigFilterer : ZoneFilterer
+{
+  public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
+  {
     var amount = zones.Length;
     var filterPoints = Settings.GetFilterPoints();
-    foreach (var filterPoint in filterPoints) {
+    foreach (var filterPoint in filterPoints)
+    {
       zones = FilterByRange(zones, new Vector3(filterPoint.x, 0, filterPoint.y), filterPoint.min, filterPoint.max);
     }
     if (Player.m_localPlayer)
@@ -17,10 +20,12 @@ public class ConfigFilterer : ZoneFilterer {
     return zones;
   }
 
-  private static Vector2i[] FilterByRange(Vector2i[] zones, Vector3 position, float min, float max) {
+  private static Vector2i[] FilterByRange(Vector2i[] zones, Vector3 position, float min, float max)
+  {
     var zoneSystem = ZoneSystem.instance;
     var halfZone = zoneSystem.m_zoneSize / 2.0f;
-    return zones.Where(zone => {
+    return zones.Where(zone =>
+    {
       var center = zoneSystem.GetZonePos(zone);
       var distance = center - position;
       center.y = 0f;

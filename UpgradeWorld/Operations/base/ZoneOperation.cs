@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Base class for all zone based operations. Provides the "zone by zone" execution logic.</summary>
-public abstract class ZoneOperation : ExecutedOperation {
+public abstract class ZoneOperation : ExecutedOperation
+{
   public string Operation = "BaseOperation";
   protected Vector2i[] ZonesToUpgrade;
   protected int ZonesPerUpdate = 1;
@@ -12,12 +13,14 @@ public abstract class ZoneOperation : ExecutedOperation {
   protected int PreOperated = 0;
   protected FiltererParameters Args;
   protected List<ZoneFilterer> Filterers = new();
-  protected ZoneOperation(Terminal context, FiltererParameters args) : base(context, args.Start) {
+  protected ZoneOperation(Terminal context, FiltererParameters args) : base(context, args.Start)
+  {
     ZonesToUpgrade = Zones.GetZones(args.TargetZones);
     Args = args;
   }
   protected string InitString = "";
-  protected override string OnInit() {
+  protected override string OnInit()
+  {
     List<string> messages = new();
     ZonesToUpgrade = Filterers.Aggregate(ZonesToUpgrade, (zones, filterer) => filterer.FilterZones(zones, ref messages));
     var zoneString = ZonesToUpgrade.Length + " zones: " + Helper.JoinRows(messages);
@@ -28,41 +31,53 @@ public abstract class ZoneOperation : ExecutedOperation {
     return InitString;
   }
   protected abstract bool ExecuteZone(Vector2i zone);
-  protected override bool OnExecute() {
+  protected override bool OnExecute()
+  {
     if (ZonesToUpgrade == null || ZonesToUpgrade.Length == 0) return true;
 
-    for (var i = 0; i < ZonesPerUpdate && ZoneIndex < ZonesToUpgrade.Length; i++) {
+    for (var i = 0; i < ZonesPerUpdate && ZoneIndex < ZonesToUpgrade.Length; i++)
+    {
       var zone = ZonesToUpgrade[ZoneIndex];
       var success = ExecuteZone(zone);
       MoveToNextZone(success);
       if (!success) break;
     }
     UpdateConsole();
-    if (ZoneIndex >= ZonesToUpgrade.Length) {
+    if (ZoneIndex >= ZonesToUpgrade.Length)
+    {
       return true;
     }
     return false;
   }
 
-  private void MoveToNextZone(bool success = true) {
-    if (success) {
+  private void MoveToNextZone(bool success = true)
+  {
+    if (success)
+    {
       Attempts = 0;
       ZoneIndex++;
-    } else {
+    }
+    else
+    {
       Attempts++;
-      if (Attempts > 1000) {
+      if (Attempts > 1000)
+      {
         Failed++;
         Attempts = 0;
         ZoneIndex++;
       }
     }
   }
-  private void UpdateConsole() {
-    if (Settings.Verbose) {
+  private void UpdateConsole()
+  {
+    if (Settings.Verbose)
+    {
       var totalString = (ZonesToUpgrade.Length + PreOperated).ToString();
       var updatedString = (ZoneIndex + PreOperated).ToString().PadLeft(totalString.Length, '0');
       PrintOnce(Operation + ": " + updatedString + "/" + totalString, false);
-    } else {
+    }
+    else
+    {
       var percent = Math.Min(100, ZonesToUpgrade.Length == 0 ? 100 : (int)Math.Floor(100.0 * (ZoneIndex + PreOperated) / (ZonesToUpgrade.Length + PreOperated)));
       PrintOnce(Operation + ": " + percent + "%", false);
     }

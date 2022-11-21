@@ -2,15 +2,18 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Destroys and places given locations.</summary>
-public class RegenerateLocations : LocationOperation {
-  public RegenerateLocations(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context, args) {
+public class RegenerateLocations : LocationOperation
+{
+  public RegenerateLocations(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context, args)
+  {
     Operation = "Reset locations";
     InitString = args.Print("Reset locations at");
     Verb = "reseted";
     Filterers = Filterers.Append(new LocationFilterer(ids)).ToList();
   }
 
-  protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location) {
+  protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location)
+  {
     if (!location.m_placed) return false;
     location.m_placed = false;
     ZoneSystem.instance.m_locationInstances[zone] = location;
