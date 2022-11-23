@@ -11,8 +11,12 @@ public class Upgrade : BaseOperation
     "tarpits",
     "onions",
     "mistlands",
+    "mistlands_worldgen",
+    "hh_worldgen",
+    "legacy_worldgen",
     "mountain_caves",
-    "EVA"
+    "EVA",
+    "jewelcrafting"
   };
 
   public Upgrade(Terminal context, string type, Dictionary<string, string> extra, FiltererParameters args) : base(context)
@@ -33,6 +37,12 @@ public class Upgrade : BaseOperation
     {
       var noClearing = Parse.Flag(extra, "noclearing");
       Executor.AddOperation(new DistributeLocations(new[] { "MountainCave02" }, args.Start, args.Chance, Context));
+      Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
+    }
+    else if (type == "jewelcrafting")
+    {
+      var noClearing = Parse.Flag(extra, "noclearing");
+      Executor.AddOperation(new DistributeLocations(new[] { "JC_Gacha_Location" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
     }
     else if (type == "tarpits")
@@ -60,6 +70,18 @@ public class Upgrade : BaseOperation
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
       Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new DistributeLocations(new string[0], args.Start, args.Chance, Context));
+    }
+    else if (type == "mistlands_worldgen")
+    {
+      Executor.AddOperation(new WorldVersion(Context, 2, args.Start));
+    }
+    else if (type == "hh_worldgen")
+    {
+      Executor.AddOperation(new WorldVersion(Context, 1, args.Start));
+    }
+    else if (type == "legacy_worldgen")
+    {
+      Executor.AddOperation(new WorldVersion(Context, 0, args.Start));
     }
     else if (type == "eva")
     {

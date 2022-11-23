@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System.IO;
+using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 namespace UpgradeWorld;
@@ -7,7 +8,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.20";
+  const string VERSION = "1.21";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -16,6 +17,7 @@ public class UpgradeWorld : BaseUnityPlugin
     Log = Logger;
     Settings.Init(Config);
     new Harmony(GUID).PatchAll();
+    SetupWatcher();
   }
   public void Start()
   {
@@ -26,6 +28,38 @@ public class UpgradeWorld : BaseUnityPlugin
   {
     Executor.Execute();
   }
+
+
+  private void SetupWatcher()
+  {
+    FileSystemWatcher watcher = new(Path.GetDirectoryName(Config.ConfigFilePath), Path.GetFileName(Config.ConfigFilePath));
+    watcher.Changed += ReadConfigValues;
+    watcher.Created += ReadConfigValues;
+    watcher.Renamed += ReadConfigValues;
+    watcher.IncludeSubdirectories = true;
+    watcher.SynchronizingObject = ThreadingHelper.SynchronizingObject;
+    watcher.EnableRaisingEvents = true;
+  }
+
+  private void OnDestroy()
+  {
+    Config.Save();
+  }
+  private void ReadConfigValues(object sender, FileSystemEventArgs e)
+  {
+    if (!File.Exists(Config.ConfigFilePath)) return;
+    try
+    {
+      Log.LogDebug("ReadConfigValues called");
+      Config.Reload();
+    }
+    catch
+    {
+      Log.LogError($"There was an issue loading your {Config.ConfigFilePath}");
+      Log.LogError("Please check your config entries for spelling and format!");
+    }
+  }
+
 }
 
 [HarmonyPatch(typeof(Console), nameof(Console.IsConsoleEnabled))]
