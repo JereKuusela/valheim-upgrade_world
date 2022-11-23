@@ -14,6 +14,10 @@ See [documentation](https://github.com/JereKuusela/valheim-upgrade_world/blob/ma
 
 Thanks for Azumatt for creating the mod icon!
 
+Sources: [GitHub](https://github.com/JereKuusela/valheim-upgrade_world)
+
+Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
+
 # Changelog
 
 - v1.21
