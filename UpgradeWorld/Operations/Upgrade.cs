@@ -44,6 +44,7 @@ public class Upgrade : BaseOperation
       var noClearing = Parse.Flag(extra, "noclearing");
       Executor.AddOperation(new DistributeLocations(new[] { "JC_Gacha_Location" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
+      Executor.AddOperation(new Print(Context, "Note: This is for Jewelcrafting mod.", "", args.Start));
     }
     else if (type == "tarpits")
     {
@@ -74,10 +75,16 @@ public class Upgrade : BaseOperation
     else if (type == "mistlands_worldgen")
     {
       Executor.AddOperation(new WorldVersion(Context, 2, args.Start));
+      args.MinDistance = 5901;
+      Executor.AddOperation(new RemoveLocations(Context, new string[0], args));
+      Executor.AddOperation(new DistributeLocations(new string[0], args.Start, args.Chance, Context));
+      Executor.AddOperation(new ResetZones(Context, args));
+      Executor.AddOperation(new Print(Context, "If you don't want to automatically reset outer areas, use <color=yellow>stop</color> and then <color=yellow>world_gen mistlands</color> commands.", "", args.Start));
     }
     else if (type == "hh_worldgen")
     {
       Executor.AddOperation(new WorldVersion(Context, 1, args.Start));
+      Executor.AddOperation(new Print(Context, "", "To reset outer areas, use <color=yellow>world_reset minDistance=5900</color> command.", args.Start));
     }
     else if (type == "legacy_worldgen")
     {
@@ -100,6 +107,7 @@ public class Upgrade : BaseOperation
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
       Executor.AddOperation(new RemoveVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
       Executor.AddOperation(new AddVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
+      Executor.AddOperation(new Print(Context, "Note: This is for Epic Valheim Additions mod.", "", args.Start));
     }
     else
       Print("Error: Invalid upgrade type");

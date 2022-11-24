@@ -43,7 +43,7 @@ public static class Executor
     }
     if (!ShouldExecute && !Settings.AutoStart && !operations[0].AutoStart)
     {
-      if (PrintInit) operations[operations.Count - 1].Print("Use start to begin execution or stop to cancel.");
+      if (PrintInit) operations[operations.Count - 1].Print("Use <color=yellow>start</color> to begin execution or <color=yellow>stop</color> to cancel.");
       PrintInit = false;
       return;
     }

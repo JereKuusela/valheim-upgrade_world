@@ -20,6 +20,10 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 # Changelog
 
+- v1.22
+	- Adds a new command `world_gen` to set the world gen.
+	- Adds automatic reset for outer areas to the `mistlands_worldgen` operation.
+
 - v1.21
 	- Adds Player_tombstone to the default player base item list.
 	- Adds a new upgrade operation `jewelcrafting`.
