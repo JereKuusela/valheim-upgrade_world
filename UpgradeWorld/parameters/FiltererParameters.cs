@@ -72,10 +72,7 @@ public class FiltererParameters
       else Unhandled.Add(split[0], "");
     }
     if (!Zone.HasValue && !Pos.HasValue)
-    {
-      var pos = Helper.GetPlayerPosition();
-      Pos = new Vector2(pos.x, pos.z);
-    }
+      Pos = new Vector2(0, 0);
   }
   public virtual bool Valid(Terminal terminal)
   {

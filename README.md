@@ -29,6 +29,20 @@ This mod also adds current coordinates (and zone index) to the minimaps which sh
 
 Note: The default base detection is very conservative. Single workbenches, campfires, etc. will exclude a significant area around them, unless configured otherwise.
 
+# Upgrade operations
+
+For `upgrade` command:
+
+- `mountain_caves`: Places mountain caves to already explored areas.
+- `tarpits`: Places tar pits to already explored areas.
+- `onions`: Rerolls already generated and unlooted mountain chests.
+- `mistlands`: Fully regenerates mistlands biomes. Terrain is automatically updated by the base game and not affected by this operation.
+- `mistlands_worldgen`: Upgrades biome distribution to the Mistlands version. Biomes will change in the outer areas. Areas past 5900 meters will be reseted. Rivers will move everywhere in the world and can destroy bases (even with the player base protection).
+- `hh_worldgen`: Downgrades biome distribution to the Heart & Home version.
+- `legacy_worldgen`: Downgrades biome distribution to the Early access release version.
+- `eva`: Upgrades the world with the changes from Epic Valheim Additions mod.
+- `jewelcrafting`: Upgrades the world with the changes from Jewelcrafting mod.
+
 # Dedicated servers
 
 By default, all admins can execute commands of this mod.
@@ -49,7 +63,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
-- `pos=x,z`: Position of the center. If not given, player's position is used. Default distance is all of the map.
+- `pos=x,z`: Position of the center. Default value is the world center. Default distance is all of the map.
 - `safeZones=distance`: Set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
 - `start`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
 - `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
@@ -86,9 +100,9 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `zones_restore [...args]`: Adds missing zone control objects (responsible for random spawns).
 
 Examples:
-- `biomes_count 100 min=5000 pos=0,0`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
+- `biomes_count 100 min=5000`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
 - `chests_reset TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds`: Rerolls mountain treasure chests which only have naturally occurring items.
-- `chests_reset * looted min=1500 pos=0,0`: Resets all chests which are 1500 meters away from the world center.
+- `chests_reset * looted min=1500`: Resets all chests which are 1500 meters away from the world center.
 - `locations_remove Meteorite`: Removes all flametal ores.
 - `locations_reset SunkenCrypt4,Crypt2,Crypt3,Crypt4,MountainCave02,TrollCave02`: To regenerate dungeons. Some entraces will randomly rotate which will also randomize the dungeon layout.
 - `objects_count Spawner_\*`: Counts all creature spawnpoints.
@@ -97,18 +111,11 @@ Examples:
 - `objects_remove FirTree chance=33`: Removes 33% of Fir Trees.
 - `objects_remove StatueCorgi`: Removes all corgi statues.
 - `objects_remove Spawner_\* max=200`: Removes all creature spawnpoints within 200 meters.
-- `upgrade mountain_caves`: Places mountain caves to already explored areas.
-- `upgrade tarpits`: Places tar pits to already explored areas.
-- `upgrade onions`: Rerolls already generated and unlooted mountain chests.
-- `upgrade mistlands`: Fully regenerates mistlands biomes.
-- `upgrade mistlands_worldgen`: Upgrades biome distribution to the Mistlands version.
-- `upgrade hh_worldgen`: Downgrades biome distribution to the Heart & Home version.
-- `upgrade legacy_worldgen`: Downgrades biome distribution to the Early access release version.
 - `vegetation_reset biome=Meadows force`: Resets all vegetation in Meadows, including areas with player bases
 - `zones_generate`: To generate the entire world (takes hours) and then use `objects_count` command to check how many of each object exists.
 - `zones_generate`: To generate the entire world (takes hours) and then use `objects_remove` for modifications.
 - `zones_reset biomes=mistlands`: Destroying a biome.
-- `zones_reset min=5000 pos=0,0`: Destroying areas after 5000 meters from the world center.
+- `zones_reset min=5000`: Destroying areas after 5000 meters from the world center.
 - `zones_reset zone=3,-3 safeZones=0`: Destroy a single zone at indices 3,-3 to fix any local issues.
 
 # Configuration
