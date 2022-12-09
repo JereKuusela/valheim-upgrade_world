@@ -32,7 +32,7 @@ public class ServerExecution
     var root = Settings.RootUsers;
     var allowed = false;
     if (root.Count > 0) allowed = root.Contains(host);
-    else allowed = zNet.m_adminList.Contains(host);
+    else allowed = zNet.ListContainsId(zNet.m_adminList, host);
     if (allowed) return true;
     Helper.Print(Console.instance, rpc, "Unauthorized to use Upgrade World commands.");
     return false;
