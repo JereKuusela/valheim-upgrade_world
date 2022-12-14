@@ -20,6 +20,9 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 # Changelog
 
+- v1.24
+	- Fixes chest reset not working properly.
+	
 - v1.23
 	- Fixes operation center not being at the world center by default.
 	
