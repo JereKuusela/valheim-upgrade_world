@@ -39,6 +39,9 @@ public abstract class ZoneOperation : ExecutedOperation
     {
       var zone = ZonesToUpgrade[ZoneIndex];
       var success = ExecuteZone(zone);
+      // Makes the zone unload as soon as possible.
+      if (success && ZoneSystem.instance.m_zones.TryGetValue(zone, out var zoneObj))
+        zoneObj.m_ttl = ZoneSystem.instance.m_zoneTTL;
       MoveToNextZone(success);
       if (!success) break;
     }

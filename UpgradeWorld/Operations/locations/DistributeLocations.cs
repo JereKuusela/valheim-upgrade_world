@@ -13,7 +13,7 @@ public class DistributeLocations : ExecutedOperation
   {
     Ids = ids;
     if (Ids.Length == 0)
-      Ids = ZoneSystem.instance.m_locations.Select(loc => loc.m_prefabName).ToArray();
+      Ids = ZoneSystem.instance.m_locations.OrderBy(loc => loc.m_prioritized).Where(loc => loc.m_enable && loc.m_quantity != 0).Select(loc => loc.m_prefabName).ToArray();
     Chance = chance;
   }
   protected override bool OnExecute()

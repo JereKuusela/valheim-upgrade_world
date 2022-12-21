@@ -103,7 +103,7 @@ public class Upgrade : BaseOperation
       args.SafeZones = 0;
       Executor.AddOperation(new RemoveLocations(Context, new[] { "SvartalfrQueenAltar" }, args));
       args.SafeZones = safeZones;
-      Executor.AddOperation(new DistributeLocations(new[] { "BlazingDamnedOneAltar", "JotunnAltar", "SvartalfrQueenAltar_New", "Vegvisir_BlazingDamnedOne", "Vegvisir_Jotunn", "Vegvisir_SvartalfrQueen" }, args.Start, args.Chance, Context));
+      Executor.AddOperation(new DistributeLocations(new string[0], args.Start, args.Chance, Context));
       Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
       Executor.AddOperation(new RemoveVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
       Executor.AddOperation(new AddVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));

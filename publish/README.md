@@ -20,6 +20,12 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 # Changelog
 
+- v1.25
+	- Improves performance of `vegetation_add` and `zones_generate` commands.
+	- Fixes `vegetation_add` and `vegetation_reset` showing wrong amount of added objects.
+	- Fixes location distribution not prioritizing priority locations.
+	- Fixes `upgrade EVA` to work with EVA version 1.8.0
+	
 - v1.24
 	- Fixes chest reset not working properly.
 	

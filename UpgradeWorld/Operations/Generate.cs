@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace UpgradeWorld;
 /// <summary>Generates zones.</summary>
 public class Generate : ZoneOperation
@@ -11,9 +13,10 @@ public class Generate : ZoneOperation
 
   protected override bool ExecuteZone(Vector2i zone)
   {
-    var zoneSystem = ZoneSystem.instance;
-    if (zoneSystem.IsZoneGenerated(zone)) return true;
-    return zoneSystem.PokeLocalZone(zone);
+    var zs = ZoneSystem.instance;
+    if (zs.IsZoneGenerated(zone)) return true;
+    GameObject go;
+    return zs.SpawnZone(zone, ZoneSystem.SpawnMode.Ghost, out go);
   }
   protected override void OnEnd()
   {
