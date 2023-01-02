@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
+
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
 public class ResetZones : ZoneOperation
 {
-
+  private Dictionary<Vector2i, Direction> BorderZones = new();
   public ResetZones(Terminal context, FiltererParameters args) : base(context, args)
   {
     Operation = "Reset";
@@ -37,7 +38,44 @@ public class ResetZones : ZoneOperation
     }
     zoneSystem.m_generatedZones.Remove(zone);
     Reseted++;
+    AddBorder(zone, Direction.North);
+    AddBorder(zone, Direction.East);
+    AddBorder(zone, Direction.South);
+    AddBorder(zone, Direction.West);
+    AddBorder(zone, Direction.NorthWest);
+    AddBorder(zone, Direction.NorthEast);
+    AddBorder(zone, Direction.SouthWest);
+    AddBorder(zone, Direction.SouthEast);
     return true;
+  }
+  private void AddBorder(Vector2i zone, Direction direction)
+  {
+    if (direction == Direction.North) zone.y -= 1;
+    if (direction == Direction.East) zone.x -= 1;
+    if (direction == Direction.South) zone.y += 1;
+    if (direction == Direction.West) zone.x += 1;
+    if (direction == Direction.NorthWest)
+    {
+      zone.y -= 1;
+      zone.x += 1;
+    }
+    if (direction == Direction.NorthEast)
+    {
+      zone.y -= 1;
+      zone.x -= 1;
+    }
+    if (direction == Direction.SouthWest)
+    {
+      zone.y += 1;
+      zone.x += 1;
+    }
+    if (direction == Direction.SouthEast)
+    {
+      zone.y += 1;
+      zone.x -= 1;
+    }
+    if (BorderZones.ContainsKey(zone)) direction |= BorderZones[zone];
+    BorderZones[zone] = direction;
   }
 
   protected override void OnEnd()
@@ -45,5 +83,8 @@ public class ResetZones : ZoneOperation
     var text = $"{Operation} completed. {Reseted} zones reseted.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
+    BorderZones = BorderZones.Where(kvp => ZoneSystem.instance.IsZoneGenerated(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    new ResetBorder(Context, BorderZones);
+    ClutterSystem.instance?.ClearAll();
   }
 }

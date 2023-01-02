@@ -29,11 +29,16 @@ public abstract class EntityOperation : BaseOperation
       values = values.Where(prefab => string.Equals(prefab.name, id, StringComparison.OrdinalIgnoreCase));
     return values.Select(prefab => prefab.name).ToList();
   }
-  public static IEnumerable<ZDO> GetZDOs(string id, DataParameters args)
+  public static ZDO[] GetZDOs(string id, DataParameters args)
   {
     var code = id.GetStableHashCode();
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => code == zdo.GetPrefab());
-    return FilterZdos(zdos, args);
+    return FilterZdos(zdos, args).ToArray();
+  }
+  public static ZDO[] GetZDOs(string id)
+  {
+    var code = id.GetStableHashCode();
+    return ZDOMan.instance.m_objectsByID.Values.Where(zdo => code == zdo.GetPrefab()).ToArray();
   }
   public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, DataParameters args) => args.FilterZdos(zdos);
 }
