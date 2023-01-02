@@ -66,6 +66,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `pos=x,z`: Position of the center. Default value is the world center. Default distance is all of the map.
 - `safeZones=distance`: Set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
 - `start`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
+- `terrain=meters`: Resets terrain around the object when using `vegetation_add` or `vegetation_reset`.
 - `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
 
 # Commands

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+
 namespace UpgradeWorld;
 /// <summary>Removes given entity ids within a given distance.</summary>
 public class RemoveVegetation : ZoneOperation

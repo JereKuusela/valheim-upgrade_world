@@ -20,6 +20,7 @@ public class FiltererParameters
   public float MinDistance = 0;
   public float MaxDistance = 0;
   public float Chance = 1f;
+  public float TerrainReset = 0f;
   public int SafeZones = Settings.SafeZoneSize;
   public TargetZones TargetZones = TargetZones.Generated;
   public Dictionary<string, string> Unhandled = new();
@@ -56,6 +57,7 @@ public class FiltererParameters
         else if (name == "min" | name == "mindistance") MinDistance = Parse.Float(value);
         else if (name == "max" | name == "maxdistance") MaxDistance = Parse.Float(value);
         else if (name == "chance") Chance = Parse.Float(value) / 100f;
+        else if (name == "terrain") TerrainReset = Parse.Float(value);
         else if (name == "distance")
         {
           var distance = Parse.FloatRange(value);
@@ -186,6 +188,7 @@ public class FiltererParameters
       { "maxDistance", (int index) => index == 0 ? CommandWrapper.Info("maxDistance=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
       { "safeZones", (int index) => index == 0 ? CommandWrapper.Info("safezones=<color=yellow>amount</color> | The size of protected areas around player base structures.") : null },
       { "chance", (int index) => index == 0 ? CommandWrapper.Info("chance=<color=yellow>percentage</color> (from 0 to 100) | The chance of a single operation being done.") : null },
+      { "terrain", (int index) => index == 0 ? CommandWrapper.Info("terrain=<color=yellow>meters</color> | Radius of reseted terrain.") : null },
       { "start", (int index) => CommandWrapper.Flag("start", "Starts the operation instantly") },
       { "force", (int index) => CommandWrapper.Flag("force", "Disables the player base detection") },
       { "noEdges", (int index) => CommandWrapper.Flag("noedges", "Excludes zones with multiple biomes") },
