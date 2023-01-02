@@ -23,11 +23,7 @@ public abstract class ZoneOperation : ExecutedOperation
   {
     List<string> messages = new();
     ZonesToUpgrade = Filterers.Aggregate(ZonesToUpgrade, (zones, filterer) => filterer.FilterZones(zones, ref messages));
-    var zoneString = ZonesToUpgrade.Length + " zones: " + Helper.JoinRows(messages);
-    if (Settings.Verbose)
-      InitString += " (" + zoneString + ")";
-    else
-      InitString += " (use verbose command to show amount of zones)";
+    InitString += ZonesToUpgrade.Length + " zones: " + Helper.JoinRows(messages);
     return InitString;
   }
   protected abstract bool ExecuteZone(Vector2i zone);

@@ -7,7 +7,7 @@ public class PlaceLocations : LocationOperation
   {
     Operation = "Place missing locations";
     InitString = args.Print("Place missing locations to");
-    Verb = "placed";
+    Verb = "spawned to the world";
     args.Chance = 1f;
     ClearLocationAreas = clearLocationAreas;
   }

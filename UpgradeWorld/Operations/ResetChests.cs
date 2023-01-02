@@ -86,10 +86,7 @@ public class ResetChests : EntityOperation
         zdo.Set(Hash.Items, savePackage.GetBase64());
       }
     }
-    if (Settings.Verbose)
-      Print("Chests reseted (" + resetedChests + " of " + totalChests + ").");
-    else
-      Print("Chests reseted.");
+    Print("Chests reseted (" + resetedChests + " of " + totalChests + ").");
   }
   private bool IsValid(ItemDrop.ItemData item)
   {

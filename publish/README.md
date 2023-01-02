@@ -20,6 +20,10 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 # Changelog
 
+- v1.27
+	- Changes most output to be printed even without verbose mode.
+	- Changes the default value of verbose mode to false.
+
 - v1.26
 	- Fixes location priotization not working correctly (caused boss locations being placed last).
 

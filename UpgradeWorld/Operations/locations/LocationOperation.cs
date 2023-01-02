@@ -27,8 +27,7 @@ public abstract class LocationOperation : ZoneOperation
   protected abstract bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location);
   protected override void OnEnd()
   {
-    var text = Operation + " completed.";
-    if (Settings.Verbose) text += $" {Operated} locations {Verb}.";
+    var text = $"{Operation} completed. {Operated} locations {Verb}.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
   }

@@ -27,8 +27,7 @@ public class AddVegetation : VegetationOperation
   protected override void OnEnd()
   {
     base.OnEnd();
-    var text = Operation + " completed.";
-    if (Settings.Verbose) text += $" {Counter} vegetations added.";
+    var text = $"{Operation} completed. {Counter} vegetations added.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
   }

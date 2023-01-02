@@ -42,8 +42,7 @@ public class ResetZones : ZoneOperation
 
   protected override void OnEnd()
   {
-    var text = Operation + " completed.";
-    if (Settings.Verbose) text += " " + Reseted + " zones reseted.";
+    var text = $"{Operation} completed. {Reseted} zones reseted.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
   }

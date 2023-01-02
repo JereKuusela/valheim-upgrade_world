@@ -21,8 +21,7 @@ public class Generate : ZoneOperation
   protected override void OnEnd()
   {
     var generated = ZonesToUpgrade.Length - Failed;
-    var text = Operation + " completed.";
-    if (Settings.Verbose) text += " " + generated + " zones generated.";
+    var text = Operation + " completed. " + generated + " zones generated.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
   }

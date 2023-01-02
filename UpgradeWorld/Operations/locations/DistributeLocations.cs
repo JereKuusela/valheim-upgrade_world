@@ -21,10 +21,7 @@ public class DistributeLocations : ExecutedOperation
     // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
     if (Attempts == 0)
     {
-      if (Settings.Verbose)
-        Print($"Redistributing locations {Ids[Attempts]}. This may take a while...");
-      else
-        Print($"Redistributing locations. This may take a while...");
+      Print($"Redistributing locations {Ids[Attempts]}. This may take a while...");
       return false;
     }
     if (Attempts <= Ids.Length)
@@ -35,7 +32,7 @@ public class DistributeLocations : ExecutedOperation
       var location = zs.m_locations.FirstOrDefault(location => location.m_prefabName == id);
       if (location == null) return false;
       // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
-      if (Settings.Verbose && Attempts < Ids.Length)
+      if (Attempts < Ids.Length)
         Print($"Redistributing locations {Ids[Attempts]}. This may take a while...");
       var before = zs.m_locationInstances.Count;
       ClearUnplaced(id);
@@ -65,15 +62,10 @@ public class DistributeLocations : ExecutedOperation
   }
   protected override void OnEnd()
   {
-    if (Settings.Verbose)
-    {
-      if (Added >= 0)
-        Print($"{Added} locations{Helper.LocationIdString(Ids)} added (total amount: {Total}).");
-      else
-        Print($"{Math.Abs(Added)} locations{Helper.LocationIdString(Ids)} removed (total amount: {Total}).");
-    }
+    if (Added >= 0)
+      Print($"{Added} locations{Helper.LocationIdString(Ids)} added to the world (total amount: {Total}).");
     else
-      Print($"Locations{Helper.LocationIdString(Ids)} added.");
+      Print($"{Math.Abs(Added)} locations{Helper.LocationIdString(Ids)} removed from the world (total amount: {Total}).");
   }
 
 

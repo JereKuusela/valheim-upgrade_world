@@ -48,7 +48,7 @@ public static class Settings
   public static void Init(ConfigFile config)
   {
     var section = "1. General";
-    configVerbose = config.Bind(section, "Verbose output", true, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
+    configVerbose = config.Bind(section, "Verbose output", false, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
     configPreventDoubleZNetView = config.Bind(section, "Prevent double ZNet view", true, "Some bugged objects keep duplicating and corrupting the save. This prevents that from happening which allows removing these objects.");
     configAutoStart = config.Bind(section, "Automatic start", false, "If true, operations start automatically without having to use the start command.");
     configPlayerSafeDistance = config.Bind(section, "Safe distance around the player", 0f, "Zones within this distance won't be changed.");
