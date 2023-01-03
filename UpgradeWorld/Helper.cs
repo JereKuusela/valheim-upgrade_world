@@ -101,10 +101,18 @@ public static class Helper
   public static void Print(Terminal terminal, string value) => Print(terminal, ServerExecution.User, value);
 
   private static string Previous = "";
-  public static void PrintOnce(Terminal terminal, ZRpc? user, string value)
+  private static DateTime PreviousTime = new DateTime(0);
+  public static void PrintOnce(Terminal terminal, ZRpc? user, string value, float limiter = 0f)
   {
     if (ZNet.m_isServer && user != null)
-      user.Invoke(ServerExecution.RPC_RemotePrintOnce, value);
+    {
+      var now = DateTime.Now;
+      if (limiter == 0f || now.Subtract(PreviousTime).TotalSeconds > limiter)
+      {
+        user.Invoke(ServerExecution.RPC_RemotePrintOnce, value);
+        PreviousTime = now;
+      }
+    }
     if (!terminal) return;
     if (terminal.m_chatBuffer.LastOrDefault() == value) return;
     if (Previous != "")

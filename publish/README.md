@@ -22,9 +22,10 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 - v1.27
 	- Adds a new parameteter `terrain` to reset nearby terrain when resetting vegetation.
-	- Fixes `zones_reset` command causing holes in the zone borders.
 	- Changes most output to be printed even without verbose mode.
 	- Changes the default value of verbose mode to false.
+	- Fixes `zones_reset` command causing holes in the zone borders.
+	- Fixes networking logging not being throttled.
 
 - v1.26
 	- Fixes location priotization not working correctly (caused boss locations being placed last).

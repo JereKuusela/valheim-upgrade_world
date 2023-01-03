@@ -26,6 +26,6 @@ public abstract class BaseOperation
   protected void PrintOnce(string value, bool addDot = true)
   {
     if (addDot && !value.EndsWith(".")) value += ".";
-    Helper.PrintOnce(Context, User, value);
+    Helper.PrintOnce(Context, User, value, 10f);
   }
 }
