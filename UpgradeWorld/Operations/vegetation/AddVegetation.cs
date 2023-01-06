@@ -7,8 +7,9 @@ namespace UpgradeWorld;
 ///<summary>Runs the vegetation placement code for the filtered zones.</summary>
 public class AddVegetation : VegetationOperation
 {
+  public static Dictionary<Vector2i, ZDO> TCZdos = new();
+  public static DateTime LastUpdate = DateTime.MinValue;
   public int Counter = 0;
-  public Dictionary<Vector2i, ZDO> TCZdos = new();
   public AddVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, ids, args)
   {
     Operation = "Add vegetation";
@@ -30,7 +31,11 @@ public class AddVegetation : VegetationOperation
   protected override void OnStart()
   {
     base.OnStart();
-    TCZdos = EntityOperation.GetZDOs(Settings.TerrainCompilerId).ToDictionary(zdo => ZoneSystem.instance.GetZone(zdo.GetPosition()));
+    if (Args.TerrainReset != 0f && DateTime.Now - LastUpdate > TimeSpan.FromSeconds(10))
+    {
+      LastUpdate = DateTime.Now;
+      TCZdos = EntityOperation.GetZDOs(Settings.TerrainCompilerId).ToDictionary(zdo => ZoneSystem.instance.GetZone(zdo.GetPosition()));
+    }
   }
   protected override void OnEnd()
   {
@@ -57,10 +62,13 @@ public class AddVegetation : VegetationOperation
     var root = zs.m_zones[zone].m_root;
     var zonePos = ZoneSystem.instance.GetZonePos(zone);
     var heightmap = Zones.GetHeightmap(root);
-    VegetationResetTerrain.Heightmap = heightmap;
-    VegetationResetTerrain.ResetRadius = Args.TerrainReset;
-    if (TCZdos.TryGetValue(zone, out var zdo))
-      VegetationResetTerrain.TCZDO = zdo;
+    if (Args.TerrainReset != 0f)
+    {
+      VegetationResetTerrain.Heightmap = heightmap;
+      VegetationResetTerrain.ResetRadius = Args.TerrainReset;
+      if (TCZdos.TryGetValue(zone, out var zdo))
+        VegetationResetTerrain.TCZDO = zdo;
+    }
     var clearAreas = GetClearAreas(zone);
     zs.PlaceVegetation(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, spawnedObjects);
     Counter += spawnedObjects.Count;

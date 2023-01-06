@@ -23,6 +23,7 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 - v1.28
 	- Adds a new command `world_clean` to remove missing objects.
 	- Adds caching to the player base detection (10 seconds).
+	- Adds caching to the terrain reset (10 seconds).
 	- Adds a new setting "Operation delay" to prevent dedicated servers from getting overloaded.
 	- Removes settings "Safe distance around the player" and "Custom points" as obsolete (+ improves performance).
 	- Improves performance of single zone operations.
