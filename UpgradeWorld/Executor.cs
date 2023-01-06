@@ -34,6 +34,7 @@ public static class Executor
     DoClean();
     ShouldExecute = false;
   }
+  private static DateTime LastCommand = DateTime.MinValue;
   public static void Execute()
   {
     if (operations.Count == 0)
@@ -47,8 +48,12 @@ public static class Executor
       PrintInit = false;
       return;
     }
+    if (DateTime.Now - LastCommand < TimeSpan.FromMilliseconds(Settings.Throttle)) return;
     if (operations[0].Execute())
+    {
+      LastCommand = DateTime.Now;
       operations.RemoveAt(0);
+    }
     if (operations.Count == 0)
       DoClean();
   }

@@ -128,8 +128,6 @@ Filtering options in the config:
 
 - Safe zone items: List of items used for the automatic player base detection. By default includes structures that have the player base effect.
 - How many adjacent zones are included in the safe zone: Size of the player base protection. Default value 1 means 3x3 zones per player base structure to ensure proper coverage. Value -1 can be used to disable the player base detection.
-- Safe distance around the player: Excludes zones that are too close to the players (in meters). All commands allow specifying the minimum distance so using this setting is not really needed.
-- Custom points: Coordinates and distances to exclude zones. Format: x1,z1,min1,max1|x2,z2,min2,max2|...
 
 Other settings are:
 
@@ -137,14 +135,11 @@ Other settings are:
 - Prevent double ZNet view: Some bugged objects keep duplicating and corrupting the save. This prevents that from happening which allows removing these objects.
 - Automatic start: Starts commands automatically without having to use the start command. This allows using the commands more easily but can lead to more mistakes.
 - Operations per update: How many zones are destroyed per Unity update. Can be useful if destroying large parts of a world, but recommended to keep it as it is.
+- Root users: SteamIds that are allowed to execute commands (-1 for the dedicated server). If not set, all admins can use the commands.
 - Show map coordinates: If true, shows coordinates and distance on the big map.
 - Show minimap coordinates: If true, shows coordinates on the minimap.
-- Root users: SteamIds that are allowed to execute commands (-1 for the dedicated server). If not set, all admins can use the commands.
+- Operation delay: Milliseconds between each command. Prevents lots of small operations overloading the dedicated server.
 - World size: Max radius for operations (if using a mod to change the world size or need to affect areas outside the play area).
-
-Examples:
-- Setting "300,500,500,0|1000,2000,500,0" to custom points would protect areas at coordinates 300,500 and 1000,2000 within 500 meters.
-- Setting "300,500,0,100" to custom points would only operate near coordinates 300,500 witin 100 meters.
 
 # How it works
 

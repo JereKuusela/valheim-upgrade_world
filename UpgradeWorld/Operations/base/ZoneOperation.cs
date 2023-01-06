@@ -23,7 +23,10 @@ public abstract class ZoneOperation : ExecutedOperation
   {
     List<string> messages = new();
     ZonesToUpgrade = Filterers.Aggregate(ZonesToUpgrade, (zones, filterer) => filterer.FilterZones(zones, ref messages));
-    InitString += ZonesToUpgrade.Length + " zones: " + Helper.JoinRows(messages);
+    InitString += $" {ZonesToUpgrade.Length} zones";
+    if (messages.Count > 0)
+      InitString += $": {Helper.JoinRows(messages)}";
+    InitString += $".";
     return InitString;
   }
   protected abstract bool ExecuteZone(Vector2i zone);

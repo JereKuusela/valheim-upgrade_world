@@ -23,8 +23,9 @@ public class UpgradeWorld : BaseUnityPlugin
   {
     CommandWrapper.Init();
     FiltererParameters.Parameters.Sort();
+    InvokeRepeating("Execute", 1f, 0.01f);
   }
-  public void Update()
+  public void Execute()
   {
     Executor.Execute();
   }

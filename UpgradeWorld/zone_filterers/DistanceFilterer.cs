@@ -17,14 +17,14 @@ public class DistanceFilterer : ZoneFilterer
   public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
   {
     var amount = zones.Length;
-    zones = FilterByDIstance(zones, Center, MinDistance, MaxDistance);
+    zones = FilterByDistance(zones, Center, MinDistance, MaxDistance);
     var skipped = amount - zones.Length;
     if (skipped > 0) messages.Add(skipped + " skipped by the command");
     return zones;
   }
 
   /// <summary>Returns only zones which center point is included within a given range..</summary>
-  private static Vector2i[] FilterByDIstance(Vector2i[] zones, Vector3 position, float minDistance, float maxDistance)
+  private static Vector2i[] FilterByDistance(Vector2i[] zones, Vector3 position, float minDistance, float maxDistance)
   {
     var zoneSystem = ZoneSystem.instance;
     return zones.Where(zone =>
