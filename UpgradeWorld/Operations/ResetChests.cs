@@ -19,7 +19,7 @@ public class ResetChests : EntityOperation
     {
       chestNames = ZNetScene.instance.m_prefabs.Where(prefab =>
       {
-        if (prefab.GetComponent<Container>() is { } container)
+        if (prefab.TryGetComponent<Container>(out var container))
           return !container.m_defaultItems.IsEmpty();
         return false;
       }).Select(obj => obj.name).OrderBy(item => item).ToList();

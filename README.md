@@ -94,6 +94,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation. `chance` directly scales the min and max amounts (bigger values work too).
 - `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation. `chance` determines how many of the vegetation are removed and directly scales the min and max amounts.
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
+- `world_clean`: Removes missing objects from armor stands, chests, item stands and the world (for example when removing mods that add new items).
 - `world_gen [legacy/hh/mistlands] [start]`: Sets the world generation version.
 - `world_reset [...args]`: Resets locations and zones.
 - `zones_generate [...args]`: Pre-generates areas without having to visit them.

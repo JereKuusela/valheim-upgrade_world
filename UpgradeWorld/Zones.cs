@@ -15,6 +15,19 @@ public static class Zones
   {
     return zones.OrderBy(zone => zone.Magnitude()).ToArray();
   }
+  public static Vector2i[] GetZones(FiltererParameters args)
+  {
+    var zs = ZoneSystem.instance;
+    if (args.Zone.HasValue && args.MaxDistance == 0f && args.MinDistance == 0f)
+    {
+      if (args.TargetZones == TargetZones.Generated && !zs.m_generatedZones.Contains(args.Zone.Value))
+        return new Vector2i[0];
+      if (args.TargetZones == TargetZones.Ungenerated && zs.m_generatedZones.Contains(args.Zone.Value))
+        return new Vector2i[0];
+      return new Vector2i[] { args.Zone.Value };
+    }
+    return GetZones(args.TargetZones);
+  }
   public static Vector2i[] GetZones(TargetZones zones)
   {
     if (zones == TargetZones.All) return GetWorldZones();

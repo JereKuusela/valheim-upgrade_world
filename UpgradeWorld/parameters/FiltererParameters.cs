@@ -54,8 +54,8 @@ public class FiltererParameters
         if (name == "safezones") SafeZones = Parse.Int(value, 2);
         else if (name == "pos") Pos = Parse.Pos(value);
         else if (name == "zone") Zone = Parse.Zone(value);
-        else if (name == "min" | name == "mindistance") MinDistance = Parse.Float(value);
-        else if (name == "max" | name == "maxdistance") MaxDistance = Parse.Float(value);
+        else if (name == "min" || name == "mindistance") MinDistance = Parse.Float(value);
+        else if (name == "max" || name == "maxdistance") MaxDistance = Parse.Float(value);
         else if (name == "chance") Chance = Parse.Float(value) / 100f;
         else if (name == "terrain") TerrainReset = Parse.Float(value);
         else if (name == "distance")

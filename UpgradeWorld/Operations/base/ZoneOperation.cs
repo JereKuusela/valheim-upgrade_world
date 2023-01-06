@@ -15,7 +15,7 @@ public abstract class ZoneOperation : ExecutedOperation
   protected List<ZoneFilterer> Filterers = new();
   protected ZoneOperation(Terminal context, FiltererParameters args) : base(context, args.Start)
   {
-    ZonesToUpgrade = Zones.GetZones(args.TargetZones);
+    ZonesToUpgrade = Zones.GetZones(args);
     Args = args;
   }
   protected string InitString = "";

@@ -20,6 +20,10 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 # Changelog
 
+- v1.28
+	- Adds a new command `world_clean` to remove missing objects.
+	- Improves performance of single zone operations.
+
 - v1.27
 	- Adds a new parameteter `terrain` to reset nearby terrain when resetting vegetation.
 	- Changes most output to be printed even without verbose mode.

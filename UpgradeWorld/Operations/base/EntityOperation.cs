@@ -35,10 +35,16 @@ public abstract class EntityOperation : BaseOperation
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => code == zdo.GetPrefab());
     return FilterZdos(zdos, args).ToArray();
   }
+  public static ZDO[] GetZDOs(FiltererParameters args)
+  {
+    var zdos = ZDOMan.instance.m_objectsByID.Values;
+    return FilterZdos(zdos, args).ToArray();
+  }
   public static ZDO[] GetZDOs(string id)
   {
     var code = id.GetStableHashCode();
     return ZDOMan.instance.m_objectsByID.Values.Where(zdo => code == zdo.GetPrefab()).ToArray();
   }
   public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, DataParameters args) => args.FilterZdos(zdos);
+  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.FilterZdos(zdos);
 }
