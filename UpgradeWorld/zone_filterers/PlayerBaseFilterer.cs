@@ -11,7 +11,7 @@ public class PlayerBaseFilterer : ZoneFilterer
   public int Size = 0;
   public PlayerBaseFilterer(int size)
   {
-    size = Size;
+    Size = size;
   }
   private HashSet<Vector2i> GetExcluded()
   {
