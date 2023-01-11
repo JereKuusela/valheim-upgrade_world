@@ -16,13 +16,15 @@ public static class Helper
       return biome;
     return Heightmap.Biome.None;
   }
-
+  private static KeyValuePair<int, int> SpawnedHash = ZDO.GetHashZDOID("spawn_id");
   public static void RemoveZDO(ZDO zdo)
   {
     if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid) return;
     if (ZNet.instance.m_peers.Any(peer => peer.m_characterID == zdo.m_uid)) return;
     if (!zdo.IsOwner())
       zdo.SetOwner(ZDOMan.instance.GetMyID());
+    var spawned = zdo.GetZDOID(SpawnedHash);
+    if (spawned != ZDOID.None) RemoveZDO(zdo);
     if (ZNetScene.instance.m_instances.TryGetValue(zdo, out var view))
       ZNetScene.instance.Destroy(view.gameObject);
     else
