@@ -20,8 +20,12 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 # Changelog
 
+- v1.30
+	- Adds automatic terrain reset to location removing.
+	- Fixes terrain reset not affecting paint.
+
 - v1.29
-	- Fix for player base detection not always working.
+	- Fixes player base detection not always working.
 
 - v1.28
 	- Adds a new command `world_clean` to remove missing objects.
