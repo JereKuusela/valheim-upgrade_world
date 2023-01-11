@@ -52,11 +52,7 @@ public class AddVegetation : VegetationOperation
     var root = zs.m_zones[zone].m_root;
     var zonePos = ZoneSystem.instance.GetZonePos(zone);
     var heightmap = Zones.GetHeightmap(root);
-    if (Args.TerrainReset != 0f)
-    {
-      ResetTerrain.ResetRadius = Args.TerrainReset;
-      ResetTerrain.Zone = zone;
-    }
+    ResetTerrain.ResetRadius = Args.TerrainReset;
     var clearAreas = GetClearAreas(zone);
     zs.PlaceVegetation(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, spawnedObjects);
     Counter += spawnedObjects.Count;
@@ -64,6 +60,5 @@ public class AddVegetation : VegetationOperation
       UnityEngine.Object.Destroy(obj);
     spawnedObjects.Clear();
     ResetTerrain.ResetRadius = 0f;
-    ResetTerrain.Zone = null;
   }
 }

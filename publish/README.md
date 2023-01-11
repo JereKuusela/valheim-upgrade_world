@@ -23,7 +23,7 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 - v1.30
 	- Adds automatic terrain reset to location removing.
 	- Fixes terrain reset not affecting paint.
-	- Fixes spawn point removing not also removing the spawned creature.
+	- Fixes spawn point removing not removing the spawned creature.
 
 - v1.29
 	- Fixes player base detection not always working.

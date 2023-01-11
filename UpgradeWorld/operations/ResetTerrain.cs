@@ -15,15 +15,21 @@ public class ResetTerrain
   public static Dictionary<Vector2i, ZDO> TCZdos = new();
   public static DateTime LastUpdate = DateTime.MinValue;
   public static float ResetRadius = 0f;
-  public static Vector2i? Zone = null;
 
   // Needed so that the vegetation spawns on the reseted terrain.
   [HarmonyPatch(nameof(ZoneSystem.GetGroundData)), HarmonyPostfix]
-  static void OverrideGroundWithDefaultHeight(ref Vector3 p)
+  static void OverrideGroundDataWithDefaultHeight(ref Vector3 p)
   {
     if (ResetRadius == 0f) return;
-    if (Zone == null) return;
     p.y = WorldGenerator.instance.GetHeight(p.x, p.z);
+  }
+  // Needed so that the vegetation spawns on the reseted terrain.
+  [HarmonyPatch(nameof(ZoneSystem.GetGroundHeight), typeof(Vector3)), HarmonyPrefix]
+  static bool OverrideGroundHeightWithDefaultHeight(Vector3 p, ref float __result)
+  {
+    if (ResetRadius == 0f) return true;
+    __result = WorldGenerator.instance.GetHeight(p.x, p.z);
+    return false;
   }
   // Reset done here because this is the last check.
   [HarmonyPatch(nameof(ZoneSystem.InsideClearArea)), HarmonyPostfix]
@@ -31,8 +37,7 @@ public class ResetTerrain
   {
     if (__result) return;
     if (ResetRadius == 0f) return;
-    if (Zone == null) return;
-    Execute(Zone.Value, point, ResetRadius);
+    Execute(point, ResetRadius);
   }
 
   private static Vector3 VertexToWorld(Vector3 pos, int j, int i)
@@ -41,8 +46,11 @@ public class ResetTerrain
     pos.z += j - 32.5f;
     return pos;
   }
-  public static void Execute(Vector2i zone, Vector3 pos, float radius)
+  public static void Execute(Vector3 pos) => Execute(pos, ResetRadius);
+  private static void Execute(Vector3 pos, float radius)
   {
+    if (radius == 0f) return;
+    var zone = ZoneSystem.instance.GetZone(pos);
     if (DateTime.Now - LastUpdate > TimeSpan.FromSeconds(10))
     {
       LastUpdate = DateTime.Now;
@@ -50,8 +58,7 @@ public class ResetTerrain
     }
     if (!TCZdos.TryGetValue(zone, out var zdo)) return;
     var byteArray = zdo.GetByteArray("TCData");
-    if (byteArray == null)
-      return;
+    if (byteArray == null) return;
     var center = ZoneSystem.instance.GetZonePos(zone);
     var change = false;
     var from = new ZPackage(Utils.Decompress(byteArray));

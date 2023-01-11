@@ -41,8 +41,13 @@ public abstract class LocationOperation : ZoneOperation
     var heightmap = Zones.GetHeightmap(root);
     if (clear || forceClear)
       Helper.ClearAreaForLocation(zone, location, forceClear);
+    ResetTerrain.ResetRadius = Args.TerrainReset == 0f ? location.m_location.m_exteriorRadius : Args.TerrainReset;
+    ResetTerrain.Execute(location.m_position);
     List<ZoneSystem.ClearArea> clearAreas = new();
+    zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, spawnedObjects);
+    foreach (var obj in spawnedObjects)
+      UnityEngine.Object.Destroy(obj);
     spawnedObjects.Clear();
-    zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Full, spawnedObjects);
+    ResetTerrain.ResetRadius = 0f;
   }
 }

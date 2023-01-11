@@ -49,11 +49,13 @@ public class RemoveLocations : ExecutedOperation
       name = location.m_prefabName;
       if (Ids.Count > 0 && !Ids.Contains(name)) continue;
       Helper.ClearZDOsWithinDistance(zone, kvp.Value.m_position, location.m_exteriorRadius);
-      ResetTerrain.Execute(zone, kvp.Value.m_position, Args.TerrainReset == 0f ? location.m_exteriorRadius : Args.TerrainReset);
+      ResetTerrain.ResetRadius = Args.TerrainReset == 0f ? location.m_exteriorRadius : Args.TerrainReset;
+      ResetTerrain.Execute(kvp.Value.m_position);
       removed++;
       zs.m_locationInstances.Remove(zone);
       if (Settings.Verbose)
         Print($"Location {name} removed at {zone.ToString()}.");
+      ResetTerrain.ResetRadius = 0f;
     }
     return removed;
 
