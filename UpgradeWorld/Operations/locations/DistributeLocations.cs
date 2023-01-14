@@ -8,7 +8,7 @@ public class DistributeLocations : ExecutedOperation
   public float Chance = 1f;
   public int Added = 0;
   private int Total = 0;
-  public static bool PlaceToAlreadyGenerated = false;
+  public static bool SpawnToAlreadyGenerated = false;
   public DistributeLocations(string[] ids, bool autoStart, float chance, Terminal context) : base(context, autoStart)
   {
     Ids = ids;
@@ -26,7 +26,7 @@ public class DistributeLocations : ExecutedOperation
     }
     if (Attempts <= Ids.Length)
     {
-      PlaceToAlreadyGenerated = true;
+      SpawnToAlreadyGenerated = true;
       var zs = ZoneSystem.instance;
       var id = Ids[Attempts - 1];
       var location = zs.m_locations.FirstOrDefault(location => location.m_prefabName == id);
@@ -35,7 +35,7 @@ public class DistributeLocations : ExecutedOperation
       if (Attempts < Ids.Length)
         Print($"Redistributing locations {Ids[Attempts]}. This may take a while...");
       var before = zs.m_locationInstances.Count;
-      ClearUnplaced(id);
+      ClearNotSpawned(id);
       zs.GenerateLocations(location);
       if (Chance < 1f)
       {
@@ -45,12 +45,12 @@ public class DistributeLocations : ExecutedOperation
       }
       Total += Count(id);
       Added += zs.m_locationInstances.Count - before;
-      PlaceToAlreadyGenerated = false;
+      SpawnToAlreadyGenerated = false;
       return false;
     }
     return true;
   }
-  private void ClearUnplaced(string id)
+  private void ClearNotSpawned(string id)
   {
     var zs = ZoneSystem.instance;
     zs.m_locationInstances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefabName != id).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);

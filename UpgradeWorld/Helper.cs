@@ -19,6 +19,7 @@ public static class Helper
   private static KeyValuePair<int, int> SpawnedHash = ZDO.GetHashZDOID("spawn_id");
   public static void RemoveZDO(ZDO zdo)
   {
+    if (zdo == null || !zdo.IsValid()) return;
     if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid) return;
     if (ZNet.instance.m_peers.Any(peer => peer.m_characterID == zdo.m_uid)) return;
     if (!zdo.IsOwner())
@@ -42,6 +43,7 @@ public static class Helper
   /// <summary>Clears entities too close to a given position.</summary>
   public static void ClearZDOsWithinDistance(Vector2i zone, Vector3 position, float distance)
   {
+    if (distance == 0f) return;
     List<ZDO> sectorObjects = new();
     ZDOMan.instance.FindObjects(zone, sectorObjects);
     var scene = ZNetScene.instance;

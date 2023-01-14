@@ -15,7 +15,7 @@ public class RemoveLocations : ExecutedOperation
   private int LocationProxyHash = "LocationProxy".GetStableHashCode();
   private int LocationHash = "location".GetStableHashCode();
 
-  private int RemovePlaced()
+  private int RemoveSpawned()
   {
     var zs = ZoneSystem.instance;
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => LocationProxyHash == zdo.GetPrefab());
@@ -30,10 +30,9 @@ public class RemoveLocations : ExecutedOperation
       {
         name = location.m_prefabName;
         if (Ids.Count > 0 && !Ids.Contains(name)) continue;
-        Helper.ClearZDOsWithinDistance(zone, zdo.GetPosition(), location.m_location.m_exteriorRadius);
+        Helper.ClearZDOsWithinDistance(zone, zdo.GetPosition(), Args.ObjectReset != 0 ? location.m_location.m_exteriorRadius : Args.ObjectReset);
       }
-      else
-        Helper.RemoveZDO(zdo);
+      Helper.RemoveZDO(zdo);
       removed++;
       zs.m_locationInstances.Remove(zone);
       if (Settings.Verbose)
@@ -44,11 +43,10 @@ public class RemoveLocations : ExecutedOperation
     {
       if (!Args.Roll()) continue;
       var zone = kvp.Key;
-      var name = "???";
       var location = kvp.Value.m_location;
-      name = location.m_prefabName;
+      var name = location.m_prefabName;
       if (Ids.Count > 0 && !Ids.Contains(name)) continue;
-      Helper.ClearZDOsWithinDistance(zone, kvp.Value.m_position, location.m_exteriorRadius);
+      Helper.ClearZDOsWithinDistance(zone, kvp.Value.m_position, Args.ObjectReset != 0 ? location.m_location.m_exteriorRadius : Args.ObjectReset);
       ResetTerrain.ResetRadius = Args.TerrainReset == 0f ? location.m_exteriorRadius : Args.TerrainReset;
       ResetTerrain.Execute(kvp.Value.m_position);
       removed++;
@@ -60,15 +58,16 @@ public class RemoveLocations : ExecutedOperation
     return removed;
 
   }
-  private int RemoveUnplaced()
+  private int RemoveNotSpawned()
   {
     var zs = ZoneSystem.instance;
     var filterers = FiltererFactory.Create(Args);
-    filterers = filterers.Append(new LocationFilterer(Ids)).ToList();
+    if (Ids.Count > 0)
+      filterers = filterers.Append(new LocationFilterer(Ids)).ToList();
     List<string> messages = new();
-    var unplacedZones = filterers.Aggregate(Zones.GetZones(TargetZones.All), (zones, filterer) => filterer.FilterZones(zones, ref messages));
+    var notSpawnedZones = filterers.Aggregate(Zones.GetZones(TargetZones.All), (zones, filterer) => filterer.FilterZones(zones, ref messages));
     var removed = 0;
-    foreach (var zone in unplacedZones)
+    foreach (var zone in notSpawnedZones)
     {
       if (!Args.Roll()) continue;
       if (!zs.m_locationInstances.TryGetValue(zone, out var location)) continue;
@@ -82,7 +81,7 @@ public class RemoveLocations : ExecutedOperation
 
   protected override bool OnExecute()
   {
-    var removed = RemovePlaced() + RemoveUnplaced();
+    var removed = RemoveSpawned() + RemoveNotSpawned();
     Print($"Removed {removed} locations.");
     return true;
   }

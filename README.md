@@ -8,7 +8,7 @@ Install on the admin client and on the server (modding [guide](https://youtu.be/
 
 # Things you can do
 
-- Place tar pits and mountain caves on already explored areas.
+- Spawn tar pits and mountain caves on already explored areas.
 - Reroll chest loots to have onion seeds on already explored areas.
 - Completely regenerate Mistlands.
 - Remove any object from the game world.
@@ -33,8 +33,8 @@ Note: The default base detection is very conservative. Single workbenches, campf
 
 For `upgrade` command:
 
-- `mountain_caves`: Places mountain caves to already explored areas.
-- `tarpits`: Places tar pits to already explored areas.
+- `mountain_caves`: Spawns mountain caves to already explored areas.
+- `tarpits`: Spawns tar pits to already explored areas.
 - `onions`: Rerolls already generated and unlooted mountain chests.
 - `mistlands`: Fully regenerates mistlands biomes. Terrain is automatically updated by the base game and not affected by this operation.
 - `mistlands_worldgen`: Upgrades biome distribution to the Mistlands version. Biomes will change in the outer areas. Areas past 5900 meters will be reseted. Rivers will move everywhere in the world and can destroy bases (even with the player base protection).
@@ -55,10 +55,12 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 
 - `biomes=biome1,biome2,...`: Only includes given biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
 - `chance=percentage`: Makes a single operation to be applied randomly.
+- `clear=meters`: Overrides the cleared radius when using `locations_remove`.
 - `count=min-max`: Filters objects by their amount. Only applies to `objects_count`.
 - `distance=min-max`: Short-hand for setting both distances.
 - `force`: Disables player base detection (same as `safeZones=0`).
 - `level=min-max`: Filters objects by their creature level. Only applies to `objects_*` commands.
+- `location=id`: Filters objects by their location. Only applies to `objects_*` commands.
 - `log`: Object commands print to the log file instead of the console.
 - `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
@@ -77,11 +79,14 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
 - `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items. `chance` determines how many of the chests are reseted.
 - `locations_add [id1,id2,...] [noclearing] [...args]`: Adds locations to already explored areas. With `noclearing`, the location area is not cleared of existing objects. `chance` determines how many of the locations are added.
+- `locations_list [id1,id2,...] [...args]`: Lists locations showing their position and biome.
+- `locations_register [id] [...args]`: Registers locations to the database. This doesn't actually spawn them.
 - `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used). `chance` determines how many of the locations are removed.
 - `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout. `chance` determines how many of the locations are reseted.
 - `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. Parameter `count=1` can be used to exclude non-existing objects.
 - `objects_list [id1,id2,...] [...args]`: Lists objects showing their position and biome.
 - `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `objects_count` to check that you don't remove too much.
+- `objects_swap [new id,id1,id2,...] [...args]`: Replaces objects with a new one.
 - `save_disable`: Disables world saving. But still a good idea to make backups.
 - `save_enable`: Enables world saving.
 - `start`: Most commands don't execute instantly but instead print the zones being affected. This command can be then used to start executing.
@@ -146,13 +151,13 @@ Other settings are:
 ## Glossary
 
 - Generated area: The world generator generates up to 500 meters from places any player has visited (usually abour 350 meters). This is much bigger area than what gets revelead on the minimap.
-- Location: Special places like rune stones, dungeon entrances or abandoned houses that are placed to the world by the world generator.
+- Location: Special places like rune stones, dungeon entrances or abandoned houses that are spawned to the world by the world generator.
 - Zone: The world is split to tiles of 64 m x 64 m size. This is the granularity of the world generation. See https://valheim.fandom.com/wiki/Zones for more info.
 
 ## Resetting zones
 
 1. Removes all objects from a zone (including player placed structures).
-2. If the zone has a location, marks the location as unplaced (to allow redistributing it).
+2. If the zone has a location, marks the location as not spawned (to allow redistributing it).
 3. Marks the zone as ungenerated. Visiting the zone will regenerate like it were at start of the game.
 4. Locations are not automatically redistributed. Use "redistribute" command (otherwise you get the same locations as before).
 5. Visiting zones will regenerate them.
@@ -165,9 +170,9 @@ Portals in the loaded area won't be automatically disconnected but relogging fix
 
 ## Adding locations
 
-1. Runs a modified genloc command which allows redistributing unplaced locations to already generated areas.
+1. Runs a modified genloc command which allows redistributing not spawned locations to already generated areas.
 2. Skip zones that didn't get a new location.
-3. For each redistributed location, destroy everything within the location exterior radius and place the location to the world.
+3. For each redistributed location, destroy everything within the location exterior radius and spawn the location to the world.
 
 ## Resetting chests
 

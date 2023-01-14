@@ -17,7 +17,7 @@ public class AddVegetation : VegetationOperation
     var zs = ZoneSystem.instance;
     if (zs.IsZoneLoaded(zone))
     {
-      Place(zone);
+      SpawnVegetation(zone);
       return true;
     }
     zs.PokeLocalZone(zone);
@@ -46,7 +46,7 @@ public class AddVegetation : VegetationOperation
     return clearAreas;
   }
   private readonly List<GameObject> spawnedObjects = new();
-  protected void Place(Vector2i zone)
+  protected void SpawnVegetation(Vector2i zone)
   {
     var zs = ZoneSystem.instance;
     var root = zs.m_zones[zone].m_root;

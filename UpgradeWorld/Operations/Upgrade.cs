@@ -37,20 +37,20 @@ public class Upgrade : BaseOperation
     {
       var noClearing = Parse.Flag(extra, "noclearing");
       Executor.AddOperation(new DistributeLocations(new[] { "MountainCave02" }, args.Start, args.Chance, Context));
-      Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
+      Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
     }
     else if (type == "jewelcrafting")
     {
       var noClearing = Parse.Flag(extra, "noclearing");
       Executor.AddOperation(new DistributeLocations(new[] { "JC_Gacha_Location" }, args.Start, args.Chance, Context));
-      Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
+      Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
       Executor.AddOperation(new Print(Context, "Note: This is for Jewelcrafting mod.", "", args.Start));
     }
     else if (type == "tarpits")
     {
       var noClearing = Parse.Flag(extra, "noclearing");
       Executor.AddOperation(new DistributeLocations(new[] { "TarPit1", "TarPit2", "TarPit3" }, args.Start, args.Chance, Context));
-      Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
+      Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
     }
     else if (type == "onions")
     {
@@ -104,7 +104,7 @@ public class Upgrade : BaseOperation
       Executor.AddOperation(new RemoveLocations(Context, new[] { "SvartalfrQueenAltar" }, args));
       args.SafeZones = safeZones;
       Executor.AddOperation(new DistributeLocations(new string[0], args.Start, args.Chance, Context));
-      Executor.AddOperation(new PlaceLocations(Context, !noClearing, args));
+      Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
       Executor.AddOperation(new RemoveVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
       Executor.AddOperation(new AddVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
       Executor.AddOperation(new Print(Context, "Note: This is for Epic Valheim Additions mod.", "", args.Start));

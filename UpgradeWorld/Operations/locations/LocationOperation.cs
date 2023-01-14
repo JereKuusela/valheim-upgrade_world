@@ -32,8 +32,8 @@ public abstract class LocationOperation : ZoneOperation
     Print(text);
   }
   private readonly List<GameObject> spawnedObjects = new();
-  /// <summary>Places a location to the game world.</summary>
-  protected void PlaceLocation(Vector2i zone, ZoneSystem.LocationInstance location, bool clear, bool forceClear)
+  /// <summary>Spawns a location to the game world.</summary>
+  protected void SpawnLocation(Vector2i zone, ZoneSystem.LocationInstance location, bool clear, bool forceClear)
   {
     var zoneSystem = ZoneSystem.instance;
     var root = zoneSystem.m_zones[zone].m_root;

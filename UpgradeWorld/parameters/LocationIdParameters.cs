@@ -5,11 +5,18 @@ namespace UpgradeWorld;
 public class LocationIdParameters : FiltererParameters
 {
   public string[] Ids = new string[0];
+  public bool Log = false;
   public LocationIdParameters(FiltererParameters pars) : base(pars)
   {
   }
   public LocationIdParameters(Terminal.ConsoleEventArgs args) : base(args)
   {
+    foreach (var kvp in Unhandled)
+    {
+      if (kvp.Key == "log")
+        Log = true;
+    }
+    Unhandled.Remove("log");
   }
   public override bool Valid(Terminal terminal)
   {

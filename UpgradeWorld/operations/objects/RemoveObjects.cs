@@ -10,7 +10,7 @@ public class RemoveObjects : EntityOperation
   }
   private void Remove(IEnumerable<string> ids, DataParameters args)
   {
-    var prefabs = ids.SelectMany(GetPrefabs);
+    var prefabs = ids.SelectMany(GetPrefabs).ToList();
     var total = 0;
     var texts = prefabs.Select(id =>
     {

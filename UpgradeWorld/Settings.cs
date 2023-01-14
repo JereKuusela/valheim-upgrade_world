@@ -60,6 +60,6 @@ public static class Settings
     configDestroysPerUpdate = config.Bind("2. Destroying", "Operations per update", 100, "How many zones are destroyed per Unity update.");
     configTimeBasedDataNames = config.Bind("3. Change time/day", "Time based data names", "spawntime,lastTime,SpawnTime,StartTime,alive_time,spawn_time,picked_time,plantTime,pregnant,TameLastFeeding", "Names of the data values that should be updated with the new time. Changing these is NOT recommended.");
     configZoneControlId = config.Bind("4. Other", "Zone control name", "_ZoneCtrl", "Name of the zone control entity which controls the enemy spawning. Changing these is NOT recommended.");
-    configTerrainCompilerId = config.Bind("4. Other", "Terain compiler name", "_TerrainCompiler", "Name of the terrain compiler keeping track of terrain edits. Changing these is NOT recommended.");
+    configTerrainCompilerId = config.Bind("4. Other", "Terrain compiler name", "_TerrainCompiler", "Name of the terrain compiler keeping track of terrain edits. Changing these is NOT recommended.");
   }
 }

@@ -8,7 +8,7 @@ using UnityEngine;
 namespace UpgradeWorld;
 
 
-// Location generation only places them on ungenerated zones. Skipping this check allows upgrading existing zones.
+// Location generation only spawns them on ungenerated zones. Skipping this check allows upgrading existing zones.
 [HarmonyPatch(typeof(ZoneSystem))]
 public class ResetTerrain
 {

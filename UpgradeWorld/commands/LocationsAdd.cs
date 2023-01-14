@@ -18,7 +18,7 @@ public class LocationsAddCommand
       if (Helper.IsClient(args)) return;
       if (!pars.Valid(args.Context)) return;
       Executor.AddOperation(new DistributeLocations(pars.Ids, pars.Start, pars.Chance, args.Context));
-      Executor.AddOperation(new PlaceLocations(args.Context, !noClearing, pars));
+      Executor.AddOperation(new SpawnLocations(args.Context, !noClearing, pars));
     }, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
   }
 }

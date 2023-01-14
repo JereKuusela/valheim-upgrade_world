@@ -22,8 +22,14 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 - v1.30
 	- Adds automatic terrain reset to location removing.
+	- Adds a new command `objects_swap` to swap objects.
+	- Adds a new command `locations_register` to register locations to the location database.
+	- Adds a new command `locations_list` to print location positions.
+	- Adds a new paramater `clear` to the `locations_remove` command to override the radius of cleared objects.
+	- Adds a new parameter `location` to the `objects_remove` command to filter by location.
 	- Fixes terrain reset not affecting paint.
 	- Fixes spawn point removing not removing the spawned creature.
+	- Fixes wrong name on the "Terrain compiler name" setting.
 
 - v1.29
 	- Fixes player base detection not always working.
@@ -44,13 +50,4 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 	- Fixes networking logging not being throttled.
 
 - v1.26
-	- Fixes location priotization not working correctly (caused boss locations being placed last).
-
-- v1.25
-	- Improves performance of `vegetation_add` and `zones_generate` commands.
-	- Fixes `vegetation_add` and `vegetation_reset` showing wrong amount of added objects.
-	- Fixes location distribution not prioritizing priority locations.
-	- Fixes `upgrade EVA` to work with EVA version 1.8.0
-	
-- v1.24
-	- Fixes chest reset not working properly.
+	- Fixes location priotization not working correctly (caused boss locations being spawned last).

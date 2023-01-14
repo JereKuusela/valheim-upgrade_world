@@ -1,15 +1,15 @@
-using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
-///<summary>Destroys and places given locations.</summary>
+///<summary>Destroys and spawns given locations.</summary>
 public class RegenerateLocations : LocationOperation
 {
-  public RegenerateLocations(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context, args)
+  public RegenerateLocations(Terminal context, string[] ids, FiltererParameters args) : base(context, args)
   {
     Operation = "Reset locations";
     InitString = args.Print("Reset locations at");
     Verb = "reseted";
-    Filterers = Filterers.Append(new LocationFilterer(ids)).ToList();
+    if (ids.Length > 0)
+      Filterers = Filterers.Append(new LocationFilterer(ids)).ToList();
   }
 
   protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location)
@@ -17,7 +17,7 @@ public class RegenerateLocations : LocationOperation
     if (!location.m_placed) return false;
     location.m_placed = false;
     ZoneSystem.instance.m_locationInstances[zone] = location;
-    PlaceLocation(zone, location, true, true);
+    SpawnLocation(zone, location, true, true);
     if (Settings.Verbose)
       Print("Location " + location.m_location.m_prefabName + " reseted at " + zone.ToString());
     return true;

@@ -98,11 +98,14 @@ public class SetCommands
     new ZonesResetCommand();
     new ZonesGenerateCommand();
     new ObjectsListCommand();
+    new LocationsListCommand();
     new LocationsAddCommand();
     new LocationsResetCommand();
     new ObjectsRemoveCommand();
+    new LocationsRegisterCommand();
     new LocationsRemoveCommand();
     new ChestsResetCommand();
+    new ObjectsSwapCommand();
     new TimeSetCommand();
     new StartStopCommand();
     new UpgradeCommand();

@@ -7,6 +7,7 @@ namespace UpgradeWorld;
 public class DataParameters : IdParameters
 {
   public Range<int>? Level;
+  public string LocationIds = "";
   public bool Log = false;
   public new bool RequireId;
   public DataParameters(FiltererParameters pars) : base(pars)
@@ -20,9 +21,12 @@ public class DataParameters : IdParameters
         Level = Parse.IntRange(kvp.Value);
       if (kvp.Key == "log")
         Log = true;
+      if (kvp.Key == "location")
+        LocationIds = kvp.Value;
     }
     Unhandled.Remove("level");
     Unhandled.Remove("log");
+    Unhandled.Remove("location");
   }
   public override IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos)
   {
@@ -37,6 +41,11 @@ public class DataParameters : IdParameters
         return Level.Min <= value && value <= Level.Max;
       });
     }
+    if (LocationIds != "")
+    {
+      var ids = Parse.Split(LocationIds).Select(s => s.GetStableHashCode()).ToHashSet();
+      zdos = zdos.Where(zdo => ids.Contains(zdo.GetInt(Hash.Location)));
+    }
     return zdos;
   }
 
@@ -46,6 +55,7 @@ public class DataParameters : IdParameters
     var autoComplete = FiltererParameters.GetAutoComplete();
     autoComplete["level"] = (int index) => index == 0 ? CommandWrapper.Info("level=<color=yellow>amount</color> or level=<color=yellow>min-max</color> | Levels of the creature.") : null;
     autoComplete["log"] = (int index) => index == 0 ? CommandWrapper.Info("Out put to log file instead of console.") : null;
+    autoComplete["location"] = (int index) => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList();
     return autoComplete;
   }
   public static new List<string> Parameters = GetAutoComplete().Keys.OrderBy(s => s).ToList();

@@ -21,6 +21,7 @@ public class FiltererParameters
   public float MaxDistance = 0;
   public float Chance = 1f;
   public float TerrainReset = 0f;
+  public float ObjectReset = 0f;
   public int SafeZones = Settings.SafeZoneSize;
   public TargetZones TargetZones = TargetZones.Generated;
   public Dictionary<string, string> Unhandled = new();
@@ -41,6 +42,9 @@ public class FiltererParameters
     SafeZones = pars.SafeZones;
     TargetZones = pars.TargetZones;
     Unhandled = pars.Unhandled;
+    ObjectReset = pars.ObjectReset;
+    TerrainReset = pars.TerrainReset;
+
   }
   public FiltererParameters(Terminal.ConsoleEventArgs args)
   {
@@ -58,6 +62,7 @@ public class FiltererParameters
         else if (name == "max" || name == "maxdistance") MaxDistance = Parse.Float(value);
         else if (name == "chance") Chance = Parse.Float(value) / 100f;
         else if (name == "terrain") TerrainReset = Parse.Float(value);
+        else if (name == "clear") ObjectReset = Parse.Float(value);
         else if (name == "distance")
         {
           var distance = Parse.FloatRange(value);
@@ -121,6 +126,7 @@ public class FiltererParameters
     return true;
   }
   public virtual IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos) => zdos.Where(zdo => FilterPosition(zdo.GetPosition()));
+  public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position));
 
   public override string ToString()
   {
@@ -189,6 +195,7 @@ public class FiltererParameters
       { "safeZones", (int index) => index == 0 ? CommandWrapper.Info("safezones=<color=yellow>amount</color> | The size of protected areas around player base structures.") : null },
       { "chance", (int index) => index == 0 ? CommandWrapper.Info("chance=<color=yellow>percentage</color> (from 0 to 100) | The chance of a single operation being done.") : null },
       { "terrain", (int index) => index == 0 ? CommandWrapper.Info("terrain=<color=yellow>meters</color> | Radius of reseted terrain.") : null },
+      { "clear", (int index) => index == 0 ? CommandWrapper.Info("clear=<color=yellow>meters</color> | Overrides the radius of removed objects.") : null },
       { "start", (int index) => CommandWrapper.Flag("start", "Starts the operation instantly") },
       { "force", (int index) => CommandWrapper.Flag("force", "Disables the player base detection") },
       { "noEdges", (int index) => CommandWrapper.Flag("noedges", "Excludes zones with multiple biomes") },

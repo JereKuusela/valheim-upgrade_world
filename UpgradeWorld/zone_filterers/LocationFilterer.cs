@@ -12,6 +12,7 @@ public class LocationFilterer : ZoneFilterer
   public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
   {
     var locationObjects = Ids.Select(id => id.GetStableHashCode()).ToHashSet();
+    if (locationObjects.Count == 0) return zones;
     var zs = ZoneSystem.instance;
     var amount = zones.Length;
     zones = zones.Where(zone =>
