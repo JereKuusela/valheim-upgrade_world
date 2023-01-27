@@ -20,7 +20,7 @@ public class BiomesCountCommand
         Helper.Print(args.Context, "Error: Missing precision.");
         return;
       }
-      if (!Parse.TryFloat(pars.Unhandled.First().Key, out precision))
+      if (!Parse.TryFloat(pars.Unhandled.First(), out precision))
       {
         Helper.Print(args.Context, "Error: Precision has wrong format.");
         return;
@@ -30,7 +30,7 @@ public class BiomesCountCommand
         Helper.Print(args.Context, "Error: <color=yellow>zone</color> is not supported.");
         return;
       }
-      pars.Unhandled.Remove(pars.Unhandled.First().Key);
+      pars.Unhandled.Remove(pars.Unhandled.First());
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       new CountBiomes(args.Context, precision, pars);

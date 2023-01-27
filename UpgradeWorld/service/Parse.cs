@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -5,7 +6,7 @@ using UnityEngine;
 using UpgradeWorld;
 
 namespace Service;
-public class Range<T>
+public class Range<T> where T : IComparable
 {
   public T Min;
   public T Max;
@@ -18,6 +19,31 @@ public class Range<T>
   {
     Min = min;
     Max = max;
+  }
+
+  public bool Includes(T value)
+  {
+    return Min.CompareTo(value) <= 0 && Max.CompareTo(value) >= 0;
+  }
+}
+public class Vector3Range
+{
+  public Vector3 Min;
+  public Vector3 Max;
+  public Vector3Range(Vector3 value)
+  {
+    Min = value;
+    Max = value;
+  }
+  public Vector3Range(Vector3 min, Vector3 max)
+  {
+    Min = min;
+    Max = max;
+  }
+
+  public bool Includes(Vector3 value)
+  {
+    return Min.sqrMagnitude <= value.sqrMagnitude && value.sqrMagnitude <= Max.sqrMagnitude;
   }
 }
 
@@ -144,21 +170,7 @@ public static class Parse
     angle.z = Parse.Float(values, 2, defaultValue.eulerAngles.z);
     return Quaternion.Euler(angle);
   }
-  public static Range<Quaternion> AngleYXZRange(string arg) => AngleYXZRange(arg, Quaternion.identity);
-  public static Range<Quaternion> AngleYXZRange(string arg, Quaternion defaultValue)
-  {
-    var parts = Split(arg);
-    var y = Parse.FloatRange(parts, 0, defaultValue.y);
-    var x = Parse.FloatRange(parts, 1, defaultValue.x);
-    var z = Parse.FloatRange(parts, 2, defaultValue.z);
-    return ToAngleRange(x, y, z);
-  }
-  private static Range<Quaternion> ToAngleRange(Range<float> x, Range<float> y, Range<float> z)
-  {
-    var min = Quaternion.Euler(new(x.Min, y.Min, z.Min));
-    var max = Quaternion.Euler(new(x.Max, y.Max, z.Max));
-    return new(min, max);
-  }
+
   ///<summary>Parses XZY vector starting at zero index. Zero is used for missing values.</summary>
   public static Vector3 VectorXZY(string[] args) => VectorXZY(args, 0, Vector3.zero);
   ///<summary>Parses XZY vector starting at zero index. Default values is used for missing values.</summary>
@@ -174,7 +186,7 @@ public static class Parse
     vector.z = Float(args, index + 1, defaultValue.z);
     return vector;
   }
-  public static Range<Vector3> VectorXZYRange(string arg, Vector3 defaultValue)
+  public static Vector3Range VectorXZYRange(string arg, Vector3 defaultValue)
   {
     var parts = Split(arg);
     var x = FloatRange(parts, 0, defaultValue.x);
@@ -197,7 +209,7 @@ public static class Parse
     vector.z = Float(args, index, defaultValue.z);
     return vector;
   }
-  public static Range<Vector3> VectorZXYRange(string arg, Vector3 defaultValue)
+  public static Vector3Range VectorZXYRange(string arg, Vector3 defaultValue)
   {
     var parts = Split(arg);
     var x = FloatRange(parts, 1, defaultValue.x);
@@ -205,7 +217,7 @@ public static class Parse
     var z = FloatRange(parts, 0, defaultValue.z);
     return ToVectorRange(x, y, z);
   }
-  private static Range<Vector3> ToVectorRange(Range<float> x, Range<float> y, Range<float> z)
+  private static Vector3Range ToVectorRange(Range<float> x, Range<float> y, Range<float> z)
   {
     Vector3 min = new(x.Min, y.Min, z.Min);
     Vector3 max = new(x.Max, y.Max, z.Max);
@@ -226,7 +238,7 @@ public static class Parse
     vector.z = Float(args, index + 2, defaultValue.z);
     return vector;
   }
-  public static Range<Vector3> VectorYXZRange(string arg, Vector3 defaultValue)
+  public static Vector3Range VectorYXZRange(string arg, Vector3 defaultValue)
   {
     var parts = Split(arg);
     var x = FloatRange(parts, 1, defaultValue.x);
@@ -246,7 +258,7 @@ public static class Parse
     if (scale.z == 0) scale.z = scale.x;
     return scale;
   }
-  public static Range<Vector3> ScaleRange(string arg)
+  public static Vector3Range ScaleRange(string arg)
   {
     var parts = Split(arg);
     var x = FloatRange(parts, 0, 0f);
@@ -289,9 +301,9 @@ public static class Parse
     value = parameters.FirstOrDefault(arg => arg.ToLower() == flag) != null;
     return parameters.Where(arg => arg.ToLower() != flag);
   }
-  public static bool Flag(Dictionary<string, string> parameters, string flag)
+  public static bool Flag(List<string> parameters, string flag)
   {
-    var key = parameters.Keys.FirstOrDefault(key => key.ToLower() == flag.ToLower());
+    var key = parameters.FirstOrDefault(value => value.ToLower() == flag.ToLower());
     if (key == null) return false;
     return parameters.Remove(key);
   }

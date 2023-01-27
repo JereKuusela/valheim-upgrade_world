@@ -12,12 +12,16 @@ public class CountParameters : DataParameters
   }
   public CountParameters(Terminal.ConsoleEventArgs args) : base(args, false)
   {
-    foreach (var kvp in Unhandled)
+    foreach (var par in Unhandled.ToList())
     {
-      if (kvp.Key == "count")
-        Count = Parse.IntRange(kvp.Value);
+      var split = par.Split('=');
+      if (split[0] == "count")
+      {
+        Count = Parse.IntRange(split[1]);
+      }
+      else continue;
+      Unhandled.Remove(par);
     }
-    Unhandled.Remove("count");
   }
 
   public static new Dictionary<string, Func<int, List<string>?>> GetAutoComplete()

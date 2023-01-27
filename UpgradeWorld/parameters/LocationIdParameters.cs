@@ -11,16 +11,17 @@ public class LocationIdParameters : FiltererParameters
   }
   public LocationIdParameters(Terminal.ConsoleEventArgs args) : base(args)
   {
-    foreach (var kvp in Unhandled)
+    foreach (var par in Unhandled.ToList())
     {
-      if (kvp.Key == "log")
+      if (par == "log")
         Log = true;
+      else continue;
+      Unhandled.Remove(par);
     }
-    Unhandled.Remove("log");
   }
   public override bool Valid(Terminal terminal)
   {
-    Ids = Unhandled.SelectMany(kvp => Parse.Split(kvp.Key)).ToArray();
+    Ids = Unhandled.SelectMany(kvp => Parse.Split(kvp)).ToArray();
     Unhandled.Clear();
     if (!base.Valid(terminal)) return false;
     var invalidIds = Ids.Where(id => ZoneSystem.instance.GetLocation(id) == null);

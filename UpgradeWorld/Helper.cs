@@ -136,4 +136,14 @@ public static class Helper
     if (ids.Count() == 0) return "";
     return " " + Helper.JoinRows(ids);
   }
+
+
+  public static string PrintVectorXZY(Vector3 vector) => "(" + vector.x.ToString("F0") + ", " + vector.z.ToString("F0") + ", " + vector.y.ToString("F0") + ")";
+  public static string PrintVectorYXZ(Vector3 vector) => "(" + vector.y.ToString("F0") + ", " + vector.x.ToString("F0") + ", " + vector.z.ToString("F0") + ")";
+  public static string PrintAngleYXZ(Quaternion quaternion) => PrintVectorYXZ(quaternion.eulerAngles);
+
+  public static string PrintDay(long v) => ToDay(v).ToString();
+
+  public static long ToDay(long v) => v / 1000 / 10000 / 1800;
+  public static long ToTick(long v) => v * 1000 * 10000 * 1800;
 }

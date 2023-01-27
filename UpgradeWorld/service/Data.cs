@@ -1,0 +1,85 @@
+using UnityEngine;
+using UpgradeWorld;
+
+namespace Service;
+
+public class DataHelper
+{
+  public static string GetData(ZDO zdo, int hash, string type)
+  {
+    if ((type == "" || type == "vector") && zdo.m_vec3?.ContainsKey(hash) == true)
+      return Helper.PrintVectorXZY(zdo.m_vec3[hash]) + " (vector)";
+    if ((type == "" || type == "quat") && zdo.m_quats?.ContainsKey(hash) == true)
+      return Helper.PrintAngleYXZ(zdo.m_quats[hash]) + " (quat)";
+    if ((type == "" || type == "long") && zdo.m_longs?.ContainsKey(hash) == true)
+    {
+      if (hash == Hash.TimeOfDeath) return Helper.PrintDay(zdo.m_longs[hash]) + " (long)";
+      return zdo.m_longs[hash].ToString() + " (long)";
+    }
+    if ((type == "" || type == "string") && zdo.m_strings?.ContainsKey(hash) == true)
+      return zdo.m_strings[hash] + " (string)";
+    if ((type == "" || type == "int") && zdo.m_ints?.ContainsKey(hash) == true)
+      return zdo.m_ints[hash].ToString() + " (int)";
+    if ((type == "" || type == "float") && zdo.m_floats?.ContainsKey(hash) == true)
+      return zdo.m_floats[hash].ToString("F1") + " (float)";
+    return "No data";
+  }
+
+  public static bool SetData(ZDO zdo, int hash, string data, string type)
+  {
+    if (type == "vector" || (type == "" && zdo.m_vec3?.ContainsKey(hash) == true))
+    {
+      if (zdo.m_vec3 == null) zdo.m_vec3 = new();
+      zdo.m_vec3[hash] = Parse.VectorXZY(Parse.Split(data), Vector3.zero);
+    }
+    else if (type == "quat" || (type == "" && zdo.m_quats?.ContainsKey(hash) == true))
+    {
+
+      if (zdo.m_quats == null) zdo.m_quats = new();
+      zdo.m_quats[hash] = Parse.AngleYXZ(data);
+    }
+    else if (type == "long" || (type == "" && zdo.m_longs?.ContainsKey(hash) == true))
+    {
+      if (zdo.m_longs == null) zdo.m_longs = new();
+      if (hash == Hash.TimeOfDeath) zdo.m_longs[hash] = Helper.ToTick(Parse.Long(data));
+      else zdo.m_longs[hash] = Parse.Long(data);
+    }
+    else if (type == "string" || (type == "" && zdo.m_strings?.ContainsKey(hash) == true))
+    {
+      if (zdo.m_strings == null) zdo.m_strings = new();
+      zdo.m_strings[hash] = data;
+    }
+    else if (type == "int" || (type == "" && zdo.m_ints?.ContainsKey(hash) == true))
+    {
+      if (zdo.m_ints == null) zdo.m_ints = new();
+      zdo.m_ints[hash] = Parse.Int(data);
+    }
+    else if (type == "float" || (type == "" && zdo.m_floats?.ContainsKey(hash) == true))
+    {
+      if (zdo.m_floats == null) zdo.m_floats = new();
+      zdo.m_floats[hash] = Parse.Float(data);
+    }
+    else
+      return false;
+    return true;
+  }
+  public static bool HasData(ZDO zdo, int hash, string data, bool includeEmpty)
+  {
+    if (zdo.m_vec3?.ContainsKey(hash) == true)
+      return Parse.VectorXZYRange(data, Vector3.zero).Includes(zdo.m_vec3[hash]);
+    if (zdo.m_quats?.ContainsKey(hash) == true)
+      return Parse.AngleYXZ(data) == zdo.m_quats[hash];
+    if (zdo.m_longs?.ContainsKey(hash) == true)
+    {
+      if (hash == Hash.TimeOfDeath) return Parse.LongRange(data).Includes(Helper.ToDay(zdo.m_longs[hash]));
+      return Parse.LongRange(data).Includes(zdo.m_longs[hash]);
+    }
+    if (zdo.m_strings?.ContainsKey(hash) == true)
+      return zdo.m_strings[hash] == data;
+    if (zdo.m_ints?.ContainsKey(hash) == true)
+      return Parse.IntRange(data).Includes(zdo.m_ints[hash]);
+    if (zdo.m_floats?.ContainsKey(hash) == true)
+      return Parse.FloatRange(data).Includes(zdo.m_floats[hash]);
+    return includeEmpty;
+  }
+}

@@ -24,7 +24,7 @@ public class FiltererParameters
   public float ObjectReset = 0f;
   public int SafeZones = Settings.SafeZoneSize;
   public TargetZones TargetZones = TargetZones.Generated;
-  public Dictionary<string, string> Unhandled = new();
+  public List<string> Unhandled = new();
   public bool IsBiomeValid(Heightmap.Biome biome) => Biomes.Count() == 0 || Biomes.Contains(biome);
   public bool IsBiomeValid(Vector3 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos));
   public bool IsBiomeValid(Vector2 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos.x, pos.y));
@@ -70,13 +70,13 @@ public class FiltererParameters
           MaxDistance = distance.Max;
         }
         else if (name == "biomes") Biomes = Parse.Biomes(value);
-        else Unhandled.Add(split[0], split[1]);
+        else Unhandled.Add(par);
       }
       else if (name == "noedges") NoEdges = true;
       else if (name == "start") Start = true;
       else if (name == "zone") Zone = Helper.GetPlayerZone();
       else if (name == "force") SafeZones = 0;
-      else Unhandled.Add(split[0], "");
+      else Unhandled.Add(par);
     }
     if (!Zone.HasValue && !Pos.HasValue)
       Pos = new Vector2(0, 0);

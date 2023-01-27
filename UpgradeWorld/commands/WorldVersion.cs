@@ -16,9 +16,9 @@ public class WorldVersionCommand
       FiltererParameters pars = new(args);
 
       var version = -1;
-      if (pars.Unhandled.ContainsKey("legacy")) version = 0;
-      if (pars.Unhandled.ContainsKey("hh")) version = 1;
-      if (pars.Unhandled.ContainsKey("mistlands")) version = 2;
+      if (pars.Unhandled.Contains("legacy")) version = 0;
+      if (pars.Unhandled.Contains("hh")) version = 1;
+      if (pars.Unhandled.Contains("mistlands")) version = 2;
       if (version == -1)
       {
         Helper.Print(args.Context, "Error: Missing or incorrect version parameter.");

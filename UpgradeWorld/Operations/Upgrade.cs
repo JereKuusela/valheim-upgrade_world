@@ -19,13 +19,13 @@ public class Upgrade : BaseOperation
     "jewelcrafting"
   };
 
-  public Upgrade(Terminal context, string type, Dictionary<string, string> extra, FiltererParameters args) : base(context)
+  public Upgrade(Terminal context, string type, List<string> extra, FiltererParameters args) : base(context)
   {
     AddOperations(type, extra, args);
     Types.Sort();
   }
 
-  private void AddOperations(string type, Dictionary<string, string> extra, FiltererParameters args)
+  private void AddOperations(string type, List<string> extra, FiltererParameters args)
   {
     if (type == null || type == "")
     {

@@ -24,8 +24,8 @@ public class RemoveObjects : EntityOperation
       }
       total += removed;
       return "Removed " + removed + " of " + id + ".";
-    });
-    texts = texts.Prepend($"Total: {total}").ToArray();
+    }).ToArray();
+    texts = texts.Prepend($"Removed: {total}").ToArray();
     if (args.Log) Log(texts);
     else Print(texts, false);
   }
