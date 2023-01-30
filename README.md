@@ -80,7 +80,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items. `chance` determines how many of the chests are reseted.
 - `locations_add [id1,id2,...] [noclearing] [...args]`: Adds locations to already explored areas. With `noclearing`, the location area is not cleared of existing objects. `chance` determines how many of the locations are added.
 - `locations_list [id1,id2,...] [...args]`: Lists locations showing their position and biome.
-- `locations_register [id] [...args]`: Registers locations to the database. This doesn't actually spawn them.
+- `location_register [id] [x,z,y=player position]`: Registers a location to the database (without spawning it). If the location already exists, then its position is automatically used.
 - `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used). `chance` determines how many of the locations are removed.
 - `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout. `chance` determines how many of the locations are reseted.
 - `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. Parameter `count=1` can be used to exclude non-existing objects.

@@ -63,6 +63,11 @@ public static class CommandWrapper
     if (ServerDevcommands == null) return new();
     return GetMethod(InfoType(), "XZ", new[] { typeof(string), typeof(string), typeof(int) }).Invoke(null, new object[] { name, description, index }) as List<string>;
   }
+  public static List<string> XZY(string name, string description, int index)
+  {
+    if (ServerDevcommands == null) return new();
+    return GetMethod(InfoType(), "XZY", new[] { typeof(string), typeof(string), typeof(int) }).Invoke(null, new object[] { name, description, index }) as List<string>;
+  }
   public static List<string> Flag(string name, string description)
   {
     if (ServerDevcommands == null) return new();

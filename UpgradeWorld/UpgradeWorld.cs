@@ -103,7 +103,7 @@ public class SetCommands
     new LocationsResetCommand();
     new ObjectsRemoveCommand();
     new ObjectsEditCommand();
-    new LocationsRegisterCommand();
+    new LocationRegisterCommand();
     new LocationsRemoveCommand();
     new ChestsResetCommand();
     new ObjectsSwapCommand();

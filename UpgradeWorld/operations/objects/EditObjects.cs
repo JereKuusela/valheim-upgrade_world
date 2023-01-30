@@ -16,7 +16,7 @@ public class EditObjects : EntityOperation
       var split = Parse.Split(data);
       var value = split.Length > 1 ? split[1] : "";
       var type = split.Length > 2 ? split[2] : "";
-      return DataHelper.SetData(zdo, split[0].GetStableHashCode(), value, type);
+      return DataHelper.SetData(zdo, split[0], value, type);
     }).Count() > 0;
     if (result)
     {

@@ -5,8 +5,11 @@ namespace Service;
 
 public class DataHelper
 {
-  public static string GetData(ZDO zdo, int hash, string type)
+  public static string GetData(ZDO zdo, string key, string type)
   {
+    var hash = key.GetStableHashCode();
+    var hashId = (key + "_u").GetStableHashCode();
+    var hashValue = (key + "_i").GetStableHashCode();
     if ((type == "" || type == "vector") && zdo.m_vec3?.ContainsKey(hash) == true)
       return Helper.PrintVectorXZY(zdo.m_vec3[hash]) + " (vector)";
     if ((type == "" || type == "quat") && zdo.m_quats?.ContainsKey(hash) == true)
@@ -22,11 +25,15 @@ public class DataHelper
       return zdo.m_ints[hash].ToString() + " (int)";
     if ((type == "" || type == "float") && zdo.m_floats?.ContainsKey(hash) == true)
       return zdo.m_floats[hash].ToString("F1") + " (float)";
+    if ((type == "" || type == "id") && zdo.m_longs?.ContainsKey(hashId) == true && zdo.m_longs?.ContainsKey(hashValue) == true)
+      return zdo.m_longs[hashId].ToString() + "/" + zdo.m_longs[hashValue].ToString();
     return "No data";
   }
 
-  public static bool SetData(ZDO zdo, int hash, string data, string type)
+  public static bool SetData(ZDO zdo, string key, string data, string type)
   {
+    var hash = key.GetStableHashCode();
+    var hashId = (key + "_u").GetStableHashCode();
     if (type == "vector" || (type == "" && zdo.m_vec3?.ContainsKey(hash) == true))
     {
       if (zdo.m_vec3 == null) zdo.m_vec3 = new();
@@ -59,12 +66,23 @@ public class DataHelper
       if (zdo.m_floats == null) zdo.m_floats = new();
       zdo.m_floats[hash] = Parse.Float(data);
     }
+    else if (type == "id" || (type == "" && zdo.m_longs?.ContainsKey(hashId) == true))
+    {
+      if (zdo.m_longs == null) zdo.m_longs = new();
+      var split = Parse.Split(data, '/');
+      var hashValue = (key + "_i").GetStableHashCode();
+      zdo.m_longs[hashId] = Parse.Long(split[0]);
+      zdo.m_longs[hashValue] = Parse.Long(split, 1);
+    }
     else
       return false;
     return true;
   }
-  public static bool HasData(ZDO zdo, int hash, string data, bool includeEmpty)
+  public static bool HasData(ZDO zdo, string key, string data, bool includeEmpty)
   {
+    var hash = key.GetStableHashCode();
+    var hashId = (key + "_u").GetStableHashCode();
+    var hashValue = (key + "_i").GetStableHashCode();
     if (zdo.m_vec3?.ContainsKey(hash) == true)
       return Parse.VectorXZYRange(data, Vector3.zero).Includes(zdo.m_vec3[hash]);
     if (zdo.m_quats?.ContainsKey(hash) == true)
@@ -80,6 +98,8 @@ public class DataHelper
       return Parse.IntRange(data).Includes(zdo.m_ints[hash]);
     if (zdo.m_floats?.ContainsKey(hash) == true)
       return Parse.FloatRange(data).Includes(zdo.m_floats[hash]);
+    if (zdo.m_longs?.ContainsKey(hashId) == true && zdo.m_longs?.ContainsKey(hashValue) == true)
+      return data == zdo.m_longs[hashId] + "/" + zdo.m_longs[hashValue];
     return includeEmpty;
   }
 }

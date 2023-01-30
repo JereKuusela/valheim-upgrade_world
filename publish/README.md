@@ -23,7 +23,7 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 - v1.30
 	- Adds automatic terrain reset to location removing.
 	- Adds a new command `objects_swap` to swap objects.
-	- Adds a new command `locations_register` to register locations to the location database.
+	- Adds a new command `location_register` to register locations to the location database.
 	- Adds a new command `locations_list` to print location positions.
 	- Adds a new paramater `clear` to the `locations_remove` command to override the radius of cleared objects.
 	- Adds a new parameter `location` to the `objects_remove` command to filter by location.

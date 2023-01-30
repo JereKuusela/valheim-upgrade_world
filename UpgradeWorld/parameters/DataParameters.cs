@@ -59,10 +59,9 @@ public class DataParameters : IdParameters
     foreach (var filter in Filters)
     {
       var split = Parse.Split(filter);
-      var hash = split[0].GetStableHashCode();
       var value = split.Length > 1 ? split[1] : "";
       var includeEmpty = split.Length > 2 ? Parse.Boolean(split[2]) ?? false : false;
-      zdos = zdos.Where(zdo => DataHelper.HasData(zdo, hash, value, includeEmpty));
+      zdos = zdos.Where(zdo => DataHelper.HasData(zdo, split[0], value, includeEmpty));
     }
     return zdos;
   }
@@ -70,7 +69,7 @@ public class DataParameters : IdParameters
 
   public static new Dictionary<string, Func<int, List<string>?>> GetAutoComplete()
   {
-    var types = new List<string>() { "string", "int", "float", "long", "vector", "quat" };
+    var types = new List<string>() { "float", "id", "int", "long", "quat", "string", "vector" };
     var truths = new List<string>() { "true", "false" };
     var autoComplete = FiltererParameters.GetAutoComplete();
     autoComplete["level"] = (int index) => index == 0 ? CommandWrapper.Info("level=<color=yellow>amount</color> or level=<color=yellow>min-max</color> | Levels of the creature.") : null;

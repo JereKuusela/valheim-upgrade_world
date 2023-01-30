@@ -16,7 +16,7 @@ public class ListObjectPositions : EntityOperation
     {
       var split = Parse.Split(print);
       var type = split.Length > 1 ? split[1] : "";
-      return DataHelper.GetData(zdo, split[0].GetStableHashCode(), type);
+      return DataHelper.GetData(zdo, split[0], type);
     }).ToList());
   }
   private void ListPositions(IEnumerable<string> ids, DataParameters args)
