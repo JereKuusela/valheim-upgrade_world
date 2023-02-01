@@ -20,10 +20,18 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 # Changelog
 
+- v1.31
+	- Adds a new command `objects_respawn` to refresh objects.
+	- Adds a new command `objects_edit` to set data values.
+	- Adds a new parameter `print` to the `objects_list` to display any data value.
+	- Adds a new parameter `filter` to the object commands to filter by data value.
+	- Changes the command `location_register` to target only a single zone.
+	- Fixes a possible crash when removing objects.
+
 - v1.30
 	- Adds automatic terrain reset to location removing.
 	- Adds a new command `objects_swap` to swap objects.
-	- Adds a new command `location_register` to register locations to the location database.
+	- Adds a new command `locations_register` to register locations to the location database.
 	- Adds a new command `locations_list` to print location positions.
 	- Adds a new paramater `clear` to the `locations_remove` command to override the radius of cleared objects.
 	- Adds a new parameter `location` to the `objects_remove` command to filter by location.

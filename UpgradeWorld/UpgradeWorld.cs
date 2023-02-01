@@ -108,6 +108,7 @@ public class SetCommands
     new ChestsResetCommand();
     new ObjectsSwapCommand();
     new TimeSetCommand();
+    new ObjetsRefreshCommand();
     new StartStopCommand();
     new UpgradeCommand();
     new VerboseCommand();

@@ -25,7 +25,7 @@ public static class Helper
     if (!zdo.IsOwner())
       zdo.SetOwner(ZDOMan.instance.GetMyID());
     var spawned = zdo.GetZDOID(SpawnedHash);
-    if (ZDOMan.instance.m_objectsByID.TryGetValue(spawned, out var spawnedZdo))
+    if (ZDOMan.instance.m_objectsByID.TryGetValue(spawned, out var spawnedZdo) && spawnedZdo != zdo)
       RemoveZDO(spawnedZdo);
     if (ZNetScene.instance.m_instances.TryGetValue(zdo, out var view))
       ZNetScene.instance.Destroy(view.gameObject);
