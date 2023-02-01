@@ -27,6 +27,7 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 	- Adds a new parameter `filter` to the object commands to filter by data value.
 	- Changes the command `location_register` to target only a single zone.
 	- Fixes a possible crash when removing objects.
+	- Optimizes `objects_*` commands.
 
 - v1.30
 	- Adds automatic terrain reset to location removing.

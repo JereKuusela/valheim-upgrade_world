@@ -57,7 +57,9 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `chance=percentage`: Makes a single operation to be applied randomly.
 - `clear=meters`: Overrides the cleared radius when using `locations_remove`.
 - `count=min-max`: Filters objects by their amount. Only applies to `objects_count`.
+- `data=key,value,type`: Sets object data. Type is only needed if the key doesn't already exist. Only applies to `objects_edit`. Multiple data values can be set at once.
 - `distance=min-max`: Short-hand for setting both distances.
+- `filter=key,value,includeMissing`: Filters object by data value. Third parameter must be truthy to include objects that don't have the data value set. Only applies to `objects_*` commands. Multiple filters can be set at once.
 - `force`: Disables player base detection (same as `safeZones=0`).
 - `level=min-max`: Filters objects by their creature level. Only applies to `objects_*` commands.
 - `location=id`: Filters objects by their location. Only applies to `objects_*` commands.
@@ -66,6 +68,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
 - `pos=x,z`: Position of the center. Default value is the world center. Default distance is all of the map.
+- `print=key,type`: Prints object data. Type is only needed if the same key is used for multiple types. Only applies to `objects_list` command. Multiple values can be printed at once.
 - `safeZones=distance`: Set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
 - `start`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
 - `terrain=meters`: Resets terrain around the object when using `vegetation_add` or `vegetation_reset`.
@@ -84,7 +87,9 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used). `chance` determines how many of the locations are removed.
 - `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout. `chance` determines how many of the locations are reseted.
 - `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. Parameter `count=1` can be used to exclude non-existing objects.
-- `objects_list [id1,id2,...] [...args]`: Lists objects showing their position and biome.
+- `objects_edit [id1,id2,...] [data=key,value,type] [...args]`: Edits data of objects.
+- `objects_list [id1,id2,...] [print=key,type] [...args]`: Lists objects showing their position and biome. `print` allows displaying custom data.
+- `objects_refresh [id1,id2,...] [...args]`: Refresh/respawns objects.
 - `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `objects_count` to check that you don't remove too much.
 - `objects_swap [new id,id1,id2,...] [...args]`: Replaces objects with a new one.
 - `save_disable`: Disables world saving. But still a good idea to make backups.

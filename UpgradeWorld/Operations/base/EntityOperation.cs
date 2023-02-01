@@ -20,20 +20,30 @@ public abstract class EntityOperation : BaseOperation
     if (id.EndsWith("*", StringComparison.Ordinal)) return name.StartsWith(id.Substring(0, id.Length - 1), StringComparison.OrdinalIgnoreCase);
     return id == name;
   }
+  private static int PlayerHash = "Player".GetStableHashCode();
   public static List<string> GetPrefabs(string id)
   {
-    IEnumerable<GameObject> values = ZNetScene.instance.m_namedPrefabs.Values;
-    if (id.Contains("*"))
-      values = values.Where(prefab => IsIncluded(id, prefab.name));
+    IEnumerable<KeyValuePair<int, GameObject>> values = ZNetScene.instance.m_namedPrefabs.Where(kvp => kvp.Key != PlayerHash);
+    if (id == "*")
+    {
+      // Empty on purpose.
+    }
+    else if (id.Contains("*"))
+      values = values.Where(kvp => IsIncluded(id, kvp.Value.name));
     else
-      values = values.Where(prefab => string.Equals(prefab.name, id, StringComparison.OrdinalIgnoreCase));
-    return values.Select(prefab => prefab.name).ToList();
+      values = values.Where(kvp => string.Equals(kvp.Value.name, id, StringComparison.OrdinalIgnoreCase));
+    return values.Select(kvp => kvp.Value.name).ToList();
   }
   public static ZDO[] GetZDOs(string id, DataParameters args)
   {
     var code = id.GetStableHashCode();
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => code == zdo.GetPrefab());
     return FilterZdos(zdos, args).ToArray();
+  }
+  public static ZDO[] GetZDOs(ZDO[] zdos, string id)
+  {
+    var code = id.GetStableHashCode();
+    return zdos.Where(zdo => code == zdo.GetPrefab()).ToArray();
   }
   public static ZDO[] GetZDOs(FiltererParameters args)
   {

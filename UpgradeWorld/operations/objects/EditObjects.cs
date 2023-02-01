@@ -30,9 +30,10 @@ public class EditObjects : EntityOperation
   {
     var prefabs = ids.SelectMany(GetPrefabs).ToList();
     var total = 0;
+    var zdos = GetZDOs(args);
     var texts = prefabs.Select(id =>
     {
-      var updated = GetZDOs(id, args).Where(zdo => SetData(zdo, args.Datas)).Count();
+      var updated = GetZDOs(zdos, id).Where(zdo => SetData(zdo, args.Datas)).Count();
       total += updated;
       return "Updated " + updated + " of " + id + ".";
     }).ToArray();

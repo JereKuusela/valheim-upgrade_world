@@ -13,9 +13,10 @@ public class SwapObjects : EntityOperation
     var toSwap = ids.FirstOrDefault().GetStableHashCode();
     var prefabs = ids.Skip(1).SelectMany(GetPrefabs).ToList();
     var total = 0;
+    var allZdos = GetZDOs(args);
     var texts = prefabs.Select(id =>
     {
-      var zdos = GetZDOs(id, args);
+      var zdos = GetZDOs(allZdos, id);
       var swapped = 0;
       foreach (var zdo in zdos)
       {

@@ -12,9 +12,10 @@ public class RemoveObjects : EntityOperation
   {
     var prefabs = ids.SelectMany(GetPrefabs).ToList();
     var total = 0;
+    var allZdos = GetZDOs(args);
     var texts = prefabs.Select(id =>
     {
-      var zdos = GetZDOs(id, args);
+      var zdos = GetZDOs(allZdos, id);
       var removed = 0;
       foreach (var zdo in zdos)
       {

@@ -10,7 +10,7 @@ public class ObjetsRefreshCommand
     }, DataParameters.GetAutoComplete());
     new Terminal.ConsoleCommand("objects_refresh", "[id1,id2,...] [...args] - Refreshes / respawn objects.", (args) =>
     {
-      DataParameters pars = new(args, true);
+      DataParameters pars = new(args, false);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       new RefreshObjects(args.Context, pars.Ids, pars);

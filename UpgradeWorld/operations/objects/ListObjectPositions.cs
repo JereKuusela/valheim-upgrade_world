@@ -21,9 +21,10 @@ public class ListObjectPositions : EntityOperation
   }
   private void ListPositions(IEnumerable<string> ids, DataParameters args)
   {
+    var zdos = GetZDOs(args);
     var texts = ids.Select(id =>
     {
-      return GetZDOs(id, args).Select(zdo => id + " " + zdo.m_uid.m_id + " " + Helper.PrintVectorXZY(zdo.GetPosition()) + ": " + GetData(zdo, args.Prints));
+      return GetZDOs(zdos, id).Select(zdo => id + " " + zdo.m_uid.m_id + " " + Helper.PrintVectorXZY(zdo.GetPosition()) + ": " + GetData(zdo, args.Prints));
     }).Aggregate((acc, list) => acc.Concat(list));
     if (args.Log) Log(texts);
     else Print(texts, false);

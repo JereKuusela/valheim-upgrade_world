@@ -15,9 +15,10 @@ public class CountObjects : EntityOperation
     if (ids.Count == 0) ids.Add("*");
     var prefabs = ids.SelectMany(GetPrefabs).ToHashSet();
     var total = 0;
+    var zdos = GetZDOs(args);
     var texts = prefabs.Select(id =>
     {
-      var count = GetZDOs(id, args).Count();
+      var count = GetZDOs(zdos, id).Count();
       if (count < countRange.Min || count >= countRange.Max) return "";
       total += count;
       return $"{id}: {count}";
