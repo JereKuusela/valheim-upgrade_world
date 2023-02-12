@@ -22,6 +22,7 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 - v1.32
 	- Adds a new command `chests_search` to search chests and stands.
+	- Adds underscore support for data setting and filtering (for space bars).
 
 - v1.31
 	- Adds a new command `objects_respawn` to refresh objects.
@@ -53,13 +54,3 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 	- Adds a new setting "Operation delay" to prevent dedicated servers from getting overloaded.
 	- Removes settings "Safe distance around the player" and "Custom points" as obsolete (+ improves performance).
 	- Improves performance of single zone operations.
-
-- v1.27
-	- Adds a new parameteter `terrain` to reset nearby terrain when resetting vegetation.
-	- Changes most output to be printed even without verbose mode.
-	- Changes the default value of verbose mode to false.
-	- Fixes `zones_reset` command causing holes in the zone borders.
-	- Fixes networking logging not being throttled.
-
-- v1.26
-	- Fixes location priotization not working correctly (caused boss locations being spawned last).

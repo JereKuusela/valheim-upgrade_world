@@ -54,7 +54,7 @@ public class DataHelper
     else if (type == "string" || (type == "" && zdo.m_strings?.ContainsKey(hash) == true))
     {
       if (zdo.m_strings == null) zdo.m_strings = new();
-      zdo.m_strings[hash] = data;
+      zdo.m_strings[hash] = data.Replace('_', ' ');
     }
     else if (type == "int" || (type == "" && zdo.m_ints?.ContainsKey(hash) == true))
     {
@@ -93,7 +93,7 @@ public class DataHelper
       return Parse.LongRange(data).Includes(zdo.m_longs[hash]);
     }
     if (zdo.m_strings?.ContainsKey(hash) == true)
-      return zdo.m_strings[hash] == data;
+      return zdo.m_strings[hash] == data.Replace('_', ' '); ;
     if (zdo.m_ints?.ContainsKey(hash) == true)
       return Parse.IntRange(data).Includes(zdo.m_ints[hash]);
     if (zdo.m_floats?.ContainsKey(hash) == true)
