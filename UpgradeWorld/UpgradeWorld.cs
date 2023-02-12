@@ -8,7 +8,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.31";
+  const string VERSION = "1.32";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -103,6 +103,7 @@ public class SetCommands
     new LocationsResetCommand();
     new ObjectsRemoveCommand();
     new ObjectsEditCommand();
+    new ChestsSearchCommand();
     new LocationRegisterCommand();
     new LocationsRemoveCommand();
     new ChestsResetCommand();

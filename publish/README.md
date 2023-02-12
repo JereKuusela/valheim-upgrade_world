@@ -20,6 +20,9 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 # Changelog
 
+- v1.32
+	- Adds a new command `chests_search` to search chests and stands.
+
 - v1.31
 	- Adds a new command `objects_respawn` to refresh objects.
 	- Adds a new command `objects_edit` to set data values.
