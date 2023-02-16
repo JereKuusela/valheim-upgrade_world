@@ -1,3 +1,4 @@
+using System.Linq;
 using Service;
 
 namespace UpgradeWorld;
@@ -22,14 +23,32 @@ public class CleanObjects : EntityOperation
       zdo.Set(prefix + "quality", 1);
     return true;
   }
+  private int LocationProxyHash = "LocationProxy".GetStableHashCode();
+  private int LocationHash = "location".GetStableHashCode();
   private void Clean(FiltererParameters args)
   {
     var zdos = GetZDOs(args);
-    var zs = ZNetScene.instance;
+    var scene = ZNetScene.instance;
+    var zs = ZoneSystem.instance;
+    var toRemove = zs.m_locationInstances.Where(x => x.Value.m_location?.m_prefab == null).Select(x => x.Key).ToList();
+    foreach (var zone in toRemove)
+      zs.m_locationInstances.Remove(zone);
+    Print("Removed " + toRemove.Count + " missing locations from the location database.");
+
     var removed = 0;
     foreach (var zdo in zdos)
     {
-      if (zs.m_namedPrefabs.ContainsKey(zdo.GetPrefab())) continue;
+      if (zdo.GetPrefab() != LocationProxyHash) continue;
+      if (zs.GetLocation(zdo.GetInt(LocationHash)) != null) continue;
+      Helper.RemoveZDO(zdo);
+      removed++;
+    }
+    Print("Removed " + removed + " missing locations from the world");
+
+    removed = 0;
+    foreach (var zdo in zdos)
+    {
+      if (scene.m_namedPrefabs.ContainsKey(zdo.GetPrefab())) continue;
       Helper.RemoveZDO(zdo);
       removed++;
     }
