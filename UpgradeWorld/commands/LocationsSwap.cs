@@ -12,7 +12,7 @@ public class LocationsSwapCommand
     }, DataParameters.GetAutoComplete());
     new Terminal.ConsoleCommand("locations_swap", "[new id,id1,id2,...] [...args] - Swaps locations to a different one.", (args) =>
     {
-      DataParameters pars = new(args, true);
+      DataParameters pars = new(args, true, false);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       new SwapLocations(args.Context, pars.Ids, pars);

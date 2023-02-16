@@ -7,12 +7,14 @@ public class IdParameters : FiltererParameters
 {
   public List<string> Ids = new();
   public bool RequireId;
+  public bool Validate;
   public IdParameters(FiltererParameters pars) : base(pars)
   {
   }
-  public IdParameters(Terminal.ConsoleEventArgs args, bool requireId) : base(args)
+  public IdParameters(Terminal.ConsoleEventArgs args, bool requireId, bool validate) : base(args)
   {
     RequireId = requireId;
+    Validate = validate;
   }
   public override bool Valid(Terminal terminal)
   {
@@ -25,7 +27,7 @@ public class IdParameters : FiltererParameters
       return false;
     }
     var invalidIds = Ids.Where(id => !id.Contains("*") && ZNetScene.instance.GetPrefab(id) == null);
-    if (invalidIds.Count() > 0)
+    if (Validate && invalidIds.Count() > 0)
     {
       Helper.Print(terminal, "Error: Invalid entity ids " + string.Join(", ", invalidIds));
       return false;

@@ -16,7 +16,7 @@ public class DataParameters : IdParameters
   public DataParameters(FiltererParameters pars) : base(pars)
   {
   }
-  public DataParameters(Terminal.ConsoleEventArgs args, bool requireId) : base(args, requireId)
+  public DataParameters(Terminal.ConsoleEventArgs args, bool requireId, bool validate = true) : base(args, requireId, validate)
   {
     foreach (var par in Unhandled.ToList())
     {

@@ -86,5 +86,6 @@ public class ResetZones : ZoneOperation
     BorderZones = BorderZones.Where(kvp => ZoneSystem.instance.IsZoneGenerated(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     new ResetBorder(Context, BorderZones);
     ClutterSystem.instance?.ClearAll();
+    Helper.RecalculateTerrain();
   }
 }

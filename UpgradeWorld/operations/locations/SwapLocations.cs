@@ -12,26 +12,29 @@ public class SwapLocations : EntityOperation
   {
     var toSwap = ids.FirstOrDefault().GetStableHashCode();
     var prefabs = ids.Skip(1).Select(id => id.GetStableHashCode()).ToHashSet();
-    var total = 0;
+    var swappedObjects = 0;
     var zdos = GetZDOs(args).Where(zdo => LocationProxyHash == zdo.GetPrefab()).ToArray();
     foreach (var zdo in zdos)
     {
       if (!args.Roll()) continue;
       if (!prefabs.Contains(zdo.GetInt(LocationHash))) continue;
-      total++;
+      swappedObjects++;
       if (!zdo.IsOwner())
         zdo.SetOwner(ZDOMan.instance.GetMyID());
       zdo.Set(LocationHash, toSwap);
       Refresh(zdo);
     }
-    foreach (var kvp in ZoneSystem.instance.m_locationInstances)
+    var locs = ZoneSystem.instance.m_locationInstances;
+    var location = ZoneSystem.instance.m_locationsByHash[toSwap];
+    var toModify = locs.Where(kvp => prefabs.Contains(kvp.Value.m_location?.m_hash ?? 0)).ToArray();
+    foreach (var zone in toModify)
     {
-      var location = kvp.Value;
-      if (!prefabs.Contains(location.m_location?.m_hash ?? 0)) continue;
-      location.m_location = ZoneSystem.instance.m_locationsByHash[toSwap];
-      ZoneSystem.instance.m_locationInstances[kvp.Key] = location;
+      var data = locs[zone.Key];
+      data.m_location = location;
+      locs[zone.Key] = data;
     }
-    Print($"Swapped {total} locations.", false);
+    var swappedDatabase = toModify.Length;
+    Print($"Swapped {swappedObjects} location objects and {swappedDatabase} location entries.", false);
   }
 
   private static void Refresh(ZDO zdo)

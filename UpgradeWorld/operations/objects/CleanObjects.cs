@@ -32,7 +32,7 @@ public class CleanObjects : EntityOperation
     var toRemove = zs.m_locationInstances.Where(x => x.Value.m_location?.m_prefab == null).Select(x => x.Key).ToList();
     foreach (var zone in toRemove)
       zs.m_locationInstances.Remove(zone);
-    Print("Removed " + toRemove.Count + " missing locations from the location database.");
+    Print("Removed " + toRemove.Count + " missing location entries.");
 
     var removed = 0;
     foreach (var zdo in zdos)
@@ -42,7 +42,7 @@ public class CleanObjects : EntityOperation
       Helper.RemoveZDO(zdo);
       removed++;
     }
-    Print("Removed " + removed + " missing locations from the world");
+    Print("Removed " + removed + " missing location objects.");
 
     removed = 0;
     foreach (var zdo in zdos)
@@ -51,7 +51,7 @@ public class CleanObjects : EntityOperation
       Helper.RemoveZDO(zdo);
       removed++;
     }
-    Print("Removed " + removed + " missing objects from the world");
+    Print("Removed " + removed + " missing objects.");
 
     removed = 0;
     foreach (var zdo in zdos)

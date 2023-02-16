@@ -146,4 +146,10 @@ public static class Helper
 
   public static long ToDay(long v) => v / 1000 / 10000 / 1800;
   public static long ToTick(long v) => v * 1000 * 10000 * 1800;
+
+  public static void RecalculateTerrain()
+  {
+    foreach (var hm in Heightmap.m_heightmaps)
+      hm.Poke(true);
+  }
 }
