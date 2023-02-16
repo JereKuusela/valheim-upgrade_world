@@ -23,8 +23,7 @@ public class CleanObjects : EntityOperation
       zdo.Set(prefix + "quality", 1);
     return true;
   }
-  private int LocationProxyHash = "LocationProxy".GetStableHashCode();
-  private int LocationHash = "location".GetStableHashCode();
+
   private void Clean(FiltererParameters args)
   {
     var zdos = GetZDOs(args);

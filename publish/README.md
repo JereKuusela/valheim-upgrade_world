@@ -22,6 +22,7 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 - v1.33
 	- Adds a new setting "Safe zone objects" to allow excluding areas by non-player built objects.
+	- Adds a new command `locations_swap` to swap locations.
 	- Changes the `world_clean` command to also remove missing locations.
 
 - v1.32

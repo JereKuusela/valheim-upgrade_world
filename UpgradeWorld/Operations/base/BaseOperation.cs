@@ -3,6 +3,8 @@ namespace UpgradeWorld;
 ///<summary>Base class for all operations. Only provides basic utilities.</summary>
 public abstract class BaseOperation
 {
+  protected int LocationProxyHash = "LocationProxy".GetStableHashCode();
+  protected int LocationHash = "location".GetStableHashCode();
   protected Terminal Context;
   public ZRpc? User = null;
   protected BaseOperation(Terminal context)

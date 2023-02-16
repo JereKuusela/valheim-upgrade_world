@@ -87,6 +87,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `location_register [id] [x,z,y=player position]`: Registers a location to the database (without spawning it). If the location already exists, then its position is automatically used.
 - `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used). `chance` determines how many of the locations are removed.
 - `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout. `chance` determines how many of the locations are reseted.
+- `locations_swap [new id,id1,id2,...] [...args]`: Replaces locations with a new one.
 - `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. Parameter `count=1` can be used to exclude non-existing objects.
 - `objects_edit [id1,id2,...] [data=key,value,type] [...args]`: Edits data of objects.
 - `objects_list [id1,id2,...] [print=key,type] [...args]`: Lists objects showing their position and biome. `print` allows displaying custom data.

@@ -121,6 +121,7 @@ public class SetCommands
     new ZonesRestoreCommand();
     new WorldVersionCommand();
     new WorldCleanCommand();
+    new LocationsSwapCommand();
     if (Terminal.commands.TryGetValue("genloc", out var genloc))
     {
       genloc.IsCheat = false;

@@ -12,8 +12,6 @@ public class RemoveLocations : ExecutedOperation
     Args.TargetZones = TargetZones.All;
     Ids = ids.ToHashSet();
   }
-  private int LocationProxyHash = "LocationProxy".GetStableHashCode();
-  private int LocationHash = "location".GetStableHashCode();
 
   private int RemoveSpawned()
   {

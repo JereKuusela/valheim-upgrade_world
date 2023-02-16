@@ -9,8 +9,6 @@ public class RegisterLocation : BaseOperation
   {
     Register(id, position);
   }
-  private int LocationProxyHash = "LocationProxy".GetStableHashCode();
-  private int LocationHash = "location".GetStableHashCode();
   private void Register(string id, Vector3 position)
   {
     var hash = id.GetStableHashCode();
