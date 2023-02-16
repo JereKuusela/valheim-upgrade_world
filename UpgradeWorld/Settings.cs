@@ -28,6 +28,8 @@ public static class Settings
   public static int WorldRadius => configWorldRadius.Value;
   public static ConfigEntry<string> configSafeZoneItems;
   public static HashSet<int> SafeZoneItems => configSafeZoneItems.Value.Split(',').Select(name => name.Trim().GetStableHashCode()).ToHashSet();
+  public static ConfigEntry<string> configSafeZoneObjects;
+  public static HashSet<int> SafeZoneObjects => configSafeZoneObjects.Value.Split(',').Select(name => name.Trim().GetStableHashCode()).ToHashSet();
   public static ConfigEntry<int> configSafeZoneSize;
   public static int SafeZoneSize => configSafeZoneSize.Value;
   public static ConfigEntry<int> configThrottle;
@@ -50,7 +52,8 @@ public static class Settings
     configPreventDoubleZNetView = config.Bind(section, "Prevent double ZNet view", true, "Some bugged objects keep duplicating and corrupting the save. This prevents that from happening which allows removing these objects.");
     configAutoStart = config.Bind(section, "Automatic start", false, "If true, operations start automatically without having to use the start command.");
     configWorldRadius = config.Bind(section, "World radius", 10500, "Max radius for operations.");
-    configSafeZoneItems = config.Bind(section, "Safe zone items", "blastfurnace,bonfire,charcoal_kiln,fermenter,fire_pit,forge,guard_stone,hearth,piece_artisanstation,piece_bed02,piece_brazierceiling01,piece_groundtorch,piece_groundtorch_blue,piece_groundtorch_green,piece_groundtorch_wood,piece_oven,piece_spinningwheel,piece_stonecutter,piece_walltorch,piece_workbench,portal,portal_wood,smelter,windmill,piece_chest,piece_chest_blackmetal,piece_chest_private,piece_chest_treasure,piece_chest_wood,Player_tombstone", "List of entity names that prevent zones being modified.");
+    configSafeZoneItems = config.Bind(section, "Safe zone items", "blastfurnace,bonfire,charcoal_kiln,fermenter,fire_pit,forge,guard_stone,hearth,piece_artisanstation,piece_bed02,piece_brazierceiling01,piece_groundtorch,piece_groundtorch_blue,piece_groundtorch_green,piece_groundtorch_wood,piece_oven,piece_spinningwheel,piece_stonecutter,piece_walltorch,piece_workbench,portal,portal_wood,smelter,windmill,piece_chest,piece_chest_blackmetal,piece_chest_private,piece_chest_treasure,piece_chest_wood", "List of player placed objects that prevent zones being modified.");
+    configSafeZoneObjects = config.Bind(section, "Safe zone objects", "Player_tombstone", "List of object ids that prevent zones being modified.");
     configSafeZoneSize = config.Bind(section, "Safe zones", 2, "0 = disable, 1 = only the zone, 2 = 3x3 zones, 3 = 5x5 zones, etc.");
     configRootUsers = config.Bind(section, "Root users", "", "SteamIDs that can execute commands on servers (-1 for the dedicated server). If not set, then all admins can execute commands.");
     configMapCoordinates = config.Bind(section, "Show map coordinates", true, "The map shows coordinates on hover.");

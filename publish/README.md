@@ -20,6 +20,9 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 # Changelog
 
+- v1.33
+	- Adds a new setting "Safe zone objects" to allow excluding areas by non-player built objects.
+
 - v1.32
 	- Adds a new command `chests_search` to search chests and stands.
 	- Adds underscore support for data setting and filtering (for space bars).

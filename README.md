@@ -137,7 +137,8 @@ The config can be found in the \<GameDirectory\>\BepInEx\config\upgrade_world.cf
 
 Filtering options in the config:
 
-- Safe zone items: List of items used for the automatic player base detection. By default includes structures that have the player base effect.
+- Safe zone items: List of items placed by players that are used for the automatic player base detection. By default includes structures that have the player base effect.
+- Safe zone objects: List of items that are used for the automatic player base detection. By default includes the tombstone.
 - How many adjacent zones are included in the safe zone: Size of the player base protection. Default value 1 means 3x3 zones per player base structure to ensure proper coverage. Value -1 can be used to disable the player base detection.
 
 Other settings are:
