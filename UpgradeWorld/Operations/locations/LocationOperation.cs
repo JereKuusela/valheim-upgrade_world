@@ -35,7 +35,6 @@ public abstract class LocationOperation : ZoneOperation
   /// <summary>Spawns a location to the game world.</summary>
   protected void SpawnLocation(Vector2i zone, ZoneSystem.LocationInstance location, bool clear, bool forceClear)
   {
-
     var zoneSystem = ZoneSystem.instance;
     var root = zoneSystem.m_zones[zone].m_root;
     var zonePos = ZoneSystem.instance.GetZonePos(zone);
