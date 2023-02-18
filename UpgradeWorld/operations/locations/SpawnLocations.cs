@@ -14,6 +14,11 @@ public class SpawnLocations : LocationOperation
   protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location)
   {
     if (location.m_placed) return false;
+    if (location.m_location?.m_prefab == null)
+    {
+      Print("Location " + (location.m_location?.m_prefabName ?? "???") + " is missing at " + zone.ToString());
+      return false;
+    }
     SpawnLocation(zone, location, ClearLocationAreas, false);
     if (Settings.Verbose)
       Print("Location " + location.m_location.m_prefabName + " spawned at " + zone.ToString());

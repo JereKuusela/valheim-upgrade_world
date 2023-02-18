@@ -17,6 +17,11 @@ public class RegenerateLocations : LocationOperation
     if (!location.m_placed) return false;
     location.m_placed = false;
     ZoneSystem.instance.m_locationInstances[zone] = location;
+    if (location.m_location?.m_prefab == null)
+    {
+      Print("Location " + (location.m_location?.m_prefabName ?? "???") + " is missing at " + zone.ToString());
+      return false;
+    }
     SpawnLocation(zone, location, true, true);
     if (Settings.Verbose)
       Print("Location " + location.m_location.m_prefabName + " reseted at " + zone.ToString());

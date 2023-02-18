@@ -20,6 +20,10 @@ Donations: [Buy me a computer](https://www.buymeacoffee.com/jerekuusela)
 
 # Changelog
 
+- v1.34
+	- Adds more error checks to the `locations_reset` command.
+	- Improves the `locations_swap` command to work better with missing locations.
+
 - v1.33
 	- Adds a new setting "Safe zone objects" to allow excluding areas by non-player built objects.
 	- Adds a new command `locations_swap` to swap locations.

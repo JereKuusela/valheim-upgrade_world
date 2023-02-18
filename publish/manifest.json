@@ -1,6 +1,6 @@
 {
   "name": "Upgrade_World",
-  "version_number": "1.33.0",
+  "version_number": "1.34.0",
   "website_url": "https://github.com/JereKuusela/valheim-upgrade_world",
   "description": "A tool which can add new content to already explored areas.",
   "dependencies": [
