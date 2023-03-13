@@ -12,40 +12,40 @@
     <Message Text="Copied to Libs folder." Importance="High" />
   </Target>
   <ItemGroup>
-    <Reference Include="BepInEx.dll">
+    <Reference Include="BepInEx">
       <HintPath>..\..\Libs\BepinEx.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.dll">
+    <Reference Include="UnityEngine">
       <HintPath>..\..\Libs\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule.dll">
+    <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\Libs\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.JSONSerializeModule.dll">
+    <Reference Include="UnityEngine.JSONSerializeModule">
       <HintPath>..\..\Libs\UnityEngine.JSONSerializeModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule.dll">
-      <HintPath>..\..\Libs\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule.dll">
+    <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>..\..\Libs\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UI.dll">
+    <Reference Include="UnityEngine.UI">
       <HintPath>..\..\Libs\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="0Harmony.dll">
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\..\Libs\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="0Harmony">
       <HintPath>..\..\Libs\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="BepInEx.Harmony.dll">
+    <Reference Include="BepInEx.Harmony">
       <HintPath>..\..\Libs\BepInEx.Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_valheim_publicized.dll">
+    <Reference Include="assembly_valheim_publicized">
       <HintPath>..\..\Libs\assembly_valheim_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_utils_publicized.dll">
+    <Reference Include="assembly_utils_publicized">
       <HintPath>..\..\Libs\assembly_utils_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_guiutils_publicized.dll">
+    <Reference Include="assembly_guiutils_publicized">
       <HintPath>..\..\Libs\assembly_guiutils_publicized.dll</HintPath>
     </Reference>
   </ItemGroup>

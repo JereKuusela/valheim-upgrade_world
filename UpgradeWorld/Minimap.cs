@@ -8,20 +8,20 @@ public class Minimap_Alignment
   static void Postfix(Minimap __instance)
   {
     // Removes the need of padding.
-    __instance.m_biomeNameSmall.alignment = TextAnchor.UpperRight;
-    __instance.m_biomeNameLarge.alignment = TextAnchor.UpperRight;
+    __instance.m_biomeNameSmall.alignment = TMPro.TextAlignmentOptions.TopRight;
+    __instance.m_biomeNameLarge.alignment = TMPro.TextAlignmentOptions.TopRight;
   }
 }
 
 [HarmonyPatch(typeof(Minimap), nameof(Minimap.UpdateBiome))]
 public class Minimap_ShowPos
 {
-  private static void AddText(UnityEngine.UI.Text input, string text)
+  private static void AddText(TMPro.TMP_Text input, string text)
   {
     if (input.text.Contains(text)) return;
     input.text += text;
   }
-  private static void CleanUp(UnityEngine.UI.Text input, string text)
+  private static void CleanUp(TMPro.TMP_Text input, string text)
   {
     if (text == "" || !input.text.Contains(text)) return;
     input.text = input.text.Replace(text, "");
