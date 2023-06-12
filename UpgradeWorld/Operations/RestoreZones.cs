@@ -2,11 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Adds missing zone controls.</summary>
-public class RestoreZones : ZoneOperation
-{
+public class RestoreZones : ZoneOperation {
   protected int Added = 0;
-  public RestoreZones(Terminal context, FiltererParameters args) : base(context, args)
-  {
+  public RestoreZones(Terminal context, FiltererParameters args) : base(context, args) {
     Operation = "Restore zones";
     ZonesPerUpdate = Settings.DestroysPerUpdate;
     args.TargetZones = TargetZones.Generated;
@@ -14,8 +12,7 @@ public class RestoreZones : ZoneOperation
     InitString = args.Print($"Restore");
     Filterers = FiltererFactory.Create(args);
   }
-  protected override bool ExecuteZone(Vector2i zone)
-  {
+  protected override bool ExecuteZone(Vector2i zone) {
     var zs = ZoneSystem.instance;
     var zonePos = zs.GetZonePos(zone);
     var prefab = zs.m_zoneCtrlPrefab;
@@ -23,17 +20,14 @@ public class RestoreZones : ZoneOperation
     List<ZDO> zdos = new();
     ZDOMan.instance.FindObjects(zone, zdos);
     var found = zdos.Any(zdo => zdo.GetPrefab() == hash);
-    if (!found)
-    {
-      var zdo = ZDOMan.instance.CreateNewZDO(zonePos);
+    if (!found) {
+      var zdo = ZDOMan.instance.CreateNewZDO(zonePos, hash);
       zdo.SetPrefab(hash);
-      zdo.SetPGWVersion(zs.m_pgwVersion);
       Added += 1;
     }
     return true;
   }
-  protected override void OnEnd()
-  {
+  protected override void OnEnd() {
     var text = Operation + " completed.";
     text += $" {Added} zone controls added.";
     if (Failed > 0) text += " " + Failed + " errors.";

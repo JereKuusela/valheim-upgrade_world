@@ -3,11 +3,9 @@ using System.Linq;
 namespace UpgradeWorld;
 
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
-public class ResetZones : ZoneOperation
-{
+public class ResetZones : ZoneOperation {
   private Dictionary<Vector2i, Direction> BorderZones = new();
-  public ResetZones(Terminal context, FiltererParameters args) : base(context, args)
-  {
+  public ResetZones(Terminal context, FiltererParameters args) : base(context, args) {
     Operation = "Reset";
     ZonesPerUpdate = Settings.DestroysPerUpdate;
     args.TargetZones = TargetZones.Generated;
@@ -15,24 +13,21 @@ public class ResetZones : ZoneOperation
     Filterers = FiltererFactory.Create(args);
   }
   private int Reseted = 0;
-  protected override bool ExecuteZone(Vector2i zone)
-  {
+  protected override bool ExecuteZone(Vector2i zone) {
     if (!Args.Roll()) return true;
     var zoneSystem = ZoneSystem.instance;
     var scene = ZNetScene.instance;
     List<ZDO> sectorObjects = new();
     ZDOMan.instance.FindObjects(zone, sectorObjects);
     var players = ZNet.instance.m_players.Select(player => player.m_characterID).ToHashSet();
-    foreach (var zdo in sectorObjects)
-    {
+    foreach (var zdo in sectorObjects) {
       if (players.Contains(zdo.m_uid)) continue;
       var position = zdo.GetPosition();
       if (zoneSystem.GetZone(position) == zone)
         Helper.RemoveZDO(zdo);
     }
     var locations = zoneSystem.m_locationInstances;
-    if (locations.TryGetValue(zone, out var location))
-    {
+    if (locations.TryGetValue(zone, out var location)) {
       location.m_placed = false;
       zoneSystem.m_locationInstances[zone] = location;
     }
@@ -48,29 +43,24 @@ public class ResetZones : ZoneOperation
     AddBorder(zone, Direction.SouthEast);
     return true;
   }
-  private void AddBorder(Vector2i zone, Direction direction)
-  {
+  private void AddBorder(Vector2i zone, Direction direction) {
     if (direction == Direction.North) zone.y -= 1;
     if (direction == Direction.East) zone.x -= 1;
     if (direction == Direction.South) zone.y += 1;
     if (direction == Direction.West) zone.x += 1;
-    if (direction == Direction.NorthWest)
-    {
+    if (direction == Direction.NorthWest) {
       zone.y -= 1;
       zone.x += 1;
     }
-    if (direction == Direction.NorthEast)
-    {
+    if (direction == Direction.NorthEast) {
       zone.y -= 1;
       zone.x -= 1;
     }
-    if (direction == Direction.SouthWest)
-    {
+    if (direction == Direction.SouthWest) {
       zone.y += 1;
       zone.x += 1;
     }
-    if (direction == Direction.SouthEast)
-    {
+    if (direction == Direction.SouthEast) {
       zone.y += 1;
       zone.x -= 1;
     }
@@ -78,8 +68,7 @@ public class ResetZones : ZoneOperation
     BorderZones[zone] = direction;
   }
 
-  protected override void OnEnd()
-  {
+  protected override void OnEnd() {
     var text = $"{Operation} completed. {Reseted} zones reseted.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);

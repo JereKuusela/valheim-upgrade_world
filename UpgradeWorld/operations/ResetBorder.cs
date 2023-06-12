@@ -6,19 +6,15 @@ namespace UpgradeWorld;
 public enum Direction { None, North, East, South = 4, West = 8, NorthEast = 16, SouthEast = 32, SouthWest = 64, NorthWest = 128 }
 
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
-public class ResetBorder : EntityOperation
-{
-  public ResetBorder(Terminal context, Dictionary<Vector2i, Direction> zones) : base(context)
-  {
+public class ResetBorder : EntityOperation {
+  public ResetBorder(Terminal context, Dictionary<Vector2i, Direction> zones) : base(context) {
     Execute(zones);
   }
-  private void Execute(Dictionary<Vector2i, Direction> zones)
-  {
+  private void Execute(Dictionary<Vector2i, Direction> zones) {
     var zdos = GetZDOs(Settings.TerrainCompilerId);
     var zs = ZoneSystem.instance;
     var reseted = 0;
-    foreach (var zdo in zdos)
-    {
+    foreach (var zdo in zdos) {
       var zone = zs.GetZone(zdo.GetPosition());
       if (!zones.ContainsKey(zone)) continue;
       Update(zdo, zones[zone]);
@@ -27,8 +23,7 @@ public class ResetBorder : EntityOperation
     Print($"{reseted} border zones reseted");
   }
 
-  private void Update(ZDO zdo, Direction direction)
-  {
+  private void Update(ZDO zdo, Direction direction) {
     var byteArray = zdo.GetByteArray("TCData");
     if (byteArray == null)
       return;
@@ -42,8 +37,7 @@ public class ResetBorder : EntityOperation
     var size = from.ReadInt();
     to.Write(size);
     var width = (int)Math.Sqrt(size);
-    for (int index = 0; index < size; index++)
-    {
+    for (int index = 0; index < size; index++) {
       var wasModified = from.ReadBool();
       var modified = wasModified;
       var j = index / width;
@@ -65,13 +59,11 @@ public class ResetBorder : EntityOperation
       if (direction.HasFlag(Direction.SouthEast) && j == 0 && i == width - 1)
         modified = false;
       to.Write(modified);
-      if (modified)
-      {
+      if (modified) {
         to.Write(from.ReadSingle());
         to.Write(from.ReadSingle());
       }
-      if (wasModified && !modified)
-      {
+      if (wasModified && !modified) {
         change = true;
         from.ReadSingle();
         from.ReadSingle();
@@ -79,12 +71,10 @@ public class ResetBorder : EntityOperation
     }
     size = from.ReadInt();
     to.Write(size);
-    for (int index = 0; index < size; index++)
-    {
+    for (int index = 0; index < size; index++) {
       var modified = from.ReadBool();
       to.Write(modified);
-      if (modified)
-      {
+      if (modified) {
         to.Write(from.ReadSingle());
         to.Write(from.ReadSingle());
         to.Write(from.ReadSingle());
@@ -94,7 +84,7 @@ public class ResetBorder : EntityOperation
     var bytes = Utils.Compress(to.GetArray());
     if (!change) return;
     if (!zdo.IsOwner())
-      zdo.SetOwner(ZDOMan.instance.GetMyID());
+      zdo.SetOwner(ZDOMan.instance.m_sessionID);
     zdo.Set("TCData", bytes);
   }
 

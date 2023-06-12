@@ -2,8 +2,7 @@ using System.Collections.Generic;
 
 namespace Service;
 
-public static class Hash
-{
+public static class Hash {
   public static int Level = "level".GetStableHashCode();
   public static int TimeOfDeath = "timeOfDeath".GetStableHashCode();
   public static int Location = "location".GetStableHashCode();

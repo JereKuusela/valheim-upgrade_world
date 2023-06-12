@@ -1,20 +1,16 @@
 using HarmonyLib;
 namespace UpgradeWorld;
-public class SavingCommands
-{
+public class SavingCommands {
   public static bool SavingDisabled = false;
-  public SavingCommands()
-  {
+  public SavingCommands() {
     CommandWrapper.RegisterEmpty("save_disable");
-    new Terminal.ConsoleCommand("save_disable", "- Disables saving.", (args) =>
-    {
+    new Terminal.ConsoleCommand("save_disable", "- Disables saving.", (args) => {
       if (Helper.IsClient(args)) return;
       SavingDisabled = true;
       Helper.Print(args.Context, "Saving disabled.");
     });
     CommandWrapper.RegisterEmpty("save_enable");
-    new Terminal.ConsoleCommand("save_enable", "- Enables saving.", (args) =>
-    {
+    new Terminal.ConsoleCommand("save_enable", "- Enables saving.", (args) => {
       if (Helper.IsClient(args)) return;
       SavingDisabled = false;
       ZoneSystem.instance.m_didZoneTest = false;
@@ -24,12 +20,9 @@ public class SavingCommands
 }
 
 [HarmonyPatch(typeof(ZoneSystem), nameof(ZoneSystem.SkipSaving))]
-public class SkipSaving
-{
-  static bool Prefix(ref bool __result)
-  {
-    if (SavingCommands.SavingDisabled)
-    {
+public class SkipSaving {
+  static bool Prefix(ref bool __result) {
+    if (SavingCommands.SavingDisabled) {
       __result = true;
       return false;
     }

@@ -4,16 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
 namespace UpgradeWorld;
-public struct FilterPoint
-{
+public struct FilterPoint {
   public float x;
   public float y;
   public float min;
   public float max;
 }
 #nullable disable
-public static class Settings
-{
+public static class Settings {
   public static ConfigEntry<bool> configMapCoordinates;
   public static bool MapCoordinates => configMapCoordinates.Value;
   public static ConfigEntry<bool> configMiniMapCoordinates;
@@ -45,8 +43,7 @@ public static class Settings
   public static ConfigEntry<string> configRootUsers;
   public static HashSet<string> RootUsers => configRootUsers.Value.Split(',').Select(s => s.Trim()).Where(s => s != "").ToHashSet();
 
-  public static void Init(ConfigFile config)
-  {
+  public static void Init(ConfigFile config) {
     var section = "1. General";
     configVerbose = config.Bind(section, "Verbose output", false, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
     configPreventDoubleZNetView = config.Bind(section, "Prevent double ZNet view", true, "Some bugged objects keep duplicating and corrupting the save. This prevents that from happening which allows removing these objects.");
