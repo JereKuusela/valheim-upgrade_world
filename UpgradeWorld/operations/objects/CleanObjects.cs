@@ -93,6 +93,24 @@ public class CleanObjects : EntityOperation {
       zdo.Set(Hash.Items, savePackage.GetBase64());
     }
     Print("Removed " + removed + " missing objects from chests");
+
+
+    var prefab = zs.m_zoneCtrlPrefab;
+    var zoneCtrlHash = prefab.name.GetStableHashCode();
+    var reseted = 0;
+    foreach (var zdo in zdos) {
+      if (zdo.GetPrefab() != zoneCtrlHash) continue;
+      var id = zdo.m_uid;
+      var longs = ZDOExtraData.GetLongs(id);
+      if (longs.Count < 256) continue;
+      if (!zdo.IsOwner())
+        zdo.SetOwner(ZDOMan.instance.m_sessionID);
+      ZDOHelper.Release(ZDOExtraData.s_longs, id);
+      zdo.IncreaseDataRevision();
+      reseted++;
+    }
+    Print("Reseted " + reseted + " corrupted zone controls.");
+
   }
 
   private int CleanChest(ZPackage from, ZPackage to) {

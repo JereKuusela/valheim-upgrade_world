@@ -2,12 +2,13 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+
 namespace UpgradeWorld;
 [BepInPlugin(GUID, NAME, VERSION)]
 public class UpgradeWorld : BaseUnityPlugin {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.35";
+  const string VERSION = "1.36";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -61,6 +62,7 @@ public class IsConsoleEnabled {
     __result = true;
   }
 }
+
 [HarmonyPatch(typeof(ZNetView), nameof(ZNetView.Awake))]
 public class PreventDoubleZNetView {
   static bool Prefix(ZNetView __instance) {

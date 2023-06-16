@@ -1,3 +1,6 @@
+- v1.36
+  - Updates the `world_clean` command to fix corrupted zone controls.
+
 - v1.35
   - Updated for the new game version.
 
