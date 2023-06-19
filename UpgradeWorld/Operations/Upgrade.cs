@@ -15,7 +15,7 @@ public class Upgrade : BaseOperation {
     "legacy_worldgen",
     "mountain_caves",
     "EVA",
-    "jewelcrafting"
+    "hildir"
   };
 
   public Upgrade(Terminal context, string type, List<string> extra, FiltererParameters args) : base(context) {
@@ -33,11 +33,6 @@ public class Upgrade : BaseOperation {
       var noClearing = Parse.Flag(extra, "noclearing");
       Executor.AddOperation(new DistributeLocations(new[] { "MountainCave02" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
-    } else if (type == "jewelcrafting") {
-      var noClearing = Parse.Flag(extra, "noclearing");
-      Executor.AddOperation(new DistributeLocations(new[] { "JC_Gacha_Location" }, args.Start, args.Chance, Context));
-      Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
-      Executor.AddOperation(new Print(Context, "Note: This is for Jewelcrafting mod.", "", args.Start));
     } else if (type == "tarpits") {
       var noClearing = Parse.Flag(extra, "noclearing");
       Executor.AddOperation(new DistributeLocations(new[] { "TarPit1", "TarPit2", "TarPit3" }, args.Start, args.Chance, Context));
@@ -68,6 +63,10 @@ public class Upgrade : BaseOperation {
       Executor.AddOperation(new Print(Context, "", "To reset outer areas, use <color=yellow>world_reset minDistance=5900</color> command.", args.Start));
     } else if (type == "legacy_worldgen") {
       Executor.AddOperation(new WorldVersion(Context, 0, args.Start));
+    } else if (type == "hildir") {
+      var noClearing = Parse.Flag(extra, "noclearing");
+      Executor.AddOperation(new DistributeLocations(new[] { "Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave" }, args.Start, args.Chance, Context));
+      Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
     } else if (type == "eva") {
       if (args.Biomes.Count() > 0) {
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));

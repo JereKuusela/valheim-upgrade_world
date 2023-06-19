@@ -1,3 +1,8 @@
+- v1.37
+  - Adds a new upgrade `hildir`.
+  - Changes the `objects_list` command to support wildcards for the object ids.
+  - Updates the `world_clean` command to remove excess rooms from dungeons.
+
 - v1.36
   - Updates the `world_clean` command to fix corrupted zone controls.
 

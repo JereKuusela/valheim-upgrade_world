@@ -33,15 +33,15 @@ Note: The default base detection is very conservative. Single workbenches, campf
 
 For `upgrade` command:
 
-- `mountain_caves`: Spawns mountain caves to already explored areas.
-- `tarpits`: Spawns tar pits to already explored areas.
+- `hildir`: Adds new locations to already explored areas.
+- `mountain_caves`: Adds mountain caves to already explored areas.
+- `tarpits`: Adds tar pits to already explored areas.
 - `onions`: Rerolls already generated and unlooted mountain chests.
 - `mistlands`: Fully regenerates mistlands biomes. Terrain is automatically updated by the base game and not affected by this operation.
 - `mistlands_worldgen`: Upgrades biome distribution to the Mistlands version. Biomes will change in the outer areas. Areas past 5900 meters will be reseted. Rivers will move everywhere in the world and can destroy bases (even with the player base protection).
 - `hh_worldgen`: Downgrades biome distribution to the Heart & Home version.
 - `legacy_worldgen`: Downgrades biome distribution to the Early access release version.
 - `eva`: Upgrades the world with the changes from Epic Valheim Additions mod.
-- `jewelcrafting`: Upgrades the world with the changes from Jewelcrafting mod.
 
 # Dedicated servers
 

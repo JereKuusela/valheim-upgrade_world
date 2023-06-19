@@ -108,9 +108,27 @@ public class CleanObjects : EntityOperation {
       ZDOHelper.Release(ZDOExtraData.s_longs, id);
       zdo.IncreaseDataRevision();
       reseted++;
+      Print($"Reseted corrupted zone control at {Helper.PrintVectorXZY(zdo.GetPosition())}.");
     }
     Print("Reseted " + reseted + " corrupted zone controls.");
 
+    var updated = 0;
+    foreach (var zdo in zdos) {
+      var rooms = zdo.GetInt(ZDOVars.s_rooms);
+      if (rooms < 128) continue;
+      var id = zdo.m_uid;
+      for (var i = 127; i < rooms; i++) {
+        var text = "room" + i.ToString();
+        zdo.RemoveInt(text.GetStableHashCode());
+        zdo.RemoveVec3((text + "_pos").GetStableHashCode());
+        ZDOExtraData.s_quats.Remove(id, (text + "_pos").GetStableHashCode());
+        zdo.RemoveInt((text + "_seed").GetStableHashCode());
+      }
+      Print($"Removed {rooms - 127} extra rooms from the dungeon at {Helper.PrintVectorXZY(zdo.GetPosition())}.");
+      zdo.Set(ZDOVars.s_rooms, 127);
+      updated++;
+    }
+    Print("Removed extra rooms from " + updated + " dungeons.");
   }
 
   private int CleanChest(ZPackage from, ZPackage to) {
