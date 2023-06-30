@@ -37,7 +37,7 @@ public class ResetChests : EntityOperation {
         continue;
       }
       totalChests++;
-      if (!zdo.GetBool(Hash.AddedDefaultItems, false)) {
+      if (!zdo.GetBool(ZDOVars.s_addedDefaultItems)) {
         if (Settings.Verbose)
           Print("Skipping a chest: Drops already unrolled.");
         continue;
@@ -49,7 +49,7 @@ public class ResetChests : EntityOperation {
       } else {
         var container = prefabs[zdo.GetPrefab()].GetComponent<Container>();
         inventory = new(container.m_name, container.m_bkg, container.m_width, container.m_height);
-        ZPackage loadPackage = new(zdo.GetString(Hash.Items, ""));
+        ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
         inventory.Load(loadPackage);
       }
       if (inventory.GetAllItems().Count == 0 && !looted) {
@@ -63,10 +63,10 @@ public class ResetChests : EntityOperation {
       if (obj) {
         obj.GetComponent<Container>().AddDefaultItems();
       } else {
-        zdo.Set(Hash.AddedDefaultItems, false);
+        zdo.Set(ZDOVars.s_addedDefaultItems, false);
         ZPackage savePackage = new();
         inventory.Save(savePackage);
-        zdo.Set(Hash.Items, savePackage.GetBase64());
+        zdo.Set(ZDOVars.s_items, savePackage.GetBase64());
       }
     }
     Print("Chests reseted (" + resetedChests + " of " + totalChests + ").");

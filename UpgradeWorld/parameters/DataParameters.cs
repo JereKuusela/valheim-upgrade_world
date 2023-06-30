@@ -40,13 +40,13 @@ public class DataParameters : IdParameters {
       var emptyOk = Level.Min <= 1;
       zdos = zdos.Where(zdo => {
         if (!ZDOExtraData.s_ints.TryGetValue(zdo.m_uid, out var ints)) return emptyOk;
-        if (!ints.TryGetValue(Hash.Level, out var value)) return emptyOk;
+        if (!ints.TryGetValue(ZDOVars.s_level, out var value)) return emptyOk;
         return Level.Min <= value && value <= Level.Max;
       });
     }
     if (LocationIds != "") {
       var ids = Parse.Split(LocationIds).Select(s => s.GetStableHashCode()).ToHashSet();
-      zdos = zdos.Where(zdo => ids.Contains(zdo.GetInt(Hash.Location)));
+      zdos = zdos.Where(zdo => ids.Contains(zdo.GetInt(ZDOVars.s_location)));
     }
     foreach (var filter in Filters) {
       var split = Parse.Split(filter);

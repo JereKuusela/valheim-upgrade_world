@@ -1,3 +1,7 @@
+- v1.38
+  - Fixes the `object_refresh` command not always working for spawn points.
+  - Removes the upgrade `hildir` because this mod doesn't work on PTB.
+
 - v1.37
   - Adds a new upgrade `hildir`.
   - Changes the `objects_list` command to support wildcards for the object ids.

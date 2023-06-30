@@ -19,7 +19,7 @@ public class DataHelper {
     if (hasVec && (type == "" || type == "vector")) return Helper.PrintVectorXZY(ZDOExtraData.s_vec3[id][hash]) + " (vector)";
     if (hasQuat && (type == "" || type == "quat")) return Helper.PrintAngleYXZ(ZDOExtraData.s_quats[id][hash]) + " (quat)";
     if (hasLong && (type == "" || type == "long")) {
-      if (hash == Hash.TimeOfDeath) return Helper.PrintDay(ZDOExtraData.s_longs[id][hash]) + " (long)";
+      if (hash == ZDOVars.s_timeOfDeath) return Helper.PrintDay(ZDOExtraData.s_longs[id][hash]) + " (long)";
       return ZDOExtraData.s_longs[id][hash].ToString() + " (long)";
     }
     if (hasString && (type == "" || type == "string")) return ZDOExtraData.s_strings[id][hash] + " (string)";
@@ -46,7 +46,7 @@ public class DataHelper {
     } else if (type == "quat" || (type == "" && hasQuat)) {
       zdo.Set(hash, Parse.AngleYXZ(data));
     } else if (type == "long" || (type == "" && hasLong)) {
-      if (hash == Hash.TimeOfDeath) zdo.Set(hash, Helper.ToTick(Parse.Long(data)));
+      if (hash == ZDOVars.s_timeOfDeath) zdo.Set(hash, Helper.ToTick(Parse.Long(data)));
       else zdo.Set(hash, Parse.Long(data));
     } else if (type == "string" || (type == "" && hasString)) {
       zdo.Set(hash, data.Replace('_', ' '));
@@ -75,7 +75,7 @@ public class DataHelper {
       return Parse.AngleYXZ(data) == ZDOExtraData.s_quats[id][hash];
     var hasLong = ZDOExtraData.s_longs.ContainsKey(id) && ZDOExtraData.s_longs[id].ContainsKey(hash);
     if (hasLong) {
-      if (hash == Hash.TimeOfDeath) return Parse.LongRange(data).Includes(Helper.ToDay(ZDOExtraData.s_longs[id][hash]));
+      if (hash == ZDOVars.s_timeOfDeath) return Parse.LongRange(data).Includes(Helper.ToDay(ZDOExtraData.s_longs[id][hash]));
       return Parse.LongRange(data).Includes(ZDOExtraData.s_longs[id][hash]);
     }
     var hasString = ZDOExtraData.s_strings.ContainsKey(id) && ZDOExtraData.s_strings[id].ContainsKey(hash);

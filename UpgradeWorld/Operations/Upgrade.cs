@@ -63,7 +63,7 @@ public class Upgrade : BaseOperation {
       Executor.AddOperation(new Print(Context, "", "To reset outer areas, use <color=yellow>world_reset minDistance=5900</color> command.", args.Start));
     } else if (type == "legacy_worldgen") {
       Executor.AddOperation(new WorldVersion(Context, 0, args.Start));
-    } else if (type == "hildir") {
+    } else if (false && type == "hildir") { // Disabled because new version is needed after PTB.
       var noClearing = Parse.Flag(extra, "noclearing");
       Executor.AddOperation(new DistributeLocations(new[] { "Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave" }, args.Start, args.Chance, Context));
       Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));

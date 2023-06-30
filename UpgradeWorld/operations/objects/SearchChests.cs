@@ -36,9 +36,9 @@ public class SearchChests : EntityOperation {
     else Print(standContents, false);
 
     var chestContents = zdos.Select(zdo => {
-      var items = zdo.GetString(Hash.Items, "");
+      var items = zdo.GetString(ZDOVars.s_items);
       if (items == "") return "";
-      ZPackage loadPackage = new(zdo.GetString(Hash.Items, ""));
+      ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
       var content = SearchChest(loadPackage, prefabs);
       if (content.Count == 0) return "";
       var name = zs.m_namedPrefabs[zdo.GetPrefab()].name;

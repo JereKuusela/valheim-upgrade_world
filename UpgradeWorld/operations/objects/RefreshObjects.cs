@@ -9,27 +9,28 @@ public class RefreshObjects : EntityOperation {
   }
   private bool SetData(ZDO zdo) {
     var updated = false;
-    if (zdo.GetZDOID(Hash.SpawnId) != ZDOID.None) {
+    var spawnId = zdo.GetConnectionZDOID(ZDOExtraData.ConnectionType.Spawned);
+    if (!spawnId.IsNone()) {
       updated = true;
-      if (ZDOMan.instance.m_objectsByID.TryGetValue(zdo.GetZDOID(Hash.SpawnId), out var spawnedZdo))
+      if (ZDOMan.instance.m_objectsByID.TryGetValue(spawnId, out var spawnedZdo))
         Helper.RemoveZDO(spawnedZdo);
-      zdo.Set(Hash.SpawnId, ZDOID.None);
-      zdo.Set(Hash.AliveTime, 0);
+      ZDOExtraData.ReleaseConnection(zdo.m_uid);
+      zdo.Set(ZDOVars.s_aliveTime, 0);
     }
-    if (zdo.GetLong(Hash.PickedTime) != 0) {
+    if (zdo.GetLong(ZDOVars.s_pickedTime) != 0) {
       updated = true;
-      zdo.Set(Hash.PickedTime, 0L);
+      zdo.Set(ZDOVars.s_pickedTime, 0L);
     }
-    if (zdo.GetLong(Hash.SpawnTime) != 0) {
+    if (zdo.GetLong(ZDOVars.s_spawnTime) != 0) {
       updated = true;
-      zdo.Set(Hash.SpawnTime, 0L);
+      zdo.Set(ZDOVars.s_spawnTime, 0L);
     }
-    if (zdo.GetBool(Hash.AddedDefaultItems)) {
+    if (zdo.GetBool(ZDOVars.s_addedDefaultItems)) {
       var prefab = ZNetScene.instance.GetPrefab(zdo.GetPrefab());
       if (zdo.GetString(Hash.OverrideItems) != "" || prefab.GetComponent<Container>()?.m_defaultItems.IsEmpty() != true) {
         updated = true;
-        zdo.Set(Hash.AddedDefaultItems, false);
-        zdo.Set(Hash.Items, ClearChest(zdo));
+        zdo.Set(ZDOVars.s_addedDefaultItems, false);
+        zdo.Set(ZDOVars.s_items, ClearChest(zdo));
       }
     }
     if (zdo.GetLong(Hash.Changed) != 0) {
@@ -60,7 +61,7 @@ public class RefreshObjects : EntityOperation {
   }
 
   private string ClearChest(ZDO zdo) {
-    var str = zdo.GetString(Hash.Items);
+    var str = zdo.GetString(ZDOVars.s_items);
     if (string.IsNullOrEmpty(str)) return "";
     ZPackage current = new(str);
     ZPackage empty = new();

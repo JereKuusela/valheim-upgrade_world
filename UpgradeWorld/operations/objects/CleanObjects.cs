@@ -81,16 +81,16 @@ public class CleanObjects : EntityOperation {
 
     removed = 0;
     foreach (var zdo in zdos) {
-      var items = zdo.GetString(Hash.Items, "");
+      var items = zdo.GetString(ZDOVars.s_items);
       if (items == "") continue;
-      ZPackage loadPackage = new(zdo.GetString(Hash.Items, ""));
+      ZPackage loadPackage = new(items);
       ZPackage savePackage = new();
       var result = CleanChest(loadPackage, savePackage);
       if (result == 0) continue;
       removed += result;
       if (!zdo.IsOwner())
         zdo.SetOwner(ZDOMan.instance.m_sessionID);
-      zdo.Set(Hash.Items, savePackage.GetBase64());
+      zdo.Set(ZDOVars.s_items, savePackage.GetBase64());
     }
     Print("Removed " + removed + " missing objects from chests");
 
