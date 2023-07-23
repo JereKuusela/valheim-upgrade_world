@@ -19,7 +19,7 @@ public class SwapObjects : EntityOperation {
         if (zdo.GetPrefab() == toSwap) continue;
         swapped++;
         if (!zdo.IsOwner())
-          zdo.SetOwner(ZDOMan.instance.m_sessionID);
+          zdo.SetOwner(ZDOMan.GetSessionID());
         zdo.SetPrefab(toSwap);
         Refresh(zdo);
       }

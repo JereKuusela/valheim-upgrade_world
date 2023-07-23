@@ -39,7 +39,7 @@ public class RefreshObjects : EntityOperation {
     }
     if (updated) {
       if (!zdo.IsOwner())
-        zdo.SetOwner(ZDOMan.instance.m_sessionID);
+        zdo.SetOwner(ZDOMan.GetSessionID());
     }
     return updated;
   }

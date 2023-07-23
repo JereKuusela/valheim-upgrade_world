@@ -17,7 +17,7 @@ public class EditObjects : EntityOperation {
     }).Count() > 0;
     if (result) {
       if (!zdo.IsOwner())
-        zdo.SetOwner(ZDOMan.instance.m_sessionID);
+        zdo.SetOwner(ZDOMan.GetSessionID());
       zdo.DataRevision = revision + 1;
     }
     return result;

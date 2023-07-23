@@ -19,7 +19,7 @@ public static class Helper {
     if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid) return;
     if (ZNet.instance.m_peers.Any(peer => peer.m_characterID == zdo.m_uid)) return;
     if (!zdo.IsOwner())
-      zdo.SetOwner(ZDOMan.instance.m_sessionID);
+      zdo.SetOwner(ZDOMan.GetSessionID());
     var spawned = zdo.GetConnectionZDOID(ZDOExtraData.ConnectionType.Spawned);
     if (spawned != ZDOID.None && ZDOMan.instance.m_objectsByID.TryGetValue(spawned, out var spawnedZdo) && spawnedZdo != zdo)
       RemoveZDO(spawnedZdo);

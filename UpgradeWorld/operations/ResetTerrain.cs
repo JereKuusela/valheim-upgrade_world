@@ -113,7 +113,7 @@ public class ResetTerrain {
     var bytes = Utils.Compress(to.GetArray());
     if (!change) return;
     if (!zdo.IsOwner())
-      zdo.SetOwner(ZDOMan.instance.m_sessionID);
+      zdo.SetOwner(ZDOMan.GetSessionID());
     zdo.Set("TCData", bytes);
   }
 }

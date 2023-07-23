@@ -5,7 +5,7 @@ public class SpawnLocations : LocationOperation {
   public SpawnLocations(Terminal context, bool clearLocationAreas, FiltererParameters args) : base(context, args) {
     Operation = "Spawn missing locations";
     InitString = args.Print("Spawn missing locations to");
-    Verb = "spawned to the world";
+    Verb = "spawned to already generated areas";
     args.Chance = 1f;
     ClearLocationAreas = clearLocationAreas;
   }

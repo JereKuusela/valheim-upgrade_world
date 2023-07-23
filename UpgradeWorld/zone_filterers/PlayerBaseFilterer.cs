@@ -25,7 +25,7 @@ public class PlayerBaseFilterer : IZoneFilterer {
     var adjacent = size - 1;
     var ids = Settings.SafeZoneItems;
     var allIds = Settings.SafeZoneObjects;
-    var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => allIds.Contains(zdo.GetPrefab()) || (ids.Contains(zdo.GetPrefab()) && zdo.GetLong("creator") != 0L));
+    var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => allIds.Contains(zdo.GetPrefab()) || (ids.Contains(zdo.GetPrefab()) && zdo.GetLong(ZDOVars.s_creator) != 0L));
     foreach (var zdo in zdos) {
       var zone = ZoneSystem.instance.GetZone(zdo.GetPosition());
       for (var i = -adjacent; i <= adjacent; i++) {

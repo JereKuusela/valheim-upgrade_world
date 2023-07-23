@@ -17,7 +17,7 @@ public class DistributeLocations : ExecutedOperation {
   protected override bool OnExecute() {
     // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
     if (Attempts == 0) {
-      Print($"Redistributing locations {Ids[Attempts]}. This may take a while...");
+      Print($"Generating locations {Ids[Attempts]}. This may take a while...");
       return false;
     }
     if (Attempts <= Ids.Length) {
@@ -28,7 +28,7 @@ public class DistributeLocations : ExecutedOperation {
       if (location == null) return false;
       // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
       if (Attempts < Ids.Length)
-        Print($"Redistributing locations {Ids[Attempts]}. This may take a while...");
+        Print($"Generating locations {Ids[Attempts]}. This may take a while...");
       var before = zs.m_locationInstances.Count;
       ClearNotSpawned(id);
       zs.GenerateLocations(location);
@@ -54,13 +54,13 @@ public class DistributeLocations : ExecutedOperation {
   }
   protected override void OnEnd() {
     if (Added >= 0)
-      Print($"{Added} locations{Helper.LocationIdString(Ids)} added to the world (total amount: {Total}).");
+      Print($"{Added} locations{Helper.LocationIdString(Ids)} added to the world (total amount in the world: {Total}).");
     else
-      Print($"{Math.Abs(Added)} locations{Helper.LocationIdString(Ids)} removed from the world (total amount: {Total}).");
+      Print($"{Math.Abs(Added)} locations{Helper.LocationIdString(Ids)} removed from the world (total amount in the world: {Total}).");
   }
 
 
   protected override string OnInit() {
-    return $"Redistribute locations{Helper.LocationIdString(Ids)} to all areas.";
+    return $"Generate locations{Helper.LocationIdString(Ids)} to all areas.";
   }
 }

@@ -13,7 +13,7 @@ public class CleanObjects : EntityOperation {
     if (item == "") return false;
     if (zs.m_namedPrefabs.ContainsKey(item.GetStableHashCode())) return false;
     if (!zdo.IsOwner())
-      zdo.SetOwner(ZDOMan.instance.m_sessionID);
+      zdo.SetOwner(ZDOMan.GetSessionID());
     zdo.Set(prefix + "item", "");
     zdo.Set(prefix + "variant", 0);
     if (prefix == "")
@@ -89,7 +89,7 @@ public class CleanObjects : EntityOperation {
       if (result == 0) continue;
       removed += result;
       if (!zdo.IsOwner())
-        zdo.SetOwner(ZDOMan.instance.m_sessionID);
+        zdo.SetOwner(ZDOMan.GetSessionID());
       zdo.Set(ZDOVars.s_items, savePackage.GetBase64());
     }
     Print("Removed " + removed + " missing objects from chests");
@@ -104,7 +104,7 @@ public class CleanObjects : EntityOperation {
       var longs = ZDOExtraData.GetLongs(id);
       if (longs.Count < 256) continue;
       if (!zdo.IsOwner())
-        zdo.SetOwner(ZDOMan.instance.m_sessionID);
+        zdo.SetOwner(ZDOMan.GetSessionID());
       ZDOHelper.Release(ZDOExtraData.s_longs, id);
       zdo.IncreaseDataRevision();
       reseted++;
