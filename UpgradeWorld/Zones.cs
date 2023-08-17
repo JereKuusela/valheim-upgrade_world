@@ -13,7 +13,8 @@ public static class Zones
 
   private static Vector2i[] Sort(Vector2i[] zones)
   {
-    return zones.OrderBy(zone => zone.Magnitude()).ToArray();
+    // Magnitude doesn't work with int.MinValue, so needs special handling.
+    return zones.OrderBy(zone => zone.x == int.MinValue || zone.y == int.MinValue ? int.MinValue : zone.Magnitude()).ToArray();
   }
   public static Vector2i[] GetZones(FiltererParameters args)
   {

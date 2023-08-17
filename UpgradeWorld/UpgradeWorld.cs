@@ -5,30 +5,35 @@ using HarmonyLib;
 
 namespace UpgradeWorld;
 [BepInPlugin(GUID, NAME, VERSION)]
-public class UpgradeWorld : BaseUnityPlugin {
+public class UpgradeWorld : BaseUnityPlugin
+{
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.38";
+  const string VERSION = "1.39";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
-  public void Awake() {
+  public void Awake()
+  {
     Log = Logger;
     Settings.Init(Config);
     new Harmony(GUID).PatchAll();
     SetupWatcher();
   }
-  public void Start() {
+  public void Start()
+  {
     CommandWrapper.Init();
     FiltererParameters.Parameters.Sort();
     InvokeRepeating("Execute", 1f, 0.01f);
   }
-  public void Execute() {
+  public void Execute()
+  {
     Executor.Execute();
   }
 
 
-  private void SetupWatcher() {
+  private void SetupWatcher()
+  {
     FileSystemWatcher watcher = new(Path.GetDirectoryName(Config.ConfigFilePath), Path.GetFileName(Config.ConfigFilePath));
     watcher.Changed += ReadConfigValues;
     watcher.Created += ReadConfigValues;
@@ -39,16 +44,21 @@ public class UpgradeWorld : BaseUnityPlugin {
   }
 
 #pragma warning disable IDE0051 // Remove unused private members
-  private void OnDestroy() {
+  private void OnDestroy()
+  {
 #pragma warning restore IDE0051
     Config.Save();
   }
-  private void ReadConfigValues(object sender, FileSystemEventArgs e) {
+  private void ReadConfigValues(object sender, FileSystemEventArgs e)
+  {
     if (!File.Exists(Config.ConfigFilePath)) return;
-    try {
+    try
+    {
       Log.LogDebug("ReadConfigValues called");
       Config.Reload();
-    } catch {
+    }
+    catch
+    {
       Log.LogError($"There was an issue loading your {Config.ConfigFilePath}");
       Log.LogError("Please check your config entries for spelling and format!");
     }
@@ -57,18 +67,23 @@ public class UpgradeWorld : BaseUnityPlugin {
 }
 
 [HarmonyPatch(typeof(Console), nameof(Console.IsConsoleEnabled))]
-public class IsConsoleEnabled {
-  static void Postfix(ref bool __result) {
+public class IsConsoleEnabled
+{
+  static void Postfix(ref bool __result)
+  {
     __result = true;
   }
 }
 
 [HarmonyPatch(typeof(ZNetView), nameof(ZNetView.Awake))]
-public class PreventDoubleZNetView {
-  static bool Prefix(ZNetView __instance) {
+public class PreventDoubleZNetView
+{
+  static bool Prefix(ZNetView __instance)
+  {
     if (!Settings.PreventDoubleZNetView) return true;
     if (ZNetView.m_forceDisableInit || ZDOMan.instance == null) return true;
-    if (ZNetView.m_useInitZDO && ZNetView.m_initZDO == null) {
+    if (ZNetView.m_useInitZDO && ZNetView.m_initZDO == null)
+    {
       ZLog.LogWarning($"Preventing double ZNetView for {__instance.gameObject.name}. Use 'remove_entities' command to remove these objects.");
       UnityEngine.Object.Destroy(__instance);
       return false;
@@ -77,8 +92,10 @@ public class PreventDoubleZNetView {
   }
 }
 [HarmonyPatch(typeof(Terminal), "InitTerminal")]
-public class SetCommands {
-  public static void Postfix() {
+public class SetCommands
+{
+  public static void Postfix()
+  {
     new TimeChangeCommand();
     new BiomesCountCommand();
     new ObjectsCountCommand();
@@ -109,7 +126,8 @@ public class SetCommands {
     new WorldVersionCommand();
     new WorldCleanCommand();
     new LocationsSwapCommand();
-    if (Terminal.commands.TryGetValue("genloc", out var genloc)) {
+    if (Terminal.commands.TryGetValue("genloc", out var genloc))
+    {
       genloc.IsCheat = false;
       genloc.OnlyServer = false;
     }

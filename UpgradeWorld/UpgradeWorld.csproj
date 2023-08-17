@@ -39,14 +39,14 @@
     <Reference Include="BepInEx.Harmony">
       <HintPath>..\..\Libs\BepInEx.Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_valheim_publicized">
-      <HintPath>..\..\Libs\assembly_valheim_publicized.dll</HintPath>
+    <Reference Include="assembly_valheim_publicized_pbt">
+      <HintPath>..\..\Libs\assembly_valheim_publicized_pbt.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_utils_publicized">
-      <HintPath>..\..\Libs\assembly_utils_publicized.dll</HintPath>
+    <Reference Include="assembly_utils_publicized_pbt">
+      <HintPath>..\..\Libs\assembly_utils_publicized_pbt.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_guiutils_publicized">
-      <HintPath>..\..\Libs\assembly_guiutils_publicized.dll</HintPath>
+    <Reference Include="assembly_guiutils_publicized_pbt">
+      <HintPath>..\..\Libs\assembly_guiutils_publicized_pbt.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

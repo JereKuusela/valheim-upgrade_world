@@ -1,3 +1,8 @@
+- v1.39
+  - Adds a new upgrade `hildir`.
+  - Fixed for the new patch.
+  - Fixes error when trying to reset world where a player has teleported extremely far away.
+
 - v1.38
   - Fixes the `object_refresh` command not always working for spawn points.
   - Removes the upgrade `hildir` because this mod doesn't work on PTB.
