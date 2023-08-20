@@ -3,11 +3,14 @@ using Service;
 
 namespace UpgradeWorld;
 /// <summary>Removes missing objects.</summary>
-public class CleanObjects : EntityOperation {
-  public CleanObjects(Terminal context, FiltererParameters args) : base(context) {
+public class CleanObjects : EntityOperation
+{
+  public CleanObjects(Terminal context, FiltererParameters args) : base(context)
+  {
     Clean(args);
   }
-  private bool Clean(ZDO zdo, string prefix) {
+  private bool Clean(ZDO zdo, string prefix)
+  {
     var zs = ZNetScene.instance;
     var item = zdo.GetString(prefix + "item", "");
     if (item == "") return false;
@@ -21,41 +24,50 @@ public class CleanObjects : EntityOperation {
     return true;
   }
 
-  private void Clean(FiltererParameters args) {
+  private void Clean(FiltererParameters args)
+  {
     var zdos = GetZDOs(args);
     var scene = ZNetScene.instance;
     var zs = ZoneSystem.instance;
     var toRemove = zs.m_locationInstances.Where(x => x.Value.m_location?.m_prefab == null).Select(x => x.Key).ToList();
     foreach (var zone in toRemove)
       zs.m_locationInstances.Remove(zone);
-    Print("Removed " + toRemove.Count + " missing location entries.");
+    if (toRemove.Count > 0)
+      Print($"Removed {toRemove.Count} missing location entries.");
 
     var removed = 0;
-    foreach (var zdo in zdos) {
+    foreach (var zdo in zdos)
+    {
       if (zdo.GetPrefab() != LocationProxyHash) continue;
       if (zs.GetLocation(zdo.GetInt(LocationHash)) != null) continue;
       Helper.RemoveZDO(zdo);
       removed++;
     }
-    Print("Removed " + removed + " missing location objects.");
+    if (removed > 0)
+      Print($"Removed {removed} missing location objects.");
 
     removed = 0;
-    foreach (var zdo in zdos) {
+    foreach (var zdo in zdos)
+    {
       if (scene.m_namedPrefabs.ContainsKey(zdo.GetPrefab())) continue;
       Helper.RemoveZDO(zdo);
       removed++;
     }
-    Print("Removed " + removed + " missing objects.");
+    if (removed > 0)
+      Print($"Removed {removed} missing objects.");
 
     removed = 0;
-    foreach (var zdo in zdos) {
+    foreach (var zdo in zdos)
+    {
       if (Clean(zdo, ""))
         removed++;
     }
-    Print("Removed " + removed + " missing objects from item stands");
+    if (removed > 0)
+      Print($"Removed {removed} missing objects from item stands");
 
     removed = 0;
-    foreach (var zdo in zdos) {
+    foreach (var zdo in zdos)
+    {
       if (Clean(zdo, "0_"))
         removed++;
       if (Clean(zdo, "1_"))
@@ -77,10 +89,12 @@ public class CleanObjects : EntityOperation {
       if (Clean(zdo, "9_"))
         removed++;
     }
-    Print("Removed " + removed + " missing objects from armor stands");
+    if (removed > 0)
+      Print($"Removed {removed} missing objects from armor stands");
 
     removed = 0;
-    foreach (var zdo in zdos) {
+    foreach (var zdo in zdos)
+    {
       var items = zdo.GetString(ZDOVars.s_items);
       if (items == "") continue;
       ZPackage loadPackage = new(items);
@@ -92,32 +106,38 @@ public class CleanObjects : EntityOperation {
         zdo.SetOwner(ZDOMan.GetSessionID());
       zdo.Set(ZDOVars.s_items, savePackage.GetBase64());
     }
-    Print("Removed " + removed + " missing objects from chests");
+    if (removed > 0)
+      Print($"Removed {removed} missing objects from chests");
 
 
     var prefab = zs.m_zoneCtrlPrefab;
     var zoneCtrlHash = prefab.name.GetStableHashCode();
     var reseted = 0;
-    foreach (var zdo in zdos) {
+    var count = 0;
+    foreach (var zdo in zdos)
+    {
       if (zdo.GetPrefab() != zoneCtrlHash) continue;
       var id = zdo.m_uid;
       var longs = ZDOExtraData.GetLongs(id);
-      if (longs.Count < 256) continue;
+      if (longs.Count < 1) continue;
+      count += longs.Count;
       if (!zdo.IsOwner())
         zdo.SetOwner(ZDOMan.GetSessionID());
       ZDOHelper.Release(ZDOExtraData.s_longs, id);
       zdo.IncreaseDataRevision();
       reseted++;
-      Print($"Reseted corrupted zone control at {Helper.PrintVectorXZY(zdo.GetPosition())}.");
     }
-    Print("Reseted " + reseted + " corrupted zone controls.");
+    if (count > 0)
+      Print($"Cleared {count} spawn data from {reseted} zone controls.");
 
     var updated = 0;
-    foreach (var zdo in zdos) {
+    foreach (var zdo in zdos)
+    {
       var rooms = zdo.GetInt(ZDOVars.s_rooms);
       if (rooms < 128) continue;
       var id = zdo.m_uid;
-      for (var i = 127; i < rooms; i++) {
+      for (var i = 127; i < rooms; i++)
+      {
         var text = "room" + i.ToString();
         zdo.RemoveInt(text.GetStableHashCode());
         zdo.RemoveVec3((text + "_pos").GetStableHashCode());
@@ -128,18 +148,23 @@ public class CleanObjects : EntityOperation {
       zdo.Set(ZDOVars.s_rooms, 127);
       updated++;
     }
-    Print("Removed extra rooms from " + updated + " dungeons.");
+    if (updated > 0)
+      Print($"Removed extra rooms from {updated} dungeons.");
+    Print("World cleaned.");
   }
 
-  private int CleanChest(ZPackage from, ZPackage to) {
+  private int CleanChest(ZPackage from, ZPackage to)
+  {
     int version = from.ReadInt();
     to.Write(version);
     int items = from.ReadInt();
     to.Write(items);
     var removed = 0;
-    for (int i = 0; i < items; i++) {
+    for (int i = 0; i < items; i++)
+    {
       string text = from.ReadString();
-      if (ZNetScene.instance.m_namedPrefabs.ContainsKey(text.GetStableHashCode())) {
+      if (ZNetScene.instance.m_namedPrefabs.ContainsKey(text.GetStableHashCode()))
+      {
         to.Write(text);
         to.Write(from.ReadInt());
         to.Write(from.ReadSingle());
@@ -149,19 +174,24 @@ public class CleanObjects : EntityOperation {
           to.Write(from.ReadInt());
         if (version >= 102)
           to.Write(from.ReadInt());
-        if (version >= 103) {
+        if (version >= 103)
+        {
           to.Write(from.ReadLong());
           to.Write(from.ReadString());
         }
-        if (version >= 104) {
+        if (version >= 104)
+        {
           var dataAmount = from.ReadInt();
           to.Write(dataAmount);
-          for (int j = 0; j < dataAmount; j++) {
+          for (int j = 0; j < dataAmount; j++)
+          {
             to.Write(from.ReadString());
             to.Write(from.ReadString());
           }
         }
-      } else {
+      }
+      else
+      {
         removed++;
         from.ReadInt();
         from.ReadSingle();
@@ -171,20 +201,24 @@ public class CleanObjects : EntityOperation {
           from.ReadInt();
         if (version >= 102)
           from.ReadInt();
-        if (version >= 103) {
+        if (version >= 103)
+        {
           from.ReadLong();
           from.ReadString();
         }
-        if (version >= 104) {
+        if (version >= 104)
+        {
           var dataAmount = from.ReadInt();
-          for (int j = 0; j < dataAmount; j++) {
+          for (int j = 0; j < dataAmount; j++)
+          {
             from.ReadString();
             from.ReadString();
           }
         }
       }
     }
-    if (removed > 0) {
+    if (removed > 0)
+    {
       to.SetPos(4);
       to.Write(items - removed);
     }

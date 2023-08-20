@@ -6,11 +6,11 @@ Always back up your world before making any changes!
 
 Install on the admin client and on the server (modding [guide](https://youtu.be/L9ljm2eKLrk)).
 
-# Usage
+## Usage
 
 See [documentation](https://github.com/JereKuusela/valheim-upgrade_world/blob/main/README.md).
 
-# Credits
+## Credits
 
 Thanks for Azumatt for creating the mod icon!
 

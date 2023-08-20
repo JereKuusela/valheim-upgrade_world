@@ -4,22 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
 namespace UpgradeWorld;
-public struct FilterPoint {
+public struct FilterPoint
+{
   public float x;
   public float y;
   public float min;
   public float max;
 }
 #nullable disable
-public static class Settings {
+public static class Settings
+{
+  public static ConfigEntry<bool> configDisableAutomaticGenloc;
+  public static bool DisableAutomaticGenloc => configDisableAutomaticGenloc.Value;
   public static ConfigEntry<bool> configMapCoordinates;
   public static bool MapCoordinates => configMapCoordinates.Value;
   public static ConfigEntry<bool> configMiniMapCoordinates;
   public static bool MiniMapCoordinates => configMiniMapCoordinates.Value;
   public static ConfigEntry<bool> configVerbose;
   public static bool Verbose => configVerbose.Value;
-  public static ConfigEntry<bool> configPreventDoubleZNetView;
-  public static bool PreventDoubleZNetView => configPreventDoubleZNetView.Value;
   public static ConfigEntry<bool> configAutoStart;
   public static bool AutoStart => configAutoStart.Value;
   public static ConfigEntry<int> configWorldRadius;
@@ -43,10 +45,10 @@ public static class Settings {
   public static ConfigEntry<string> configRootUsers;
   public static HashSet<string> RootUsers => configRootUsers.Value.Split(',').Select(s => s.Trim()).Where(s => s != "").ToHashSet();
 
-  public static void Init(ConfigFile config) {
+  public static void Init(ConfigFile config)
+  {
     var section = "1. General";
     configVerbose = config.Bind(section, "Verbose output", false, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
-    configPreventDoubleZNetView = config.Bind(section, "Prevent double ZNet view", true, "Some bugged objects keep duplicating and corrupting the save. This prevents that from happening which allows removing these objects.");
     configAutoStart = config.Bind(section, "Automatic start", false, "If true, operations start automatically without having to use the start command.");
     configWorldRadius = config.Bind(section, "World radius", 10500, "Max radius for operations.");
     configSafeZoneItems = config.Bind(section, "Safe zone items", "blastfurnace,bonfire,charcoal_kiln,fermenter,fire_pit,forge,guard_stone,hearth,piece_artisanstation,piece_bed02,piece_brazierceiling01,piece_groundtorch,piece_groundtorch_blue,piece_groundtorch_green,piece_groundtorch_wood,piece_oven,piece_spinningwheel,piece_stonecutter,piece_walltorch,piece_workbench,portal,portal_wood,smelter,windmill,piece_chest,piece_chest_blackmetal,piece_chest_private,piece_chest_treasure,piece_chest_wood", "List of player placed objects that prevent zones being modified.");
@@ -56,6 +58,7 @@ public static class Settings {
     configMapCoordinates = config.Bind(section, "Show map coordinates", true, "The map shows coordinates on hover.");
     configMiniMapCoordinates = config.Bind(section, "Show minimap coordinates", false, "The minimap shows player coordinates.");
     configThrottle = config.Bind(section, "Operation delay", 100, "Milliseconds between each command. Prevents lots of small operations overloading the dedicated server.");
+    configDisableAutomaticGenloc = config.Bind(section, "Disable automatic genloc", false, "If enabled, new content updates won't automatically redistribute locations.");
 
     configDestroysPerUpdate = config.Bind("2. Destroying", "Operations per update", 100, "How many zones are destroyed per Unity update.");
     configTimeBasedDataNames = config.Bind("3. Change time/day", "Time based data names", "spawntime,lastTime,SpawnTime,StartTime,alive_time,spawn_time,picked_time,plantTime,pregnant,TameLastFeeding", "Names of the data values that should be updated with the new time. Changing these is NOT recommended.");

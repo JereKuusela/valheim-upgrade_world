@@ -6,7 +6,7 @@ Always back up your world before making any changes!
 
 Install on the admin client and on the server (modding [guide](https://youtu.be/L9ljm2eKLrk)).
 
-# Things you can do
+## Things you can do
 
 - Spawn tar pits and mountain caves on already explored areas.
 - Reroll chest loots to have onion seeds on already explored areas.
@@ -15,7 +15,7 @@ Install on the admin client and on the server (modding [guide](https://youtu.be/
 - Generate the whole world without having to physically go anywhere.
 - Manually regenerate areas or dungeons.
 
-# Quick instructions:
+## Quick instructions
 
 1. Back up your world!
 2. Install the mod and load the world.
@@ -29,7 +29,7 @@ This mod also adds current coordinates (and zone index) to the minimaps which sh
 
 Note: The default base detection is very conservative. Single workbenches, campfires, etc. will exclude a significant area around them, unless configured otherwise.
 
-# Upgrade operations
+## Upgrade operations
 
 For `upgrade` command:
 
@@ -43,13 +43,13 @@ For `upgrade` command:
 - `legacy_worldgen`: Downgrades biome distribution to the Early access release version.
 - `eva`: Upgrades the world with the changes from Epic Valheim Additions mod.
 
-# Dedicated servers
+## Dedicated servers
 
 By default, all admins can execute commands of this mod.
 
 If you wish to restrict this, edit the config file and add Steam IDs to the root users setting (separated by ,). After that only those users can execute commands.
 
-# Parameters
+## Parameters
 
 Most commands allow fine-tuning the affected area. Following parameters are available:
 
@@ -74,7 +74,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `terrain=meters`: Resets terrain around the object when using `vegetation_add` or `vegetation_reset`.
 - `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
 
-# Commands
+## Commands
 
 Overview of available commands (remember that tab key can be used for autocomplete / cycle through options):
 
@@ -106,7 +106,10 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation. `chance` directly scales the min and max amounts (bigger values work too).
 - `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation. `chance` determines how many of the vegetation are removed and directly scales the min and max amounts.
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
-- `world_clean`: Removes missing objects from armor stands, chests, item stands and the world (for example when removing mods that add new items).
+- `world_clean`:
+  - Clears spawn data from zone controls.
+  - Removes missing objects from armor stands, chests, item stands and the world.
+  - Removes missing locations.
 - `world_gen [legacy/hh/mistlands] [start]`: Sets the world generation version.
 - `world_reset [...args]`: Resets locations and zones.
 - `zones_generate [...args]`: Pre-generates areas without having to visit them.
@@ -114,6 +117,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `zones_restore [...args]`: Adds missing zone control objects (responsible for random spawns).
 
 Examples:
+
 - `biomes_count 100 min=5000`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
 - `chests_reset TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds`: Rerolls mountain treasure chests which only have naturally occurring items.
 - `chests_reset * looted min=1500`: Resets all chests which are 1500 meters away from the world center.
@@ -132,7 +136,7 @@ Examples:
 - `zones_reset min=5000`: Destroying areas after 5000 meters from the world center.
 - `zones_reset zone=3,-3 safeZones=0`: Destroy a single zone at indices 3,-3 to fix any local issues.
 
-# Configuration
+## Configuration
 
 The config can be found in the \<GameDirectory\>\BepInEx\config\upgrade_world.cfg folder after the first start up.
 
@@ -145,8 +149,8 @@ Filtering options in the config:
 Other settings are:
 
 - Verbose output: Prints more output which gives a better understanding how the mod operators. However this can spoil things of your world.
-- Prevent double ZNet view: Some bugged objects keep duplicating and corrupting the save. This prevents that from happening which allows removing these objects.
 - Automatic start: Starts commands automatically without having to use the start command. This allows using the commands more easily but can lead to more mistakes.
+- Disable automatic genloc: After new content updates, Valheim automatically redistributes unplaced locations with genloc command. This can mess up custom worlds with manually defined locations.
 - Operations per update: How many zones are destroyed per Unity update. Can be useful if destroying large parts of a world, but recommended to keep it as it is.
 - Root users: SteamIds that are allowed to execute commands (-1 for the dedicated server). If not set, all admins can use the commands.
 - Show map coordinates: If true, shows coordinates and distance on the big map.
@@ -154,15 +158,15 @@ Other settings are:
 - Operation delay: Milliseconds between each command. Prevents lots of small operations overloading the dedicated server.
 - World size: Max radius for operations (if using a mod to change the world size or need to affect areas outside the play area).
 
-# How it works
+## How it works
 
-## Glossary
+### Glossary
 
 - Generated area: The world generator generates up to 500 meters from places any player has visited (usually abour 350 meters). This is much bigger area than what gets revelead on the minimap.
 - Location: Special places like rune stones, dungeon entrances or abandoned houses that are spawned to the world by the world generator.
-- Zone: The world is split to tiles of 64 m x 64 m size. This is the granularity of the world generation. See https://valheim.fandom.com/wiki/Zones for more info.
+- Zone: The world is split to tiles of 64 m x 64 m size. This is the granularity of the world generation. See <https://valheim.fandom.com/wiki/Zones> for more info.
 
-## Resetting zones
+### Resetting zones
 
 1. Removes all objects from a zone (including player placed structures).
 2. If the zone has a location, marks the location as not spawned (to allow redistributing it).
@@ -172,29 +176,29 @@ Other settings are:
 
 Portals in the loaded area won't be automatically disconnected but relogging fixes that.
 
-## Generating zones
+### Generating zones
 
 1. Calls the generating function for each zone.
 
-## Adding locations
+### Adding locations
 
 1. Runs a modified genloc command which allows redistributing not spawned locations to already generated areas.
 2. Skip zones that didn't get a new location.
 3. For each redistributed location, destroy everything within the location exterior radius and spawn the location to the world.
 
-## Resetting chests
+### Resetting chests
 
 1. Gets all chests from the save file. Filters chests that are empty (looted or loot not rolled yet) or include a wrong item (to not replace manually put items).
 2. If the chest is in a loaded area, remove all items and roll loot.
 3. Otherwise remove all items and set the chest as "not rolled yet" so that the loot is rolled when the chest is loaded. This is done directly by modifying the save file without actually loading the chest.
 
-## Counting biomes
+### Counting biomes
 
 1. Checks from the map which biome is at each position.
 
 The map returns the exact biome information. This is slightly different than what the minimap shows as it will show the average biome.
 
-## Counting/listing/removing objects
+### Counting/listing/removing objects
 
 1. Uses the available id list (same what spawn command uses) to resolve wildcards.
 2. Directly counts objects from the save file data without loading them to the world.
@@ -202,7 +206,7 @@ The map returns the exact biome information. This is slightly different than wha
 
 This can result in objects near biome edges showing "wrong" biome because the generation code uses the average biome.
 
-## Changing time/day
+### Changing time/day
 
 1. Changes the world time like the skiptime command.
 2. Changes the time data values of objects to match the new time.

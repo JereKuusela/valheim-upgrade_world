@@ -75,22 +75,6 @@ public class IsConsoleEnabled
   }
 }
 
-[HarmonyPatch(typeof(ZNetView), nameof(ZNetView.Awake))]
-public class PreventDoubleZNetView
-{
-  static bool Prefix(ZNetView __instance)
-  {
-    if (!Settings.PreventDoubleZNetView) return true;
-    if (ZNetView.m_forceDisableInit || ZDOMan.instance == null) return true;
-    if (ZNetView.m_useInitZDO && ZNetView.m_initZDO == null)
-    {
-      ZLog.LogWarning($"Preventing double ZNetView for {__instance.gameObject.name}. Use 'remove_entities' command to remove these objects.");
-      UnityEngine.Object.Destroy(__instance);
-      return false;
-    }
-    return true;
-  }
-}
 [HarmonyPatch(typeof(Terminal), "InitTerminal")]
 public class SetCommands
 {
