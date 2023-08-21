@@ -33,20 +33,19 @@ public abstract class LocationOperation : ZoneOperation
   }
   private readonly List<GameObject> spawnedObjects = new();
   /// <summary>Spawns a location to the game world.</summary>
-  protected void SpawnLocation(Vector2i zone, ZoneSystem.LocationInstance location, bool clear, bool forceClear)
+  protected void SpawnLocation(Vector2i zone, ZoneSystem.LocationInstance location, float clearRadius)
   {
     var zoneSystem = ZoneSystem.instance;
     var root = zoneSystem.m_zones[zone].m_root;
     var zonePos = ZoneSystem.instance.GetZonePos(zone);
     var heightmap = Zones.GetHeightmap(root);
-    if (clear || forceClear)
-      Helper.ClearAreaForLocation(zone, location, forceClear);
+    Helper.ClearAreaForLocation(zone, location, clearRadius);
     ResetTerrain.ResetRadius = Args.TerrainReset == 0f ? location.m_location.m_exteriorRadius : Args.TerrainReset;
     ResetTerrain.Execute(location.m_position);
     List<ZoneSystem.ClearArea> clearAreas = new();
     zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, spawnedObjects);
     foreach (var obj in spawnedObjects)
-      UnityEngine.Object.Destroy(obj);
+      Object.Destroy(obj);
     spawnedObjects.Clear();
     ResetTerrain.ResetRadius = 0f;
   }

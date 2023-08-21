@@ -1,3 +1,8 @@
+- v1.40
+  - Optimizes ZDO removing.
+  - Removes settings "Terrain compiler name" and "Zone control name" as obsolete.
+  - Removes the parameter `noclearing` as obsolete.
+
 - v1.39
   - Adds a new setting "Disable automatic genloc".
   - Changes `world_clean` to remove all spawn data from zone controls.
@@ -16,6 +21,3 @@
 
 - v1.36
   - Updates the `world_clean` command to fix corrupted zone controls.
-
-- v1.35
-  - Updated for the new game version.

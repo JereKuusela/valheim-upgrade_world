@@ -22,7 +22,10 @@ public class RegenerateLocations : LocationOperation
       Print("Location " + (location.m_location?.m_prefabName ?? "???") + " is missing at " + zone.ToString());
       return false;
     }
-    SpawnLocation(zone, location, true, true);
+
+    var clearRadius = location.m_location.m_exteriorRadius;
+    if (Args.ObjectReset.HasValue) clearRadius = Args.ObjectReset.Value;
+    SpawnLocation(zone, location, clearRadius);
     if (Settings.Verbose)
       Print("Location " + location.m_location.m_prefabName + " reseted at " + zone.ToString());
     return true;

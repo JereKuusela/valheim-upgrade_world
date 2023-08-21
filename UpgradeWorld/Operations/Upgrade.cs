@@ -35,15 +35,13 @@ public class Upgrade : BaseOperation
     type = type.ToLower();
     if (type == "mountain_caves")
     {
-      var noClearing = Parse.Flag(extra, "noclearing");
-      Executor.AddOperation(new DistributeLocations(new[] { "MountainCave02" }, args.Start, args.Chance, Context));
-      Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
+      Executor.AddOperation(new DistributeLocations(["MountainCave02"], args.Start, args.Chance, Context));
+      Executor.AddOperation(new SpawnLocations(Context, args));
     }
     else if (type == "tarpits")
     {
-      var noClearing = Parse.Flag(extra, "noclearing");
-      Executor.AddOperation(new DistributeLocations(new[] { "TarPit1", "TarPit2", "TarPit3" }, args.Start, args.Chance, Context));
-      Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
+      Executor.AddOperation(new DistributeLocations(["TarPit1", "TarPit2", "TarPit3"], args.Start, args.Chance, Context));
+      Executor.AddOperation(new SpawnLocations(Context, args));
     }
     else if (type == "onions")
     {
@@ -52,7 +50,7 @@ public class Upgrade : BaseOperation
         Print("Error: This operation doesn't support extra parameters " + string.Join(", ", extra));
         return;
       }
-      new ResetChests(new[] { "TreasureChest_mountains" }, new[] { "Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds" }, args.Start, new(args), Context);
+      new ResetChests(["TreasureChest_mountains"], ["Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds"], args.Start, new(args), Context);
     }
     else if (type == "mistlands")
     {
@@ -63,14 +61,14 @@ public class Upgrade : BaseOperation
       }
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
       Executor.AddOperation(new ResetZones(Context, args));
-      Executor.AddOperation(new DistributeLocations(new string[0], args.Start, args.Chance, Context));
+      Executor.AddOperation(new DistributeLocations([], args.Start, args.Chance, Context));
     }
     else if (type == "mistlands_worldgen")
     {
       Executor.AddOperation(new WorldVersion(Context, 2, args.Start));
       args.MinDistance = 5901;
-      Executor.AddOperation(new RemoveLocations(Context, new string[0], args));
-      Executor.AddOperation(new DistributeLocations(new string[0], args.Start, args.Chance, Context));
+      Executor.AddOperation(new RemoveLocations(Context, [], args));
+      Executor.AddOperation(new DistributeLocations([], args.Start, args.Chance, Context));
       Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new Print(Context, "If you don't want to automatically reset outer areas, use <color=yellow>stop</color> and then <color=yellow>world_gen mistlands</color> commands.", "", args.Start));
     }
@@ -85,9 +83,8 @@ public class Upgrade : BaseOperation
     }
     else if (type == "hildir")
     {
-      var noClearing = Parse.Flag(extra, "noclearing");
-      Executor.AddOperation(new DistributeLocations(new[] { "Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave" }, args.Start, args.Chance, Context));
-      Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
+      Executor.AddOperation(new DistributeLocations(["Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave"], args.Start, args.Chance, Context));
+      Executor.AddOperation(new SpawnLocations(Context, args));
     }
     else if (type == "eva")
     {
@@ -96,14 +93,13 @@ public class Upgrade : BaseOperation
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
         return;
       }
-      var noClearing = Parse.Flag(extra, "noclearing");
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Plains, Heightmap.Biome.DeepNorth, Heightmap.Biome.Mistlands, Heightmap.Biome.AshLands };
       var safeZones = args.SafeZones;
       args.SafeZones = 0;
       Executor.AddOperation(new RemoveLocations(Context, new[] { "SvartalfrQueenAltar" }, args));
       args.SafeZones = safeZones;
       Executor.AddOperation(new DistributeLocations(new string[0], args.Start, args.Chance, Context));
-      Executor.AddOperation(new SpawnLocations(Context, !noClearing, args));
+      Executor.AddOperation(new SpawnLocations(Context, args));
       Executor.AddOperation(new RemoveVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
       Executor.AddOperation(new AddVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
       Executor.AddOperation(new Print(Context, "Note: This is for Epic Valheim Additions mod.", "", args.Start));

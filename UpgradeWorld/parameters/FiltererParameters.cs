@@ -4,12 +4,14 @@ using System.Linq;
 using Service;
 using UnityEngine;
 namespace UpgradeWorld;
-public enum TargetZones {
+public enum TargetZones
+{
   Generated,
   Ungenerated,
   All
 }
-public class FiltererParameters {
+public class FiltererParameters
+{
   public HashSet<Heightmap.Biome> Biomes = new();
   public bool NoEdges = false;
   public bool Start = false;
@@ -19,7 +21,7 @@ public class FiltererParameters {
   public float MaxDistance = 0;
   public float Chance = 1f;
   public float TerrainReset = 0f;
-  public float ObjectReset = 0f;
+  public float? ObjectReset;
   public int SafeZones = Settings.SafeZoneSize;
   public TargetZones TargetZones = TargetZones.Generated;
   public List<string> Unhandled = new();
@@ -27,7 +29,8 @@ public class FiltererParameters {
   public bool IsBiomeValid(Vector3 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos));
   public bool IsBiomeValid(Vector2 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos.x, pos.y));
 
-  public FiltererParameters(FiltererParameters pars) {
+  public FiltererParameters(FiltererParameters pars)
+  {
     Biomes = pars.Biomes;
     NoEdges = pars.NoEdges;
     Start = pars.Start;
@@ -43,11 +46,14 @@ public class FiltererParameters {
     TerrainReset = pars.TerrainReset;
 
   }
-  public FiltererParameters(Terminal.ConsoleEventArgs args) {
-    foreach (var par in args.Args.Skip(1).ToArray()) {
+  public FiltererParameters(Terminal.ConsoleEventArgs args)
+  {
+    foreach (var par in args.Args.Skip(1).ToArray())
+    {
       var split = par.Split('=');
       var name = split[0].ToLower();
-      if (split.Length > 1) {
+      if (split.Length > 1)
+      {
         var value = split[1];
         if (name == "safezones") SafeZones = Parse.Int(value, 2);
         else if (name == "pos") Pos = Parse.Pos(value);
@@ -57,13 +63,16 @@ public class FiltererParameters {
         else if (name == "chance") Chance = Parse.Float(value) / 100f;
         else if (name == "terrain") TerrainReset = Parse.Float(value);
         else if (name == "clear") ObjectReset = Parse.Float(value);
-        else if (name == "distance") {
+        else if (name == "distance")
+        {
           var distance = Parse.FloatRange(value);
           MinDistance = distance.Min;
           MaxDistance = distance.Max;
-        } else if (name == "biomes") Biomes = Parse.Biomes(value);
+        }
+        else if (name == "biomes") Biomes = Parse.Biomes(value);
         else Unhandled.Add(par);
-      } else if (name == "noedges") NoEdges = true;
+      }
+      else if (name == "noedges") NoEdges = true;
       else if (name == "start") Start = true;
       else if (name == "zone") Zone = Helper.GetPlayerZone();
       else if (name == "force") SafeZones = 0;
@@ -72,35 +81,44 @@ public class FiltererParameters {
     if (!Zone.HasValue && !Pos.HasValue)
       Pos = new Vector2(0, 0);
   }
-  public virtual bool Valid(Terminal terminal) {
-    if (Unhandled.Count() > 0) {
+  public virtual bool Valid(Terminal terminal)
+  {
+    if (Unhandled.Count() > 0)
+    {
       Helper.Print(terminal, "Error: Unhandled parameters " + string.Join(", ", Unhandled));
       return false;
     }
-    if (Zone.HasValue && Pos.HasValue) {
+    if (Zone.HasValue && Pos.HasValue)
+    {
       Helper.Print(terminal, "Error: <color=yellow>pos</color> and <color=yellow>zone</color> can't be used at the same time.");
       return false;
     }
-    if (Biomes.Contains(Heightmap.Biome.None)) {
+    if (Biomes.Contains(Heightmap.Biome.None))
+    {
       Helper.Print(terminal, "Error: Invalid biomes.");
       return false;
     }
-    if (!Zone.HasValue && !Pos.HasValue) {
+    if (!Zone.HasValue && !Pos.HasValue)
+    {
       Helper.Print(terminal, "Error: Position or zone is not defined.");
       return false;
     }
     return true;
   }
 
-  public bool FilterPosition(Vector3 pos) {
+  public bool FilterPosition(Vector3 pos)
+  {
     if (Biomes.Count() > 0 && !IsBiomeValid(pos)) return false;
     if (NoEdges && WorldGenerator.instance.GetBiomeArea(pos) != Heightmap.BiomeArea.Median) return false;
-    if (Zone.HasValue) {
+    if (Zone.HasValue)
+    {
       var zone = Zone.Value;
       var min = (int)MinDistance;
       var max = (int)MaxDistance;
       if (!Zones.IsWithin(zone, ZoneSystem.instance.GetZone(pos), min, max)) return false;
-    } else if (Pos.HasValue) {
+    }
+    else if (Pos.HasValue)
+    {
       Vector3 position = new(Pos.Value.x, 0, Pos.Value.y);
       if (MinDistance > 0 && Utils.DistanceXZ(pos, position) < MinDistance) return false;
       if (MaxDistance > 0 && Utils.DistanceXZ(pos, position) > MaxDistance) return false;
@@ -110,7 +128,8 @@ public class FiltererParameters {
   public virtual IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos) => zdos.Where(zdo => FilterPosition(zdo.GetPosition()));
   public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position));
 
-  public override string ToString() {
+  public override string ToString()
+  {
     var position = "";
     if (Zone.HasValue) position = $"{Zone.Value.x} {Zone.Value.y}";
     if (Pos.HasValue) position = $"{Pos.Value.x} {Pos.Value.y}";
@@ -121,15 +140,19 @@ public class FiltererParameters {
       };
     return string.Join("\n", texts);
   }
-  public string Print(string operation) {
+  public string Print(string operation)
+  {
     var str = operation + " ";
-    if (Biomes.Count > 0) {
+    if (Biomes.Count > 0)
+    {
       str += string.Join(", ", Biomes.Select(biome => Enum.GetName(typeof(Heightmap.Biome), biome)));
       if (NoEdges)
         str += " (excluding biome edges)";
-    } else
+    }
+    else
       str += "zones";
-    if (MinDistance > 0 || MaxDistance > 0) {
+    if (MinDistance > 0 || MaxDistance > 0)
+    {
       if (MinDistance > 0) str += " more than " + (MinDistance - 1);
       if (MinDistance > 0 && MaxDistance > 0) str += " and";
       if (MaxDistance > 0) str += " less than " + (MaxDistance + 1);
@@ -146,7 +169,8 @@ public class FiltererParameters {
         str += "player";
       else if (Pos.HasValue)
         str += "coordinates " + Pos.Value.x + "," + Pos.Value.y;
-    } else if (Zone.HasValue)
+    }
+    else if (Zone.HasValue)
       str += " at index " + Zone.Value.x + "," + Zone.Value.y;
     var size = 1 + (SafeZones - 1) * 2;
     if (SafeZones <= 0)
@@ -156,9 +180,10 @@ public class FiltererParameters {
     return str;
   }
   public static List<string> Parameters = new() {
-    "pos", "zone", "biomes", "min", "minDistance", "max", "maxDistance", "distance", "start", "noEdges", "safeZones", "chance", "force"
+    "clear", "terrain", "pos", "zone", "biomes", "min", "minDistance", "max", "maxDistance", "distance", "start", "noEdges", "safeZones", "chance", "force"
   };
-  public static Dictionary<string, Func<int, List<string>?>> GetAutoComplete() {
+  public static Dictionary<string, Func<int, List<string>?>> GetAutoComplete()
+  {
     return new() {
       { "pos", (int index) => CommandWrapper.XZ("pos", "Coordinates for the center point. If not given, player's position is used", index)},
       { "zone", (int index) => CommandWrapper.XZ("zone" , "Indices for the center zone", index) },
@@ -183,7 +208,8 @@ public class FiltererParameters {
     };
   }
   public static System.Random random = new();
-  public bool Roll() {
+  public bool Roll()
+  {
     if (Chance >= 1f) return true;
     return random.NextDouble() < Chance;
   }
