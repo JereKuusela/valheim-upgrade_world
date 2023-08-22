@@ -1,4 +1,7 @@
 - v1.40
+  - Adds a new upgrade `hildir`.
+  - Fixes for the new update.
+  - Fixes custom clear area not affecting location reset.
   - Optimizes ZDO removing.
   - Removes settings "Terrain compiler name" and "Zone control name" as obsolete.
   - Removes the parameter `noclearing` as obsolete.
