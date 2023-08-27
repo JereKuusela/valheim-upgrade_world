@@ -1,6 +1,7 @@
 - v1.41
-  - Improves the performance `locations_add` command (used by most upgrade commands).
+  - Changes `world_clean` to optimize dungeons instead of removing extra rooms.
   - Fixes `locations_add` command placing every unplaced location, instead of just the specified locations (mostly affects some custom maps).
+  - Improves the performance `locations_add` command (used by most upgrade commands).
 
 - v1.40
   - Adds a new upgrade `hildir`.

@@ -149,5 +149,8 @@ public static class Helper
   {
     foreach (var hm in Heightmap.s_heightmaps)
       hm.Poke(true);
+    // This was copied from Better Continents, not sure if really needed.
+    foreach (var lod in UnityEngine.Object.FindObjectsOfType<TerrainLod>())
+      lod.m_heightmapState = TerrainLod.HeightmapState.NeedsRebuild;
   }
 }

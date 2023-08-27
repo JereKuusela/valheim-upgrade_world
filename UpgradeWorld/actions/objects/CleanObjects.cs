@@ -9,20 +9,6 @@ public class CleanObjects : EntityOperation
   {
     Clean(args);
   }
-  private bool Clean(ZDO zdo, string prefix)
-  {
-    var zs = ZNetScene.instance;
-    var item = zdo.GetString(prefix + "item", "");
-    if (item == "") return false;
-    if (zs.m_namedPrefabs.ContainsKey(item.GetStableHashCode())) return false;
-    if (!zdo.IsOwner())
-      zdo.SetOwner(ZDOMan.GetSessionID());
-    zdo.Set(prefix + "item", "");
-    zdo.Set(prefix + "variant", 0);
-    if (prefix == "")
-      zdo.Set(prefix + "quality", 1);
-    return true;
-  }
 
   private void Clean(FiltererParameters args)
   {
@@ -134,23 +120,29 @@ public class CleanObjects : EntityOperation
     foreach (var zdo in zdos)
     {
       var rooms = zdo.GetInt(ZDOVars.s_rooms);
-      if (rooms < 128) continue;
-      var id = zdo.m_uid;
-      for (var i = 127; i < rooms; i++)
-      {
-        var text = "room" + i.ToString();
-        zdo.RemoveInt(text.GetStableHashCode());
-        zdo.RemoveVec3((text + "_pos").GetStableHashCode());
-        ZDOExtraData.s_quats.Remove(id, (text + "_pos").GetStableHashCode());
-        zdo.RemoveInt((text + "_seed").GetStableHashCode());
-      }
-      Print($"Removed {rooms - 127} extra rooms from the dungeon at {Helper.PrintVectorXZY(zdo.GetPosition())}.");
-      zdo.Set(ZDOVars.s_rooms, 127);
+      if (rooms == 0) continue;
+      ZDOMan.instance.ConvertDungeonRooms([zdo]);
+      Print($"Optimized dungeon at {Helper.PrintVectorXZY(zdo.GetPosition())}.");
       updated++;
     }
     if (updated > 0)
-      Print($"Removed extra rooms from {updated} dungeons.");
+      Print($"Optimized {updated} dungeons.");
     Print("World cleaned.");
+  }
+
+  private bool Clean(ZDO zdo, string prefix)
+  {
+    var zs = ZNetScene.instance;
+    var item = zdo.GetString(prefix + "item", "");
+    if (item == "") return false;
+    if (zs.m_namedPrefabs.ContainsKey(item.GetStableHashCode())) return false;
+    if (!zdo.IsOwner())
+      zdo.SetOwner(ZDOMan.GetSessionID());
+    zdo.Set(prefix + "item", "");
+    zdo.Set(prefix + "variant", 0);
+    if (prefix == "")
+      zdo.Set(prefix + "quality", 1);
+    return true;
   }
 
   private int CleanChest(ZPackage from, ZPackage to)

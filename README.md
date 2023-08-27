@@ -108,6 +108,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
 - `world_clean`:
   - Clears spawn data from zone controls.
+  - Optimizes dungeons.
   - Removes missing objects from armor stands, chests, item stands and the world.
   - Removes missing locations.
 - `world_gen [legacy/hh/mistlands] [start]`: Sets the world generation version.
