@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 namespace UpgradeWorld;
-public interface IZoneFilterer {
+public interface IZoneFilterer
+{
   Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages);
 }
 
-public static class FiltererFactory {
-  public static List<IZoneFilterer> Create(FiltererParameters args) {
+public static class FiltererFactory
+{
+  public static List<IZoneFilterer> Create(FiltererParameters args)
+  {
     List<IZoneFilterer> filters = new();
     if (args.Biomes.Count > 0) filters.Add(new BiomeFilterer(args.Biomes, !args.NoEdges));
     if (args.Zone.HasValue && (args.MinDistance != 0f || args.MaxDistance != 0f)) filters.Add(new ZoneDistanceFilterer(args.Zone.Value, (int)args.MinDistance, (int)args.MaxDistance));

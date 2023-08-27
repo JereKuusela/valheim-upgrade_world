@@ -35,13 +35,13 @@ public class Upgrade : BaseOperation
     type = type.ToLower();
     if (type == "mountain_caves")
     {
-      Executor.AddOperation(new DistributeLocations(["MountainCave02"], args.Start, args.Chance, Context));
-      Executor.AddOperation(new SpawnLocations(Context, args));
+      Executor.AddOperation(new DistributeLocations(Context, ["MountainCave02"], args.Start, args.Chance));
+      Executor.AddOperation(new SpawnLocations(Context, ["MountainCave02"], args));
     }
     else if (type == "tarpits")
     {
-      Executor.AddOperation(new DistributeLocations(["TarPit1", "TarPit2", "TarPit3"], args.Start, args.Chance, Context));
-      Executor.AddOperation(new SpawnLocations(Context, args));
+      Executor.AddOperation(new DistributeLocations(Context, ["TarPit1", "TarPit2", "TarPit3"], args.Start, args.Chance));
+      Executor.AddOperation(new SpawnLocations(Context, ["TarPit1", "TarPit2", "TarPit3"], args));
     }
     else if (type == "onions")
     {
@@ -61,14 +61,14 @@ public class Upgrade : BaseOperation
       }
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
       Executor.AddOperation(new ResetZones(Context, args));
-      Executor.AddOperation(new DistributeLocations([], args.Start, args.Chance, Context));
+      Executor.AddOperation(new DistributeLocations(Context, [], args.Start, args.Chance));
     }
     else if (type == "mistlands_worldgen")
     {
       Executor.AddOperation(new WorldVersion(Context, 2, args.Start));
       args.MinDistance = 5901;
       Executor.AddOperation(new RemoveLocations(Context, [], args));
-      Executor.AddOperation(new DistributeLocations([], args.Start, args.Chance, Context));
+      Executor.AddOperation(new DistributeLocations(Context, [], args.Start, args.Chance));
       Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new Print(Context, "If you don't want to automatically reset outer areas, use <color=yellow>stop</color> and then <color=yellow>world_gen mistlands</color> commands.", "", args.Start));
     }
@@ -83,8 +83,8 @@ public class Upgrade : BaseOperation
     }
     else if (type == "hildir")
     {
-      Executor.AddOperation(new DistributeLocations(["Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave"], args.Start, args.Chance, Context));
-      Executor.AddOperation(new SpawnLocations(Context, args));
+      Executor.AddOperation(new DistributeLocations(Context, ["Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave"], args.Start, args.Chance));
+      Executor.AddOperation(new SpawnLocations(Context, ["Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave"], args));
     }
     else if (type == "eva")
     {
@@ -93,15 +93,15 @@ public class Upgrade : BaseOperation
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
         return;
       }
-      args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Plains, Heightmap.Biome.DeepNorth, Heightmap.Biome.Mistlands, Heightmap.Biome.AshLands };
+      args.Biomes = [Heightmap.Biome.Plains, Heightmap.Biome.DeepNorth, Heightmap.Biome.Mistlands, Heightmap.Biome.AshLands];
       var safeZones = args.SafeZones;
       args.SafeZones = 0;
-      Executor.AddOperation(new RemoveLocations(Context, new[] { "SvartalfrQueenAltar" }, args));
+      Executor.AddOperation(new RemoveLocations(Context, ["SvartalfrQueenAltar"], args));
       args.SafeZones = safeZones;
-      Executor.AddOperation(new DistributeLocations(new string[0], args.Start, args.Chance, Context));
-      Executor.AddOperation(new SpawnLocations(Context, args));
-      Executor.AddOperation(new RemoveVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
-      Executor.AddOperation(new AddVegetation(Context, new() { "BurningTree", "FrometalVein_frac", "HeavymetalVein" }, args));
+      Executor.AddOperation(new DistributeLocations(Context, [], args.Start, args.Chance));
+      Executor.AddOperation(new SpawnLocations(Context, [], args));
+      Executor.AddOperation(new RemoveVegetation(Context, ["BurningTree", "FrometalVein_frac", "HeavymetalVein"], args));
+      Executor.AddOperation(new AddVegetation(Context, ["BurningTree", "FrometalVein_frac", "HeavymetalVein"], args));
       Executor.AddOperation(new Print(Context, "Note: This is for Epic Valheim Additions mod.", "", args.Start));
     }
     else

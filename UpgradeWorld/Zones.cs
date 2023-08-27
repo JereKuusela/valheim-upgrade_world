@@ -22,10 +22,10 @@ public static class Zones
     if (args.Zone.HasValue && args.MaxDistance == 0f && args.MinDistance == 0f)
     {
       if (args.TargetZones == TargetZones.Generated && !zs.m_generatedZones.Contains(args.Zone.Value))
-        return new Vector2i[0];
+        return [];
       if (args.TargetZones == TargetZones.Ungenerated && zs.m_generatedZones.Contains(args.Zone.Value))
-        return new Vector2i[0];
-      return new Vector2i[] { args.Zone.Value };
+        return [];
+      return [args.Zone.Value];
     }
     return GetZones(args.TargetZones);
   }
@@ -41,7 +41,7 @@ public static class Zones
   {
     var zs = ZoneSystem.instance;
     var zones = zs.m_generatedZones.ToHashSet();
-    var limit = (int)Math.Ceiling((float)Settings.WorldRadius / zs.m_zoneSize);
+    var limit = (int)Math.Ceiling(Settings.WorldRadius / zs.m_zoneSize);
     for (var i = -limit; i <= limit; i++)
     {
       for (var j = -limit; j <= limit; j++)

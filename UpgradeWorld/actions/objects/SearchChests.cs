@@ -4,11 +4,14 @@ using Service;
 
 namespace UpgradeWorld;
 /// <summary>Searchs objects from chests.</summary>
-public class SearchChests : EntityOperation {
-  public SearchChests(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context) {
+public class SearchChests : EntityOperation
+{
+  public SearchChests(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context)
+  {
     Search(ids, args);
   }
-  private string SearchStand(ZDO zdo, string prefix, HashSet<string> ids) {
+  private string SearchStand(ZDO zdo, string prefix, HashSet<string> ids)
+  {
     var item = zdo.GetString(prefix + "item", "");
     if (item == "") return "";
     if (!ids.Contains(item)) return "";
@@ -18,13 +21,15 @@ public class SearchChests : EntityOperation {
     if (quality > 1) item += ", level " + quality + "";
     return item;
   }
-  private void Search(IEnumerable<string> ids, DataParameters args) {
+  private void Search(IEnumerable<string> ids, DataParameters args)
+  {
     var prefabs = ids.SelectMany(GetPrefabs).ToHashSet();
     var zdos = GetZDOs(args);
 
     var zs = ZNetScene.instance;
-    var prefixes = new string[] { "", "0_", "1_", "2_", "3_", "4_", "5_", "6_", "7_", "8_", "9_" };
-    var standContents = zdos.Select(zdo => {
+    string[] prefixes = ["", "0_", "1_", "2_", "3_", "4_", "5_", "6_", "7_", "8_", "9_"];
+    var standContents = zdos.Select(zdo =>
+    {
       var content = prefixes.Select(prefix => SearchStand(zdo, prefix, prefabs)).Where(x => x != "").ToList();
       if (content.Count == 0) return "";
       var name = zs.m_namedPrefabs[zdo.GetPrefab()].name;
@@ -35,7 +40,8 @@ public class SearchChests : EntityOperation {
     if (args.Log) Log(standContents);
     else Print(standContents, false);
 
-    var chestContents = zdos.Select(zdo => {
+    var chestContents = zdos.Select(zdo =>
+    {
       var items = zdo.GetString(ZDOVars.s_items);
       if (items == "") return "";
       ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
@@ -51,11 +57,13 @@ public class SearchChests : EntityOperation {
     else Print(chestContents, false);
   }
 
-  private Dictionary<string, int> SearchChest(ZPackage from, HashSet<string> ids) {
+  private Dictionary<string, int> SearchChest(ZPackage from, HashSet<string> ids)
+  {
     Dictionary<string, int> amounts = new();
     var version = from.ReadInt();
     var items = from.ReadInt();
-    for (int i = 0; i < items; i++) {
+    for (int i = 0; i < items; i++)
+    {
       var text = from.ReadString();
       var stack = from.ReadInt();
       // Durability.
@@ -63,27 +71,33 @@ public class SearchChests : EntityOperation {
       from.ReadVector2i();
       from.ReadBool();
       var quality = "";
-      if (version >= 101) {
+      if (version >= 101)
+      {
         var value = from.ReadInt();
         if (value > 1) quality = " , level " + value + "";
       }
       var variant = "";
-      if (version >= 102) {
+      if (version >= 102)
+      {
         var value = from.ReadInt();
         if (value > 0) variant = ", style " + value;
       }
-      if (version >= 103) {
+      if (version >= 103)
+      {
         from.ReadLong();
         from.ReadString();
       }
-      if (version >= 104) {
+      if (version >= 104)
+      {
         var dataAmount = from.ReadInt();
-        for (int j = 0; j < dataAmount; j++) {
+        for (int j = 0; j < dataAmount; j++)
+        {
           from.ReadString();
           from.ReadString();
         }
       }
-      if (ids.Contains(text)) {
+      if (ids.Contains(text))
+      {
         var key = text + variant + quality;
         if (amounts.ContainsKey(key))
           amounts[key] += stack;

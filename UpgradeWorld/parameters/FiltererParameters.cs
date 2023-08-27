@@ -79,7 +79,7 @@ public class FiltererParameters
       else Unhandled.Add(par);
     }
     if (!Zone.HasValue && !Pos.HasValue)
-      Pos = new Vector2(0, 0);
+      Pos = new(0, 0);
   }
   public virtual bool Valid(Terminal terminal)
   {

@@ -4,7 +4,8 @@ using System.Linq;
 using Service;
 
 namespace UpgradeWorld;
-public class DataParameters : IdParameters {
+public class DataParameters : IdParameters
+{
   public Range<int>? Level;
   public string LocationIds = "";
   public List<string> Prints = new();
@@ -12,10 +13,13 @@ public class DataParameters : IdParameters {
   public List<string> Filters = new();
   public bool Log = false;
   public new bool RequireId;
-  public DataParameters(FiltererParameters pars) : base(pars) {
+  public DataParameters(FiltererParameters pars) : base(pars)
+  {
   }
-  public DataParameters(Terminal.ConsoleEventArgs args, bool requireId, bool validate = true) : base(args, requireId, validate) {
-    foreach (var par in Unhandled.ToList()) {
+  public DataParameters(Terminal.ConsoleEventArgs args, bool requireId, bool validate = true) : base(args, requireId, validate)
+  {
+    foreach (var par in Unhandled.ToList())
+    {
       var split = par.Split('=');
       var value = string.Join("=", split.Skip(1));
       if (split[0] == "level")
@@ -34,21 +38,26 @@ public class DataParameters : IdParameters {
       Unhandled.Remove(par);
     }
   }
-  public override IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos) {
+  public override IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos)
+  {
     zdos = base.FilterZdos(zdos);
-    if (Level != null) {
+    if (Level != null)
+    {
       var emptyOk = Level.Min <= 1;
-      zdos = zdos.Where(zdo => {
+      zdos = zdos.Where(zdo =>
+      {
         if (!ZDOExtraData.s_ints.TryGetValue(zdo.m_uid, out var ints)) return emptyOk;
         if (!ints.TryGetValue(ZDOVars.s_level, out var value)) return emptyOk;
         return Level.Min <= value && value <= Level.Max;
       });
     }
-    if (LocationIds != "") {
+    if (LocationIds != "")
+    {
       var ids = Parse.Split(LocationIds).Select(s => s.GetStableHashCode()).ToHashSet();
       zdos = zdos.Where(zdo => ids.Contains(zdo.GetInt(ZDOVars.s_location)));
     }
-    foreach (var filter in Filters) {
+    foreach (var filter in Filters)
+    {
       var split = Parse.Split(filter);
       var value = split.Length > 1 ? split[1] : "";
       var includeEmpty = split.Length > 2 && (Parse.Boolean(split[2]) ?? false);
@@ -58,24 +67,28 @@ public class DataParameters : IdParameters {
   }
 
 
-  public static new Dictionary<string, Func<int, List<string>?>> GetAutoComplete() {
-    var types = new List<string>() { "float", "id", "int", "long", "quat", "string", "vector" };
-    var truths = new List<string>() { "true", "false" };
+  public static new Dictionary<string, Func<int, List<string>?>> GetAutoComplete()
+  {
+    List<string> types = ["float", "id", "int", "long", "quat", "string", "vector"];
+    List<string> truths = ["true", "false"];
     var autoComplete = FiltererParameters.GetAutoComplete();
     autoComplete["level"] = (int index) => index == 0 ? CommandWrapper.Info("level=<color=yellow>amount</color> or level=<color=yellow>min-max</color> | Levels of the creature.") : null;
-    autoComplete["print"] = (int index) => {
+    autoComplete["print"] = (int index) =>
+    {
       if (index == 0) return CommandWrapper.Info("print=<color=yellow>key</color>,type | Prints data with a given key.");
       if (index == 1) return types;
       return null;
     };
-    autoComplete["data"] = (int index) => {
+    autoComplete["data"] = (int index) =>
+    {
       if (index == 0) return CommandWrapper.Info("data=<color=yellow>key</color>,value,type | Sets data to a given key. Type is required for new entries.");
       if (index == 1) return CommandWrapper.Info("data=key,<color=yellow>value</color>,type | Data value.");
       if (index == 2) return types;
       return null;
     };
 
-    autoComplete["filter"] = (int index) => {
+    autoComplete["filter"] = (int index) =>
+    {
       if (index == 0) return CommandWrapper.Info("filter=<color=yellow>key</color>,value,includeEmpty | Filter by a data value.");
       if (index == 1) return CommandWrapper.Info("filter=key,<color=yellow>value</color>,includeEmpty | Value or data type for new entries.");
       if (index == 2) return truths;

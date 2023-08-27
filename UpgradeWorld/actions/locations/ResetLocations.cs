@@ -8,8 +8,7 @@ public class RegenerateLocations : LocationOperation
     Operation = "Reset locations";
     InitString = args.Print("Reset locations at");
     Verb = "reseted";
-    if (ids.Length > 0)
-      Filterers = Filterers.Append(new LocationFilterer(ids)).ToList();
+    Filterers = Filterers.Append(new LocationFilterer(ids, false)).ToList();
   }
 
   protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location)

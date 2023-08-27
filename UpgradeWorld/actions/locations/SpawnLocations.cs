@@ -1,13 +1,16 @@
+using System.Linq;
+
 namespace UpgradeWorld;
 ///<summary>Spawns locations in explored areas.</summary>
 public class SpawnLocations : LocationOperation
 {
-  public SpawnLocations(Terminal context, FiltererParameters args) : base(context, args)
+  public SpawnLocations(Terminal context, string[] ids, FiltererParameters args) : base(context, args)
   {
     Operation = "Spawn missing locations";
     InitString = args.Print("Spawn missing locations to");
     Verb = "spawned to already generated areas";
     args.Chance = 1f;
+    Filterers = Filterers.Append(new LocationFilterer(ids, true)).ToList();
   }
   protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location)
   {
