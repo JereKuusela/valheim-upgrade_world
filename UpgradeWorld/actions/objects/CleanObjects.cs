@@ -152,63 +152,81 @@ public class CleanObjects : EntityOperation
     int items = from.ReadInt();
     to.Write(items);
     var removed = 0;
-    for (int i = 0; i < items; i++)
+    try
     {
-      string text = from.ReadString();
-      if (ZNetScene.instance.m_namedPrefabs.ContainsKey(text.GetStableHashCode()))
+      for (int i = 0; i < items; i++)
       {
-        to.Write(text);
-        to.Write(from.ReadInt());
-        to.Write(from.ReadSingle());
-        to.Write(from.ReadVector2i());
-        to.Write(from.ReadBool());
-        if (version >= 101)
-          to.Write(from.ReadInt());
-        if (version >= 102)
-          to.Write(from.ReadInt());
-        if (version >= 103)
+        string text = from.ReadString();
+        if (ZNetScene.instance.m_namedPrefabs.ContainsKey(text.GetStableHashCode()))
         {
-          to.Write(from.ReadLong());
-          to.Write(from.ReadString());
-        }
-        if (version >= 104)
-        {
-          var dataAmount = from.ReadInt();
-          to.Write(dataAmount);
-          for (int j = 0; j < dataAmount; j++)
+          to.Write(text);
+          to.Write(from.ReadInt());
+          to.Write(from.ReadSingle());
+          to.Write(from.ReadVector2i());
+          to.Write(from.ReadBool());
+          if (version >= 101)
+            to.Write(from.ReadInt());
+          if (version >= 102)
+            to.Write(from.ReadInt());
+          if (version >= 103)
           {
-            to.Write(from.ReadString());
+            to.Write(from.ReadLong());
             to.Write(from.ReadString());
           }
-        }
-      }
-      else
-      {
-        removed++;
-        from.ReadInt();
-        from.ReadSingle();
-        from.ReadVector2i();
-        from.ReadBool();
-        if (version >= 101)
-          from.ReadInt();
-        if (version >= 102)
-          from.ReadInt();
-        if (version >= 103)
-        {
-          from.ReadLong();
-          from.ReadString();
-        }
-        if (version >= 104)
-        {
-          var dataAmount = from.ReadInt();
-          for (int j = 0; j < dataAmount; j++)
+          if (version >= 104)
           {
-            from.ReadString();
+            var dataAmount = from.ReadInt();
+            to.Write(dataAmount);
+            for (int j = 0; j < dataAmount; j++)
+            {
+              to.Write(from.ReadString());
+              to.Write(from.ReadString());
+            }
+          }
+          if (version >= 105)
+            to.Write(from.ReadInt());
+          if (version >= 106)
+            to.Write(from.ReadBool());
+        }
+        else
+        {
+          removed++;
+          from.ReadInt();
+          from.ReadSingle();
+          from.ReadVector2i();
+          from.ReadBool();
+          if (version >= 101)
+            from.ReadInt();
+          if (version >= 102)
+            from.ReadInt();
+          if (version >= 103)
+          {
+            from.ReadLong();
             from.ReadString();
           }
+          if (version >= 104)
+          {
+            var dataAmount = from.ReadInt();
+            for (int j = 0; j < dataAmount; j++)
+            {
+              from.ReadString();
+              from.ReadString();
+            }
+          }
+          if (version >= 105)
+            from.ReadInt();
+          if (version >= 106)
+            from.ReadBool();
         }
       }
     }
+    catch
+    {
+      // Fallback for truly corrupted chests.
+      removed = items;
+    }
+
+
     if (removed > 0)
     {
       to.SetPos(4);

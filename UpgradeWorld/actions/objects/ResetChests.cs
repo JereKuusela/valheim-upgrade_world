@@ -85,6 +85,12 @@ public class ResetChests : EntityOperation
         inventory.Save(savePackage);
         zdo.Set(ZDOVars.s_items, savePackage.GetBase64());
       }
+      if (args.TerrainReset > 0f)
+      {
+        ResetTerrain.ResetRadius = args.TerrainReset;
+        ResetTerrain.Execute(zdo.GetPosition());
+        ResetTerrain.ResetRadius = 0f;
+      }
     }
     Print("Chests reseted (" + resetedChests + " of " + totalChests + ").");
   }

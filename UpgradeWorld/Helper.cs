@@ -126,13 +126,13 @@ public static class Helper
   public static string IdString(IEnumerable<string> ids)
   {
     if (ids.Count() == 0) return "";
-    return " " + Helper.JoinRows(ids);
+    return " " + JoinRows(ids);
   }
   public static string LocationIdString(IEnumerable<string> ids)
   {
     if (ids.Count() == ZoneSystem.instance.m_locations.Count) return "";
     if (ids.Count() == 0) return "";
-    return " " + Helper.JoinRows(ids);
+    return " " + JoinRows(ids);
   }
 
 

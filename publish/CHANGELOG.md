@@ -1,6 +1,7 @@
 - v1.41
   - Changes `world_clean` to optimize dungeons instead of removing extra rooms.
   - Fixes `locations_add` command placing every unplaced location, instead of just the specified locations (mostly affects some custom maps).
+  - Fixes `world_clean` command not working for new chest format.
   - Improves the performance `locations_add` command (used by most upgrade commands).
 
 - v1.40
