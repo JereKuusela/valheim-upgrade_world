@@ -38,9 +38,9 @@ public class DataParameters : IdParameters
       Unhandled.Remove(par);
     }
   }
-  public override IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos)
+  public override IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, bool checkExcludedZones)
   {
-    zdos = base.FilterZdos(zdos);
+    zdos = base.FilterZdos(zdos, checkExcludedZones);
     if (Level != null)
     {
       var emptyOk = Level.Min <= 1;

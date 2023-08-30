@@ -14,12 +14,17 @@ public class RemoveLocations : ExecutedOperation
     };
     Ids = ids.ToHashSet();
   }
-
+  protected override void OnStart()
+  {
+    if (Args.SafeZones == 0) return;
+    PlayerBaseFilterer filterer = new(Args.SafeZones);
+    filterer.CalculateExcluded();
+  }
   private int RemoveSpawned()
   {
     var zs = ZoneSystem.instance;
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => LocationProxyHash == zdo.GetPrefab());
-    zdos = Args.FilterZdos(zdos);
+    zdos = Args.FilterZdos(zdos, true);
     var removed = 0;
     foreach (var zdo in zdos)
     {
@@ -40,7 +45,7 @@ public class RemoveLocations : ExecutedOperation
       if (Settings.Verbose)
         Print($"Location {name} removed at {zone}.");
     }
-    var toRemove = zs.m_locationInstances.Where(kvp => Args.FilterPosition(kvp.Value.m_position)).ToList();
+    var toRemove = zs.m_locationInstances.Where(kvp => Args.FilterPosition(kvp.Value.m_position, true)).ToList();
     foreach (var kvp in toRemove)
     {
       if (!Args.Roll()) continue;

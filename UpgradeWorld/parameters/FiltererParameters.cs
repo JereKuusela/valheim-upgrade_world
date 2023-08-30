@@ -106,7 +106,7 @@ public class FiltererParameters
     return true;
   }
 
-  public bool FilterPosition(Vector3 pos)
+  public bool FilterPosition(Vector3 pos, bool checkExcludedZones)
   {
     if (Biomes.Count() > 0 && !IsBiomeValid(pos)) return false;
     if (NoEdges && WorldGenerator.instance.GetBiomeArea(pos) != Heightmap.BiomeArea.Median) return false;
@@ -123,10 +123,11 @@ public class FiltererParameters
       if (MinDistance > 0 && Utils.DistanceXZ(pos, position) < MinDistance) return false;
       if (MaxDistance > 0 && Utils.DistanceXZ(pos, position) > MaxDistance) return false;
     }
+    if (checkExcludedZones && PlayerBaseFilterer.ExcludedZones.Contains(ZoneSystem.instance.GetZone(pos))) return false;
     return true;
   }
-  public virtual IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos) => zdos.Where(zdo => FilterPosition(zdo.GetPosition()));
-  public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position));
+  public virtual IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, bool checkExcludedZones) => zdos.Where(zdo => FilterPosition(zdo.GetPosition(), checkExcludedZones));
+  public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position, true));
 
   public override string ToString()
   {

@@ -35,12 +35,12 @@ public class Upgrade : BaseOperation
     type = type.ToLower();
     if (type == "mountain_caves")
     {
-      Executor.AddOperation(new DistributeLocations(Context, ["MountainCave02"], args.Start, args.Chance));
+      Executor.AddOperation(new DistributeLocations(Context, ["MountainCave02"], args));
       Executor.AddOperation(new SpawnLocations(Context, ["MountainCave02"], args));
     }
     else if (type == "tarpits")
     {
-      Executor.AddOperation(new DistributeLocations(Context, ["TarPit1", "TarPit2", "TarPit3"], args.Start, args.Chance));
+      Executor.AddOperation(new DistributeLocations(Context, ["TarPit1", "TarPit2", "TarPit3"], args));
       Executor.AddOperation(new SpawnLocations(Context, ["TarPit1", "TarPit2", "TarPit3"], args));
     }
     else if (type == "onions")
@@ -61,14 +61,14 @@ public class Upgrade : BaseOperation
       }
       args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
       Executor.AddOperation(new ResetZones(Context, args));
-      Executor.AddOperation(new DistributeLocations(Context, [], args.Start, args.Chance));
+      Executor.AddOperation(new DistributeLocations(Context, [], args));
     }
     else if (type == "mistlands_worldgen")
     {
       Executor.AddOperation(new WorldVersion(Context, 2, args.Start));
       args.MinDistance = 5901;
       Executor.AddOperation(new RemoveLocations(Context, [], args));
-      Executor.AddOperation(new DistributeLocations(Context, [], args.Start, args.Chance));
+      Executor.AddOperation(new DistributeLocations(Context, [], args));
       Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new Print(Context, "If you don't want to automatically reset outer areas, use <color=yellow>stop</color> and then <color=yellow>world_gen mistlands</color> commands.", "", args.Start));
     }
@@ -83,7 +83,7 @@ public class Upgrade : BaseOperation
     }
     else if (type == "hildir")
     {
-      Executor.AddOperation(new DistributeLocations(Context, ["Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave"], args.Start, args.Chance));
+      Executor.AddOperation(new DistributeLocations(Context, ["Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave"], args));
       Executor.AddOperation(new SpawnLocations(Context, ["Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave"], args));
     }
     else if (type == "eva")
@@ -98,7 +98,7 @@ public class Upgrade : BaseOperation
       args.SafeZones = 0;
       Executor.AddOperation(new RemoveLocations(Context, ["SvartalfrQueenAltar"], args));
       args.SafeZones = safeZones;
-      Executor.AddOperation(new DistributeLocations(Context, [], args.Start, args.Chance));
+      Executor.AddOperation(new DistributeLocations(Context, [], args));
       Executor.AddOperation(new SpawnLocations(Context, [], args));
       Executor.AddOperation(new RemoveVegetation(Context, ["BurningTree", "FrometalVein_frac", "HeavymetalVein"], args));
       Executor.AddOperation(new AddVegetation(Context, ["BurningTree", "FrometalVein_frac", "HeavymetalVein"], args));

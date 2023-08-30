@@ -1,16 +1,26 @@
+using System.Collections.Generic;
 using System.Linq;
 
 namespace UpgradeWorld;
 ///<summary>Spawns locations in explored areas.</summary>
 public class SpawnLocations : LocationOperation
 {
+  private readonly string[] Ids;
   public SpawnLocations(Terminal context, string[] ids, FiltererParameters args) : base(context, args)
   {
     Operation = "Spawn missing locations";
     InitString = args.Print("Spawn missing locations to");
     Verb = "spawned to already generated areas";
     args.Chance = 1f;
-    Filterers = Filterers.Append(new LocationFilterer(ids, true)).ToList();
+    Ids = ids;
+  }
+  protected override void OnStart()
+  {
+    // This must be done right before execution to get the latest location data.
+    // Doing it on the contructor would result in wrong zones if location distribute was executed before.
+    var filterer = new LocationFilterer(Ids, true);
+    List<string> messages = [];
+    ZonesToUpgrade = filterer.FilterZones(ZonesToUpgrade, ref messages);
   }
   protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location)
   {

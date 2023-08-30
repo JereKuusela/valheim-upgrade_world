@@ -13,7 +13,7 @@ public class WorldResetCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       Executor.AddOperation(new RemoveLocations(args.Context, [], pars));
-      Executor.AddOperation(new DistributeLocations(args.Context, [], pars.Start, pars.Chance));
+      Executor.AddOperation(new DistributeLocations(args.Context, [], pars));
       Executor.AddOperation(new ResetZones(args.Context, pars));
     }, optionsFetcher: () => FiltererParameters.Parameters);
   }

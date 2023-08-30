@@ -53,6 +53,6 @@ public abstract class EntityOperation : BaseOperation
   public static ZDO[] GetZDOs(string id) => GetZDOs(id.GetStableHashCode());
   public static ZDO[] GetZDOs(int hash) => ZDOMan.instance.m_objectsByID.Values.Where(zdo => hash == zdo.GetPrefab()).ToArray();
 
-  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, DataParameters args) => args.FilterZdos(zdos);
-  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.FilterZdos(zdos);
+  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, DataParameters args) => args.FilterZdos(zdos, false);
+  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.FilterZdos(zdos, false);
 }

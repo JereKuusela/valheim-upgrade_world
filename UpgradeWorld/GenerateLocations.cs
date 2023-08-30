@@ -6,9 +6,9 @@ namespace UpgradeWorld;
 [HarmonyPatch(typeof(ZoneSystem), nameof(ZoneSystem.IsZoneGenerated))]
 public class IsZoneGenerated
 {
-  static bool Prefix(ref bool __result)
+  static bool Prefix(Vector2i zoneID, ref bool __result)
   {
-    if (DistributeLocations.SpawnToAlreadyGenerated)
+    if (DistributeLocations.SpawnToAlreadyGenerated && DistributeLocations.AllowedZones.Contains(zoneID))
     {
       __result = false;
       return false;

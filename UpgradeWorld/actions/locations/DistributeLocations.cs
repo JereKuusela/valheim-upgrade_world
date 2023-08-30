@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
+
 namespace UpgradeWorld;
 /// <summary>Distributes given location ids to already generated zones.</summary>
 public class DistributeLocations : ExecutedOperation
@@ -9,12 +12,20 @@ public class DistributeLocations : ExecutedOperation
   public int Added = 0;
   private int Total = 0;
   public static bool SpawnToAlreadyGenerated = false;
-  public DistributeLocations(Terminal context, string[] ids, bool autoStart, float chance) : base(context, autoStart)
+  public static HashSet<Vector2i> AllowedZones = [];
+  public DistributeLocations(Terminal context, string[] ids, FiltererParameters args) : base(context, args.Start)
   {
     Ids = ids;
     if (Ids.Length == 0)
       Ids = ZoneSystem.instance.m_locations.OrderByDescending(loc => loc.m_prioritized).Where(loc => loc.m_enable && loc.m_quantity != 0).Select(loc => loc.m_prefabName).ToArray();
-    Chance = chance;
+    Chance = args.Chance;
+    args = new(args)
+    {
+      TargetZones = TargetZones.All
+    };
+    var filterers = FiltererFactory.Create(args);
+    List<string> messages = [];
+    AllowedZones = filterers.Aggregate(Zones.GetZones(args), (zones, filterer) => filterer.FilterZones(zones, ref messages)).ToHashSet();
   }
   protected override bool OnExecute()
   {
