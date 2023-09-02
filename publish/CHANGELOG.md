@@ -1,3 +1,6 @@
+- v1.42
+  - Fixes "item with the same key..." error that sometimes happens.
+
 - v1.41
   - Changes `world_clean` to optimize dungeons instead of removing extra rooms.
   - Changes the location distribution to be affected by safe zones.

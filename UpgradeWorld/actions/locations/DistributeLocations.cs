@@ -25,7 +25,7 @@ public class DistributeLocations : ExecutedOperation
     };
     var filterers = FiltererFactory.Create(args);
     List<string> messages = [];
-    AllowedZones = filterers.Aggregate(Zones.GetZones(args), (zones, filterer) => filterer.FilterZones(zones, ref messages)).ToHashSet();
+    AllowedZones = [.. filterers.Aggregate(Zones.GetZones(args), (zones, filterer) => filterer.FilterZones(zones, ref messages)).Distinct()];
   }
   protected override bool OnExecute()
   {
