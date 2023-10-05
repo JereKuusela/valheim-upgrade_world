@@ -15,7 +15,6 @@ public class Upgrade : BaseOperation
     "hh_worldgen",
     "legacy_worldgen",
     "mountain_caves",
-    "EVA",
     "hildir"
   };
 
@@ -85,24 +84,6 @@ public class Upgrade : BaseOperation
     {
       Executor.AddOperation(new DistributeLocations(Context, ["Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave"], args));
       Executor.AddOperation(new SpawnLocations(Context, ["Hildir_plainsfortress", "Hildir_crypt", "Hildir_camp", "Hildir_cave"], args));
-    }
-    else if (type == "eva")
-    {
-      if (args.Biomes.Count() > 0)
-      {
-        Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
-        return;
-      }
-      args.Biomes = [Heightmap.Biome.Plains, Heightmap.Biome.DeepNorth, Heightmap.Biome.Mistlands, Heightmap.Biome.AshLands];
-      var safeZones = args.SafeZones;
-      args.SafeZones = 0;
-      Executor.AddOperation(new RemoveLocations(Context, ["SvartalfrQueenAltar"], args));
-      args.SafeZones = safeZones;
-      Executor.AddOperation(new DistributeLocations(Context, [], args));
-      Executor.AddOperation(new SpawnLocations(Context, [], args));
-      Executor.AddOperation(new RemoveVegetation(Context, ["BurningTree", "FrometalVein_frac", "HeavymetalVein"], args));
-      Executor.AddOperation(new AddVegetation(Context, ["BurningTree", "FrometalVein_frac", "HeavymetalVein"], args));
-      Executor.AddOperation(new Print(Context, "Note: This is for Epic Valheim Additions mod.", "", args.Start));
     }
     else
       Print("Error: Invalid upgrade type");

@@ -41,7 +41,6 @@ For `upgrade` command:
 - `mistlands_worldgen`: Upgrades biome distribution to the Mistlands version. Biomes will change in the outer areas. Areas past 5900 meters will be reseted. Rivers will move everywhere in the world and can destroy bases (even with the player base protection).
 - `hh_worldgen`: Downgrades biome distribution to the Heart & Home version.
 - `legacy_worldgen`: Downgrades biome distribution to the Early access release version.
-- `eva`: Upgrades the world with the changes from Epic Valheim Additions mod.
 
 ## Dedicated servers
 
