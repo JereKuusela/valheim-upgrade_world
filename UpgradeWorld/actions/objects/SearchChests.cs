@@ -47,6 +47,7 @@ public class SearchChests : EntityOperation
       ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
       var content = SearchChest(loadPackage, prefabs);
       if (content.Count == 0) return "";
+      AddPin(zdo.GetPosition());
       var name = zs.m_namedPrefabs[zdo.GetPrefab()].name;
       var id = name + " " + zdo.m_uid.ID + " " + Helper.PrintVectorXZY(zdo.GetPosition());
       return id + "\n" + string.Join("\n", content.Select(x => x.Key + ": " + x.Value));
@@ -55,11 +56,12 @@ public class SearchChests : EntityOperation
 
     if (args.Log) Log(chestContents);
     else Print(chestContents, false);
+    PrintPins();
   }
 
   private Dictionary<string, int> SearchChest(ZPackage from, HashSet<string> ids)
   {
-    Dictionary<string, int> amounts = new();
+    Dictionary<string, int> amounts = [];
     var version = from.ReadInt();
     var items = from.ReadInt();
     for (int i = 0; i < items; i++)

@@ -31,6 +31,7 @@ public class RegisterLocation : BaseOperation
     }
     zs.m_locationInstances.Remove(zone);
     zs.RegisterLocation(location, position, zs.IsZoneGenerated(zone));
+    AddPin(position);
     Print($"Location {id} registered to {Helper.PrintVectorXZY(position)}.");
     Print("To actually spawn the registered locations, reset the zone or spawn them manually.");
   }

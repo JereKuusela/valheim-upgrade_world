@@ -148,6 +148,9 @@ public class CleanObjects : EntityOperation
   private int CleanChest(ZPackage from, ZPackage to)
   {
     int version = from.ReadInt();
+    // Item Drawers mod uses the same ZDO key.
+    // But luckily it writes 0 as version, so it can be detected.
+    if (version == 0) return 0;
     to.Write(version);
     int items = from.ReadInt();
     to.Write(items);

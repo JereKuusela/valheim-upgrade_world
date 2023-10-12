@@ -1,3 +1,9 @@
+- v1.44
+  - Adds new parameter `pin` to show results on the map (requires Server Devcommands mod).
+  - Changes invalid id check to be warning instead of error (doesn't block executing).
+  - Fixes `locations_list` not using x,z,y format.
+  - Fixes `world_clean` clearing all drawers from Item Drawers mod.
+
 - v1.43
   - Fixed for the new patch.
   - Removes the `upgrade EVA` command as obsolete.

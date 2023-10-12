@@ -73,6 +73,7 @@ public class ResetChests : EntityOperation
       }
       if (AllowedItems.Count > 0 && !inventory.GetAllItems().All(IsValid)) continue;
       resetedChests++;
+      AddPin(zdo.GetPosition());
       inventory.RemoveAll();
       if (obj)
       {
@@ -93,6 +94,7 @@ public class ResetChests : EntityOperation
       }
     }
     Print("Chests reseted (" + resetedChests + " of " + totalChests + ").");
+    PrintPins();
   }
   private bool IsValid(ItemDrop.ItemData item)
   {

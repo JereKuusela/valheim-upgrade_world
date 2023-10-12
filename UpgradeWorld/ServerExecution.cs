@@ -3,11 +3,13 @@ using HarmonyLib;
 namespace UpgradeWorld;
 
 [HarmonyPatch(typeof(ZNet), nameof(ZNet.RPC_PeerInfo))]
-public class ServerExecution {
+public class ServerExecution
+{
   public static ZRpc? User = null;
 
   ///<summary>Sends command to the server so that it can be executed there.</summary>
-  public static void Send(string command) {
+  public static void Send(string command)
+  {
     if (!ZNet.instance) return;
     var server = ZNet.instance.GetServerRPC();
     if (server == null) return;
@@ -20,8 +22,11 @@ public class ServerExecution {
   public static void Send(Terminal.ConsoleEventArgs args) => Send(args.Args);
 
   public static string RPC_Command = "UpgradeWorld_Command";
+  public static string RPC_Pins = "DEV_Pins";
+
   public static string RPC_RemotePrintOnce = "UpgradeWorld_RemotePrintOnce";
-  private static bool IsAllowed(ZRpc rpc) {
+  private static bool IsAllowed(ZRpc rpc)
+  {
     var zNet = ZNet.instance;
     if (!zNet.enabled) return false;
     if (rpc == null) return false;
@@ -34,16 +39,19 @@ public class ServerExecution {
     Helper.Print(Console.instance, rpc, "Unauthorized to use Upgrade World commands.");
     return false;
   }
-  private static void RPC_Do_Command(ZRpc rpc, string command) {
+  private static void RPC_Do_Command(ZRpc rpc, string command)
+  {
     User = rpc;
     if (IsAllowed(rpc))
       Console.instance.TryRunCommand(command);
     User = null;
   }
-  private static void RPC_PrintOnce(ZRpc rpc, string value) {
+  private static void RPC_PrintOnce(ZRpc rpc, string value)
+  {
     Helper.PrintOnce(Console.instance, null, value);
   }
-  static void Postfix(ZNet __instance, ZRpc rpc) {
+  static void Postfix(ZNet __instance, ZRpc rpc)
+  {
     if (__instance.IsDedicated())
       rpc.Register<string>(RPC_Command, new(RPC_Do_Command));
     else

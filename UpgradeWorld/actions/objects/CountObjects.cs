@@ -26,5 +26,6 @@ public class CountObjects : EntityOperation
     texts = texts.Prepend($"Total: {total}").ToArray();
     if (args.Log) Log(texts);
     else Print(texts, false);
+    PrintPins();
   }
 }

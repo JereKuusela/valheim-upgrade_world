@@ -24,7 +24,8 @@ public class FiltererParameters
   public float? ObjectReset;
   public int SafeZones = Settings.SafeZoneSize;
   public TargetZones TargetZones = TargetZones.Generated;
-  public List<string> Unhandled = new();
+  public bool Pin;
+  public List<string> Unhandled = [];
   public bool IsBiomeValid(Heightmap.Biome biome) => Biomes.Count() == 0 || Biomes.Contains(biome);
   public bool IsBiomeValid(Vector3 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos));
   public bool IsBiomeValid(Vector2 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos.x, pos.y));
@@ -74,6 +75,7 @@ public class FiltererParameters
       }
       else if (name == "noedges") NoEdges = true;
       else if (name == "start") Start = true;
+      else if (name == "pin") Pin = true;
       else if (name == "zone") Zone = Helper.GetPlayerZone();
       else if (name == "force") SafeZones = 0;
       else Unhandled.Add(par);
@@ -199,6 +201,7 @@ public class FiltererParameters
       { "clear", (int index) => index == 0 ? CommandWrapper.Info("clear=<color=yellow>meters</color> | Overrides the radius of removed objects.") : null },
       { "start", (int index) => CommandWrapper.Flag("start", "Starts the operation instantly") },
       { "force", (int index) => CommandWrapper.Flag("force", "Disables the player base detection") },
+      { "pin", (int index) => CommandWrapper.Flag("pin", "Pins results on the map") },
       { "noEdges", (int index) => CommandWrapper.Flag("noedges", "Excludes zones with multiple biomes") },
       { "distance", (int index) => {
           if (index == 0) return CommandWrapper.Info("distance=<color=yellow>min</color>,max | Minimum distance from the center point / zone.");

@@ -21,6 +21,7 @@ public class RemoveObjects : EntityOperation
       {
         if (!args.Roll()) continue;
         removed++;
+        AddPin(zdo.GetPosition());
         Helper.RemoveZDO(zdo);
       }
       total += removed;
@@ -29,5 +30,6 @@ public class RemoveObjects : EntityOperation
     texts = texts.Prepend($"Removed: {total}").ToArray();
     if (args.Log) Log(texts);
     else Print(texts, false);
+    PrintPins();
   }
 }

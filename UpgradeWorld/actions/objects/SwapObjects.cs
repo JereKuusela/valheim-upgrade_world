@@ -2,19 +2,24 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Swaps objects with another one.</summary>
-public class SwapObjects : EntityOperation {
-  public SwapObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context) {
+public class SwapObjects : EntityOperation
+{
+  public SwapObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context)
+  {
     Swap(ids, args);
   }
-  private void Swap(IEnumerable<string> ids, DataParameters args) {
+  private void Swap(IEnumerable<string> ids, DataParameters args)
+  {
     var toSwap = ids.FirstOrDefault().GetStableHashCode();
     var prefabs = ids.Skip(1).SelectMany(GetPrefabs).ToList();
     var total = 0;
     var allZdos = GetZDOs(args);
-    var texts = prefabs.Select(id => {
+    var texts = prefabs.Select(id =>
+    {
       var zdos = GetZDOs(allZdos, id);
       var swapped = 0;
-      foreach (var zdo in zdos) {
+      foreach (var zdo in zdos)
+      {
         if (!args.Roll()) continue;
         if (zdo.GetPrefab() == toSwap) continue;
         swapped++;
@@ -22,6 +27,7 @@ public class SwapObjects : EntityOperation {
           zdo.SetOwner(ZDOMan.GetSessionID());
         zdo.SetPrefab(toSwap);
         Refresh(zdo);
+        AddPin(zdo.GetPosition());
       }
       total += swapped;
       return "Swapped " + swapped + " of " + id + ".";
@@ -29,9 +35,11 @@ public class SwapObjects : EntityOperation {
     texts = texts.Prepend($"Total: {total}").ToArray();
     if (args.Log) Log(texts);
     else Print(texts, false);
+    PrintPins();
   }
 
-  private static void Refresh(ZDO zdo) {
+  private static void Refresh(ZDO zdo)
+  {
     if (!ZNetScene.instance.m_instances.TryGetValue(zdo, out var view)) return;
     var newObj = ZNetScene.instance.CreateObject(zdo);
     UnityEngine.Object.Destroy(view.gameObject);

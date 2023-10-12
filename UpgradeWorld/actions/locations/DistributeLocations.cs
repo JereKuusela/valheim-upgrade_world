@@ -13,9 +13,9 @@ public class DistributeLocations : ExecutedOperation
   private int Total = 0;
   public static bool SpawnToAlreadyGenerated = false;
   public static HashSet<Vector2i> AllowedZones = [];
-  public DistributeLocations(Terminal context, string[] ids, FiltererParameters args) : base(context, args.Start)
+  public DistributeLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Start)
   {
-    Ids = ids;
+    Ids = [.. ids];
     if (Ids.Length == 0)
       Ids = ZoneSystem.instance.m_locations.OrderByDescending(loc => loc.m_prioritized).Where(loc => loc.m_enable && loc.m_quantity != 0).Select(loc => loc.m_prefabName).ToArray();
     Chance = args.Chance;
@@ -54,6 +54,8 @@ public class DistributeLocations : ExecutedOperation
           .Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefabName != id || FiltererParameters.random.NextDouble() < Chance)
           .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
       }
+      var unplaced = zs.m_locationInstances.Where(kvp => kvp.Value.m_location.m_prefabName == id && !kvp.Value.m_placed).ToList();
+      foreach (var kvp in unplaced) AddPin(kvp.Value.m_position);
       Total += Count(id);
       Added += zs.m_locationInstances.Count - before;
       SpawnToAlreadyGenerated = false;

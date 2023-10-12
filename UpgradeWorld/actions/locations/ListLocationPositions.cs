@@ -4,23 +4,25 @@ namespace UpgradeWorld;
 /// <summary>Lists position and biome of each location.</summary>
 public class ListLocationPositions : EntityOperation
 {
-  public ListLocationPositions(Terminal context, IEnumerable<string> ids, LocationIdParameters args) : base(context)
+  public ListLocationPositions(Terminal context, HashSet<string> ids, LocationIdParameters args) : base(context, args.Pin)
   {
     ListPositions(ids, args);
   }
-  private void ListPositions(IEnumerable<string> ids, LocationIdParameters args)
+  private void ListPositions(HashSet<string> ids, LocationIdParameters args)
   {
     var zs = ZoneSystem.instance;
-    List<string> texts = new();
-    var toPrint = args.FilterLocations(zs.m_locationInstances.Values).ToList();
-    foreach (var loc in toPrint)
+    List<string> texts = [];
+    var locs = args.FilterLocations(zs.m_locationInstances.Values).Where(l => ids.Count() == 0 || ids.Contains(l.m_location?.m_prefabName ?? "")).ToList();
+    foreach (var loc in locs)
     {
       var location = loc.m_location;
       var name = location.m_prefabName;
-      if (ids.Count() > 0 && !ids.Contains(name)) continue;
-      texts.Add(name + ": " + loc.m_position.ToString("F0") + " " + WorldGenerator.instance.GetBiome(loc.m_position));
+      texts.Add($"{name}: {Helper.PrintVectorXZY(loc.m_position)} {WorldGenerator.instance.GetBiome(loc.m_position)}");
+      AddPin(loc.m_position);
     }
     if (args.Log) Log(texts);
     else Print(texts, false);
+    PrintPins();
   }
+
 }

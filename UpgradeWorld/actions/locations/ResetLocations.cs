@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Destroys and spawns given locations.</summary>
 public class RegenerateLocations : LocationOperation
 {
-  public RegenerateLocations(Terminal context, string[] ids, FiltererParameters args) : base(context, args)
+  public RegenerateLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args)
   {
     Operation = "Reset locations";
     InitString = args.Print("Reset locations at");
@@ -25,6 +26,7 @@ public class RegenerateLocations : LocationOperation
     var clearRadius = location.m_location.m_exteriorRadius;
     if (Args.ObjectReset.HasValue) clearRadius = Args.ObjectReset.Value;
     SpawnLocation(zone, location, clearRadius);
+    AddPin(location.m_position);
     if (Settings.Verbose)
       Print("Location " + location.m_location.m_prefabName + " reseted at " + zone.ToString());
     return true;

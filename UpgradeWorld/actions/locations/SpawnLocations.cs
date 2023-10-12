@@ -5,8 +5,8 @@ namespace UpgradeWorld;
 ///<summary>Spawns locations in explored areas.</summary>
 public class SpawnLocations : LocationOperation
 {
-  private readonly string[] Ids;
-  public SpawnLocations(Terminal context, string[] ids, FiltererParameters args) : base(context, args)
+  private readonly HashSet<string> Ids;
+  public SpawnLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args)
   {
     Operation = "Spawn missing locations";
     InitString = args.Print("Spawn missing locations to");
@@ -33,6 +33,7 @@ public class SpawnLocations : LocationOperation
     var clearRadius = location.m_location.m_location.m_clearArea ? location.m_location.m_exteriorRadius : 0f;
     if (Args.ObjectReset.HasValue) clearRadius = Args.ObjectReset.Value;
     SpawnLocation(zone, location, clearRadius);
+    AddPin(location.m_position);
     if (Settings.Verbose)
       Print("Location " + location.m_location.m_prefabName + " spawned at " + zone.ToString());
     return true;

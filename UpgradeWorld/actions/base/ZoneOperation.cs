@@ -13,7 +13,7 @@ public abstract class ZoneOperation : ExecutedOperation
   protected int PreOperated = 0;
   protected FiltererParameters Args;
   protected List<IZoneFilterer> Filterers = new();
-  protected ZoneOperation(Terminal context, FiltererParameters args) : base(context, args.Start)
+  protected ZoneOperation(Terminal context, FiltererParameters args) : base(context, args.Start, args.Pin)
   {
     ZonesToUpgrade = Zones.GetZones(args);
     Args = args;
@@ -45,11 +45,7 @@ public abstract class ZoneOperation : ExecutedOperation
       if (!success) break;
     }
     UpdateConsole();
-    if (ZoneIndex >= ZonesToUpgrade.Length)
-    {
-      return true;
-    }
-    return false;
+    return ZoneIndex >= ZonesToUpgrade.Length;
   }
 
   private void MoveToNextZone(bool success = true)
