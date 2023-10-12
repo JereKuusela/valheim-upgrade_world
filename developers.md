@@ -9,7 +9,7 @@ using HarmonyLib;
 
 namespace UpgradeWorld;
 
-private class CommandRegistration
+public class CommandRegistration
 {
   public string name = "";
   public string description = "";
