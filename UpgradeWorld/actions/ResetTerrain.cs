@@ -56,11 +56,13 @@ public class ResetTerrain
       TCZdos = EntityOperation.GetZDOs(Settings.TerrainCompilerHash).ToLookup(zdo => ZoneSystem.instance.GetZone(zdo.GetPosition()));
     }
     var removed = false;
-    for (var x = pos.x - radius; x < pos.x + radius; x += 64f)
+    var centerZone = ZoneSystem.instance.GetZone(pos);
+    var d = (int)Math.Ceiling(radius / 64f);
+    for (var i = centerZone.x - d; i <= centerZone.x + d; i++)
     {
-      for (var z = pos.z - radius; z < pos.z + radius; z += 64f)
+      for (var j = centerZone.y - d; j <= centerZone.y + d; j++)
       {
-        var zone = ZoneSystem.instance.GetZone(new(x, 0, z));
+        var zone = new Vector2i(i, j);
         if (TCZdos == null || !TCZdos.Contains(zone)) continue;
         var zdos = TCZdos[zone];
         ResetTerrainInZdo(pos, radius, zone, zdos.First());
