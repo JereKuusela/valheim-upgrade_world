@@ -12,7 +12,7 @@ public abstract class ZoneOperation : ExecutedOperation
   ///<summary>Some operations can be done outside the zone loading logic.</summary>
   protected int PreOperated = 0;
   protected FiltererParameters Args;
-  protected List<IZoneFilterer> Filterers = new();
+  protected List<IZoneFilterer> Filterers = [];
   protected ZoneOperation(Terminal context, FiltererParameters args) : base(context, args.Start, args.Pin)
   {
     ZonesToUpgrade = Zones.GetZones(args);

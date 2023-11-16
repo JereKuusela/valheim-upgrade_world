@@ -43,32 +43,32 @@ public static class CommandWrapper
   }
   public static List<string> Info(string value)
   {
-    if (ServerDevcommands == null) return new();
+    if (ServerDevcommands == null) return [];
     return GetMethod(InfoType(), "Create", [typeof(string)]).Invoke(null, [value]) as List<string>;
   }
   public static List<string> XZ(string name, string description, int index)
   {
-    if (ServerDevcommands == null) return new();
+    if (ServerDevcommands == null) return [];
     return GetMethod(InfoType(), "XZ", [typeof(string), typeof(string), typeof(int)]).Invoke(null, [name, description, index]) as List<string>;
   }
   public static List<string> XZY(string name, string description, int index)
   {
-    if (ServerDevcommands == null) return new();
+    if (ServerDevcommands == null) return [];
     return GetMethod(InfoType(), "XZY", [typeof(string), typeof(string), typeof(int)]).Invoke(null, [name, description, index]) as List<string>;
   }
   public static List<string> Flag(string name, string description)
   {
-    if (ServerDevcommands == null) return new();
+    if (ServerDevcommands == null) return [];
     return GetMethod(InfoType(), "Flag", [typeof(string), typeof(string)]).Invoke(null, new[] { name, description }) as List<string>;
   }
   public static List<string> ObjectIds()
   {
-    if (ServerDevcommands == null) return new();
+    if (ServerDevcommands == null) return [];
     return InfoType().GetProperty("ObjectIds", PublicBinding).GetValue(null) as List<string>;
   }
   public static List<string> LocationIds()
   {
-    if (ServerDevcommands == null) return new();
+    if (ServerDevcommands == null) return [];
     return InfoType().GetProperty("LocationIds", PublicBinding).GetValue(null) as List<string>;
   }
   public static void RegisterEmpty(string command)

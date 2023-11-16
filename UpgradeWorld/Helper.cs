@@ -72,7 +72,7 @@ public static class Helper
   {
     if (extra.Count() > handled)
     {
-      Helper.Print(args.Context, "Error: Unhandled parameters " + string.Join(", ", extra.Skip(handled)));
+      Print(args.Context, "Error: Unhandled parameters " + string.Join(", ", extra.Skip(handled)));
       return false;
     }
     return true;

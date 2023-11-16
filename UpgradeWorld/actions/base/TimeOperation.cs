@@ -18,7 +18,7 @@ public abstract class TimeOperation : BaseOperation
     var delta = zNet.GetTime().Ticks - previousTicks;
     var spawnZonesUpdated = 0;
     var zoneControlsUpdated = 0;
-    Dictionary<int, int> updated = new();
+    Dictionary<int, int> updated = [];
     var dataNames = Settings.TimeBasedDataNames;
     var parameters = dataNames.Select(par => par.GetStableHashCode()).ToHashSet();
     foreach (var parameter in parameters) updated.Add(parameter, 0);

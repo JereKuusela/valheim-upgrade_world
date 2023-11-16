@@ -8,9 +8,9 @@ public class DataParameters : IdParameters
 {
   public Range<int>? Level;
   public string LocationIds = "";
-  public List<string> Prints = new();
-  public List<string> Datas = new();
-  public List<string> Filters = new();
+  public List<string> Prints = [];
+  public List<string> Datas = [];
+  public List<string> Filters = [];
   public bool Log = false;
   public new bool RequireId;
   public DataParameters(FiltererParameters pars) : base(pars)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace UpgradeWorld;
 public class WorldVersionCommand
 {
-  private static readonly List<string> Versions = new() { "legacy", "hh", "mistlands" };
+  private static readonly List<string> Versions = ["legacy", "hh", "mistlands"];
   public WorldVersionCommand()
   {
     CommandWrapper.Register("world_gen", (int index) =>

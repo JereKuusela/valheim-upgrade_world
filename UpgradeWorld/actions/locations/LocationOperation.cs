@@ -31,7 +31,7 @@ public abstract class LocationOperation : ZoneOperation
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
   }
-  private readonly List<GameObject> spawnedObjects = new();
+  private readonly List<GameObject> spawnedObjects = [];
   /// <summary>Spawns a location to the game world.</summary>
   protected void SpawnLocation(Vector2i zone, ZoneSystem.LocationInstance location, float clearRadius)
   {
@@ -42,7 +42,7 @@ public abstract class LocationOperation : ZoneOperation
     Helper.ClearAreaForLocation(zone, location, clearRadius);
     ResetTerrain.ResetRadius = Args.TerrainReset == 0f ? location.m_location.m_exteriorRadius : Args.TerrainReset;
     ResetTerrain.Execute(location.m_position);
-    List<ZoneSystem.ClearArea> clearAreas = new();
+    List<ZoneSystem.ClearArea> clearAreas = [];
     zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, spawnedObjects);
     foreach (var obj in spawnedObjects)
       Object.Destroy(obj);

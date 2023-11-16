@@ -6,8 +6,8 @@ namespace UpgradeWorld;
 /// <summary>Predefined upgrade operations</summary>
 public class Upgrade : BaseOperation
 {
-  public static List<string> Types = new()
-  {
+  public static List<string> Types =
+  [
     "tarpits",
     "onions",
     "mistlands",
@@ -16,7 +16,7 @@ public class Upgrade : BaseOperation
     "legacy_worldgen",
     "mountain_caves",
     "hildir"
-  };
+  ];
 
   public Upgrade(Terminal context, string type, List<string> extra, FiltererParameters args) : base(context)
   {
@@ -58,7 +58,7 @@ public class Upgrade : BaseOperation
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
         return;
       }
-      args.Biomes = new HashSet<Heightmap.Biome> { Heightmap.Biome.Mistlands };
+      args.Biomes = [Heightmap.Biome.Mistlands];
       Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new DistributeLocations(Context, [], args));
     }

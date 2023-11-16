@@ -9,7 +9,7 @@ public static class FiltererFactory
 {
   public static List<IZoneFilterer> Create(FiltererParameters args)
   {
-    List<IZoneFilterer> filters = new();
+    List<IZoneFilterer> filters = [];
     if (args.Biomes.Count > 0) filters.Add(new BiomeFilterer(args.Biomes, !args.NoEdges));
     if (args.Zone.HasValue && (args.MinDistance != 0f || args.MaxDistance != 0f)) filters.Add(new ZoneDistanceFilterer(args.Zone.Value, (int)args.MinDistance, (int)args.MaxDistance));
     else if (args.Pos.HasValue && (args.MinDistance != 0f || args.MaxDistance != 0f)) filters.Add(new DistanceFilterer(new(args.Pos.Value.x, 0, args.Pos.Value.y), args.MinDistance, args.MaxDistance));

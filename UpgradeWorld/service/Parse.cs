@@ -272,19 +272,19 @@ public static class Parse
 
   public static string[] Split(string arg, char separator = ',') => arg.Split(separator).Select(s => s.Trim()).Where(s => s != "").ToArray();
   public static string[] Split(string[] args, int index, char separator) => args.Length <= index ? ([]) : Split(args[index], separator);
-  private static readonly HashSet<string> Truthies = new() {
+  private static readonly HashSet<string> Truthies = [
     "1",
     "true",
     "yes",
     "on"
-  };
+  ];
   private static bool IsTruthy(string value) => Truthies.Contains(value);
-  private static readonly HashSet<string> Falsies = new() {
+  private static readonly HashSet<string> Falsies = [
     "0",
     "false",
     "no",
     "off"
-  };
+  ];
   private static bool IsFalsy(string value) => Falsies.Contains(value);
   public static bool? Boolean(string arg)
   {

@@ -6,7 +6,7 @@ namespace UpgradeWorld;
 /// <summary>Rerolls given chests.</summary>
 public class ResetChests : EntityOperation
 {
-  private static List<string> chestNames = new();
+  private static List<string> chestNames = [];
   private readonly HashSet<string> AllowedItems;
   public ResetChests(string[] chestIds, IEnumerable<string> allowedItems, bool looted, DataParameters args, Terminal context) : base(context)
   {

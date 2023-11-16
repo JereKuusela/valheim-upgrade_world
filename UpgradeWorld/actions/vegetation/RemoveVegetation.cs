@@ -6,7 +6,7 @@ namespace UpgradeWorld;
 public class RemoveVegetation : ZoneOperation
 {
   protected int Removed = 0;
-  private readonly HashSet<int> Ids = new();
+  private readonly HashSet<int> Ids = [];
   public RemoveVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args)
   {
     ZonesPerUpdate = Settings.DestroysPerUpdate;
@@ -32,7 +32,7 @@ public class RemoveVegetation : ZoneOperation
   }
   protected void Remove(Vector2i zone)
   {
-    List<ZDO> zdos = new();
+    List<ZDO> zdos = [];
     ZDOMan.instance.FindObjects(zone, zdos);
     foreach (var zdo in zdos)
     {

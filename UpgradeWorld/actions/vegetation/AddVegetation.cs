@@ -36,7 +36,7 @@ public class AddVegetation : VegetationOperation
   }
   private List<ZoneSystem.ClearArea> GetClearAreas(Vector2i zone)
   {
-    List<ZoneSystem.ClearArea> clearAreas = new();
+    List<ZoneSystem.ClearArea> clearAreas = [];
     var zs = ZoneSystem.instance;
     if (zs.m_locationInstances.TryGetValue(zone, out var location))
     {
@@ -45,7 +45,7 @@ public class AddVegetation : VegetationOperation
     }
     return clearAreas;
   }
-  private readonly List<GameObject> spawnedObjects = new();
+  private readonly List<GameObject> spawnedObjects = [];
   protected void SpawnVegetation(Vector2i zone)
   {
     var zs = ZoneSystem.instance;

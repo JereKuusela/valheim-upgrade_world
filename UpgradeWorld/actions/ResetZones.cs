@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
 public class ResetZones : ZoneOperation
 {
-  private Dictionary<Vector2i, Direction> BorderZones = new();
+  private Dictionary<Vector2i, Direction> BorderZones = [];
   public ResetZones(Terminal context, FiltererParameters args) : base(context, args)
   {
     Operation = "Reset";
@@ -20,7 +20,7 @@ public class ResetZones : ZoneOperation
     if (!Args.Roll()) return true;
     var zoneSystem = ZoneSystem.instance;
     var scene = ZNetScene.instance;
-    List<ZDO> sectorObjects = new();
+    List<ZDO> sectorObjects = [];
     ZDOMan.instance.FindObjects(zone, sectorObjects);
     var players = ZNet.instance.m_players.Select(player => player.m_characterID).ToHashSet();
     foreach (var zdo in sectorObjects)

@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 ///<summary>Filters zones based on whether they include a player base item.</summary>
 public class PlayerBaseFilterer : IZoneFilterer
 {
-  public static HashSet<Vector2i> ExcludedZones = new();
+  public static HashSet<Vector2i> ExcludedZones = [];
   public static DateTime LastUpdate = DateTime.MinValue;
   public static int LastSize = 0;
   public int Size = 0;

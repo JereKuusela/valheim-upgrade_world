@@ -5,7 +5,7 @@ using Service;
 namespace UpgradeWorld;
 public class IdParameters : FiltererParameters
 {
-  public List<string> Ids = new();
+  public List<string> Ids = [];
   public bool RequireId;
   public bool Validate;
   public IdParameters(FiltererParameters pars) : base(pars)

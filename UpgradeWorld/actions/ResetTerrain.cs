@@ -12,7 +12,7 @@ namespace UpgradeWorld;
 [HarmonyPatch(typeof(ZoneSystem))]
 public class ResetTerrain
 {
-  public static Dictionary<Vector2i, ZDO> TCZdos = new();
+  public static ILookup<Vector2i, ZDO>? TCZdos = null;
   public static DateTime LastUpdate = DateTime.MinValue;
   public static float ResetRadius = 0f;
 
@@ -50,14 +50,36 @@ public class ResetTerrain
   private static void Execute(Vector3 pos, float radius)
   {
     if (radius == 0f) return;
-    var zone = ZoneSystem.instance.GetZone(pos);
-    if (DateTime.Now - LastUpdate > TimeSpan.FromSeconds(10))
+    if (TCZdos == null || DateTime.Now - LastUpdate > TimeSpan.FromSeconds(10))
     {
       LastUpdate = DateTime.Now;
-      TCZdos = EntityOperation.GetZDOs(Settings.TerrainCompilerHash).ToDictionary(zdo => ZoneSystem.instance.GetZone(zdo.GetPosition()));
+      TCZdos = EntityOperation.GetZDOs(Settings.TerrainCompilerHash).ToLookup(zdo => ZoneSystem.instance.GetZone(zdo.GetPosition()));
     }
-    if (!TCZdos.TryGetValue(zone, out var zdo)) return;
-    var byteArray = zdo.GetByteArray("TCData");
+    var removed = false;
+    for (var x = pos.x - radius; x < pos.x + radius; x += 64f)
+    {
+      for (var z = pos.z - radius; z < pos.z + radius; z += 64f)
+      {
+        var zone = ZoneSystem.instance.GetZone(new(x, 0, z));
+        if (TCZdos == null || !TCZdos.Contains(zone)) continue;
+        var zdos = TCZdos[zone];
+        ResetTerrainInZdo(pos, radius, zone, zdos.First());
+        if (zdos.Count() > 1)
+        {
+          // Log warning of overlapping terrain controls.
+          UpgradeWorld.Log.LogWarning($"Overlapping terrain controls in zone {zone}. Removing...");
+          zdos = zdos.Skip(1);
+          removed = true;
+          foreach (var zdo in zdos)
+            Helper.RemoveZDO(zdo);
+        }
+      }
+    }
+    if (removed) TCZdos = null;
+  }
+  private static void ResetTerrainInZdo(Vector3 pos, float radius, Vector2i zone, ZDO zdo)
+  {
+    var byteArray = zdo.GetByteArray(ZDOVars.s_TCData);
     if (byteArray == null) return;
     var center = ZoneSystem.instance.GetZonePos(zone);
     var change = false;
@@ -76,8 +98,7 @@ public class ResetTerrain
       var modified = wasModified;
       var j = index / width;
       var i = index % width;
-      // Skip borders since that will cause issues with adjacent zones.
-      if (j > 0 && j < width - 1 && i > 0 && i < width - 1)
+      if (j >= 0 && j <= width - 1 && i >= 0 && i <= width - 1)
       {
         var worldPos = VertexToWorld(center, j, i);
         if (Utils.DistanceXZ(worldPos, pos) < radius)
@@ -128,6 +149,6 @@ public class ResetTerrain
     if (!change) return;
     if (!zdo.IsOwner())
       zdo.SetOwner(ZDOMan.GetSessionID());
-    zdo.Set("TCData", bytes);
+    zdo.Set(ZDOVars.s_TCData, bytes);
   }
 }

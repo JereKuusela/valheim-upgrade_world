@@ -172,7 +172,7 @@ Other settings are:
 1. Removes all objects from a zone (including player placed structures).
 2. If the zone has a location, marks the location as not spawned (to allow redistributing it).
 3. Marks the zone as ungenerated. Visiting the zone will regenerate like it were at start of the game.
-4. Locations are not automatically redistributed. Use "redistribute" command (otherwise you get the same locations as before).
+4. Locations are not automatically redistributed. Use "genloc" command (otherwise you get the same locations as before).
 5. Visiting zones will regenerate them.
 
 Portals in the loaded area won't be automatically disconnected but relogging fixes that.

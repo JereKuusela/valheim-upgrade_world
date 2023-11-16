@@ -12,7 +12,7 @@ public enum TargetZones
 }
 public class FiltererParameters
 {
-  public HashSet<Heightmap.Biome> Biomes = new();
+  public HashSet<Heightmap.Biome> Biomes = [];
   public bool NoEdges = false;
   public bool Start = false;
   public Vector2? Pos = null;
@@ -182,9 +182,9 @@ public class FiltererParameters
       str += ". Player base detection (" + size + "x" + size + " safe zones).";
     return str;
   }
-  public static List<string> Parameters = new() {
+  public static List<string> Parameters = [
     "clear", "terrain", "pos", "zone", "biomes", "min", "minDistance", "max", "maxDistance", "distance", "start", "noEdges", "safeZones", "chance", "force"
-  };
+  ];
   public static Dictionary<string, Func<int, List<string>?>> GetAutoComplete()
   {
     return new() {

@@ -5,18 +5,23 @@ using System.Linq;
 using UnityEngine;
 namespace UpgradeWorld;
 /// <summary>Counts the amounts of biomes within a given distance.</summary>
-public class CountBiomes : BaseOperation {
-  public CountBiomes(Terminal context, float frequency, FiltererParameters args) : base(context) {
+public class CountBiomes : BaseOperation
+{
+  public CountBiomes(Terminal context, float frequency, FiltererParameters args) : base(context)
+  {
     Count(frequency, args);
   }
 
-  private void Count(float frequency, FiltererParameters args) {
+  private void Count(float frequency, FiltererParameters args)
+  {
     if (!args.Pos.HasValue) return;
     if (args.MaxDistance == 0) args.MaxDistance = Settings.WorldRadius;
-    Dictionary<Heightmap.Biome, int> biomes = new();
+    Dictionary<Heightmap.Biome, int> biomes = [];
     var start = -(float)Math.Ceiling(args.MaxDistance / frequency) * frequency;
-    for (var x = start; x <= args.MaxDistance; x += frequency) {
-      for (var y = start; y <= args.MaxDistance; y += frequency) {
+    for (var x = start; x <= args.MaxDistance; x += frequency)
+    {
+      for (var y = start; y <= args.MaxDistance; y += frequency)
+      {
         var distance = new Vector2(x, y).magnitude;
         if (distance < args.MinDistance) continue;
         if (distance > args.MaxDistance) continue;
