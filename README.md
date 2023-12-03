@@ -29,6 +29,8 @@ This mod also adds current coordinates (and zone index) to the minimaps which sh
 
 Note: The default base detection is very conservative. Single workbenches, campfires, etc. will exclude a significant area around them, unless configured otherwise.
 
+[<img width="80px" style="margin-bottom: -4" src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0b5493894cf60b300587_full_logo_white_RGB.svg">](https://discord.gg/VFRJcPwUdm) for help and examples.
+
 ## Upgrade operations
 
 For `upgrade` command:
@@ -80,7 +82,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 
 - `backup`: Saves the game with a timestamped file name.
 - `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
-- `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Chest name * rerolls all treasure chests. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items. `chance` determines how many of the chests are reseted.
+- `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Without chest name, all treasure chests are rerolled. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items. `chance` determines how many of the chests are reseted.
 - `chests_search [id1,id2,...] [...args]`: Searches chests and stands for given items.
 - `locations_add [id1,id2,...] [...args]`: Adds locations to already explored areas. `chance` determines how many of the locations are added.
 - `locations_list [id1,id2,...] [...args]`: Lists locations showing their position and biome.
@@ -121,7 +123,7 @@ Examples:
 
 - `biomes_count 100 min=5000`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
 - `chests_reset TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds`: Rerolls mountain treasure chests which only have naturally occurring items.
-- `chests_reset * looted min=1500`: Resets all chests which are 1500 meters away from the world center.
+- `chests_reset looted min=1500`: Resets all chests which are 1500 meters away from the world center.
 - `locations_remove Meteorite`: Removes all flametal ores.
 - `locations_reset SunkenCrypt4,Crypt2,Crypt3,Crypt4,MountainCave02,TrollCave02`: To regenerate dungeons. Some entraces will randomly rotate which will also randomize the dungeon layout.
 - `objects_count Spawner_\*`: Counts all creature spawnpoints.

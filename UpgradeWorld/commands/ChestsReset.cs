@@ -19,7 +19,7 @@ public class ChestsResetCommand
       var chestIds = ResetChests.ChestNames().ToArray();
       if (pars.Ids.Count() > 0)
       {
-        chestIds = new string[] { pars.Ids.First() };
+        chestIds = [pars.Ids.First()];
         pars.Ids = pars.Ids.Skip(1).ToList();
       }
       if (Helper.IsClient(args)) return;

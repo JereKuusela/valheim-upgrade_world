@@ -17,7 +17,7 @@ public class BackupCommand
   }
 }
 
-[HarmonyPatch(typeof(World), nameof(World.GetDBPath), new[] { typeof(FileHelpers.FileSource) })]
+[HarmonyPatch(typeof(World), nameof(World.GetDBPath), typeof(FileHelpers.FileSource))]
 public class BackupDb
 {
   static bool Prefix(World __instance, ref string __result)
@@ -30,7 +30,7 @@ public class BackupDb
     return true;
   }
 }
-[HarmonyPatch(typeof(World), nameof(World.GetMetaPath), new[] { typeof(FileHelpers.FileSource) })]
+[HarmonyPatch(typeof(World), nameof(World.GetMetaPath), typeof(FileHelpers.FileSource))]
 public class BackupMeta
 {
   static bool Prefix(World __instance, ref string __result)
