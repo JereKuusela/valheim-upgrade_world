@@ -17,12 +17,9 @@ public class ResetChests : EntityOperation
   {
     if (chestNames.Count == 0)
     {
-      chestNames = ZNetScene.instance.m_prefabs.Where(prefab =>
-      {
-        if (prefab.TryGetComponent<Container>(out var container))
-          return !container.m_defaultItems.IsEmpty();
-        return false;
-      }).Select(obj => obj.name).OrderBy(item => item).ToList();
+      chestNames = [.. ZNetScene.instance.m_prefabs
+        .Where(prefab => prefab.TryGetComponent<Container>(out var container) && !container.m_defaultItems.IsEmpty())
+        .Select(obj => obj.name).OrderBy(item => item)];
     }
     return chestNames;
   }
@@ -36,7 +33,7 @@ public class ResetChests : EntityOperation
       Print("Error: Invalid chest ID.");
       return;
     }
-    var zdos = chestIds.Select(name => GetZDOs(name, args)).Aggregate(new List<ZDO>(), (acc, value) => { acc.AddRange(value); return acc; });
+    var zdos = chestIds.SelectMany(name => GetZDOs(name, args)).ToArray();
     foreach (var zdo in zdos)
     {
       if (!args.Roll())
@@ -52,40 +49,29 @@ public class ResetChests : EntityOperation
           Print("Skipping a chest: Drops already unrolled.");
         continue;
       }
-      var obj = ZNetScene.instance.FindInstance(zdo);
-      Inventory inventory;
-      if (obj)
-      {
-        inventory = obj.GetComponent<Container>().GetInventory();
-      }
-      else
+      if (!looted || AllowedItems.Count > 0)
       {
         var container = prefabs[zdo.GetPrefab()].GetComponent<Container>();
-        inventory = new(container.m_name, container.m_bkg, container.m_width, container.m_height);
+        Inventory inventory = new(container.m_name, container.m_bkg, container.m_width, container.m_height);
         ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
         inventory.Load(loadPackage);
+        if (inventory.GetAllItems().Count == 0 && !looted)
+        {
+          if (Settings.Verbose)
+            Print("Skipping a chest: Already looted.");
+          continue;
+        }
+        if (AllowedItems.Count > 0 && !inventory.GetAllItems().All(IsValid)) continue;
       }
-      if (inventory.GetAllItems().Count == 0 && !looted)
-      {
-        if (Settings.Verbose)
-          Print("Skipping a chest: Already looted.");
-        continue;
-      }
-      if (AllowedItems.Count > 0 && !inventory.GetAllItems().All(IsValid)) continue;
+
+      ZDOData data = new(zdo);
+      data.Ints.Remove(ZDOVars.s_addedDefaultItems);
+      data.Strings.Remove(ZDOVars.s_items);
+      data.Clone();
       resetedChests++;
-      AddPin(zdo.GetPosition());
-      inventory.RemoveAll();
-      if (obj)
-      {
-        obj.GetComponent<Container>().AddDefaultItems();
-      }
-      else
-      {
-        zdo.Set(ZDOVars.s_addedDefaultItems, false);
-        ZPackage savePackage = new();
-        inventory.Save(savePackage);
-        zdo.Set(ZDOVars.s_items, savePackage.GetBase64());
-      }
+      AddPin(zdo.m_position);
+      Helper.RemoveZDO(zdo);
+
       if (args.TerrainReset > 0f)
       {
         ResetTerrain.ResetRadius = args.TerrainReset;

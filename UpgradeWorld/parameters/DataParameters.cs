@@ -98,5 +98,5 @@ public class DataParameters : IdParameters
     autoComplete["location"] = (int index) => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList();
     return autoComplete;
   }
-  public static new List<string> Parameters = GetAutoComplete().Keys.OrderBy(s => s).ToList();
+  public static new List<string> Parameters = [.. GetAutoComplete().Keys.OrderBy(s => s)];
 }

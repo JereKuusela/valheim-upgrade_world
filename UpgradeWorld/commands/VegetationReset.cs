@@ -14,8 +14,8 @@ public class VegetationResetCommand
       IdParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new RemoveVegetation(args.Context, pars.Ids.ToHashSet(), pars));
-      Executor.AddOperation(new AddVegetation(args.Context, pars.Ids.ToHashSet(), pars));
+      Executor.AddOperation(new RemoveVegetation(args.Context, [.. pars.Ids], pars));
+      Executor.AddOperation(new AddVegetation(args.Context, [.. pars.Ids], pars));
     }, optionsFetcher: VegetationOperation.GetIds);
   }
 }

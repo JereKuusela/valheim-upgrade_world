@@ -9,7 +9,7 @@ public class RegenerateLocations : LocationOperation
     Operation = "Reset locations";
     InitString = args.Print("Reset locations at");
     Verb = "reseted";
-    Filterers = Filterers.Append(new LocationFilterer(ids, false)).ToList();
+    Filterers = [.. Filterers, new LocationFilterer(ids, false)];
   }
 
   protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location)
