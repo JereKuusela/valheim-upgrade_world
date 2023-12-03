@@ -33,7 +33,7 @@ public class RefreshObjects : EntityOperation
     }
     if (zdo.GetBool(ZDOVars.s_addedDefaultItems))
     {
-      var prefab = ZNetScene.instance.GetPrefab(zdo.GetPrefab());
+      var prefab = ZNetScene.instance.GetPrefab(zdo.m_prefab);
       if (zdo.GetString(Hash.OverrideItems) != "" || prefab.GetComponent<Container>()?.m_defaultItems.IsEmpty() != true)
       {
         updated = true;
@@ -56,17 +56,20 @@ public class RefreshObjects : EntityOperation
   }
   private void Execute(List<string> ids, DataParameters args)
   {
-    if (ids.Count == 0) ids.Add("*");
-    var prefabs = ids.SelectMany(GetPrefabs).ToList();
+    var prefabs = GetPrefabs(ids);
+    var zdos = GetZDOs(args, prefabs);
     var total = 0;
-    var zdos = GetZDOs(args);
-    var texts = prefabs.Select(id =>
+    var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);
+    foreach (var zdo in zdos)
     {
-      var updated = GetZDOs(zdos, id).Where(zdo => SetData(zdo)).Count();
-      total += updated;
-      return updated > 0 ? $"Refreshed {updated} of {id}." : "";
-    }).Where(s => s != "").ToArray();
-    texts = texts.Prepend($"Refreshed: {total}").ToArray();
+      if (!args.Roll()) continue;
+      if (!SetData(zdo))
+        continue;
+      counts[zdo.m_prefab] += 1;
+      total += 1;
+    }
+    var linq = counts.Where(kvp => kvp.Value > 0).Select(kvp => $"Refreshed {kvp.Value} of {GetName(kvp.Key)}.");
+    string[] texts = [$"Refreshed: {total}", .. linq];
     if (args.Log) Log(texts);
     else Print(texts, false);
     PrintPins();

@@ -33,7 +33,7 @@ public class ResetChests : EntityOperation
       Print("Error: Invalid chest ID.");
       return;
     }
-    var zdos = chestIds.SelectMany(name => GetZDOs(name, args)).ToArray();
+    var zdos = GetZDOs(args, [.. prefabs.Keys]);
     foreach (var zdo in zdos)
     {
       if (!args.Roll())
@@ -51,7 +51,7 @@ public class ResetChests : EntityOperation
       }
       if (!looted || AllowedItems.Count > 0)
       {
-        var container = prefabs[zdo.GetPrefab()].GetComponent<Container>();
+        var container = prefabs[zdo.m_prefab].GetComponent<Container>();
         Inventory inventory = new(container.m_name, container.m_bkg, container.m_width, container.m_height);
         ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
         inventory.Load(loadPackage);

@@ -13,7 +13,7 @@ public class SwapLocations : EntityOperation
     var toSwap = ids.FirstOrDefault().GetStableHashCode();
     var prefabs = ids.Skip(1).Select(id => id.GetStableHashCode()).ToHashSet();
     var swappedObjects = 0;
-    var zdos = GetZDOs(args).Where(zdo => LocationProxyHash == zdo.GetPrefab()).ToArray();
+    var zdos = GetZDOs(args).Where(zdo => LocationProxyHash == zdo.m_prefab).ToArray();
     foreach (var zdo in zdos)
     {
       if (!args.Roll()) continue;

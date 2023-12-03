@@ -21,17 +21,12 @@ public class ListObjectPositions : EntityOperation
   }
   private void ListPositions(List<string> ids, DataParameters args)
   {
-    if (ids.Count == 0) ids.Add("*");
-    var prefabs = ids.SelectMany(GetPrefabs).ToHashSet();
-    var zdos = GetZDOs(args);
-    var texts = prefabs.Select(id =>
+    var zdos = GetZDOs(args, GetPrefabs(ids));
+    var texts = zdos.Select(zdo =>
     {
-      return GetZDOs(zdos, id).Select(zdo =>
-      {
-        AddPin(zdo.GetPosition());
-        return id + " " + zdo.m_uid.ID + " " + Helper.PrintVectorXZY(zdo.GetPosition()) + ": " + GetData(zdo, args.Prints);
-      });
-    }).Aggregate((acc, list) => acc.Concat(list));
+      AddPin(zdo.GetPosition());
+      return $"{GetName(zdo.m_prefab)} {zdo.m_uid.ID} {Helper.PrintVectorXZY(zdo.GetPosition())}: {GetData(zdo, args.Prints)}";
+    }).ToArray();
     if (args.Log) Log(texts);
     else Print(texts, false);
     PrintPins();

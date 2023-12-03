@@ -12,17 +12,22 @@ public abstract class EntityOperation : BaseOperation
   private static bool IsIncluded(string id, string name)
   {
     if (id == "*") return true;
-    if (id.StartsWith("*", StringComparison.Ordinal) && id.EndsWith("*", StringComparison.OrdinalIgnoreCase))
+    if (id[0] == '*' && id[id.Length - 1] == '*')
     {
       return name.Contains(id.Substring(1, id.Length - 2));
     }
-    if (id.StartsWith("*", StringComparison.Ordinal)) return name.EndsWith(id.Substring(1), StringComparison.OrdinalIgnoreCase);
-    if (id.EndsWith("*", StringComparison.Ordinal)) return name.StartsWith(id.Substring(0, id.Length - 1), StringComparison.OrdinalIgnoreCase);
+    if (id[0] == '*') return name.EndsWith(id.Substring(1), StringComparison.OrdinalIgnoreCase);
+    if (id[id.Length - 1] == '*') return name.StartsWith(id.Substring(0, id.Length - 1), StringComparison.OrdinalIgnoreCase);
     return id == name;
   }
   private static readonly int PlayerHash = "Player".GetStableHashCode();
-  public static List<string> GetPrefabs(string id)
+  private static Dictionary<int, string> HashToName = [];
+  public static string GetName(int prefab) => HashToName.TryGetValue(prefab, out var name) ? name : "";
+  public static HashSet<int> GetPrefabs(IEnumerable<string> id) => id.Count() == 0 ? GetPrefabs("*") : id.SelectMany(GetPrefabs).ToHashSet();
+  public static HashSet<int> GetPrefabs(string id)
   {
+    if (HashToName.Count == 0)
+      HashToName = ZNetScene.instance.m_namedPrefabs.ToDictionary(kvp => kvp.Value.name.GetStableHashCode(), kvp => kvp.Value.name);
     IEnumerable<KeyValuePair<int, GameObject>> values = ZNetScene.instance.m_namedPrefabs.Where(kvp => kvp.Key != PlayerHash);
     if (id == "*")
     {
@@ -32,27 +37,27 @@ public abstract class EntityOperation : BaseOperation
       values = values.Where(kvp => IsIncluded(id, kvp.Value.name));
     else
       values = values.Where(kvp => string.Equals(kvp.Value.name, id, StringComparison.OrdinalIgnoreCase));
-    return values.Select(kvp => kvp.Value.name).ToList();
+    return values.Select(kvp => kvp.Key).ToHashSet();
   }
-  public static ZDO[] GetZDOs(string id, DataParameters args) => GetZDOs(id.GetStableHashCode(), args);
-  public static ZDO[] GetZDOs(int hash, DataParameters args)
+  public static ZDO[] GetZDOs(ZDO[] zdos, int hash)
   {
-    var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => hash == zdo.GetPrefab());
+    return zdos.Where(zdo => hash == zdo.m_prefab).ToArray();
+  }
+  public static ZDO[] GetZDOs(FiltererParameters args, HashSet<int> prefabs)
+  {
+    var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => prefabs.Contains(zdo.m_prefab));
     return FilterZdos(zdos, args).ToArray();
   }
-  public static ZDO[] GetZDOs(ZDO[] zdos, string id)
+  public static ZDO[] GetZDOs(DataParameters args, HashSet<int> prefabs)
   {
-    var code = id.GetStableHashCode();
-    return zdos.Where(zdo => code == zdo.GetPrefab()).ToArray();
-  }
-  public static ZDO[] GetZDOs(FiltererParameters args)
-  {
-    var zdos = ZDOMan.instance.m_objectsByID.Values;
+    var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => prefabs.Contains(zdo.m_prefab));
     return FilterZdos(zdos, args).ToArray();
   }
+  public static ZDO[] GetZDOs(FiltererParameters args) => FilterZdos(ZDOMan.instance.m_objectsByID.Values, args).ToArray();
+  public static ZDO[] GetZDOs(DataParameters args) => FilterZdos(ZDOMan.instance.m_objectsByID.Values, args).ToArray();
   public static ZDO[] GetZDOs(string id) => GetZDOs(id.GetStableHashCode());
-  public static ZDO[] GetZDOs(int hash) => ZDOMan.instance.m_objectsByID.Values.Where(zdo => hash == zdo.GetPrefab()).ToArray();
+  public static ZDO[] GetZDOs(int hash) => ZDOMan.instance.m_objectsByID.Values.Where(zdo => hash == zdo.m_prefab).ToArray();
 
-  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, DataParameters args) => args.FilterZdos(zdos, false);
-  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.FilterZdos(zdos, false);
+  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, DataParameters args) => args.LimitZdos(args.FilterZdos(zdos, false));
+  public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.LimitZdos(args.FilterZdos(zdos, false));
 }

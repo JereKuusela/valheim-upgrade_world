@@ -24,7 +24,7 @@ public class CleanObjects : EntityOperation
     var removed = 0;
     foreach (var zdo in zdos)
     {
-      if (zdo.GetPrefab() != LocationProxyHash) continue;
+      if (zdo.m_prefab != LocationProxyHash) continue;
       if (zs.GetLocation(zdo.GetInt(LocationHash)) != null) continue;
       Helper.RemoveZDO(zdo);
       removed++;
@@ -35,7 +35,7 @@ public class CleanObjects : EntityOperation
     removed = 0;
     foreach (var zdo in zdos)
     {
-      if (scene.m_namedPrefabs.ContainsKey(zdo.GetPrefab())) continue;
+      if (scene.m_namedPrefabs.ContainsKey(zdo.m_prefab)) continue;
       Helper.RemoveZDO(zdo);
       removed++;
     }
@@ -102,7 +102,7 @@ public class CleanObjects : EntityOperation
     var count = 0;
     foreach (var zdo in zdos)
     {
-      if (zdo.GetPrefab() != zoneCtrlHash) continue;
+      if (zdo.m_prefab != zoneCtrlHash) continue;
       var id = zdo.m_uid;
       var longs = ZDOExtraData.GetLongs(id);
       if (longs.Count < 1) continue;

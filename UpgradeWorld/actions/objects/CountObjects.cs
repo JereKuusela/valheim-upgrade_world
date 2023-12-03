@@ -12,18 +12,18 @@ public class CountObjects : EntityOperation
   }
   private void Count(List<string> ids, DataParameters args, Range<int> countRange)
   {
-    if (ids.Count == 0) ids.Add("*");
-    var prefabs = ids.SelectMany(GetPrefabs).ToHashSet();
+    var prefabs = GetPrefabs(ids);
+    var zdos = GetZDOs(args, prefabs);
     var total = 0;
-    var zdos = GetZDOs(args);
-    var texts = prefabs.Select(id =>
+    var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);
+    foreach (var zdo in zdos)
     {
-      var count = GetZDOs(zdos, id).Count();
-      if (count < countRange.Min || count >= countRange.Max) return "";
-      total += count;
-      return $"{id}: {count}";
-    }).Where(s => s != "").ToArray();
-    texts = texts.Prepend($"Total: {total}").ToArray();
+      if (!args.Roll()) continue;
+      counts[zdo.m_prefab] += 1;
+      total += 1;
+    }
+    var linq = counts.Where(kvp => kvp.Value >= countRange.Min && kvp.Value < countRange.Max).Select(kvp => $"{GetName(kvp.Key)}: {kvp.Value}");
+    string[] texts = [$"Total: {total}", .. linq];
     if (args.Log) Log(texts);
     else Print(texts, false);
     PrintPins();

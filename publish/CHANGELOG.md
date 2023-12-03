@@ -1,5 +1,8 @@
 - v1.46
+  - Adds a new parameter `limit` to limit the amount of affected objects.
   - Fixes `chests_reset` not working properly on servers if clients were on the area.
+  - Fixes `objects_swap` not working properly on servers if clients were on the area.
+  - Improves performance of object related commands.
 
 - v1.45
   - Adds automatic clean up of duplicate terrain compilers when doing terrain resets.

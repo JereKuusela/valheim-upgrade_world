@@ -23,7 +23,7 @@ public class RemoveLocations : ExecutedOperation
   private int RemoveSpawned()
   {
     var zs = ZoneSystem.instance;
-    var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => LocationProxyHash == zdo.GetPrefab());
+    var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => LocationProxyHash == zdo.m_prefab);
     zdos = Args.FilterZdos(zdos, true);
     var removed = 0;
     foreach (var zdo in zdos)

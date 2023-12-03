@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Service;
 namespace UpgradeWorld;
 /// <summary>Swaps objects with another one.</summary>
 public class SwapObjects : EntityOperation
@@ -11,38 +12,25 @@ public class SwapObjects : EntityOperation
   private void Swap(IEnumerable<string> ids, DataParameters args)
   {
     var toSwap = ids.FirstOrDefault().GetStableHashCode();
-    var prefabs = ids.Skip(1).SelectMany(GetPrefabs).ToList();
+    var prefabs = GetPrefabs(ids.Skip(1).ToList());
+    var allZdos = GetZDOs(args, prefabs);
     var total = 0;
-    var allZdos = GetZDOs(args);
-    var texts = prefabs.Select(id =>
+    var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);
+    foreach (var zdo in allZdos)
     {
-      var zdos = GetZDOs(allZdos, id);
-      var swapped = 0;
-      foreach (var zdo in zdos)
-      {
-        if (!args.Roll()) continue;
-        if (zdo.GetPrefab() == toSwap) continue;
-        swapped++;
-        if (!zdo.IsOwner())
-          zdo.SetOwner(ZDOMan.GetSessionID());
-        zdo.SetPrefab(toSwap);
-        Refresh(zdo);
-        AddPin(zdo.GetPosition());
-      }
-      total += swapped;
-      return "Swapped " + swapped + " of " + id + ".";
-    });
-    texts = texts.Prepend($"Total: {total}").ToArray();
+      if (!args.Roll()) continue;
+      if (zdo.m_prefab == toSwap) continue;
+      counts[zdo.m_prefab] += 1;
+      total += 1;
+      ZDOData data = new(zdo) { Prefab = toSwap };
+      data.Clone();
+      AddPin(zdo.GetPosition());
+      Helper.RemoveZDO(zdo);
+    }
+    var linq = counts.Where(kvp => kvp.Value > 0).Select(kvp => $"Swapped {kvp.Value} of {GetName(kvp.Key)}.");
+    string[] texts = [$"Swapped: {total}", .. linq];
     if (args.Log) Log(texts);
     else Print(texts, false);
     PrintPins();
-  }
-
-  private static void Refresh(ZDO zdo)
-  {
-    if (!ZNetScene.instance.m_instances.TryGetValue(zdo, out var view)) return;
-    var newObj = ZNetScene.instance.CreateObject(zdo);
-    UnityEngine.Object.Destroy(view.gameObject);
-    ZNetScene.instance.m_instances[zdo] = newObj.GetComponent<ZNetView>();
   }
 }

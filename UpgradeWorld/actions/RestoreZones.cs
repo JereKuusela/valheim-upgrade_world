@@ -22,7 +22,7 @@ public class RestoreZones : ZoneOperation
     var hash = prefab.name.GetStableHashCode();
     List<ZDO> zdos = [];
     ZDOMan.instance.FindObjects(zone, zdos);
-    var found = zdos.Any(zdo => zdo.GetPrefab() == hash);
+    var found = zdos.Any(zdo => zdo.m_prefab == hash);
     if (!found)
     {
       var zdo = ZDOMan.instance.CreateNewZDO(zonePos, hash);

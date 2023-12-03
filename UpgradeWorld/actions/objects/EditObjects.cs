@@ -30,16 +30,20 @@ public class EditObjects : EntityOperation
   }
   private void Execute(IEnumerable<string> ids, DataParameters args)
   {
-    var prefabs = ids.SelectMany(GetPrefabs).ToList();
+    var prefabs = GetPrefabs(ids);
+    var zdos = GetZDOs(args, prefabs);
     var total = 0;
-    var zdos = GetZDOs(args);
-    var texts = prefabs.Select(id =>
+    var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);
+    foreach (var zdo in zdos)
     {
-      var updated = GetZDOs(zdos, id).Where(zdo => SetData(zdo, args.Datas)).Count();
-      total += updated;
-      return "Updated " + updated + " of " + id + ".";
-    }).ToArray();
-    texts = texts.Prepend($"Updated: {total}").ToArray();
+      if (!args.Roll()) continue;
+      if (!SetData(zdo, args.Datas))
+        continue;
+      counts[zdo.m_prefab] += 1;
+      total += 1;
+    }
+    var linq = counts.Where(kvp => kvp.Value > 0).Select(kvp => $"Updated {kvp.Value} of {GetName(kvp.Key)}.");
+    string[] texts = [$"Updated: {total}", .. linq];
     if (args.Log) Log(texts);
     else Print(texts, false);
     PrintPins();

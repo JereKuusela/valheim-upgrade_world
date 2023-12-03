@@ -48,7 +48,7 @@ public static class Helper
     var scene = ZNetScene.instance;
     foreach (var zdo in sectorObjects)
     {
-      if (zdo.GetPrefab() == Settings.ZoneControlHash || zdo.GetPrefab() == Settings.TerrainCompilerHash) continue;
+      if (zdo.m_prefab == Settings.ZoneControlHash || zdo.m_prefab == Settings.TerrainCompilerHash) continue;
       var pos = zdo.GetPosition();
       var delta = center - pos;
       delta.y = 0;

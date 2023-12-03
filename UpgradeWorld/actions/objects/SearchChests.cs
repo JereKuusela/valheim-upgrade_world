@@ -10,11 +10,11 @@ public class SearchChests : EntityOperation
   {
     Search(ids, args);
   }
-  private string SearchStand(ZDO zdo, string prefix, HashSet<string> ids)
+  private string SearchStand(ZDO zdo, string prefix, HashSet<int> ids)
   {
     var item = zdo.GetString(prefix + "item", "");
     if (item == "") return "";
-    if (!ids.Contains(item)) return "";
+    if (!ids.Contains(item.GetStableHashCode())) return "";
     var variant = zdo.GetInt(prefix + "variant");
     var quality = zdo.GetInt(prefix + "quality");
     if (variant > 1) item += ", style " + variant + "";
@@ -23,7 +23,7 @@ public class SearchChests : EntityOperation
   }
   private void Search(IEnumerable<string> ids, DataParameters args)
   {
-    var prefabs = ids.SelectMany(GetPrefabs).ToHashSet();
+    var prefabs = GetPrefabs(ids);
     var zdos = GetZDOs(args);
 
     var zs = ZNetScene.instance;
@@ -32,7 +32,7 @@ public class SearchChests : EntityOperation
     {
       var content = prefixes.Select(prefix => SearchStand(zdo, prefix, prefabs)).Where(x => x != "").ToList();
       if (content.Count == 0) return "";
-      var name = zs.m_namedPrefabs[zdo.GetPrefab()].name;
+      var name = zs.m_namedPrefabs[zdo.m_prefab].name;
       var id = name + " " + zdo.m_uid.ID + " " + Helper.PrintVectorXZY(zdo.GetPosition());
       return id + "\n" + string.Join("\n", content);
     }).Where(x => x != "").ToList();
@@ -48,7 +48,7 @@ public class SearchChests : EntityOperation
       var content = SearchChest(loadPackage, prefabs);
       if (content.Count == 0) return "";
       AddPin(zdo.GetPosition());
-      var name = zs.m_namedPrefabs[zdo.GetPrefab()].name;
+      var name = zs.m_namedPrefabs[zdo.m_prefab].name;
       var id = name + " " + zdo.m_uid.ID + " " + Helper.PrintVectorXZY(zdo.GetPosition());
       return id + "\n" + string.Join("\n", content.Select(x => x.Key + ": " + x.Value));
     }).Where(x => x != "").ToList();
@@ -59,7 +59,7 @@ public class SearchChests : EntityOperation
     PrintPins();
   }
 
-  private Dictionary<string, int> SearchChest(ZPackage from, HashSet<string> ids)
+  private Dictionary<string, int> SearchChest(ZPackage from, HashSet<int> ids)
   {
     Dictionary<string, int> amounts = [];
     var version = from.ReadInt();
@@ -98,7 +98,7 @@ public class SearchChests : EntityOperation
           from.ReadString();
         }
       }
-      if (ids.Contains(text))
+      if (ids.Contains(text.GetStableHashCode()))
       {
         var key = text + variant + quality;
         if (amounts.ContainsKey(key))

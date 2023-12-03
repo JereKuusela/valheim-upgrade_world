@@ -19,7 +19,7 @@ public class ZDOData
     zdo.Persistent = Zdo.Persistent;
     zdo.Type = Zdo.Type;
     zdo.Distant = Zdo.Distant;
-    zdo.m_prefab = Zdo.m_prefab;
+    zdo.m_prefab = Prefab;
     zdo.m_rotation = Zdo.m_rotation;
     zdo.SetOwnerInternal(Zdo.GetOwner());
     Write(zdo);
@@ -27,6 +27,7 @@ public class ZDOData
   }
 
   public ZDO Zdo;
+  public int Prefab = 0;
   public Dictionary<int, string> Strings = [];
   public Dictionary<int, float> Floats = [];
   public Dictionary<int, int> Ints = [];
@@ -138,6 +139,7 @@ public class ZDOData
   private void Load(ZDO zdo)
   {
     var id = zdo.m_uid;
+    Prefab = zdo.m_prefab;
     Floats = ZDOExtraData.s_floats.ContainsKey(id) ? ZDOExtraData.s_floats[id].ToDictionary(kvp => kvp.Key, kvp => kvp.Value) : [];
     Ints = ZDOExtraData.s_ints.ContainsKey(id) ? ZDOExtraData.s_ints[id].ToDictionary(kvp => kvp.Key, kvp => kvp.Value) : [];
     Longs = ZDOExtraData.s_longs.ContainsKey(id) ? ZDOExtraData.s_longs[id].ToDictionary(kvp => kvp.Key, kvp => kvp.Value) : [];

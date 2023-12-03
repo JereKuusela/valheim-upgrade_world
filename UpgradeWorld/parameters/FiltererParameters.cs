@@ -13,6 +13,7 @@ public enum TargetZones
 public class FiltererParameters
 {
   public HashSet<Heightmap.Biome> Biomes = [];
+  public int Limit = 0;
   public bool NoEdges = false;
   public bool Start = false;
   public Vector2? Pos = null;
@@ -57,6 +58,7 @@ public class FiltererParameters
       {
         var value = split[1];
         if (name == "safezones") SafeZones = Parse.Int(value, 2);
+        else if (name == "limit") Limit = Parse.Int(value, 0);
         else if (name == "pos") Pos = Parse.Pos(value);
         else if (name == "zone") Zone = Parse.Zone(value);
         else if (name == "min" || name == "mindistance") MinDistance = Parse.Float(value);
@@ -128,7 +130,15 @@ public class FiltererParameters
     if (checkExcludedZones && PlayerBaseFilterer.ExcludedZones.Contains(ZoneSystem.instance.GetZone(pos))) return false;
     return true;
   }
-  public virtual IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, bool checkExcludedZones) => zdos.Where(zdo => FilterPosition(zdo.GetPosition(), checkExcludedZones));
+  public virtual IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, bool checkExcludedZones) => zdos
+    .Where(zdo => FilterPosition(zdo.GetPosition(), checkExcludedZones));
+
+  public IEnumerable<ZDO> LimitZdos(IEnumerable<ZDO> zdos)
+  {
+    if (Limit <= 0) return zdos;
+    Vector3 pos = Pos.HasValue ? new(Pos.Value.x, 0, Pos.Value.y) : Zone.HasValue ? ZoneSystem.instance.GetZonePos(Zone.Value) : Vector3.zero;
+    return zdos.OrderBy(zdo => Utils.DistanceXZ(zdo.GetPosition(), pos)).Take(Limit);
+  }
   public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position, true));
 
   public override string ToString()
@@ -189,6 +199,7 @@ public class FiltererParameters
   {
     return new() {
       { "pos", (int index) => CommandWrapper.XZ("pos", "Coordinates for the center point. If not given, player's position is used", index)},
+      { "limit", (int index) => CommandWrapper.Info("limit=<color=yellow>amount</color> | Limits the amount of objects.")},
       { "zone", (int index) => CommandWrapper.XZ("zone" , "Indices for the center zone", index) },
       { "biomes", (int index) => Enum.GetNames(typeof(Heightmap.Biome)).ToList() },
       { "min", (int index) => index == 0 ? CommandWrapper.Info("min=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },

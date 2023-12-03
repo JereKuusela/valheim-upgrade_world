@@ -37,7 +37,7 @@ public class RemoveVegetation : ZoneOperation
     foreach (var zdo in zdos)
     {
       if (!Args.Roll()) continue;
-      if (!Ids.Contains(zdo.GetPrefab())) continue;
+      if (!Ids.Contains(zdo.m_prefab)) continue;
       AddPin(zdo.GetPosition());
       Helper.RemoveZDO(zdo);
       Removed++;

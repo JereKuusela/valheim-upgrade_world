@@ -26,7 +26,7 @@ public abstract class TimeOperation : BaseOperation
     {
       if (!ZDOExtraData.s_longs.TryGetValue(zdo.m_uid, out var longs)) continue;
       var changed = false;
-      if (zdo.GetPrefab() == Settings.ZoneControlHash)
+      if (zdo.m_prefab == Settings.ZoneControlHash)
       {
         zoneControlsUpdated++;
         foreach (var key in longs.Keys.ToList())

@@ -63,6 +63,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `filter=key,value,includeMissing`: Filters object by data value. Third parameter must be truthy to include objects that don't have the data value set. Only applies to `objects_*` commands. Multiple filters can be set at once. Use `_` instead of space bars.
 - `force`: Disables player base detection (same as `safeZones=0`).
 - `level=min-max`: Filters objects by their creature level. Only applies to `objects_*` commands.
+- `limit=amount`: Limits the amount of affected objects. Only applies to `objects_*` commands.
 - `location=id`: Filters objects by their location. Only applies to `objects_*` commands.
 - `log`: Object commands print to the log file instead of the console.
 - `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
