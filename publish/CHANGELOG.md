@@ -1,3 +1,6 @@
+- v1.47
+  - Fixes Root user check not working properly with crossplay.
+
 - v1.46
   - Adds a new parameter `limit` to limit the amount of affected objects.
   - Fixes `chests_reset` not working properly on servers if clients were on the area.

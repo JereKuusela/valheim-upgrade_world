@@ -31,11 +31,7 @@ public class ServerExecution
     if (!zNet.enabled) return false;
     if (rpc == null) return false;
     var host = rpc.GetSocket().GetHostName();
-    var root = Settings.RootUsers;
-    bool allowed;
-    if (root.Count > 0) allowed = root.Contains(host);
-    else allowed = zNet.ListContainsId(zNet.m_adminList, host);
-    if (allowed) return true;
+    if (Settings.IsRoot(host)) return true;
     Helper.Print(Console.instance, rpc, "Unauthorized to use Upgrade World commands.");
     return false;
   }

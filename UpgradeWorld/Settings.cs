@@ -42,7 +42,18 @@ public static class Settings
 
   public static int TerrainCompilerHash = "_TerrainCompiler".GetStableHashCode();
   public static ConfigEntry<string> configRootUsers;
-  public static HashSet<string> RootUsers => configRootUsers.Value.Split(',').Select(s => s.Trim()).Where(s => s != "").ToHashSet();
+  private static HashSet<string> RootUsers = [];
+  private static void UpdateRootUsers() => RootUsers = configRootUsers.Value.Split(',').Select(s => s.Trim()).Where(s => s != "").ToHashSet();
+  public static bool IsRoot(string id)
+  {
+    if (RootUsers.Count == 0) return id == "-1" || ZNet.instance.ListContainsId(ZNet.instance.m_adminList, id);
+    if (RootUsers.Contains(id)) return true;
+    if (id.StartsWith(PrivilegeManager.GetPlatformPrefix(PrivilegeManager.Platform.Steam)))
+      return RootUsers.Contains(id.Substring(PrivilegeManager.GetPlatformPrefix(PrivilegeManager.Platform.Steam).Length));
+    if (!id.Contains("_"))
+      return RootUsers.Contains(PrivilegeManager.GetPlatformPrefix(PrivilegeManager.Platform.Steam) + id);
+    return false;
+  }
 
   public static void Init(ConfigFile config)
   {
@@ -54,6 +65,8 @@ public static class Settings
     configSafeZoneObjects = config.Bind(section, "Safe zone objects", "Player_tombstone", "List of object ids that prevent zones being modified.");
     configSafeZoneSize = config.Bind(section, "Safe zones", 2, "0 = disable, 1 = only the zone, 2 = 3x3 zones, 3 = 5x5 zones, etc.");
     configRootUsers = config.Bind(section, "Root users", "", "SteamIDs that can execute commands on servers (-1 for the dedicated server). If not set, then all admins can execute commands.");
+    configRootUsers.SettingChanged += (sender, args) => UpdateRootUsers();
+    UpdateRootUsers();
     configMapCoordinates = config.Bind(section, "Show map coordinates", true, "The map shows coordinates on hover.");
     configMiniMapCoordinates = config.Bind(section, "Show minimap coordinates", false, "The minimap shows player coordinates.");
     configThrottle = config.Bind(section, "Operation delay", 100, "Milliseconds between each command. Prevents lots of small operations overloading the dedicated server.");

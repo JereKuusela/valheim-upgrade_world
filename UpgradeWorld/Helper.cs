@@ -86,9 +86,9 @@ public static class Helper
       return true;
     }
     var isDedicated = ZNet.instance && ZNet.instance.IsDedicated();
-    if (Settings.RootUsers.Count > 0 && !Settings.RootUsers.Contains("-1") && isDedicated && ServerExecution.User == null)
+    if (isDedicated && ServerExecution.User == null && !Settings.IsRoot("-1"))
     {
-      Helper.Print(args.Context, "Error: Dedicated server is not allowed to directly execute any commands (-1 is missing from root users).");
+      Print(args.Context, "Error: Dedicated server is not allowed to directly execute any commands (-1 is missing from root users).");
       return true;
     }
     return false;
