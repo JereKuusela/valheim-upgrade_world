@@ -58,6 +58,7 @@ public class AddVegetation : VegetationOperation
     Counter += spawnedObjects.Count;
     foreach (var obj in spawnedObjects)
     {
+      ResetTerrain.Execute(obj.transform.position);
       AddPin(obj.transform.position);
       Object.Destroy(obj);
     }
