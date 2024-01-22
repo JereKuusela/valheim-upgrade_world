@@ -72,12 +72,7 @@ public class ResetChests : EntityOperation
       AddPin(zdo.m_position);
       Helper.RemoveZDO(zdo);
 
-      if (args.TerrainReset > 0f)
-      {
-        ResetTerrain.ResetRadius = args.TerrainReset;
-        ResetTerrain.Execute(zdo.GetPosition());
-        ResetTerrain.ResetRadius = 0f;
-      }
+      ResetTerrain.Execute(zdo.GetPosition(), args.TerrainReset);
     }
     Print("Chests reseted (" + resetedChests + " of " + totalChests + ").");
     PrintPins();

@@ -14,30 +14,22 @@ public class ResetTerrain
 {
   public static ILookup<Vector2i, ZDO>? TCZdos = null;
   public static DateTime LastUpdate = DateTime.MinValue;
-  public static float ResetRadius = 0f;
+  public static bool Active = false;
 
   // Needed so that the vegetation spawns on the reseted terrain.
   [HarmonyPatch(nameof(ZoneSystem.GetGroundData)), HarmonyPostfix]
   static void OverrideGroundDataWithDefaultHeight(ref Vector3 p)
   {
-    if (ResetRadius == 0f) return;
+    if (!Active) return;
     p.y = WorldGenerator.instance.GetHeight(p.x, p.z);
   }
   // Needed so that the vegetation spawns on the reseted terrain.
   [HarmonyPatch(nameof(ZoneSystem.GetGroundHeight), typeof(Vector3)), HarmonyPrefix]
   static bool OverrideGroundHeightWithDefaultHeight(Vector3 p, ref float __result)
   {
-    if (ResetRadius == 0f) return true;
+    if (!Active) return true;
     __result = WorldGenerator.instance.GetHeight(p.x, p.z);
     return false;
-  }
-  // Reset done here because this is the last check.
-  [HarmonyPatch(nameof(ZoneSystem.InsideClearArea)), HarmonyPostfix]
-  static void ResetTerrainBeforeVegetation(bool __result, Vector3 point)
-  {
-    if (__result) return;
-    if (ResetRadius == 0f) return;
-    Execute(point, ResetRadius);
   }
 
   private static Vector3 VertexToWorld(Vector3 pos, int j, int i)
@@ -46,8 +38,7 @@ public class ResetTerrain
     pos.z += j - 32.5f;
     return pos;
   }
-  public static void Execute(Vector3 pos) => Execute(pos, ResetRadius);
-  private static void Execute(Vector3 pos, float radius)
+  public static void Execute(Vector3 pos, float radius)
   {
     if (radius == 0f) return;
     if (TCZdos == null || DateTime.Now - LastUpdate > TimeSpan.FromSeconds(10))

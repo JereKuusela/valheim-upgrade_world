@@ -1,4 +1,7 @@
 - v1.47
+  - Adds a new parameter `type` to limit objects by their components.
+  - Changes the default minimum count of `count_objects` from 0 to 1.
+  - Fixes terrain reset sometimes not working properly.
   - Fixes Root user check not working properly with crossplay.
 
 - v1.46

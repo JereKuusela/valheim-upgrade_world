@@ -21,7 +21,7 @@ public class ListObjectPositions : EntityOperation
   }
   private void ListPositions(List<string> ids, DataParameters args)
   {
-    var zdos = GetZDOs(args, GetPrefabs(ids));
+    var zdos = GetZDOs(args, GetPrefabs(ids, args.Types));
     var texts = zdos.Select(zdo =>
     {
       AddPin(zdo.GetPosition());

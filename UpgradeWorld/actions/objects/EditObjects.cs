@@ -30,7 +30,7 @@ public class EditObjects : EntityOperation
   }
   private void Execute(IEnumerable<string> ids, DataParameters args)
   {
-    var prefabs = GetPrefabs(ids);
+    var prefabs = GetPrefabs(ids, args.Types);
     var zdos = GetZDOs(args, prefabs);
     var total = 0;
     var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);

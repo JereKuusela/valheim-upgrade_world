@@ -75,6 +75,10 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `safeZones=distance`: Set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
 - `start`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
 - `terrain=meters`: Resets terrain around the object when using `vegetation_add` or `vegetation_reset`.
+- `type=type1,type2,...`: Only includes objects that have all of the given types.
+  - If the parameter is given multiple times, then objects that have any of the given type sets are included.
+  - For example `type=Container,Ship` only includes ships with a chest.
+  - For example `type=Container type=Ship` includes all ships and all chests.
 - `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
 
 ## Commands

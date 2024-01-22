@@ -13,6 +13,7 @@ public class DataParameters : IdParameters
   public List<string> Filters = [];
   public bool Log = false;
   public new bool RequireId;
+  public List<string[]> Types = [];
   public DataParameters(FiltererParameters pars) : base(pars)
   {
   }
@@ -21,19 +22,21 @@ public class DataParameters : IdParameters
     foreach (var par in Unhandled.ToList())
     {
       var split = par.Split('=');
+      var name = split[0];
       var value = string.Join("=", split.Skip(1));
-      if (split[0] == "level")
+      if (name == "level")
         Level = Parse.IntRange(value);
-      else if (split[0] == "log")
+      else if (name == "log")
         Log = true;
-      else if (split[0] == "location")
+      else if (name == "location")
         LocationIds = value;
-      else if (split[0] == "print")
+      else if (name == "print")
         Prints.Add(value);
-      else if (split[0] == "data")
+      else if (name == "data")
         Datas.Add(value);
-      else if (split[0] == "filter")
+      else if (name == "filter")
         Filters.Add(value);
+      else if (name == "type") Types.Add(Parse.Split(split[1]));
       else continue;
       Unhandled.Remove(par);
     }
@@ -94,9 +97,22 @@ public class DataParameters : IdParameters
       if (index == 2) return truths;
       return null;
     };
+    autoComplete["type"] = (int index) => ParameterComponents;
     autoComplete["log"] = (int index) => index == 0 ? CommandWrapper.Info("Out put to log file instead of console.") : null;
     autoComplete["location"] = (int index) => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList();
     return autoComplete;
   }
   public static new List<string> Parameters = [.. GetAutoComplete().Keys.OrderBy(s => s)];
+
+
+  private static List<string> parameterComponents = [];
+  public static List<string> ParameterComponents
+  {
+    get
+    {
+      if (parameterComponents.Count == 0)
+        parameterComponents = ComponentInfo.Types.Select(t => t.Name).ToList();
+      return parameterComponents;
+    }
+  }
 }

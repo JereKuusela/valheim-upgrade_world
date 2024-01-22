@@ -58,13 +58,12 @@ public class RemoveLocations : ExecutedOperation
       if (Args.ObjectReset.HasValue) clearRadius = Args.ObjectReset.Value;
       Helper.ClearZDOsWithinDistance(zone, kvp.Value.m_position, clearRadius);
       AddPin(kvp.Value.m_position);
-      ResetTerrain.ResetRadius = Args.TerrainReset == 0f ? location.m_exteriorRadius : Args.TerrainReset;
-      ResetTerrain.Execute(kvp.Value.m_position);
+      var resetRadius = Args.TerrainReset == 0f ? location.m_exteriorRadius : Args.TerrainReset;
+      ResetTerrain.Execute(kvp.Value.m_position, resetRadius);
       removed++;
       zs.m_locationInstances.Remove(zone);
       if (Settings.Verbose)
         Print($"Location {name} removed at {zone}.");
-      ResetTerrain.ResetRadius = 0f;
     }
     return removed;
 

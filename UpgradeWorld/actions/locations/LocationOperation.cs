@@ -40,13 +40,12 @@ public abstract class LocationOperation : ZoneOperation
     var zonePos = ZoneSystem.instance.GetZonePos(zone);
     var heightmap = Zones.GetHeightmap(root);
     Helper.ClearAreaForLocation(zone, location, clearRadius);
-    ResetTerrain.ResetRadius = Args.TerrainReset == 0f ? location.m_location.m_exteriorRadius : Args.TerrainReset;
-    ResetTerrain.Execute(location.m_position);
+    var resetRadius = Args.TerrainReset == 0f ? location.m_location.m_exteriorRadius : Args.TerrainReset;
+    ResetTerrain.Execute(location.m_position, resetRadius);
     List<ZoneSystem.ClearArea> clearAreas = [];
     zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, spawnedObjects);
     foreach (var obj in spawnedObjects)
       Object.Destroy(obj);
     spawnedObjects.Clear();
-    ResetTerrain.ResetRadius = 0f;
   }
 }

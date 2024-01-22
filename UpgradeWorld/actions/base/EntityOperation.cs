@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Service;
 using UnityEngine;
 namespace UpgradeWorld;
 ///<summary>Base class for entity related operations. Provides some utilities.</summary>
@@ -23,8 +24,8 @@ public abstract class EntityOperation : BaseOperation
   private static readonly int PlayerHash = "Player".GetStableHashCode();
   private static Dictionary<int, string> HashToName = [];
   public static string GetName(int prefab) => HashToName.TryGetValue(prefab, out var name) ? name : "";
-  public static HashSet<int> GetPrefabs(IEnumerable<string> id) => id.Count() == 0 ? GetPrefabs("*") : id.SelectMany(GetPrefabs).ToHashSet();
-  public static HashSet<int> GetPrefabs(string id)
+  public static HashSet<int> GetPrefabs(IEnumerable<string> id, List<string[]> types) => id.Count() == 0 ? GetPrefabs("*", types) : id.SelectMany(id => GetPrefabs(id, types)).ToHashSet();
+  public static HashSet<int> GetPrefabs(string id, List<string[]> types)
   {
     if (HashToName.Count == 0)
       HashToName = ZNetScene.instance.m_namedPrefabs.ToDictionary(kvp => kvp.Value.name.GetStableHashCode(), kvp => kvp.Value.name);
@@ -37,6 +38,9 @@ public abstract class EntityOperation : BaseOperation
       values = values.Where(kvp => IsIncluded(id, kvp.Value.name));
     else
       values = values.Where(kvp => string.Equals(kvp.Value.name, id, StringComparison.OrdinalIgnoreCase));
+
+    if (types.Count > 0)
+      values = ComponentInfo.HaveComponent(values.ToArray(), types);
     return values.Select(kvp => kvp.Key).ToHashSet();
   }
   public static ZDO[] GetZDOs(ZDO[] zdos, int hash)

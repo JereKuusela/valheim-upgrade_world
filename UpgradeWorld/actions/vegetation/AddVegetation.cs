@@ -52,17 +52,17 @@ public class AddVegetation : VegetationOperation
     var root = zs.m_zones[zone].m_root;
     var zonePos = ZoneSystem.instance.GetZonePos(zone);
     var heightmap = Zones.GetHeightmap(root);
-    ResetTerrain.ResetRadius = Args.TerrainReset;
+    ResetTerrain.Active = Args.TerrainReset != 0f;
     var clearAreas = GetClearAreas(zone);
     zs.PlaceVegetation(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, spawnedObjects);
     Counter += spawnedObjects.Count;
     foreach (var obj in spawnedObjects)
     {
-      ResetTerrain.Execute(obj.transform.position);
+      ResetTerrain.Execute(obj.transform.position, Args.TerrainReset);
       AddPin(obj.transform.position);
       Object.Destroy(obj);
     }
     spawnedObjects.Clear();
-    ResetTerrain.ResetRadius = 0f;
+    ResetTerrain.Active = false;
   }
 }

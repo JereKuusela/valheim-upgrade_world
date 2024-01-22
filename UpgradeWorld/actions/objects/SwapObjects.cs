@@ -12,7 +12,7 @@ public class SwapObjects : EntityOperation
   private void Swap(IEnumerable<string> ids, DataParameters args)
   {
     var toSwap = ids.FirstOrDefault().GetStableHashCode();
-    var prefabs = GetPrefabs(ids.Skip(1).ToList());
+    var prefabs = GetPrefabs(ids.Skip(1).ToList(), args.Types);
     var allZdos = GetZDOs(args, prefabs);
     var total = 0;
     var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);

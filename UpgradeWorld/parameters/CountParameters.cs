@@ -6,7 +6,7 @@ using Service;
 namespace UpgradeWorld;
 public class CountParameters : DataParameters
 {
-  public Range<int> Count = new(0, int.MaxValue);
+  public Range<int> Count = new(1, int.MaxValue);
   public CountParameters(FiltererParameters pars) : base(pars)
   {
   }
