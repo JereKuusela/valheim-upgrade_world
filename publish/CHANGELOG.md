@@ -1,3 +1,7 @@
+- v1.48
+  - Fixes location adding affecting the entire location database instead of only selected areas.
+  - Fixed for the new game version.
+
 - v1.47
   - Adds a new parameter `type` to limit objects by their components.
   - Changes the default minimum count of `count_objects` from 0 to 1.

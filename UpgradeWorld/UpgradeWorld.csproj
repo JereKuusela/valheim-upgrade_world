@@ -39,6 +39,9 @@
     <Reference Include="BepInEx.Harmony">
       <HintPath>..\..\Libs\BepInEx.Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="SoftReferenceableAssets_publicized">
+      <HintPath>..\..\Libs\SoftReferenceableAssets_publicized.dll</HintPath>
+    </Reference>
     <Reference Include="assembly_valheim_publicized">
       <HintPath>..\..\Libs\assembly_valheim_publicized.dll</HintPath>
     </Reference>

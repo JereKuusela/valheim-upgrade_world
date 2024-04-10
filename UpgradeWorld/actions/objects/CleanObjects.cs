@@ -15,7 +15,7 @@ public class CleanObjects : EntityOperation
     var zdos = GetZDOs(args);
     var scene = ZNetScene.instance;
     var zs = ZoneSystem.instance;
-    var toRemove = zs.m_locationInstances.Where(x => x.Value.m_location?.m_prefab == null).Select(x => x.Key).ToList();
+    var toRemove = zs.m_locationInstances.Where(x => x.Value.m_location?.m_prefab.IsValid != true).Select(x => x.Key).ToList();
     foreach (var zone in toRemove)
       zs.m_locationInstances.Remove(zone);
     if (toRemove.Count > 0)

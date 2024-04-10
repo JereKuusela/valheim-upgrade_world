@@ -8,9 +8,9 @@ public class IsZoneGenerated
 {
   static bool Prefix(Vector2i zoneID, ref bool __result)
   {
-    if (DistributeLocations.SpawnToAlreadyGenerated && DistributeLocations.AllowedZones.Contains(zoneID))
+    if (DistributeLocations.SpawnToAlreadyGenerated)
     {
-      __result = false;
+      __result = !DistributeLocations.AllowedZones.Contains(zoneID);
       return false;
     }
     return true;

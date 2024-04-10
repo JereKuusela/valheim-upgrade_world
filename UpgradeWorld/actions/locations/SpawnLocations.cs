@@ -30,7 +30,7 @@ public class SpawnLocations : LocationOperation
       Print("Location " + (location.m_location?.m_prefabName ?? "???") + " is missing at " + zone.ToString());
       return false;
     }
-    var clearRadius = location.m_location.m_location.m_clearArea ? location.m_location.m_exteriorRadius : 0f;
+    var clearRadius = location.m_location.m_clearArea ? location.m_location.m_exteriorRadius : 0f;
     if (Args.ObjectReset.HasValue) clearRadius = Args.ObjectReset.Value;
     SpawnLocation(zone, location, clearRadius);
     AddPin(location.m_position);

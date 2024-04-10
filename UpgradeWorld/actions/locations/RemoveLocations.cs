@@ -35,7 +35,7 @@ public class RemoveLocations : ExecutedOperation
       {
         name = location.m_prefabName;
         if (Ids.Count > 0 && !Ids.Contains(name)) continue;
-        var clearRadius = location.m_location.m_exteriorRadius;
+        var clearRadius = location.m_exteriorRadius;
         if (Args.ObjectReset.HasValue) clearRadius = Args.ObjectReset.Value;
         AddPin(zdo.GetPosition());
         Helper.ClearZDOsWithinDistance(zone, zdo.GetPosition(), clearRadius);
@@ -54,7 +54,7 @@ public class RemoveLocations : ExecutedOperation
       var location = kvp.Value.m_location;
       var name = location.m_prefabName;
       if (Ids.Count > 0 && !Ids.Contains(name)) continue;
-      var clearRadius = location.m_location.m_exteriorRadius;
+      var clearRadius = location.m_exteriorRadius;
       if (Args.ObjectReset.HasValue) clearRadius = Args.ObjectReset.Value;
       Helper.ClearZDOsWithinDistance(zone, kvp.Value.m_position, clearRadius);
       AddPin(kvp.Value.m_position);

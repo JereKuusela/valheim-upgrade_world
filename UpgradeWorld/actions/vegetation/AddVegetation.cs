@@ -40,7 +40,7 @@ public class AddVegetation : VegetationOperation
     var zs = ZoneSystem.instance;
     if (zs.m_locationInstances.TryGetValue(zone, out var location))
     {
-      if (location.m_location.m_location.m_clearArea)
+      if (location.m_location.m_clearArea)
         clearAreas.Add(new ZoneSystem.ClearArea(location.m_position, location.m_location.m_exteriorRadius));
     }
     return clearAreas;
