@@ -20,8 +20,8 @@ public class ResetZones : ZoneOperation
     if (!Args.Roll()) return true;
     var zoneSystem = ZoneSystem.instance;
     var scene = ZNetScene.instance;
-    List<ZDO> sectorObjects = [];
-    ZDOMan.instance.FindObjects(zone, sectorObjects);
+    var sectorObjects = Helper.GetZDOs(zone);
+
     var players = ZNet.instance.m_players.Select(player => player.m_characterID).ToHashSet();
     foreach (var zdo in sectorObjects)
     {

@@ -20,8 +20,7 @@ public class RestoreZones : ZoneOperation
     var zonePos = zs.GetZonePos(zone);
     var prefab = zs.m_zoneCtrlPrefab;
     var hash = prefab.name.GetStableHashCode();
-    List<ZDO> zdos = [];
-    ZDOMan.instance.FindObjects(zone, zdos);
+    var zdos = Helper.GetZDOs(zone);
     var found = zdos.Any(zdo => zdo.m_prefab == hash);
     if (!found)
     {

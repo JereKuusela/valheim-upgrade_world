@@ -1,3 +1,6 @@
+- v1.49
+  - Fixes object removing not working properly with Dungeon Splitter mod.
+
 - v1.48
   - Fixes location adding affecting the entire location database instead of only selected areas.
   - Fixed for the new game version.

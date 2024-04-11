@@ -1,8 +1,10 @@
+# Developers
+
 Mods that add new content should implement their own upgrade commands.
 
 Add a new file to your project `UpgradeWorld.cs`
 
-```
+```cs
 using System.Collections.Generic;
 using BepInEx.Bootstrap;
 using HarmonyLib;
@@ -47,7 +49,7 @@ public static class Upgrade
 
 Then to your plugin add
 
-```
+```cs
 public void Start()
 {
   UpgradeWorld.Upgrade.Register("MOD_locations", "Adds locations of mod MOD.", "locations_add location1,location2,location3 start");

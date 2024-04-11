@@ -16,6 +16,16 @@ public static class Helper
       return biome;
     return Heightmap.Biome.None;
   }
+  public static List<ZDO> GetZDOs(Vector2i zone)
+  {
+    var zman = ZDOMan.instance;
+    var index = zman.SectorToIndex(zone);
+    if (index >= 0 && index < zman.m_objectsBySector.Length)
+      return zman.m_objectsBySector[index];
+    if (zman.m_objectsByOutsideSector.TryGetValue(zone, out var list))
+      return list;
+    return [];
+  }
   public static void RemoveZDO(ZDO zdo)
   {
     if (zdo == null || !zdo.IsValid()) return;
@@ -42,9 +52,7 @@ public static class Helper
   public static void ClearZDOsWithinDistance(Vector2i zone, Vector3 center, float distance)
   {
     if (distance == 0f) return;
-    List<ZDO> sectorObjects = [];
-    ZDOMan.instance.FindObjects(zone, sectorObjects);
-    var scene = ZNetScene.instance;
+    var sectorObjects = GetZDOs(zone);
     foreach (var zdo in sectorObjects)
     {
       if (zdo.m_prefab == Settings.ZoneControlHash || zdo.m_prefab == Settings.TerrainCompilerHash) continue;

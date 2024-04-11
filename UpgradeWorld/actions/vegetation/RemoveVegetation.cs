@@ -32,8 +32,7 @@ public class RemoveVegetation : ZoneOperation
   }
   protected void Remove(Vector2i zone)
   {
-    List<ZDO> zdos = [];
-    ZDOMan.instance.FindObjects(zone, zdos);
+    var zdos = Helper.GetZDOs(zone);
     foreach (var zdo in zdos)
     {
       if (!Args.Roll()) continue;
