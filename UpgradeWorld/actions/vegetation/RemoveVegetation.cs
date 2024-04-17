@@ -33,6 +33,7 @@ public class RemoveVegetation : ZoneOperation
   protected void Remove(Vector2i zone)
   {
     var zdos = Helper.GetZDOs(zone);
+    if (zdos == null) return;
     foreach (var zdo in zdos)
     {
       if (!Args.Roll()) continue;

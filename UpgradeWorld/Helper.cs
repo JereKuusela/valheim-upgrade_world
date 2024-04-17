@@ -16,7 +16,7 @@ public static class Helper
       return biome;
     return Heightmap.Biome.None;
   }
-  public static List<ZDO> GetZDOs(Vector2i zone)
+  public static List<ZDO>? GetZDOs(Vector2i zone)
   {
     var zman = ZDOMan.instance;
     var index = zman.SectorToIndex(zone);
@@ -53,6 +53,7 @@ public static class Helper
   {
     if (distance == 0f) return;
     var sectorObjects = GetZDOs(zone);
+    if (sectorObjects == null) return;
     foreach (var zdo in sectorObjects)
     {
       if (zdo.m_prefab == Settings.ZoneControlHash || zdo.m_prefab == Settings.TerrainCompilerHash) continue;

@@ -23,12 +23,15 @@ public class ResetZones : ZoneOperation
     var sectorObjects = Helper.GetZDOs(zone);
 
     var players = ZNet.instance.m_players.Select(player => player.m_characterID).ToHashSet();
-    foreach (var zdo in sectorObjects)
+    if (sectorObjects != null)
     {
-      if (players.Contains(zdo.m_uid)) continue;
-      var position = zdo.GetPosition();
-      if (zoneSystem.GetZone(position) == zone)
-        Helper.RemoveZDO(zdo);
+      foreach (var zdo in sectorObjects)
+      {
+        if (players.Contains(zdo.m_uid)) continue;
+        var position = zdo.GetPosition();
+        if (zoneSystem.GetZone(position) == zone)
+          Helper.RemoveZDO(zdo);
+      }
     }
     var locations = zoneSystem.m_locationInstances;
     if (locations.TryGetValue(zone, out var location))
