@@ -166,13 +166,20 @@ public class FiltererParameters
       str += "zones";
     if (MinDistance > 0 || MaxDistance > 0)
     {
-      if (MinDistance > 0) str += " more than " + (MinDistance - 1);
-      if (MinDistance > 0 && MaxDistance > 0) str += " and";
-      if (MaxDistance > 0) str += " less than " + (MaxDistance + 1);
       if (Zone.HasValue)
+      {
+        if (MinDistance > 0) str += " more than " + (MinDistance - 1);
+        if (MinDistance > 0 && MaxDistance > 0) str += " and";
+        if (MaxDistance > 0) str += " less than " + (MaxDistance + 1);
         str += " zones";
+      }
       else
+      {
+        if (MinDistance > 0) str += " more than " + MinDistance;
+        if (MinDistance > 0 && MaxDistance > 0) str += " and";
+        if (MaxDistance > 0) str += " less than " + MaxDistance;
         str += " meters";
+      }
       str += " away from the ";
       if (Zone.HasValue)
         str += "zone " + Zone.Value.x + "," + Zone.Value.y;

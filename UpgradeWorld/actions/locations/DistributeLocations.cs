@@ -17,7 +17,7 @@ public class DistributeLocations : ExecutedOperation
   {
     Ids = [.. ids];
     if (Ids.Length == 0)
-      Ids = ZoneSystem.instance.m_locations.OrderByDescending(loc => loc.m_prioritized).Where(loc => loc.m_enable && loc.m_quantity != 0).Select(loc => loc.m_prefabName).ToArray();
+      Ids = ZoneSystem.instance.m_locations.OrderByDescending(loc => loc.m_prioritized).Where(loc => loc.m_enable && loc.m_quantity != 0).Select(loc => loc.m_prefab.Name).ToArray();
     Chance = args.Chance;
     args = new(args)
     {
@@ -40,7 +40,7 @@ public class DistributeLocations : ExecutedOperation
       SpawnToAlreadyGenerated = true;
       var zs = ZoneSystem.instance;
       var id = Ids[Attempts - 1];
-      var location = zs.m_locations.FirstOrDefault(location => location.m_prefabName == id);
+      var location = zs.m_locations.FirstOrDefault(location => location.m_prefab.Name == id);
       if (location == null) return false;
       // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
       if (Attempts < Ids.Length)
@@ -51,10 +51,10 @@ public class DistributeLocations : ExecutedOperation
       if (Chance < 1f)
       {
         zs.m_locationInstances = zs.m_locationInstances
-          .Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefabName != id || FiltererParameters.random.NextDouble() < Chance)
+          .Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefab.Name != id || FiltererParameters.random.NextDouble() < Chance)
           .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
       }
-      var unplaced = zs.m_locationInstances.Where(kvp => kvp.Value.m_location.m_prefabName == id && !kvp.Value.m_placed).ToList();
+      var unplaced = zs.m_locationInstances.Where(kvp => kvp.Value.m_location.m_prefab.Name == id && !kvp.Value.m_placed).ToList();
       foreach (var kvp in unplaced) AddPin(kvp.Value.m_position);
       Total += Count(id);
       Added += zs.m_locationInstances.Count - before;
@@ -66,12 +66,12 @@ public class DistributeLocations : ExecutedOperation
   private void ClearNotSpawned(string id)
   {
     var zs = ZoneSystem.instance;
-    zs.m_locationInstances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefabName != id).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    zs.m_locationInstances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefab.Name != id).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
   }
   private int Count(string id)
   {
     var zs = ZoneSystem.instance;
-    return zs.m_locationInstances.Where(kvp => kvp.Value.m_location.m_prefabName == id).Count();
+    return zs.m_locationInstances.Where(kvp => kvp.Value.m_location.m_prefab.Name == id).Count();
   }
   protected override void OnEnd()
   {
@@ -84,6 +84,6 @@ public class DistributeLocations : ExecutedOperation
 
   protected override string OnInit()
   {
-    return $"Generate locations{Helper.LocationIdString(Ids)} to all areas.";
+    return $"Generate locations{Helper.LocationIdString(Ids)}.";
   }
 }

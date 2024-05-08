@@ -1,3 +1,6 @@
+- v1.51
+  - Adds a new upgrade operation "ashlands" to reset existing ashlands.
+
 - v1.50
   - Fixes some resets not always working.
 

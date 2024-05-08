@@ -15,7 +15,8 @@ public class Upgrade : BaseOperation
     "hh_worldgen",
     "legacy_worldgen",
     "mountain_caves",
-    "hildir"
+    "hildir",
+    "ashlands"
   ];
 
   public Upgrade(Terminal context, string type, List<string> extra, FiltererParameters args) : base(context)
@@ -32,7 +33,20 @@ public class Upgrade : BaseOperation
       return;
     }
     type = type.ToLower();
-    if (type == "mountain_caves")
+    if (type == "ashlands")
+    {
+      if (args.Biomes.Count() > 0)
+      {
+        Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
+        return;
+      }
+      args.Biomes = [Heightmap.Biome.AshLands];
+      var ids = ZoneSystem.instance.m_locations.Where(loc => loc.m_biome == Heightmap.Biome.AshLands && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
+      Executor.AddOperation(new RemoveLocations(Context, [.. ids, "Meteorite"], args));
+      Executor.AddOperation(new ResetZones(Context, args));
+      Executor.AddOperation(new DistributeLocations(Context, ids, args));
+    }
+    else if (type == "mountain_caves")
     {
       Executor.AddOperation(new DistributeLocations(Context, ["MountainCave02"], args));
       Executor.AddOperation(new SpawnLocations(Context, ["MountainCave02"], args));
@@ -60,7 +74,8 @@ public class Upgrade : BaseOperation
       }
       args.Biomes = [Heightmap.Biome.Mistlands];
       Executor.AddOperation(new ResetZones(Context, args));
-      Executor.AddOperation(new DistributeLocations(Context, [], args));
+      var ids = ZoneSystem.instance.m_locations.Where(loc => loc.m_biome == Heightmap.Biome.Mistlands && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
+      Executor.AddOperation(new DistributeLocations(Context, ids, args));
     }
     else if (type == "mistlands_worldgen")
     {

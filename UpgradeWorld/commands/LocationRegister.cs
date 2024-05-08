@@ -25,6 +25,6 @@ public class LocationRegisterCommand
       var pos = Helper.GetPlayerPosition();
       if (args.Length > 2) pos = Parse.VectorXZY(Parse.Split(args[2]));
       new RegisterLocation(args.Context, id, pos);
-    }, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
+    }, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefab.Name).ToList());
   }
 }

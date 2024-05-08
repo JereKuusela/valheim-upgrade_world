@@ -19,7 +19,7 @@ public class RegenerateLocations : LocationOperation
     ZoneSystem.instance.m_locationInstances[zone] = location;
     if (location.m_location?.m_prefab == null)
     {
-      Print("Location " + (location.m_location?.m_prefabName ?? "???") + " is missing at " + zone.ToString());
+      Print("Location " + (location.m_location?.m_prefab.Name ?? "???") + " is missing at " + zone.ToString());
       return false;
     }
 
@@ -28,7 +28,7 @@ public class RegenerateLocations : LocationOperation
     SpawnLocation(zone, location, clearRadius);
     AddPin(location.m_position);
     if (Settings.Verbose)
-      Print("Location " + location.m_location.m_prefabName + " reseted at " + zone.ToString());
+      Print("Location " + location.m_location.m_prefab.Name + " reseted at " + zone.ToString());
     return true;
   }
 }

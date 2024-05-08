@@ -15,6 +15,6 @@ public class LocationsResetCommand
       if (Helper.IsClient(args)) return;
       if (!pars.Valid(args.Context)) return;
       Executor.AddOperation(new RegenerateLocations(args.Context, pars.Ids, pars));
-    }, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
+    }, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefab.Name).ToList());
   }
 }

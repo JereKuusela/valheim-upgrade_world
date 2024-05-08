@@ -27,7 +27,7 @@ public class SwapLocations : EntityOperation
     }
     var locs = ZoneSystem.instance.m_locationInstances;
     var location = ZoneSystem.instance.m_locationsByHash[toSwap];
-    var toModify = locs.Where(kvp => prefabs.Contains(kvp.Value.m_location?.Hash ?? 0) || prefabs.Contains(kvp.Value.m_location?.m_prefabName.GetStableHashCode() ?? 0)).ToArray();
+    var toModify = locs.Where(kvp => prefabs.Contains(kvp.Value.m_location?.Hash ?? 0) || prefabs.Contains(kvp.Value.m_location?.m_prefab.Name.GetStableHashCode() ?? 0)).ToArray();
     foreach (var zone in toModify)
     {
       var data = locs[zone.Key];

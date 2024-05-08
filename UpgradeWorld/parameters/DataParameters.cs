@@ -99,7 +99,7 @@ public class DataParameters : IdParameters
     };
     autoComplete["type"] = (int index) => ParameterComponents;
     autoComplete["log"] = (int index) => index == 0 ? CommandWrapper.Info("Out put to log file instead of console.") : null;
-    autoComplete["location"] = (int index) => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList();
+    autoComplete["location"] = (int index) => ZoneSystem.instance.m_locations.Select(location => location.m_prefab.Name).ToList();
     return autoComplete;
   }
   public static new List<string> Parameters = [.. GetAutoComplete().Keys.OrderBy(s => s)];

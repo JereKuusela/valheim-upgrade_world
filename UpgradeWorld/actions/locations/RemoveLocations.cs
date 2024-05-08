@@ -33,7 +33,7 @@ public class RemoveLocations : ExecutedOperation
       var name = "???";
       if (zs.m_locationsByHash.TryGetValue(zdo.GetInt(LocationHash), out var location))
       {
-        name = location.m_prefabName;
+        name = location.m_prefab.Name;
         if (Ids.Count > 0 && !Ids.Contains(name)) continue;
         var clearRadius = location.m_exteriorRadius;
         if (Args.ObjectReset.HasValue) clearRadius = Args.ObjectReset.Value;
@@ -52,7 +52,7 @@ public class RemoveLocations : ExecutedOperation
       if (!Args.Roll()) continue;
       var zone = kvp.Key;
       var location = kvp.Value.m_location;
-      var name = location.m_prefabName;
+      var name = location.m_prefab.Name;
       if (Ids.Count > 0 && !Ids.Contains(name)) continue;
       var clearRadius = location.m_exteriorRadius;
       if (Args.ObjectReset.HasValue) clearRadius = Args.ObjectReset.Value;
@@ -83,7 +83,7 @@ public class RemoveLocations : ExecutedOperation
       removed++;
       AddPin(location.m_position);
       if (Settings.Verbose)
-        Print("Location " + location.m_location.m_prefabName + " removed at " + zone.ToString());
+        Print("Location " + location.m_location.m_prefab.Name + " removed at " + zone.ToString());
       zs.m_locationInstances.Remove(zone);
     }
     return removed;

@@ -16,6 +16,6 @@ public class LocationsSwapCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       new SwapLocations(args.Context, pars.Ids, pars);
-    }, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefabName).ToList());
+    }, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefab.Name).ToList());
   }
 }

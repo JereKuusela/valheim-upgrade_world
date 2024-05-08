@@ -27,7 +27,7 @@ public class SpawnLocations : LocationOperation
     if (location.m_placed) return false;
     if (location.m_location?.m_prefab == null)
     {
-      Print("Location " + (location.m_location?.m_prefabName ?? "???") + " is missing at " + zone.ToString());
+      Print("Location " + (location.m_location?.m_prefab.Name ?? "???") + " is missing at " + zone.ToString());
       return false;
     }
     var clearRadius = location.m_location.m_clearArea ? location.m_location.m_exteriorRadius : 0f;
@@ -35,7 +35,7 @@ public class SpawnLocations : LocationOperation
     SpawnLocation(zone, location, clearRadius);
     AddPin(location.m_position);
     if (Settings.Verbose)
-      Print("Location " + location.m_location.m_prefabName + " spawned at " + zone.ToString());
+      Print("Location " + location.m_location.m_prefab.Name + " spawned at " + zone.ToString());
     return true;
   }
 }
