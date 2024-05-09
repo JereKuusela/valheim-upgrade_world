@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Service;
 using UnityEngine;
 namespace UpgradeWorld;
 public static class Helper
@@ -39,6 +40,12 @@ public static class Helper
       ZNetScene.instance.Destroy(view.gameObject);
     else
       ZDOMan.instance.DestroyZDO(zdo);
+  }
+  public static void MoveZDO(ZDO zdo, Vector3 pos, Quaternion rot)
+  {
+    ZDOData data = new(zdo);
+    data.Move(pos, rot);
+    RemoveZDO(zdo);
   }
 
   /// <summary>Clears the area around the location to prevent overlapping entities.</summary>

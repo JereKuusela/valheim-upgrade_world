@@ -45,6 +45,7 @@ public class Upgrade : BaseOperation
       Executor.AddOperation(new RemoveLocations(Context, [.. ids, "Meteorite"], args));
       Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new DistributeLocations(Context, ids, args));
+      Executor.AddOperation(new TempleVersion(Context, "ashlands", args.Start));
     }
     else if (type == "mountain_caves")
     {

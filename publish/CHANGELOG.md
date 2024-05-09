@@ -1,3 +1,7 @@
+- v1.52
+  - Adds a new command `temple_gen` to update the Start Temple boss stone positions.
+  - Adds Start Temple boss stone position fix to the "ashlands" upgrade operation.
+
 - v1.51
   - Adds a new upgrade operation "ashlands" to reset existing ashlands.
 

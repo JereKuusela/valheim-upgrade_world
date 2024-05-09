@@ -110,6 +110,7 @@ public class SetCommands
     new WorldVersionCommand();
     new WorldCleanCommand();
     new LocationsSwapCommand();
+    new TempleVersionCommand();
     if (Terminal.commands.TryGetValue("genloc", out var genloc))
     {
       genloc.IsCheat = false;

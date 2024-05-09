@@ -106,6 +106,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `save_enable`: Enables world saving.
 - `start`: Most commands don't execute instantly but instead print the zones being affected. This command can be then used to start executing.
 - `stop`: Stops the current execution and clears any pending command.
+- `temple_gen`: Updates the Start Temple boss stone positions.
 - `time_change [seconds]`: Changes the world time and updates object timestamps.
 - `time_change_day [days]`: Changes the world time and updates object timestamps.
 - `time_set [seconds]`: Sets the world time and updates object timestamps.

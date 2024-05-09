@@ -25,6 +25,18 @@ public class ZDOData
     Write(zdo);
     return zdo;
   }
+  public ZDO Move(Vector3 pos, Quaternion rot)
+  {
+    var zdo = ZDOMan.instance.CreateNewZDO(pos, 0);
+    zdo.Persistent = Zdo.Persistent;
+    zdo.Type = Zdo.Type;
+    zdo.Distant = Zdo.Distant;
+    zdo.m_prefab = Prefab;
+    zdo.m_rotation = rot.eulerAngles;
+    zdo.SetOwnerInternal(Zdo.GetOwner());
+    Write(zdo);
+    return zdo;
+  }
 
   public ZDO Zdo;
   public int Prefab = 0;

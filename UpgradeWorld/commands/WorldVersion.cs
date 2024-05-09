@@ -9,6 +9,7 @@ public class WorldVersionCommand
     CommandWrapper.Register("world_gen", (int index) =>
     {
       if (index == 0) return Versions;
+      if (index == 1) return ["start"];
       return null;
     });
     new Terminal.ConsoleCommand("world_gen", "[version] - Sets the world generation version.", (args) =>
