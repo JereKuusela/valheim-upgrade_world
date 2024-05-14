@@ -40,9 +40,10 @@ public class Upgrade : BaseOperation
         Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
         return;
       }
-      args.Biomes = [Heightmap.Biome.AshLands];
+      args.Pos = new(0, 4000f);
+      args.MinDistance = 11600;
       var ids = ZoneSystem.instance.m_locations.Where(loc => loc.m_biome == Heightmap.Biome.AshLands && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
-      Executor.AddOperation(new RemoveLocations(Context, [.. ids, "Meteorite"], args));
+      Executor.AddOperation(new RemoveLocations(Context, [], args));
       Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new DistributeLocations(Context, ids, args));
       Executor.AddOperation(new TempleVersion(Context, "ashlands", args.Start));

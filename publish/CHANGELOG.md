@@ -1,3 +1,6 @@
+- v1.53
+  - Fixes the upgrade operation "ashlands" not resetting the ocean gap.
+
 - v1.52.1
   - Fixes wrong version number.
 
