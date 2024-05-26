@@ -11,9 +11,9 @@ public struct FilterPoint
   public float min;
   public float max;
 }
-#nullable disable
 public static class Settings
 {
+#nullable disable
   public static ConfigEntry<bool> configDisableAutomaticGenloc;
   public static bool DisableAutomaticGenloc => configDisableAutomaticGenloc.Value;
   public static ConfigEntry<bool> configMapCoordinates;
@@ -43,6 +43,7 @@ public static class Settings
   public static int TerrainCompilerHash = "_TerrainCompiler".GetStableHashCode();
   public static ConfigEntry<string> configRootUsers;
   private static HashSet<string> RootUsers = [];
+#nullable enable
   private static void UpdateRootUsers() => RootUsers = configRootUsers.Value.Split(',').Select(s => s.Trim()).Where(s => s != "").ToHashSet();
   public static bool IsRoot(string id)
   {

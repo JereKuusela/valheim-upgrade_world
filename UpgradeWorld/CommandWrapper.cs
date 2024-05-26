@@ -77,3 +77,4 @@ public static class CommandWrapper
     Type().GetMethod("RegisterEmpty", PublicBinding).Invoke(null, [command]);
   }
 }
+#nullable enable

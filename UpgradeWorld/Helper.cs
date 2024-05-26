@@ -12,7 +12,7 @@ public static class Helper
   /// <summary>Converts a biome name to a biome.</summary>
   public static Heightmap.Biome GetBiome(string name)
   {
-    name = Helper.Normalize(name);
+    name = Normalize(name);
     if (Enum.TryParse<Heightmap.Biome>(name, true, out var biome))
       return biome;
     return Heightmap.Biome.None;
@@ -25,7 +25,7 @@ public static class Helper
       return zman.m_objectsBySector[index];
     if (zman.m_objectsByOutsideSector.TryGetValue(zone, out var list))
       return list;
-    return [];
+    return null;
   }
   public static void RemoveZDO(ZDO zdo)
   {

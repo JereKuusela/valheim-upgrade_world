@@ -36,6 +36,7 @@ Note: The default base detection is very conservative. Single workbenches, campf
 For `upgrade` command:
 
 - `ashlands`: Fully regenerates ashlands biomes and nearby water areas. Terrain is automatically updated by the base game and not affected by this operation.
+- `deepnorth`: Fully regenerates ashlands biomes and nearby water areas. Terrain is automatically updated by the base game and not affected by this operation.
 - `hildir`: Adds new locations to already explored areas.
 - `mountain_caves`: Adds mountain caves to already explored areas.
 - `tarpits`: Adds tar pits to already explored areas.

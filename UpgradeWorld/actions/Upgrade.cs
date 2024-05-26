@@ -16,7 +16,8 @@ public class Upgrade : BaseOperation
     "legacy_worldgen",
     "mountain_caves",
     "hildir",
-    "ashlands"
+    "ashlands",
+    "deepnorth"
   ];
 
   public Upgrade(Terminal context, string type, List<string> extra, FiltererParameters args) : base(context)
@@ -47,6 +48,20 @@ public class Upgrade : BaseOperation
       Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new DistributeLocations(Context, ids, args));
       Executor.AddOperation(new TempleVersion(Context, "ashlands", args.Start));
+    }
+    else if (type == "deepnorth")
+    {
+      if (args.Biomes.Count() > 0)
+      {
+        Print("Error: This operation doesn't support custom biomes " + string.Join(", ", args.Biomes));
+        return;
+      }
+      args.Pos = new(0, -4000f);
+      args.MinDistance = 11600;
+      var ids = ZoneSystem.instance.m_locations.Where(loc => loc.m_biome == Heightmap.Biome.DeepNorth && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
+      Executor.AddOperation(new RemoveLocations(Context, [], args));
+      Executor.AddOperation(new ResetZones(Context, args));
+      Executor.AddOperation(new DistributeLocations(Context, ids, args));
     }
     else if (type == "mountain_caves")
     {

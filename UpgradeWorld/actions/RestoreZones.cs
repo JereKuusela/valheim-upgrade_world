@@ -21,7 +21,7 @@ public class RestoreZones : ZoneOperation
     var prefab = zs.m_zoneCtrlPrefab;
     var hash = prefab.name.GetStableHashCode();
     var zdos = Helper.GetZDOs(zone);
-    var found = zdos.Any(zdo => zdo.m_prefab == hash);
+    var found = zdos != null && zdos.Any(zdo => zdo.m_prefab == hash);
     if (!found)
     {
       var zdo = ZDOMan.instance.CreateNewZDO(zonePos, hash);
