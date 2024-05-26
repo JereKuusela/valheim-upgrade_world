@@ -3,20 +3,14 @@ using System.Linq;
 using UnityEngine;
 namespace UpgradeWorld;
 ///<summary>Base class for all operations. Only provides basic utilities.</summary>
-public abstract class BaseOperation
+public abstract class BaseOperation(Terminal context, bool pin = false)
 {
   protected int LocationProxyHash = "LocationProxy".GetStableHashCode();
   protected int LocationHash = "location".GetStableHashCode();
-  protected Terminal Context;
-  public ZRpc? User = null;
+  protected Terminal Context = context ?? Console.instance;
+  public ZRpc? User = ServerExecution.User;
   private readonly List<Vector3> Pins = [];
-  private readonly bool Pin;
-  protected BaseOperation(Terminal context, bool pin = false)
-  {
-    Context = context ?? Console.instance;
-    User = ServerExecution.User;
-    Pin = pin;
-  }
+
   public void Print(string value, bool addDot = true)
   {
     if (addDot && !value.EndsWith(".")) value += ".";
@@ -37,11 +31,11 @@ public abstract class BaseOperation
   }
   protected void AddPin(Vector3 pos)
   {
-    if (Pin) Pins.Add(pos);
+    if (pin) Pins.Add(pos);
   }
   protected void PrintPins()
   {
-    if (!Pin) return;
+    if (!pin) return;
     if (User != null)
     {
       User.Invoke(ServerExecution.RPC_Pins, string.Join("|", Pins.Select(Helper.PrintVectorXZY)));

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Service;
 
 namespace UpgradeWorld;
@@ -46,7 +47,8 @@ public class Upgrade : BaseOperation
       var ids = ZoneSystem.instance.m_locations.Where(loc => loc.m_biome == Heightmap.Biome.AshLands && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
       Executor.AddOperation(new RemoveLocations(Context, [], args));
       Executor.AddOperation(new ResetZones(Context, args));
-      Executor.AddOperation(new DistributeLocations(Context, ids, args));
+      if (ids.Count() > 0)
+        Executor.AddOperation(new DistributeLocations(Context, ids, args));
       Executor.AddOperation(new TempleVersion(Context, "ashlands", args.Start));
     }
     else if (type == "deepnorth")
@@ -61,7 +63,8 @@ public class Upgrade : BaseOperation
       var ids = ZoneSystem.instance.m_locations.Where(loc => loc.m_biome == Heightmap.Biome.DeepNorth && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
       Executor.AddOperation(new RemoveLocations(Context, [], args));
       Executor.AddOperation(new ResetZones(Context, args));
-      Executor.AddOperation(new DistributeLocations(Context, ids, args));
+      if (ids.Count() > 0)
+        Executor.AddOperation(new DistributeLocations(Context, ids, args));
     }
     else if (type == "mountain_caves")
     {

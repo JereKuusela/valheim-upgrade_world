@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 namespace UpgradeWorld;
@@ -11,7 +12,7 @@ public static class Zones
     return root.GetComponentInChildren<Heightmap>();
   }
 
-  private static Vector2i[] Sort(Vector2i[] zones)
+  private static Vector2i[] Sort(IEnumerable<Vector2i> zones)
   {
     // Magnitude doesn't work with int.MinValue, so needs special handling.
     return [.. zones.OrderBy(zone => zone.x == int.MinValue || zone.y == int.MinValue ? int.MinValue : zone.Magnitude())];
@@ -31,12 +32,15 @@ public static class Zones
   }
   public static Vector2i[] GetZones(TargetZones zones)
   {
-    if (zones == TargetZones.All) return GetWorldZones();
+    if (zones == TargetZones.All) return GetAllZones();
     var zs = ZoneSystem.instance;
-    if (zones == TargetZones.Generated) return Sort([.. zs.m_generatedZones]);
-    return Sort(GetWorldZones().Where(zone => !zs.m_generatedZones.Contains(zone)).ToArray());
+    if (zones == TargetZones.Generated) return Sort(zs.m_generatedZones);
+    return GetAllZones().Where(zone => !zs.m_generatedZones.Contains(zone)).ToArray();
   }
-  // Returns an array of all ungenerated zones.
+  private static Vector2i[]? AllZones;
+  public static Vector2i[] GetAllZones() => AllZones ??= GetWorldZones();
+  public static void ResetAllZones() => AllZones = null;
+  // Returns an array of all zones.
   private static Vector2i[] GetWorldZones()
   {
     var zs = ZoneSystem.instance;
@@ -50,7 +54,7 @@ public static class Zones
         zones.Add(new(i, j));
       }
     }
-    return Sort([.. zones]);
+    return Sort(zones);
   }
 
   public static int Distance(Vector2i a, Vector2i b) => Math.Max(Math.Abs(a.x - b.x), Math.Abs(a.y - b.y));

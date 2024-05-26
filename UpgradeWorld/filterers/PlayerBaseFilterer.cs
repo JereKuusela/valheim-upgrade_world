@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Filters zones based on whether they include a player base item.</summary>
-public class PlayerBaseFilterer : IZoneFilterer
+public class PlayerBaseFilterer(int size) : IZoneFilterer
 {
   public static HashSet<Vector2i> ExcludedZones = [];
   public static DateTime LastUpdate = DateTime.MinValue;
   public static int LastSize = 0;
-  public int Size = 0;
-  public PlayerBaseFilterer(int size)
-  {
-    Size = size;
-  }
+  public int Size = size;
+
   public void CalculateExcluded()
   {
     if (Size != LastSize || DateTime.Now - LastUpdate > TimeSpan.FromSeconds(10))

@@ -18,8 +18,8 @@ public class FiltererParameters
   public bool Start = false;
   public Vector2? Pos = null;
   public Vector2i? Zone = null;
-  public float MinDistance = 0;
-  public float MaxDistance = 0;
+  public float MinDistance = 0f;
+  public float MaxDistance = 0f;
   public float Chance = 1f;
   public float TerrainReset = 0f;
   public float? ObjectReset;

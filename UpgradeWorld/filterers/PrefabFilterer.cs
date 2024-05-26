@@ -2,17 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Filters zones based on whether they have a given prefab.</summary>
-public class PrefabFilterer : IZoneFilterer
+public class PrefabFilterer(string id) : IZoneFilterer
 {
-  private readonly string Id;
-  public PrefabFilterer(string id)
-  {
-    Id = id;
-  }
   public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
   {
     HashSet<Vector2i> IncludedZones;
-    var hash = Id.GetStableHashCode();
+    var hash = id.GetStableHashCode();
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => zdo.m_prefab == hash);
     IncludedZones = zdos.Select(zdo => ZoneSystem.instance.GetZone(zdo.GetPosition())).Distinct().ToHashSet();
     if (IncludedZones == null)

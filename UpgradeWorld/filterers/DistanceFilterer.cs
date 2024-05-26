@@ -5,14 +5,11 @@ namespace UpgradeWorld;
 ///<summary>Filters zones based on whether they are close enough to a given position.</summary>
 public class DistanceFilterer(Vector3 center, float minDistance, float maxDistance) : IZoneFilterer
 {
-  private Vector3 Center = center;
-  private readonly float MinDistance = minDistance;
-  private readonly float MaxDistance = maxDistance;
 
   public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
   {
     var amount = zones.Length;
-    zones = FilterByDistance(zones, Center, MinDistance, MaxDistance);
+    zones = FilterByDistance(zones, center, minDistance, maxDistance);
     var skipped = amount - zones.Length;
     if (skipped > 0) messages.Add(skipped + " skipped by the command");
     return zones;

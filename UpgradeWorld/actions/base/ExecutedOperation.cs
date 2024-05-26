@@ -1,16 +1,13 @@
 using System;
 namespace UpgradeWorld;
 ///<summary>Base class for all operations that need execution. Provides the execution logic.</summary>
-public abstract class ExecutedOperation : BaseOperation
+public abstract class ExecutedOperation(Terminal context, bool autoStart, bool pin = false) : BaseOperation(context, pin)
 {
   protected int Attempts = 0;
   protected int Failed = 0;
-  public bool AutoStart;
+  public bool AutoStart = autoStart;
   public bool First = true;
-  protected ExecutedOperation(Terminal context, bool autoStart, bool pin = false) : base(context, pin)
-  {
-    AutoStart = autoStart;
-  }
+
   public bool Execute()
   {
     try

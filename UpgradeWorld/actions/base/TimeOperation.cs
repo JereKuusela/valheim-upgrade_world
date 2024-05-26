@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
 /// <summary>Safely sets the time.</summary>
-public abstract class TimeOperation : BaseOperation
+public abstract class TimeOperation(Terminal context) : BaseOperation(context)
 {
-  public TimeOperation(Terminal context) : base(context) { }
   protected void Change(double time)
   {
     if (time < 0)
