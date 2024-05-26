@@ -1,6 +1,7 @@
 - v1.54
   - Adds a new upgrade operation "deepnorth" to reset the Deep North and the ocean gap.
   - Fixes the operation `zones_restore` not always working.
+  - Removes the settings "Show map coordinates" and "Show minimap coordinates" as obsolete (use Server Devcommands if needed).
 
 - v1.53
   - Fixes the upgrade operation "ashlands" not resetting the ocean gap.

@@ -164,8 +164,6 @@ Other settings are:
 - Disable automatic genloc: After new content updates, Valheim automatically redistributes unplaced locations with genloc command. This can mess up custom worlds with manually defined locations.
 - Operations per update: How many zones are destroyed per Unity update. Can be useful if destroying large parts of a world, but recommended to keep it as it is.
 - Root users: SteamIds that are allowed to execute commands (-1 for the dedicated server). If not set, all admins can use the commands.
-- Show map coordinates: If true, shows coordinates and distance on the big map.
-- Show minimap coordinates: If true, shows coordinates on the minimap.
 - Operation delay: Milliseconds between each command. Prevents lots of small operations overloading the dedicated server.
 - World size: Max radius for operations (if using a mod to change the world size or need to affect areas outside the play area).
 

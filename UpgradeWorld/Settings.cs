@@ -16,10 +16,6 @@ public static class Settings
 #nullable disable
   public static ConfigEntry<bool> configDisableAutomaticGenloc;
   public static bool DisableAutomaticGenloc => configDisableAutomaticGenloc.Value;
-  public static ConfigEntry<bool> configMapCoordinates;
-  public static bool MapCoordinates => configMapCoordinates.Value;
-  public static ConfigEntry<bool> configMiniMapCoordinates;
-  public static bool MiniMapCoordinates => configMiniMapCoordinates.Value;
   public static ConfigEntry<bool> configVerbose;
   public static bool Verbose => configVerbose.Value;
   public static ConfigEntry<bool> configAutoStart;
@@ -68,8 +64,6 @@ public static class Settings
     configRootUsers = config.Bind(section, "Root users", "", "SteamIDs that can execute commands on servers (-1 for the dedicated server). If not set, then all admins can execute commands.");
     configRootUsers.SettingChanged += (sender, args) => UpdateRootUsers();
     UpdateRootUsers();
-    configMapCoordinates = config.Bind(section, "Show map coordinates", true, "The map shows coordinates on hover.");
-    configMiniMapCoordinates = config.Bind(section, "Show minimap coordinates", false, "The minimap shows player coordinates.");
     configThrottle = config.Bind(section, "Operation delay", 100, "Milliseconds between each command. Prevents lots of small operations overloading the dedicated server.");
     configDisableAutomaticGenloc = config.Bind(section, "Disable automatic genloc", false, "If enabled, new content updates won't automatically redistribute locations.");
 
