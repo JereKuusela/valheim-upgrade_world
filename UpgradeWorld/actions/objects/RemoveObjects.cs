@@ -4,7 +4,7 @@ namespace UpgradeWorld;
 /// <summary>Removes given entity ids within a given distance.</summary>
 public class RemoveObjects : EntityOperation
 {
-  public RemoveObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context)
+  public RemoveObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context, args.Pin)
   {
     Remove(ids, args);
   }

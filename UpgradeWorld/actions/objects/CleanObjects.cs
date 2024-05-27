@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Removes missing objects.</summary>
 public class CleanObjects : EntityOperation
 {
-  public CleanObjects(Terminal context, FiltererParameters args) : base(context)
+  public CleanObjects(Terminal context, FiltererParameters args) : base(context, args.Pin)
   {
     Clean(args);
   }

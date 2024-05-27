@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Lists positon and biome of each entity.</summary>
 public class ListObjectPositions : EntityOperation
 {
-  public ListObjectPositions(Terminal context, List<string> ids, DataParameters args) : base(context)
+  public ListObjectPositions(Terminal context, List<string> ids, DataParameters args) : base(context, args.Pin)
   {
     ListPositions(ids, args);
   }

@@ -8,7 +8,7 @@ public enum Direction { None, North, East, South = 4, West = 8, NorthEast = 16, 
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
 public class ResetBorder : EntityOperation
 {
-  public ResetBorder(Terminal context, Dictionary<Vector2i, Direction> zones) : base(context)
+  public ResetBorder(Terminal context, Dictionary<Vector2i, Direction> zones) : base(context, false)
   {
     Execute(zones);
   }

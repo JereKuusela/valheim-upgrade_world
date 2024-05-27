@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Swaps objects with another one.</summary>
 public class SwapObjects : EntityOperation
 {
-  public SwapObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context)
+  public SwapObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context, args.Pin)
   {
     Swap(ids, args);
   }

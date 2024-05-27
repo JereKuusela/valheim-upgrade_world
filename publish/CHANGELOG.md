@@ -1,7 +1,10 @@
 - v1.54
   - Adds a new upgrade operation "deepnorth" to reset the Deep North and the ocean gap.
   - Fixes the operation `zones_restore` not always working.
+  - Fixes some individual locations not always spawning.
+  - Fixes pins not working.
   - Removes the settings "Show map coordinates" and "Show minimap coordinates" as obsolete (use Server Devcommands if needed).
+  - Some minor optimizations.
 
 - v1.53
   - Fixes the upgrade operation "ashlands" not resetting the ocean gap.
@@ -18,22 +21,3 @@
 
 - v1.50
   - Fixes some resets not always working.
-
-- v1.49
-  - Fixes object removing not working properly with Dungeon Splitter mod.
-
-- v1.48
-  - Fixes location adding affecting the entire location database instead of only selected areas.
-  - Fixed for the new game version.
-
-- v1.47
-  - Adds a new parameter `type` to limit objects by their components.
-  - Changes the default minimum count of `count_objects` from 0 to 1.
-  - Fixes terrain reset sometimes not working properly.
-  - Fixes Root user check not working properly with crossplay.
-
-- v1.46
-  - Adds a new parameter `limit` to limit the amount of affected objects.
-  - Fixes `chests_reset` not working properly on servers if clients were on the area.
-  - Fixes `objects_swap` not working properly on servers if clients were on the area.
-  - Improves performance of object related commands.

@@ -4,7 +4,7 @@ namespace UpgradeWorld;
 /// <summary>Swaps locations with another one.</summary>
 public class SwapLocations : EntityOperation
 {
-  public SwapLocations(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context)
+  public SwapLocations(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context, args.Pin)
   {
     Swap(ids, args);
   }

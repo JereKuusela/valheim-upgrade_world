@@ -6,7 +6,7 @@ namespace UpgradeWorld;
 /// <summary>Searchs objects from chests.</summary>
 public class SearchChests : EntityOperation
 {
-  public SearchChests(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context)
+  public SearchChests(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context, args.Pin)
   {
     Search(ids, args);
   }

@@ -38,7 +38,7 @@ public abstract class BaseOperation(Terminal context, bool pin = false)
     if (!pin) return;
     if (User != null)
     {
-      User.Invoke(ServerExecution.RPC_Pins, string.Join("|", Pins.Select(Helper.PrintVectorXZY)));
+      User.Invoke(ServerExecution.RPC_Pins, string.Join("|", Pins.Select(Helper.PrintPin)));
     }
     else
     {

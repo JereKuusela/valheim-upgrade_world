@@ -5,7 +5,7 @@ using Service;
 using UnityEngine;
 namespace UpgradeWorld;
 ///<summary>Base class for entity related operations. Provides some utilities.</summary>
-public abstract class EntityOperation(Terminal context, bool pin = false) : BaseOperation(context, pin)
+public abstract class EntityOperation(Terminal context, bool pin) : BaseOperation(context, pin)
 {
   private static bool IsIncluded(string id, string name)
   {

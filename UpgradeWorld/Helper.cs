@@ -151,6 +151,7 @@ public static class Helper
   }
 
 
+  public static string PrintPin(Vector3 vector) => vector.x.ToString("F0") + ", " + vector.z.ToString("F0") + ", " + vector.y.ToString("F0");
   public static string PrintVectorXZY(Vector3 vector) => "(" + vector.x.ToString("F0") + ", " + vector.z.ToString("F0") + ", " + vector.y.ToString("F0") + ")";
   public static string PrintVectorYXZ(Vector3 vector) => "(" + vector.y.ToString("F0") + ", " + vector.x.ToString("F0") + ", " + vector.z.ToString("F0") + ")";
   public static string PrintAngleYXZ(Quaternion quaternion) => PrintVectorYXZ(quaternion.eulerAngles);

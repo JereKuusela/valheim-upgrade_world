@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Lists positon and biome of each entity.</summary>
 public class EditObjects : EntityOperation
 {
-  public EditObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context)
+  public EditObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context, args.Pin)
   {
     Execute(ids, args);
   }

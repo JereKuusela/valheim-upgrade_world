@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Respawns spawners, pickables, chests, etc..</summary>
 public class RefreshObjects : EntityOperation
 {
-  public RefreshObjects(Terminal context, List<string> ids, DataParameters args) : base(context)
+  public RefreshObjects(Terminal context, List<string> ids, DataParameters args) : base(context, args.Pin)
   {
     Execute(ids, args);
   }

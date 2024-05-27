@@ -6,7 +6,7 @@ namespace UpgradeWorld;
 /// <summary>Counts the amounts of given entities.</summary>
 public class CountObjects : EntityOperation
 {
-  public CountObjects(Terminal context, List<string> ids, DataParameters args, Range<int> countRange) : base(context)
+  public CountObjects(Terminal context, List<string> ids, DataParameters args, Range<int> countRange) : base(context, args.Pin)
   {
     Count(ids, args, countRange);
   }

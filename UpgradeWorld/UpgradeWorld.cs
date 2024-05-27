@@ -24,7 +24,8 @@ public class UpgradeWorld : BaseUnityPlugin
   {
     CommandWrapper.Init();
     FiltererParameters.Parameters.Sort();
-    InvokeRepeating("Execute", 1f, 0.01f);
+    // Too high tick rate probably just wasted processing power.
+    InvokeRepeating("Execute", 1f, 0.1f);
   }
   public void Execute()
   {

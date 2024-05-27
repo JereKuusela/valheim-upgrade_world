@@ -8,7 +8,7 @@ public class ResetChests : EntityOperation
 {
   private static List<string> chestNames = [];
   private readonly HashSet<string> AllowedItems;
-  public ResetChests(string[] chestIds, IEnumerable<string> allowedItems, bool looted, DataParameters args, Terminal context) : base(context)
+  public ResetChests(string[] chestIds, IEnumerable<string> allowedItems, bool looted, DataParameters args, Terminal context) : base(context, args.Pin)
   {
     AllowedItems = allowedItems.Select(Helper.Normalize).ToHashSet();
     Reroll(chestIds, looted, args);
