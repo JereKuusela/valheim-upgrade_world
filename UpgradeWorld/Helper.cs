@@ -164,9 +164,9 @@ public static class Helper
   public static void RecalculateTerrain()
   {
     foreach (var hm in Heightmap.s_heightmaps)
+    {
+      hm.m_buildData = null;
       hm.Poke(true);
-    // This was copied from Better Continents, not sure if really needed.
-    foreach (var lod in UnityEngine.Object.FindObjectsOfType<TerrainLod>())
-      lod.m_heightmapState = TerrainLod.HeightmapState.NeedsRebuild;
+    }
   }
 }

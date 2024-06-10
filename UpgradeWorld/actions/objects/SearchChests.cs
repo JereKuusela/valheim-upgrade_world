@@ -98,6 +98,10 @@ public class SearchChests : EntityOperation
           from.ReadString();
         }
       }
+      if (version >= 105)
+        from.ReadInt();
+      if (version >= 106)
+        from.ReadBool();
       if (ids.Contains(text.GetStableHashCode()))
       {
         var key = text + variant + quality;

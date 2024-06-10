@@ -1,3 +1,6 @@
+- v1.55
+  - Fixes the command `chests_search` not working.
+
 - v1.54
   - Adds a new upgrade operation "deepnorth" to reset the Deep North and the ocean gap.
   - Fixes the operation `zones_restore` not always working.
