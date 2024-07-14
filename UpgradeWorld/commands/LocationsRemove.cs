@@ -15,6 +15,6 @@ public class LocationsRemoveCommand
       if (Helper.IsClient(args)) return;
       if (!pars.Valid(args.Context)) return;
       Executor.AddOperation(new RemoveLocations(args.Context, pars.Ids, pars));
-    }, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefab.Name).ToList());
+    }, optionsFetcher: () => ZoneSystem.instance.m_locations.Select(location => location.m_prefab.Name).Distinct().ToList());
   }
 }

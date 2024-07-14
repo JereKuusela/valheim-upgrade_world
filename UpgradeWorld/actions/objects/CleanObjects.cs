@@ -1,5 +1,6 @@
 using System.Linq;
 using Service;
+using SoftReferenceableAssets;
 
 namespace UpgradeWorld;
 /// <summary>Removes missing objects.</summary>
@@ -15,7 +16,13 @@ public class CleanObjects : EntityOperation
     var zdos = GetZDOs(args);
     var scene = ZNetScene.instance;
     var zs = ZoneSystem.instance;
-    var toRemove = zs.m_locationInstances.Where(x => x.Value.m_location?.m_prefab.IsValid != true).Select(x => x.Key).ToList();
+    var toRemove = zs.m_locationInstances.Where(x =>
+    {
+      var assetId = x.Value.m_location?.m_prefab.m_assetID;
+      // Custom check so that blueprint locations for Expand World Data are not removed.
+      // They use the empty asset ID because no asset is loaded. However the mod also makes the empty asset ID available.
+      return assetId == null || !Runtime.Loader.IsAvailable(assetId.Value);
+    }).Select(x => x.Key).ToList();
     foreach (var zone in toRemove)
       zs.m_locationInstances.Remove(zone);
     if (toRemove.Count > 0)

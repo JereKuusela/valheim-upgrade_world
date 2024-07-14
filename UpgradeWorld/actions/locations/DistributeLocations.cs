@@ -40,14 +40,15 @@ public class DistributeLocations : ExecutedOperation
       SpawnToAlreadyGenerated = true;
       var zs = ZoneSystem.instance;
       var id = Ids[Attempts - 1];
-      var location = zs.m_locations.FirstOrDefault(location => location.m_prefab.Name == id);
-      if (location == null) return false;
+      var locations = zs.m_locations.Where(location => location.m_prefab.Name == id).ToArray();
+      if (locations.Length == 0) return false;
       // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
       if (Attempts < Ids.Length)
         Print($"Generating locations {Ids[Attempts]}. This may take a while...");
       var before = zs.m_locationInstances.Count;
       ClearNotSpawned(id);
-      zs.GenerateLocations(location);
+      foreach (var location in locations)
+        zs.GenerateLocations(location);
       if (Chance < 1f)
       {
         zs.m_locationInstances = zs.m_locationInstances

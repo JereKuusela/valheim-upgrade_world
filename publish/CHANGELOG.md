@@ -1,3 +1,8 @@
+- v1.56
+  - Fixes the command `world_clean` removing Expand World Data blueprint locations.
+  - Fixes autocomplete showing duplicate values if the same location has multiple entries.
+  - Fixes the command `locations_add` not adding all locations if the location has multiple entries.
+
 - v1.55
   - Fixes the command `chests_search` not working.
 
