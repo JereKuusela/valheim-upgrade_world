@@ -16,30 +16,8 @@ public class CleanObjects : EntityOperation
     var zdos = GetZDOs(args);
     var scene = ZNetScene.instance;
     var zs = ZoneSystem.instance;
-    var toRemove = zs.m_locationInstances.Where(x =>
-    {
-      var assetId = x.Value.m_location?.m_prefab.m_assetID;
-      // Custom check so that blueprint locations for Expand World Data are not removed.
-      // They use the empty asset ID because no asset is loaded. However the mod also makes the empty asset ID available.
-      return assetId == null || !Runtime.Loader.IsAvailable(assetId.Value);
-    }).Select(x => x.Key).ToList();
-    foreach (var zone in toRemove)
-      zs.m_locationInstances.Remove(zone);
-    if (toRemove.Count > 0)
-      Print($"Removed {toRemove.Count} missing location entries.");
 
     var removed = 0;
-    foreach (var zdo in zdos)
-    {
-      if (zdo.m_prefab != LocationProxyHash) continue;
-      if (zs.GetLocation(zdo.GetInt(LocationHash)) != null) continue;
-      Helper.RemoveZDO(zdo);
-      removed++;
-    }
-    if (removed > 0)
-      Print($"Removed {removed} missing location objects.");
-
-    removed = 0;
     foreach (var zdo in zdos)
     {
       if (scene.m_namedPrefabs.ContainsKey(zdo.m_prefab)) continue;

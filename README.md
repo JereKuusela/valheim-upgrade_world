@@ -92,11 +92,16 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Without chest name, all treasure chests are rerolled. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items. `chance` determines how many of the chests are reseted.
 - `chests_search [id1,id2,...] [...args]`: Searches chests and stands for given items.
 - `locations_add [id1,id2,...] [...args]`: Adds locations to already explored areas. `chance` determines how many of the locations are added.
+- `locations_clean [...args]`: Removes missing locations.
 - `locations_list [id1,id2,...] [...args]`: Lists locations showing their position and biome.
 - `location_register [id] [x,z,y=player position]`: Registers a location to the database (without spawning it). If the location already exists, then its position is automatically used.
 - `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used). `chance` determines how many of the locations are removed.
 - `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout. `chance` determines how many of the locations are reseted.
 - `locations_swap [new id,id1,id2,...] [...args]`: Replaces locations with a new one.
+- `objects_clean [...args]`:
+  - Clears spawn data from zone controls.
+  - Optimizes dungeons.
+  - Removes missing objects from armor stands, chests, item stands and the world.
 - `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. Parameter `count=1` can be used to exclude non-existing objects.
 - `objects_edit [id1,id2,...] [data=key,value,type] [...args]`: Edits data of objects.
 - `objects_list [id1,id2,...] [print=key,type] [...args]`: Lists objects showing their position and biome. `print` allows displaying custom data.
@@ -116,11 +121,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation. `chance` directly scales the min and max amounts (bigger values work too).
 - `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation. `chance` determines how many of the vegetation are removed and directly scales the min and max amounts.
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
-- `world_clean`:
-  - Clears spawn data from zone controls.
-  - Optimizes dungeons.
-  - Removes missing objects from armor stands, chests, item stands and the world.
-  - Removes missing locations.
+- `world_clean`: Combines `objects_clean` and `locations_clean` to fully clean the world.
 - `world_gen [legacy/hh/mistlands] [start]`: Sets the world generation version.
 - `world_reset [...args]`: Resets locations and zones.
 - `zones_generate [...args]`: Pre-generates areas without having to visit them.

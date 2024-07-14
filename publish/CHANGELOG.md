@@ -1,4 +1,5 @@
 - v1.56
+  - Adds new commands `locations_clean` and `objects_clean` as a smaller version of `world_clean`.
   - Fixes the command `world_clean` removing Expand World Data blueprint locations.
   - Fixes autocomplete showing duplicate values if the same location has multiple entries.
   - Fixes the command `locations_add` not adding all locations if the location has multiple entries.
