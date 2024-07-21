@@ -112,8 +112,13 @@ public class SetCommands
     new WorldCleanCommand();
     new LocationsSwapCommand();
     new TempleVersionCommand();
-    new LocationsCleanCommand();
-    new ObjectsCleanCommand();
+    new CleanChestsCommand();
+    new CleanDungeonsCommand();
+    new CleanObjectsCommand();
+    new CleanLocationsCommand();
+    new CleanHealthCommand();
+    new CleanSpawnsCommand();
+    new CleanStandsCommand();
     if (Terminal.commands.TryGetValue("genloc", out var genloc))
     {
       genloc.IsCheat = false;

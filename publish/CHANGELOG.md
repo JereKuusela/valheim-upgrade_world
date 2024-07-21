@@ -1,8 +1,10 @@
 - v1.56
-  - Adds new commands `locations_clean` and `objects_clean` as a smaller version of `world_clean`.
+  - Adds new `clean_*` commands as individual clean operations.
+  - Adds a new command `clean_health` to remove excess health data from creatures and structures.
   - Fixes the command `world_clean` removing Expand World Data blueprint locations.
   - Fixes autocomplete showing duplicate values if the same location has multiple entries.
   - Fixes the command `locations_add` not adding all locations if the location has multiple entries.
+  - Fixes pins not working with the command `world_clean`.
 
 - v1.55
   - Fixes the command `chests_search` not working.

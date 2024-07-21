@@ -9,8 +9,14 @@ public class WorldCleanCommand
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      new CleanLocations(args.Context, pars);
-      new CleanObjects(args.Context, pars);
+      var zdos = EntityOperation.GetZDOs(pars);
+      new CleanLocations(args.Context, zdos, pars.Pin);
+      new CleanObjects(args.Context, zdos, pars.Pin);
+      new CleanChests(args.Context, zdos, pars.Pin);
+      new CleanStands(args.Context, zdos, pars.Pin);
+      new CleanDungeons(args.Context, zdos, pars.Pin);
+      new CleanSpawns(args.Context, zdos, pars.Pin);
+      new CleanHealth(args.Context, zdos, pars.Pin);
     });
   }
 }

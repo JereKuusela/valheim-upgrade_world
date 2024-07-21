@@ -7,6 +7,7 @@ namespace UpgradeWorld;
 ///<summary>Base class for entity related operations. Provides some utilities.</summary>
 public abstract class EntityOperation(Terminal context, bool pin) : BaseOperation(context, pin)
 {
+  protected static string S(int i) => i > 1 ? "s" : "";
   private static bool IsIncluded(string id, string name)
   {
     if (id == "*") return true;

@@ -2,17 +2,16 @@ using System.Linq;
 using SoftReferenceableAssets;
 
 namespace UpgradeWorld;
-/// <summary>Removes missing objects.</summary>
+/// <summary>Removes missing location objects.</summary>
 public class CleanLocations : EntityOperation
 {
-  public CleanLocations(Terminal context, FiltererParameters args) : base(context, args.Pin)
+  public CleanLocations(Terminal context, ZDO[] zdos, bool pin) : base(context, pin)
   {
-    Clean(args);
+    Clean(zdos);
   }
 
-  private void Clean(FiltererParameters args)
+  private void Clean(ZDO[] zdos)
   {
-    var zdos = GetZDOs(args);
     var scene = ZNetScene.instance;
     var zs = ZoneSystem.instance;
     var toRemove = zs.m_locationInstances.Where(x =>
@@ -36,7 +35,7 @@ public class CleanLocations : EntityOperation
       removed++;
     }
     if (removed > 0)
-      Print($"Removed {removed} missing location objects.");
+      Print($"Removed {removed} missing location object{S(removed)}.");
     Print("Locations cleaned.");
   }
 }
