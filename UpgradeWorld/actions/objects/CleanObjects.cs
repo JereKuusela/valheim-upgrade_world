@@ -2,12 +2,12 @@ namespace UpgradeWorld;
 /// <summary>Removes missing objects from the world.</summary>
 public class CleanObjects : EntityOperation
 {
-  public CleanObjects(Terminal context, ZDO[] zdos, bool pin) : base(context, pin)
+  public CleanObjects(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
   {
-    Clean(zdos);
+    Clean(zdos, alwaysPrint);
   }
 
-  private void Clean(ZDO[] zdos)
+  private void Clean(ZDO[] zdos, bool alwaysPrint)
   {
     var scene = ZNetScene.instance;
 
@@ -19,7 +19,7 @@ public class CleanObjects : EntityOperation
       Helper.RemoveZDO(zdo);
       removed++;
     }
-    if (removed > 0)
+    if (alwaysPrint || removed > 0)
       Print($"Removed {removed} missing object{S(removed)}.");
   }
 

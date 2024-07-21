@@ -5,12 +5,12 @@ namespace UpgradeWorld;
 /// <summary>Removes missing location objects.</summary>
 public class CleanLocations : EntityOperation
 {
-  public CleanLocations(Terminal context, ZDO[] zdos, bool pin) : base(context, pin)
+  public CleanLocations(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
   {
-    Clean(zdos);
+    Clean(zdos, alwaysPrint);
   }
 
-  private void Clean(ZDO[] zdos)
+  private void Clean(ZDO[] zdos, bool alwaysPrint)
   {
     var scene = ZNetScene.instance;
     var zs = ZoneSystem.instance;
@@ -23,7 +23,7 @@ public class CleanLocations : EntityOperation
     }).Select(x => x.Key).ToList();
     foreach (var zone in toRemove)
       zs.m_locationInstances.Remove(zone);
-    if (toRemove.Count > 0)
+    if (alwaysPrint || toRemove.Count > 0)
       Print($"Removed {toRemove.Count} missing location entries.");
 
     var removed = 0;
@@ -34,8 +34,7 @@ public class CleanLocations : EntityOperation
       Helper.RemoveZDO(zdo);
       removed++;
     }
-    if (removed > 0)
+    if (alwaysPrint || removed > 0)
       Print($"Removed {removed} missing location object{S(removed)}.");
-    Print("Locations cleaned.");
   }
 }

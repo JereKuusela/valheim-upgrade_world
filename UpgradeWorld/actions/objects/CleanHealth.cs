@@ -5,12 +5,12 @@ namespace UpgradeWorld;
 /// <summary>Removes excess health data from creatures and structures.</summary>
 public class CleanHealth : EntityOperation
 {
-  public CleanHealth(Terminal context, ZDO[] zdos, bool pin) : base(context, pin)
+  public CleanHealth(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
   {
-    Clean(zdos);
+    Clean(zdos, alwaysPrint);
   }
 
-  private void Clean(ZDO[] zdos)
+  private void Clean(ZDO[] zdos, bool alwaysPrint)
   {
     var scene = ZNetScene.instance;
     FindPrefabs();
@@ -29,7 +29,7 @@ public class CleanHealth : EntityOperation
       zdo.IncreaseDataRevision();
       updated++;
     }
-    if (updated > 0)
+    if (alwaysPrint || updated > 0)
       Print($"Cleared {updated} health value{S(updated)} from structure.");
 
     updated = 0;
@@ -45,7 +45,7 @@ public class CleanHealth : EntityOperation
       zdo.IncreaseDataRevision();
       updated++;
     }
-    if (updated > 0)
+    if (alwaysPrint || updated > 0)
       Print($"Cleared {updated} health value{S(updated)} from creatures.");
 
   }

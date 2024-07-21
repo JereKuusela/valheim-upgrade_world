@@ -10,7 +10,7 @@ public class CleanLocationsCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       var zdos = EntityOperation.GetZDOs(pars);
-      new CleanLocations(args.Context, zdos, pars.Pin);
+      new CleanLocations(args.Context, zdos, pars.Pin, true);
     });
   }
 }

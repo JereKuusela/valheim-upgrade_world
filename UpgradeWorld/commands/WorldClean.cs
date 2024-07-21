@@ -10,13 +10,14 @@ public class WorldCleanCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       var zdos = EntityOperation.GetZDOs(pars);
-      new CleanLocations(args.Context, zdos, pars.Pin);
-      new CleanObjects(args.Context, zdos, pars.Pin);
-      new CleanChests(args.Context, zdos, pars.Pin);
-      new CleanStands(args.Context, zdos, pars.Pin);
-      new CleanDungeons(args.Context, zdos, pars.Pin);
-      new CleanSpawns(args.Context, zdos, pars.Pin);
-      new CleanHealth(args.Context, zdos, pars.Pin);
+      new CleanLocations(args.Context, zdos, pars.Pin, false);
+      new CleanObjects(args.Context, zdos, pars.Pin, false);
+      new CleanChests(args.Context, zdos, pars.Pin, false);
+      new CleanStands(args.Context, zdos, pars.Pin, false);
+      new CleanDungeons(args.Context, zdos, pars.Pin, false);
+      new CleanSpawns(args.Context, zdos, pars.Pin, false);
+      new CleanHealth(args.Context, zdos, pars.Pin, false);
+      args.Context.AddString("World cleaned.");
     });
   }
 }

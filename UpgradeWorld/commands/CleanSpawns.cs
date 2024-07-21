@@ -10,7 +10,7 @@ public class CleanSpawnsCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       var zdos = EntityOperation.GetZDOs(pars);
-      new CleanSpawns(args.Context, zdos, pars.Pin);
+      new CleanSpawns(args.Context, zdos, pars.Pin, true);
     });
   }
 }

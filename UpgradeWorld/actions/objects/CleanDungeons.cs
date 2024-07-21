@@ -3,12 +3,12 @@ namespace UpgradeWorld;
 /// <summary>Optimizes old dungeons.</summary>
 public class CleanDungeons : EntityOperation
 {
-  public CleanDungeons(Terminal context, ZDO[] zdos, bool pin) : base(context, pin)
+  public CleanDungeons(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
   {
-    Clean(zdos);
+    Clean(zdos, alwaysPrint);
   }
 
-  private void Clean(ZDO[] zdos)
+  private void Clean(ZDO[] zdos, bool alwaysPrint)
   {
     var updated = 0;
     foreach (var zdo in zdos)
@@ -20,7 +20,7 @@ public class CleanDungeons : EntityOperation
       Print($"Optimized dungeon at {Helper.PrintVectorXZY(zdo.GetPosition())}.");
       updated++;
     }
-    if (updated > 0)
+    if (alwaysPrint || updated > 0)
       Print($"Optimized {updated} dungeon{S(updated)}.");
 
   }

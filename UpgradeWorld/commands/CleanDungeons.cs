@@ -10,7 +10,7 @@ public class CleanDungeonsCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       var zdos = EntityOperation.GetZDOs(pars);
-      new CleanDungeons(args.Context, zdos, pars.Pin);
+      new CleanDungeons(args.Context, zdos, pars.Pin, true);
     });
   }
 }

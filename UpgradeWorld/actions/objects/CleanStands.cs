@@ -3,12 +3,12 @@ namespace UpgradeWorld;
 /// <summary>Removes missing objects from armor and item stands.</summary>
 public class CleanStands : EntityOperation
 {
-  public CleanStands(Terminal context, ZDO[] zdos, bool pin) : base(context, pin)
+  public CleanStands(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
   {
-    Clean(zdos);
+    Clean(zdos, alwaysPrint);
   }
 
-  private void Clean(ZDO[] zdos)
+  private void Clean(ZDO[] zdos, bool alwaysPrint)
   {
     var removed = 0;
     foreach (var zdo in zdos)
@@ -37,7 +37,7 @@ public class CleanStands : EntityOperation
       if (removed > r)
         AddPin(zdo.m_position);
     }
-    if (removed > 0)
+    if (alwaysPrint || removed > 0)
       Print($"Removed {removed} missing object{S(removed)} from armor stands");
 
     removed = 0;
@@ -49,7 +49,7 @@ public class CleanStands : EntityOperation
         removed++;
       }
     }
-    if (removed > 0)
+    if (alwaysPrint || removed > 0)
       Print($"Removed {removed} missing object{S(removed)} from item stands");
   }
 

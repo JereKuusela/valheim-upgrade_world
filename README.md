@@ -94,7 +94,10 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `clean_chests [...args]`: Removes missing objects from chests.
 - `clean_dungeons [...args]`: Optimizes old dungeons.
 - `clean_health [...args]`: Removes excess health data from creatures and structures.
-  - Note: May not work correctly if another mod modifies the creature or structure maximum health.
+  - This removes the current health if it equals the maximum health. When current health is missing, the game uses the maximum health as the default value.
+  - This will affect creatures that have taken damage but healed back to full health.
+  - This will affect structures that have taken damage but repaired back to full health.
+  - Note: May not work correctly if another mod modifies the maximum health.
 - `clean_locations [...args]`: Removes missing locations from the world and from the location database.
 - `clean_objects [...args]`: Removes missing objects from the world.
 - `clean_spawns [...args]`: Removes timestamps from the spawn system.

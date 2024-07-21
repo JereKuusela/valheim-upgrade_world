@@ -3,12 +3,12 @@ namespace UpgradeWorld;
 /// <summary>Removes timestamps from the spawn system.</summary>
 public class CleanSpawns : EntityOperation
 {
-  public CleanSpawns(Terminal context, ZDO[] zdos, bool pin) : base(context, pin)
+  public CleanSpawns(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
   {
-    Clean(zdos);
+    Clean(zdos, alwaysPrint);
   }
 
-  private void Clean(ZDO[] zdos)
+  private void Clean(ZDO[] zdos, bool alwaysPrint)
   {
     var zs = ZoneSystem.instance;
     var prefab = zs.m_zoneCtrlPrefab;
@@ -28,7 +28,7 @@ public class CleanSpawns : EntityOperation
       zdo.IncreaseDataRevision();
       reseted++;
     }
-    if (count > 0)
+    if (alwaysPrint || count > 0)
       Print($"Cleared {count} spawn data from {reseted} zone control{S(reseted)}.");
   }
 }

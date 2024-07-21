@@ -10,7 +10,7 @@ public class CleanStandsCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       var zdos = EntityOperation.GetZDOs(pars);
-      new CleanStands(args.Context, zdos, pars.Pin);
+      new CleanStands(args.Context, zdos, pars.Pin, true);
     });
   }
 }

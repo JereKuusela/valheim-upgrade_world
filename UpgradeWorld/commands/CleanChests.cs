@@ -10,7 +10,7 @@ public class CleanChestsCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       var zdos = EntityOperation.GetZDOs(pars);
-      new CleanChests(args.Context, zdos, pars.Pin);
+      new CleanChests(args.Context, zdos, pars.Pin, true);
     });
   }
 }

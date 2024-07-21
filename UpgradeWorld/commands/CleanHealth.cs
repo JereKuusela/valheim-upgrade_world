@@ -10,7 +10,7 @@ public class CleanHealthCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       var zdos = EntityOperation.GetZDOs(pars);
-      new CleanHealth(args.Context, zdos, pars.Pin);
+      new CleanHealth(args.Context, zdos, pars.Pin, true);
     });
   }
 }

@@ -3,12 +3,12 @@ namespace UpgradeWorld;
 /// <summary>Removes missing objects from chests.</summary>
 public class CleanChests : EntityOperation
 {
-  public CleanChests(Terminal context, ZDO[] zdos, bool pin) : base(context, pin)
+  public CleanChests(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
   {
-    Clean(zdos);
+    Clean(zdos, alwaysPrint);
   }
 
-  private void Clean(ZDO[] zdos)
+  private void Clean(ZDO[] zdos, bool alwaysPrint)
   {
     var removed = 0;
     foreach (var zdo in zdos)
@@ -25,7 +25,7 @@ public class CleanChests : EntityOperation
         zdo.SetOwner(ZDOMan.GetSessionID());
       zdo.Set(ZDOVars.s_items, savePackage.GetBase64());
     }
-    if (removed > 0)
+    if (alwaysPrint || removed > 0)
       Print($"Removed {removed} missing object{S(removed)} from chests");
   }
 
