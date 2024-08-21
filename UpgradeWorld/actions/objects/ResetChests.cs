@@ -36,12 +36,6 @@ public class ResetChests : EntityOperation
     var zdos = GetZDOs(args, [.. prefabs.Keys]);
     foreach (var zdo in zdos)
     {
-      if (!args.Roll())
-      {
-        if (Settings.Verbose)
-          Print("Skipping a chest: Random roll.");
-        continue;
-      }
       totalChests++;
       if (!zdo.GetBool(ZDOVars.s_addedDefaultItems))
       {

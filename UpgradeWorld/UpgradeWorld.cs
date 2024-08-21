@@ -9,7 +9,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.56";
+  const string VERSION = "1.57";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable

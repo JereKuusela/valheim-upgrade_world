@@ -1,3 +1,6 @@
+- v1.57
+  - Fixes chance not working with the command `locations_reset` (this might break chance with other commands).
+
 - v1.56
   - Adds new `clean_*` commands as individual clean operations.
   - Adds a new command `clean_health` to remove excess health data from creatures and structures.

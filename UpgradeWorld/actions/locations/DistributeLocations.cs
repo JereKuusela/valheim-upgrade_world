@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 
 namespace UpgradeWorld;
 /// <summary>Distributes given location ids to already generated zones.</summary>

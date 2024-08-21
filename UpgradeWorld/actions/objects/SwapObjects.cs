@@ -18,7 +18,6 @@ public class SwapObjects : EntityOperation
     var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);
     foreach (var zdo in allZdos)
     {
-      if (!args.Roll()) continue;
       if (zdo.m_prefab == toSwap) continue;
       counts[zdo.m_prefab] += 1;
       total += 1;

@@ -17,7 +17,6 @@ public class ResetZones : ZoneOperation
   private int Reseted = 0;
   protected override bool ExecuteZone(Vector2i zone)
   {
-    if (!Args.Roll()) return true;
     var zoneSystem = ZoneSystem.instance;
     var scene = ZNetScene.instance;
     var sectorObjects = Helper.GetZDOs(zone);

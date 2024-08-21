@@ -28,7 +28,6 @@ public class RemoveLocations : ExecutedOperation
     var removed = 0;
     foreach (var zdo in zdos)
     {
-      if (!Args.Roll()) continue;
       var zone = zs.GetZone(zdo.GetPosition());
       var name = "???";
       if (zs.m_locationsByHash.TryGetValue(zdo.GetInt(LocationHash), out var location))
@@ -78,7 +77,6 @@ public class RemoveLocations : ExecutedOperation
     var removed = 0;
     foreach (var zone in notSpawnedZones)
     {
-      if (!Args.Roll()) continue;
       if (!zs.m_locationInstances.TryGetValue(zone, out var location)) continue;
       removed++;
       AddPin(location.m_position);

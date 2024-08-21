@@ -63,7 +63,7 @@ public class FiltererParameters
         else if (name == "zone") Zone = Parse.Zone(value);
         else if (name == "min" || name == "mindistance") MinDistance = Parse.Float(value);
         else if (name == "max" || name == "maxdistance") MaxDistance = Parse.Float(value);
-        else if (name == "chance") Chance = Parse.Float(value) / 100f;
+        else if (name == "chance") Chance = Parse.Float(value);
         else if (name == "terrain") TerrainReset = Parse.Float(value);
         else if (name == "clear") ObjectReset = Parse.Float(value);
         else if (name == "distance")
@@ -82,6 +82,7 @@ public class FiltererParameters
       else if (name == "force") SafeZones = 0;
       else Unhandled.Add(par);
     }
+    if (Chance > 1f) Chance /= 100f;
     if (!Zone.HasValue && !Pos.HasValue)
       Pos = new(0, 0);
   }
@@ -131,7 +132,7 @@ public class FiltererParameters
     return true;
   }
   public virtual IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, bool checkExcludedZones) => zdos
-    .Where(zdo => FilterPosition(zdo.GetPosition(), checkExcludedZones));
+    .Where(zdo => FilterPosition(zdo.GetPosition(), checkExcludedZones) && Roll());
 
   public IEnumerable<ZDO> LimitZdos(IEnumerable<ZDO> zdos)
   {

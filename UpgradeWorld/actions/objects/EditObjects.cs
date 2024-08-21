@@ -36,7 +36,6 @@ public class EditObjects : EntityOperation
     var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);
     foreach (var zdo in zdos)
     {
-      if (!args.Roll()) continue;
       if (!SetData(zdo, args.Datas))
         continue;
       counts[zdo.m_prefab] += 1;

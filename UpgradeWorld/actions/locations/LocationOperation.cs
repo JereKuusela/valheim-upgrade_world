@@ -12,7 +12,6 @@ public abstract class LocationOperation : ZoneOperation
   }
   protected override bool ExecuteZone(Vector2i zone)
   {
-    if (Attempts == 0 && !Args.Roll()) return true;
     var zoneSystem = ZoneSystem.instance;
     var locations = zoneSystem.m_locationInstances;
     if (!locations.TryGetValue(zone, out var location)) return true;

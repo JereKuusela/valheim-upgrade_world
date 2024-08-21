@@ -16,7 +16,6 @@ public class SwapLocations : EntityOperation
     var zdos = GetZDOs(args).Where(zdo => LocationProxyHash == zdo.m_prefab).ToArray();
     foreach (var zdo in zdos)
     {
-      if (!args.Roll()) continue;
       if (!prefabs.Contains(zdo.GetInt(LocationHash))) continue;
       swappedObjects++;
       if (!zdo.IsOwner())
