@@ -1,3 +1,6 @@
+- v1.58
+  - Fixed for the new update.
+
 - v1.57
   - Fixes chance not working with the command `locations_reset` (this might break chance with other commands).
 

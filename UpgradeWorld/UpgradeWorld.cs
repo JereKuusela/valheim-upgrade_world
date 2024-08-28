@@ -9,7 +9,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.57";
+  const string VERSION = "1.58";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -102,7 +102,7 @@ public class SetCommands
     new StartStopCommand();
     new UpgradeCommand();
     new VerboseCommand();
-    new VegetationResetCommand();
+    //new VegetationResetCommand();
     new VegetationAddCommand();
     new SavingCommands();
     new BackupCommand();

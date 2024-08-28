@@ -22,6 +22,8 @@ public static class Settings
   public static bool AutoStart => configAutoStart.Value;
   public static ConfigEntry<int> configWorldRadius;
   public static int WorldRadius => configWorldRadius.Value;
+  public static ConfigEntry<int> configWorldEdge;
+  public static int WorldEdge => configWorldEdge.Value;
   public static ConfigEntry<string> configSafeZoneItems;
   public static HashSet<int> SafeZoneItems => configSafeZoneItems.Value.Split(',').Select(name => name.Trim().GetStableHashCode()).ToHashSet();
   public static ConfigEntry<string> configSafeZoneObjects;
@@ -58,6 +60,7 @@ public static class Settings
     configVerbose = config.Bind(section, "Verbose output", false, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
     configAutoStart = config.Bind(section, "Automatic start", false, "If true, operations start automatically without having to use the start command.");
     configWorldRadius = config.Bind(section, "World radius", 10500, "Max radius for operations.");
+    configWorldRadius = config.Bind(section, "World edge", 500, "Size of world edge.");
     configWorldRadius.SettingChanged += (sender, args) => Zones.ResetAllZones();
     configSafeZoneItems = config.Bind(section, "Safe zone items", "blastfurnace,bonfire,charcoal_kiln,fermenter,fire_pit,forge,guard_stone,hearth,piece_artisanstation,piece_bed02,piece_brazierceiling01,piece_groundtorch,piece_groundtorch_blue,piece_groundtorch_green,piece_groundtorch_wood,piece_oven,piece_spinningwheel,piece_stonecutter,piece_walltorch,piece_workbench,portal,portal_wood,smelter,windmill,piece_chest,piece_chest_blackmetal,piece_chest_private,piece_chest_treasure,piece_chest_wood", "List of player placed objects that prevent zones being modified.");
     configSafeZoneObjects = config.Bind(section, "Safe zone objects", "Player_tombstone", "List of object ids that prevent zones being modified.");

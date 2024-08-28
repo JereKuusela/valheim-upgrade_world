@@ -18,7 +18,6 @@ public abstract class VegetationOperation : ZoneOperation
   {
     OriginalVegetation = ZoneSystem.instance.m_vegetation;
     ZoneSystem.instance.m_vegetation = ZoneSystem.instance.m_vegetation.Select(veg => veg.Clone()).ToList();
-    if (Args.Chance != 1f) ApplyChance(Args.Chance);
     if (Ids.Count > 0)
       Set(GetWithOnlyIds(Ids, true));
   }
@@ -34,15 +33,6 @@ public abstract class VegetationOperation : ZoneOperation
   {
     var vegs = ZoneSystem.instance.m_vegetation;
     for (var i = 0; i < vegs.Count; i++) vegs[i].m_enable = values[i];
-  }
-  public static void ApplyChance(float chance)
-  {
-    var vegs = ZoneSystem.instance.m_vegetation;
-    for (var i = 0; i < vegs.Count; i++)
-    {
-      vegs[i].m_min *= chance;
-      vegs[i].m_max *= chance;
-    }
   }
 
 

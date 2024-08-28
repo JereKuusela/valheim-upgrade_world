@@ -1,0 +1,53 @@
+using System.Collections.Generic;
+using System.Linq;
+
+namespace UpgradeWorld;
+/*
+/// <summary>Removes given entity ids within a given distance.</summary>
+public class ResetVegetation : VegetationOperation
+{
+  protected int Removed = 0;
+  public HashSet<string> Hashes = [];
+  public ResetVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, ids, args)
+  {
+    ZonesPerUpdate = Settings.DestroysPerUpdate;
+    Operation = "Reset vegetation";
+    InitString = args.Print($"Reset vegetation{Helper.IdString(ids)} from");
+    args.TargetZones = TargetZones.Generated;
+    Filterers = FiltererFactory.Create(args);
+    // No parameter -> all vegetation.
+    if (ids.Count == 0)
+      ids = ZoneSystem.instance.m_vegetation.Select(veg => veg.m_prefab.name).ToHashSet();
+    // Automatically clean up fractions as well.
+    foreach (var id in Ids)
+    {
+      if (ZNetScene.instance.GetPrefab(id + "_frac"))
+        Ids.Add(id + "_frac");
+    }
+  }
+  protected override bool ExecuteZone(Vector2i zone)
+  {
+    Remove(zone);
+    return true;
+  }
+  protected void Remove(Vector2i zone)
+  {
+    var zdos = Helper.GetZDOs(zone);
+    if (zdos == null) return;
+    foreach (var zdo in zdos)
+    {
+      if (!Args.Roll()) continue;
+      if (!Ids.Contains(zdo.m_prefab)) continue;
+      AddPin(zdo.GetPosition());
+      Helper.RemoveZDO(zdo);
+      Removed++;
+    }
+  }
+  protected override void OnEnd()
+  {
+    var text = $"{Operation} completed. {Removed} vegetations removed.";
+    if (Failed > 0) text += " " + Failed + " errors.";
+    Print(text);
+  }
+}
+*/
