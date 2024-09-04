@@ -6,7 +6,7 @@ namespace UpgradeWorld;
 public class RemoveVegetation : ZoneOperation
 {
   protected int Removed = 0;
-  private readonly HashSet<int> Ids = [];
+  private readonly HashSet<int> Hashes = [];
   public RemoveVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args)
   {
     ZonesPerUpdate = Settings.DestroysPerUpdate;
@@ -17,12 +17,12 @@ public class RemoveVegetation : ZoneOperation
     // No parameter -> all vegetation.
     if (ids.Count == 0)
       ids = ZoneSystem.instance.m_vegetation.Select(veg => veg.m_prefab.name).ToHashSet();
-    Ids = ids.Select(id => id.GetStableHashCode()).ToHashSet();
+    Hashes = ids.Select(id => id.GetStableHashCode()).ToHashSet();
     // Automatically clean up fractions as well.
     foreach (var id in ids)
     {
       if (ZNetScene.instance.GetPrefab(id + "_frac"))
-        Ids.Add((id + "_frac").GetStableHashCode());
+        Hashes.Add((id + "_frac").GetStableHashCode());
     }
   }
   protected override bool ExecuteZone(Vector2i zone)
@@ -37,7 +37,7 @@ public class RemoveVegetation : ZoneOperation
     foreach (var zdo in zdos)
     {
       if (!Args.Roll()) continue;
-      if (!Ids.Contains(zdo.m_prefab)) continue;
+      if (!Hashes.Contains(zdo.m_prefab)) continue;
       AddPin(zdo.GetPosition());
       Helper.RemoveZDO(zdo);
       Removed++;

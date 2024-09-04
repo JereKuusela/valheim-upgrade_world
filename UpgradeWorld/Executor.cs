@@ -33,6 +33,7 @@ public static class Executor
     operations.Clear();
     DoClean();
     ShouldExecute = false;
+    LoadingIndicator.SetProgressVisibility(false);
   }
   private static DateTime LastCommand = DateTime.MinValue;
   public static void Execute()

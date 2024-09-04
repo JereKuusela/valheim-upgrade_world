@@ -125,8 +125,9 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `time_set [seconds]`: Sets the world time and updates object timestamps.
 - `time_set_day [days]`: Sets the world time and updates object timestamps.
 - `upgrade [operation] [...args]`: Short-hand for using common operations (mainly to add new content).
-- `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation. `chance` directly scales the min and max amounts (bigger values work too).
-- `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation. `chance` determines how many of the vegetation are removed and directly scales the min and max amounts.
+- `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation.
+- `vegetation_remove [id1,id2,...] [...args]`: Removes vegetation from generated areas. If ids are not given, removes every vegetation.
+- `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation.
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
 - `world_clean`: Combines all `clean_*` commands to fully clean the world.
 - `world_gen [legacy/hh/mistlands] [start]`: Sets the world generation version.

@@ -32,6 +32,7 @@ public class DistributeLocations : ExecutedOperation
     // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
     if (Attempts == 0)
     {
+      LoadingIndicator.SetProgressVisibility(true);
       Print($"Generating locations {Ids[Attempts]}. This may take a while...");
       return false;
     }
@@ -60,8 +61,10 @@ public class DistributeLocations : ExecutedOperation
       Total += Count(id);
       Added += zs.m_locationInstances.Count - before;
       SpawnToAlreadyGenerated = false;
+      LoadingIndicator.SetProgress(Attempts / (float)Ids.Length);
       return false;
     }
+    LoadingIndicator.SetProgressVisibility(false);
     return true;
   }
   private void ClearNotSpawned(string id)
@@ -98,77 +101,77 @@ public class DistributeLocations : ExecutedOperation
     float maxRadius = Mathf.Max(location.m_exteriorRadius, location.m_interiorRadius);
     int attempts = location.m_prioritized ? 200000 : 100000;
     int placed = zs.CountNrOfLocation(location);
+    if (location.m_unique && placed > 0) return;
     float maxRange = Settings.WorldRadius - Settings.WorldEdge;
     if (location.m_centerFirst)
       maxRange = location.m_minDistance;
-    if (!location.m_unique || placed <= 0)
+
+    zs.s_tempVeg.Clear();
+    int i = 0;
+    while (i < attempts && placed < location.m_quantity)
     {
-      zs.s_tempVeg.Clear();
-      int i = 0;
-      while (i < attempts && placed < location.m_quantity)
+      i += 1;
+      Vector2i zoneID = zs.GetRandomZone(maxRange);
+      if (location.m_centerFirst)
+        maxRange += 1f;
+      if (zs.m_locationInstances.ContainsKey(zoneID)) continue;
+      if (zs.IsZoneGenerated(zoneID)) continue;
+      Vector3 zonePos = zs.GetZonePos(zoneID);
+      Heightmap.BiomeArea biomeArea = WorldGenerator.instance.GetBiomeArea(zonePos);
+      if ((location.m_biomeArea & biomeArea) == 0) continue;
+
+      for (int j = 0; j < 20; j += 1)
       {
-        Vector2i zoneID = zs.GetRandomZone(maxRange);
-        if (location.m_centerFirst)
-          maxRange += 1f;
-        if (zs.m_locationInstances.ContainsKey(zoneID)) continue;
-        if (zs.IsZoneGenerated(zoneID)) continue;
-        Vector3 zonePos = zs.GetZonePos(zoneID);
-        Heightmap.BiomeArea biomeArea = WorldGenerator.instance.GetBiomeArea(zonePos);
-        if ((location.m_biomeArea & biomeArea) == 0) continue;
+        Vector3 randomPointInZone = zs.GetRandomPointInZone(zoneID, maxRadius);
+        float magnitude = randomPointInZone.magnitude;
+        if (location.m_minDistance != 0f && magnitude < location.m_minDistance) continue;
+        if (location.m_maxDistance != 0f && magnitude > location.m_maxDistance) continue;
+        Heightmap.Biome biome = WorldGenerator.instance.GetBiome(randomPointInZone);
+        if ((location.m_biome & biome) == Heightmap.Biome.None) continue;
 
-        for (int j = 0; j < 20; j += 1)
+        randomPointInZone.y = WorldGenerator.instance.GetHeight(randomPointInZone.x, randomPointInZone.z, out var color);
+        float num2 = (float)(randomPointInZone.y - 30.0);
+        if (num2 < location.m_minAltitude || num2 > location.m_maxAltitude) continue;
+
+        if (location.m_inForest)
         {
-          Vector3 randomPointInZone = zs.GetRandomPointInZone(zoneID, maxRadius);
-          float magnitude = randomPointInZone.magnitude;
-          if (location.m_minDistance != 0f && magnitude < location.m_minDistance) continue;
-          if (location.m_maxDistance != 0f && magnitude > location.m_maxDistance) continue;
-          Heightmap.Biome biome = WorldGenerator.instance.GetBiome(randomPointInZone);
-          if ((location.m_biome & biome) == Heightmap.Biome.None) continue;
-
-          randomPointInZone.y = WorldGenerator.instance.GetHeight(randomPointInZone.x, randomPointInZone.z, out var color);
-          float num2 = (float)(randomPointInZone.y - 30.0);
-          if (num2 < location.m_minAltitude || num2 > location.m_maxAltitude) continue;
-
-          if (location.m_inForest)
-          {
-            float forestFactor = WorldGenerator.GetForestFactor(randomPointInZone);
-            if (forestFactor < location.m_forestTresholdMin || forestFactor > location.m_forestTresholdMax) continue;
-          }
-          WorldGenerator.instance.GetTerrainDelta(randomPointInZone, location.m_exteriorRadius, out var num3, out var vector);
-          if (num3 > location.m_maxTerrainDelta || num3 < location.m_minTerrainDelta) continue;
-          if (location.m_minDistanceFromSimilar > 0f && zs.HaveLocationInRange(location.m_prefab.Name, location.m_group, randomPointInZone, location.m_minDistanceFromSimilar, false)) continue;
-          if (location.m_maxDistanceFromSimilar > 0f && !zs.HaveLocationInRange(location.m_prefabName, location.m_groupMax, randomPointInZone, location.m_maxDistanceFromSimilar, true)) continue;
-
-          float a = color.a;
-          if (location.m_minimumVegetation > 0f && a <= location.m_minimumVegetation) continue;
-          if (location.m_maximumVegetation < 1f && a >= location.m_maximumVegetation) continue;
-
-          if (location.m_surroundCheckVegetation)
-          {
-            float num4 = 0f;
-            for (int k = 0; k < location.m_surroundCheckLayers; k++)
-            {
-              float num5 = (k + 1) / (float)location.m_surroundCheckLayers * location.m_surroundCheckDistance;
-              for (int l = 0; l < 6; l++)
-              {
-                float f = l / 6f * 3.1415927f * 2f;
-                Vector3 vector2 = randomPointInZone + new Vector3(Mathf.Sin(f) * num5, 0f, Mathf.Cos(f) * num5);
-                WorldGenerator.instance.GetHeight(vector2.x, vector2.z, out var color2);
-                float num6 = (location.m_surroundCheckDistance - num5) / (location.m_surroundCheckDistance * 2f);
-                num4 += color2.a * num6;
-              }
-            }
-            zs.s_tempVeg.Add(num4);
-            if (zs.s_tempVeg.Count < 10) continue;
-            float num7 = zs.s_tempVeg.Max();
-            float num8 = zs.s_tempVeg.Average();
-            float num9 = num8 + (num7 - num8) * location.m_surroundBetterThanAverage;
-            if (num4 < num9) continue;
-          }
-          zs.RegisterLocation(location, randomPointInZone, false);
-          placed += 1;
-          break;
+          float forestFactor = WorldGenerator.GetForestFactor(randomPointInZone);
+          if (forestFactor < location.m_forestTresholdMin || forestFactor > location.m_forestTresholdMax) continue;
         }
+        WorldGenerator.instance.GetTerrainDelta(randomPointInZone, location.m_exteriorRadius, out var num3, out var vector);
+        if (num3 > location.m_maxTerrainDelta || num3 < location.m_minTerrainDelta) continue;
+        if (location.m_minDistanceFromSimilar > 0f && zs.HaveLocationInRange(location.m_prefab.Name, location.m_group, randomPointInZone, location.m_minDistanceFromSimilar, false)) continue;
+        if (location.m_maxDistanceFromSimilar > 0f && !zs.HaveLocationInRange(location.m_prefabName, location.m_groupMax, randomPointInZone, location.m_maxDistanceFromSimilar, true)) continue;
+
+        float a = color.a;
+        if (location.m_minimumVegetation > 0f && a <= location.m_minimumVegetation) continue;
+        if (location.m_maximumVegetation < 1f && a >= location.m_maximumVegetation) continue;
+
+        if (location.m_surroundCheckVegetation)
+        {
+          float num4 = 0f;
+          for (int k = 0; k < location.m_surroundCheckLayers; k++)
+          {
+            float num5 = (k + 1) / (float)location.m_surroundCheckLayers * location.m_surroundCheckDistance;
+            for (int l = 0; l < 6; l++)
+            {
+              float f = l / 6f * 3.1415927f * 2f;
+              Vector3 vector2 = randomPointInZone + new Vector3(Mathf.Sin(f) * num5, 0f, Mathf.Cos(f) * num5);
+              WorldGenerator.instance.GetHeight(vector2.x, vector2.z, out var color2);
+              float num6 = (location.m_surroundCheckDistance - num5) / (location.m_surroundCheckDistance * 2f);
+              num4 += color2.a * num6;
+            }
+          }
+          zs.s_tempVeg.Add(num4);
+          if (zs.s_tempVeg.Count < 10) continue;
+          float num7 = zs.s_tempVeg.Max();
+          float num8 = zs.s_tempVeg.Average();
+          float num9 = num8 + (num7 - num8) * location.m_surroundBetterThanAverage;
+          if (num4 < num9) continue;
+        }
+        zs.RegisterLocation(location, randomPointInZone, false);
+        placed += 1;
+        break;
       }
     }
     UnityEngine.Random.state = state;

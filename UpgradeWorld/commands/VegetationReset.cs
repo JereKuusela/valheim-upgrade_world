@@ -1,6 +1,5 @@
-using System.Linq;
 namespace UpgradeWorld;
-/*
+
 public class VegetationResetCommand
 {
   public VegetationResetCommand()
@@ -19,4 +18,3 @@ public class VegetationResetCommand
     }, optionsFetcher: VegetationOperation.GetIds);
   }
 }
-*/

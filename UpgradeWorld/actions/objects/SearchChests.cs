@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Service;
 
 namespace UpgradeWorld;
 /// <summary>Searchs objects from chests.</summary>

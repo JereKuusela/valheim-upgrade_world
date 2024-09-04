@@ -1,3 +1,10 @@
+- v1.60
+  - Adds a new command `vegetation_remove`.
+  - Fixes the command `vegetation_reset` missing.
+
+- v1.59
+  - Fixes locations adding getting stuck.
+
 - v1.58
   - Fixed for the new update.
 

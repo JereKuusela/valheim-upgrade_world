@@ -34,7 +34,7 @@ public class AddVegetation : VegetationOperation
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
   }
-  private List<ZoneSystem.ClearArea> GetClearAreas(Vector2i zone)
+  public static List<ZoneSystem.ClearArea> GetClearAreas(Vector2i zone)
   {
     List<ZoneSystem.ClearArea> clearAreas = [];
     var zs = ZoneSystem.instance;
