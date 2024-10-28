@@ -131,6 +131,8 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
 - `world_clean`: Combines all `clean_*` commands to fully clean the world.
 - `world_gen [legacy/hh/mistlands] [start]`: Sets the world generation version.
+  - Biomes will change in the outer areas.
+  - Rivers will move everywhere in the world and can destroy bases (even with the player base protection).
 - `world_reset [...args]`: Resets locations and zones.
 - `zones_generate [...args]`: Pre-generates areas without having to visit them.
 - `zones_reset [...args]`: Destroys areas making them ungenerated. These areas will be generated when visited. Can be also used to reduce save file size. `chance` determines how many of the zones are reseted.
