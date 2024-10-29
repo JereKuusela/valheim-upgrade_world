@@ -17,7 +17,7 @@ public class DistributeLocations : ExecutedOperation
   {
     Ids = [.. ids];
     if (Ids.Length == 0)
-      Ids = ZoneSystem.instance.m_locations.OrderByDescending(loc => loc.m_prioritized).Where(loc => loc.m_enable && loc.m_quantity != 0).Select(loc => loc.m_prefab.Name).ToArray();
+      Ids = ZoneSystem.instance.m_locations.Where(loc => Helper.IsValid(loc) && loc.m_enable && loc.m_quantity != 0).OrderByDescending(loc => loc.m_prioritized).Select(loc => loc.m_prefab.Name).ToArray();
     Chance = args.Chance;
     args = new(args)
     {
@@ -41,7 +41,7 @@ public class DistributeLocations : ExecutedOperation
       SpawnToAlreadyGenerated = true;
       var zs = ZoneSystem.instance;
       var id = Ids[Attempts - 1];
-      var locations = zs.m_locations.Where(location => location.m_prefab.Name == id).ToArray();
+      var locations = zs.m_locations.Where(location => Helper.IsValid(location) && location.m_prefab.Name == id).ToArray();
       if (locations.Length == 0) return false;
       // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
       if (Attempts < Ids.Length)
@@ -111,18 +111,18 @@ public class DistributeLocations : ExecutedOperation
     while (i < attempts && placed < location.m_quantity)
     {
       i += 1;
-      Vector2i zoneID = zs.GetRandomZone(maxRange);
+      Vector2i zoneID = ZoneSystem.GetRandomZone(maxRange);
       if (location.m_centerFirst)
         maxRange += 1f;
       if (zs.m_locationInstances.ContainsKey(zoneID)) continue;
       if (zs.IsZoneGenerated(zoneID)) continue;
-      Vector3 zonePos = zs.GetZonePos(zoneID);
+      Vector3 zonePos = ZoneSystem.GetZonePos(zoneID);
       Heightmap.BiomeArea biomeArea = WorldGenerator.instance.GetBiomeArea(zonePos);
       if ((location.m_biomeArea & biomeArea) == 0) continue;
 
       for (int j = 0; j < 20; j += 1)
       {
-        Vector3 randomPointInZone = zs.GetRandomPointInZone(zoneID, maxRadius);
+        Vector3 randomPointInZone = ZoneSystem.GetRandomPointInZone(zoneID, maxRadius);
         float magnitude = randomPointInZone.magnitude;
         if (location.m_minDistance != 0f && magnitude < location.m_minDistance) continue;
         if (location.m_maxDistance != 0f && magnitude > location.m_maxDistance) continue;

@@ -21,7 +21,7 @@ public class BiomeFilterer(IEnumerable<Heightmap.Biome> Biomes, bool IncludeEdge
     var halfZone = zoneSystem.m_zoneSize / 2.0f;
     return zones.Where(zone =>
     {
-      var center = zoneSystem.GetZonePos(zone);
+      var center = ZoneSystem.GetZonePos(zone);
       var corner1 = center + new Vector3(halfZone, 0f, halfZone);
       var corner2 = center + new Vector3(-halfZone, 0f, halfZone);
       var corner3 = center + new Vector3(halfZone, 0f, -halfZone);

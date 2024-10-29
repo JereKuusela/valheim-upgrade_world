@@ -28,7 +28,7 @@ public class RemoveLocations : ExecutedOperation
     var removed = 0;
     foreach (var zdo in zdos)
     {
-      var zone = zs.GetZone(zdo.GetPosition());
+      var zone = ZoneSystem.GetZone(zdo.GetPosition());
       var name = "???";
       if (zs.m_locationsByHash.TryGetValue(zdo.GetInt(LocationHash), out var location))
       {

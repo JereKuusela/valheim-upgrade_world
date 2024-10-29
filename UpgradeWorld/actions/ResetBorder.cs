@@ -19,7 +19,7 @@ public class ResetBorder : EntityOperation
     var reseted = 0;
     foreach (var zdo in zdos)
     {
-      var zone = zs.GetZone(zdo.GetPosition());
+      var zone = ZoneSystem.GetZone(zdo.GetPosition());
       if (!zones.ContainsKey(zone)) continue;
       Update(zdo, zones[zone]);
       reseted += 1;

@@ -29,7 +29,7 @@ public class PlayerBaseFilterer(int size) : IZoneFilterer
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => allIds.Contains(zdo.m_prefab) || (ids.Contains(zdo.m_prefab) && zdo.GetLong(ZDOVars.s_creator) != 0L));
     foreach (var zdo in zdos)
     {
-      var zone = ZoneSystem.instance.GetZone(zdo.GetPosition());
+      var zone = ZoneSystem.GetZone(zdo.GetPosition());
       for (var i = -adjacent; i <= adjacent; i++)
       {
         for (var j = -adjacent; j <= adjacent; j++)

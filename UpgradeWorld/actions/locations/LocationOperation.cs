@@ -36,7 +36,7 @@ public abstract class LocationOperation : ZoneOperation
   {
     var zoneSystem = ZoneSystem.instance;
     var root = zoneSystem.m_zones[zone].m_root;
-    var zonePos = ZoneSystem.instance.GetZonePos(zone);
+    var zonePos = ZoneSystem.GetZonePos(zone);
     var heightmap = Zones.GetHeightmap(root);
     Helper.ClearAreaForLocation(zone, location, clearRadius);
     var resetRadius = Args.TerrainReset == 0f ? location.m_location.m_exteriorRadius : Args.TerrainReset;

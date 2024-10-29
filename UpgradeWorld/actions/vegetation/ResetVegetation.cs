@@ -60,7 +60,7 @@ public class ResetVegetation : VegetationOperation
   {
     var zs = ZoneSystem.instance;
     var root = zs.m_zones[zone].m_root;
-    var zonePos = ZoneSystem.instance.GetZonePos(zone);
+    var zonePos = ZoneSystem.GetZonePos(zone);
     var heightmap = Zones.GetHeightmap(root);
     ResetTerrain.Active = Args.TerrainReset != 0f;
     var clearAreas = AddVegetation.GetClearAreas(zone);

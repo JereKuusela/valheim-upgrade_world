@@ -16,7 +16,8 @@ public class Upgrade : BaseOperation
     "mountain_caves",
     "hildir",
     "ashlands",
-    "deepnorth"
+    "deepnorth",
+    "bogwitch"
   ];
 
   public Upgrade(Terminal context, string type, List<string> extra, FiltererParameters args) : base(context)
@@ -68,6 +69,11 @@ public class Upgrade : BaseOperation
     {
       Executor.AddOperation(new DistributeLocations(Context, ["MountainCave02"], args));
       Executor.AddOperation(new SpawnLocations(Context, ["MountainCave02"], args));
+    }
+    else if (type == "bogwitch")
+    {
+      Executor.AddOperation(new DistributeLocations(Context, ["BogWitch_Camp"], args));
+      Executor.AddOperation(new SpawnLocations(Context, ["BogWitch_Camp"], args));
     }
     else if (type == "tarpits")
     {

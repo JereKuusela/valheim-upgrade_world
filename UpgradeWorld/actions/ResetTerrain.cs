@@ -43,10 +43,10 @@ public class ResetTerrain
     if (TCZdos == null || DateTime.Now - LastUpdate > TimeSpan.FromSeconds(10))
     {
       LastUpdate = DateTime.Now;
-      TCZdos = EntityOperation.GetZDOs(Settings.TerrainCompilerHash).ToLookup(zdo => ZoneSystem.instance.GetZone(zdo.GetPosition()));
+      TCZdos = EntityOperation.GetZDOs(Settings.TerrainCompilerHash).ToLookup(zdo => ZoneSystem.GetZone(zdo.GetPosition()));
     }
     var removed = false;
-    var centerZone = ZoneSystem.instance.GetZone(pos);
+    var centerZone = ZoneSystem.GetZone(pos);
     var d = (int)Math.Ceiling(radius / 64f);
     for (var i = centerZone.x - d; i <= centerZone.x + d; i++)
     {
@@ -73,7 +73,7 @@ public class ResetTerrain
   {
     var byteArray = zdo.GetByteArray(ZDOVars.s_TCData);
     if (byteArray == null) return;
-    var center = ZoneSystem.instance.GetZonePos(zone);
+    var center = ZoneSystem.GetZonePos(zone);
     var change = false;
     var from = new ZPackage(Utils.Decompress(byteArray));
     var to = new ZPackage();

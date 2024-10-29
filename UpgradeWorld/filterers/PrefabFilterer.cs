@@ -9,7 +9,7 @@ public class PrefabFilterer(string id) : IZoneFilterer
     HashSet<Vector2i> IncludedZones;
     var hash = id.GetStableHashCode();
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => zdo.m_prefab == hash);
-    IncludedZones = zdos.Select(zdo => ZoneSystem.instance.GetZone(zdo.GetPosition())).Distinct().ToHashSet();
+    IncludedZones = zdos.Select(zdo => ZoneSystem.GetZone(zdo.GetPosition())).Distinct().ToHashSet();
     if (IncludedZones == null)
     {
       var amount = zones.Length;

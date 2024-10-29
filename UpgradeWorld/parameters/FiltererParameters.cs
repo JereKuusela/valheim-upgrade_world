@@ -120,7 +120,7 @@ public class FiltererParameters
       var zone = Zone.Value;
       var min = (int)MinDistance;
       var max = (int)MaxDistance;
-      if (!Zones.IsWithin(zone, ZoneSystem.instance.GetZone(pos), min, max)) return false;
+      if (!Zones.IsWithin(zone, ZoneSystem.GetZone(pos), min, max)) return false;
     }
     else if (Pos.HasValue)
     {
@@ -128,7 +128,7 @@ public class FiltererParameters
       if (MinDistance > 0 && Utils.DistanceXZ(pos, position) < MinDistance) return false;
       if (MaxDistance > 0 && Utils.DistanceXZ(pos, position) > MaxDistance) return false;
     }
-    if (checkExcludedZones && PlayerBaseFilterer.ExcludedZones.Contains(ZoneSystem.instance.GetZone(pos))) return false;
+    if (checkExcludedZones && PlayerBaseFilterer.ExcludedZones.Contains(ZoneSystem.GetZone(pos))) return false;
     return true;
   }
   public virtual IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, bool checkExcludedZones) => zdos
@@ -137,7 +137,7 @@ public class FiltererParameters
   public IEnumerable<ZDO> LimitZdos(IEnumerable<ZDO> zdos)
   {
     if (Limit <= 0) return zdos;
-    Vector3 pos = Pos.HasValue ? new(Pos.Value.x, 0, Pos.Value.y) : Zone.HasValue ? ZoneSystem.instance.GetZonePos(Zone.Value) : Vector3.zero;
+    Vector3 pos = Pos.HasValue ? new(Pos.Value.x, 0, Pos.Value.y) : Zone.HasValue ? ZoneSystem.GetZonePos(Zone.Value) : Vector3.zero;
     return zdos.OrderBy(zdo => Utils.DistanceXZ(zdo.GetPosition(), pos)).Take(Limit);
   }
   public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position, true));

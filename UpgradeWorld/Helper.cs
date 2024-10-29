@@ -6,6 +6,7 @@ using UnityEngine;
 namespace UpgradeWorld;
 public static class Helper
 {
+  public static bool IsValid(ZoneSystem.ZoneLocation loc) => loc != null && loc.m_prefab != null && loc.m_prefab.IsValid && loc.m_prefab.Name != null;
   public static string Normalize(string value) => value.Trim().ToLower();
   public static string JoinRows(IEnumerable<string> values) => string.Join(", ", values);
 
@@ -82,7 +83,7 @@ public static class Helper
     return Vector3.zero;
   }
   /// <summary>Returns the player's zone while also handling the server-side.</summary>
-  public static Vector2i GetPlayerZone() => ZoneSystem.instance.GetZone(GetPlayerPosition());
+  public static Vector2i GetPlayerZone() => ZoneSystem.GetZone(GetPlayerPosition());
   public static bool CheckUnhandled(Terminal.ConsoleEventArgs args, IEnumerable<string> extra, int handled = 0)
   {
     if (extra.Count() > handled)

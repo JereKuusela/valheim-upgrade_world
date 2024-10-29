@@ -28,7 +28,7 @@ public class ResetZones : ZoneOperation
       {
         if (players.Contains(zdo.m_uid)) continue;
         var position = zdo.GetPosition();
-        if (zoneSystem.GetZone(position) == zone)
+        if (ZoneSystem.GetZone(position) == zone)
           Helper.RemoveZDO(zdo);
       }
     }

@@ -16,7 +16,7 @@ public class RestoreZones : ZoneOperation
   protected override bool ExecuteZone(Vector2i zone)
   {
     var zs = ZoneSystem.instance;
-    var zonePos = zs.GetZonePos(zone);
+    var zonePos = ZoneSystem.GetZonePos(zone);
     var prefab = zs.m_zoneCtrlPrefab;
     var hash = prefab.name.GetStableHashCode();
     var zdos = Helper.GetZDOs(zone);

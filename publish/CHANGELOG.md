@@ -1,3 +1,8 @@
+
+- v1.61
+  - Adds a new command `upgrade bogwitch`.
+  - Fixed for the new game version.
+
 - v1.60
   - Adds a new command `vegetation_remove`.
   - Fixes the command `vegetation_reset` missing.
