@@ -6,7 +6,7 @@ using UnityEngine;
 namespace UpgradeWorld;
 public static class Helper
 {
-  public static bool IsValid(ZoneSystem.ZoneLocation loc) => loc != null && loc.m_prefab != null && loc.m_prefab.IsValid && loc.m_prefab.Name != null;
+  public static bool IsValid(ZoneSystem.ZoneLocation loc) => loc != null && loc.m_prefab != null && (loc.m_prefab.IsValid || loc.m_prefab.m_name != null);
   public static string Normalize(string value) => value.Trim().ToLower();
   public static string JoinRows(IEnumerable<string> values) => string.Join(", ", values);
 
