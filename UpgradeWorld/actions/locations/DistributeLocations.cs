@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
 using UnityEngine;
 
 namespace UpgradeWorld;
@@ -13,6 +14,7 @@ public class DistributeLocations : ExecutedOperation
   private int Total = 0;
   public static bool SpawnToAlreadyGenerated = false;
   public static HashSet<Vector2i> AllowedZones = [];
+  private readonly Dictionary<string, int> Counts = [];
   public DistributeLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Start)
   {
     Ids = [.. ids];
@@ -34,6 +36,7 @@ public class DistributeLocations : ExecutedOperation
     {
       LoadingIndicator.SetProgressVisibility(true);
       Print($"Generating locations {Ids[Attempts]}. This may take a while...");
+      ClearNotSpawned(Ids);
       return false;
     }
     if (Attempts <= Ids.Length)
@@ -46,8 +49,7 @@ public class DistributeLocations : ExecutedOperation
       // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
       if (Attempts < Ids.Length)
         Print($"Generating locations {Ids[Attempts]}. This may take a while...");
-      var before = zs.m_locationInstances.Count;
-      ClearNotSpawned(id);
+      var before = Counts.TryGetValue(id, out var count) ? count : 0;
       foreach (var location in locations)
         GenerateLocations(location);
       if (Chance < 1f)
@@ -59,7 +61,7 @@ public class DistributeLocations : ExecutedOperation
       var unplaced = zs.m_locationInstances.Where(kvp => kvp.Value.m_location.m_prefab.Name == id && !kvp.Value.m_placed).ToList();
       foreach (var kvp in unplaced) AddPin(kvp.Value.m_position);
       Total += Count(id);
-      Added += zs.m_locationInstances.Count - before;
+      Added += Total - before;
       SpawnToAlreadyGenerated = false;
       LoadingIndicator.SetProgress(Attempts / (float)Ids.Length);
       return false;
@@ -67,10 +69,18 @@ public class DistributeLocations : ExecutedOperation
     LoadingIndicator.SetProgressVisibility(false);
     return true;
   }
-  private void ClearNotSpawned(string id)
+  private void ClearNotSpawned(string[] ids)
   {
+    Counts.Clear();
+    foreach (var id in ids)
+      Counts[id] = Count(id);
     var zs = ZoneSystem.instance;
-    zs.m_locationInstances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefab.Name != id).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    zs.m_locationInstances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed || !Counts.ContainsKey(kvp.Value.m_location.m_prefab.Name)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    // Better Continents adds its own locations after ClearNonPlacedLocations is called.
+    // So a workaround is to make a dummy call.
+    DummyClearNonPlacedLocations.Skip = true;
+    zs.ClearNonPlacedLocations();
+    DummyClearNonPlacedLocations.Skip = false;
   }
   private int Count(string id)
   {
@@ -176,4 +186,11 @@ public class DistributeLocations : ExecutedOperation
     }
     UnityEngine.Random.state = state;
   }
+}
+
+[HarmonyPatch(typeof(ZoneSystem), nameof(ZoneSystem.ClearNonPlacedLocations))]
+public class DummyClearNonPlacedLocations
+{
+  public static bool Skip = false;
+  static bool Prefix() => !Skip;
 }

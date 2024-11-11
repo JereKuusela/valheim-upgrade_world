@@ -1,3 +1,6 @@
+- v1.62
+  - Fixes compatibility issue with location maps from the Better Continents mod.
+  - Fixed compatibility issue with blueprint locations from the Expand World Data mod.
 
 - v1.61
   - Adds a new command `upgrade bogwitch`.
