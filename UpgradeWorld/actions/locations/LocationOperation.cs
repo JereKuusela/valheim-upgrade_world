@@ -30,21 +30,23 @@ public abstract class LocationOperation : ZoneOperation
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
   }
-  private readonly List<GameObject> spawnedObjects = [];
   /// <summary>Spawns a location to the game world.</summary>
   protected void SpawnLocation(Vector2i zone, ZoneSystem.LocationInstance location, float clearRadius)
   {
-    var zoneSystem = ZoneSystem.instance;
-    var root = zoneSystem.m_zones[zone].m_root;
+    var zs = ZoneSystem.instance;
+    var root = zs.m_zones[zone].m_root;
     var zonePos = ZoneSystem.GetZonePos(zone);
     var heightmap = Zones.GetHeightmap(root);
     Helper.ClearAreaForLocation(zone, location, clearRadius);
     var resetRadius = Args.TerrainReset == 0f ? location.m_location.m_exteriorRadius : Args.TerrainReset;
     ResetTerrain.Execute(location.m_position, resetRadius);
-    List<ZoneSystem.ClearArea> clearAreas = [];
-    zoneSystem.PlaceLocations(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, spawnedObjects);
-    foreach (var obj in spawnedObjects)
+    zs.m_tempSpawnedObjects.Clear();
+    zs.m_tempClearAreas.Clear();
+    zs.PlaceLocations(zone, zonePos, root.transform, heightmap, zs.m_tempClearAreas, ZoneSystem.SpawnMode.Ghost, zs.m_tempSpawnedObjects);
+    foreach (var obj in zs.m_tempSpawnedObjects)
       Object.Destroy(obj);
-    spawnedObjects.Clear();
+    zs.m_tempSpawnedObjects.Clear();
+    Object.Destroy(root);
+    zs.m_zones.Remove(zone);
   }
 }

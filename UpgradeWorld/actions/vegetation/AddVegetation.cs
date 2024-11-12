@@ -36,16 +36,15 @@ public class AddVegetation : VegetationOperation
   }
   public static List<ZoneSystem.ClearArea> GetClearAreas(Vector2i zone)
   {
-    List<ZoneSystem.ClearArea> clearAreas = [];
     var zs = ZoneSystem.instance;
+    zs.m_tempClearAreas.Clear();
     if (zs.m_locationInstances.TryGetValue(zone, out var location))
     {
       if (location.m_location.m_clearArea)
-        clearAreas.Add(new ZoneSystem.ClearArea(location.m_position, location.m_location.m_exteriorRadius));
+        zs.m_tempClearAreas.Add(new ZoneSystem.ClearArea(location.m_position, location.m_location.m_exteriorRadius));
     }
-    return clearAreas;
+    return zs.m_tempClearAreas;
   }
-  private readonly List<GameObject> spawnedObjects = [];
   protected void SpawnVegetation(Vector2i zone)
   {
     var zs = ZoneSystem.instance;
@@ -54,15 +53,18 @@ public class AddVegetation : VegetationOperation
     var heightmap = Zones.GetHeightmap(root);
     ResetTerrain.Active = Args.TerrainReset != 0f;
     var clearAreas = GetClearAreas(zone);
-    zs.PlaceVegetation(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, spawnedObjects);
-    Counter += spawnedObjects.Count;
-    foreach (var obj in spawnedObjects)
+    zs.m_tempSpawnedObjects.Clear();
+    zs.PlaceVegetation(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, zs.m_tempSpawnedObjects);
+    Counter += zs.m_tempSpawnedObjects.Count;
+    foreach (var obj in zs.m_tempSpawnedObjects)
     {
       ResetTerrain.Execute(obj.transform.position, Args.TerrainReset);
       AddPin(obj.transform.position);
       Object.Destroy(obj);
     }
-    spawnedObjects.Clear();
+    zs.m_tempSpawnedObjects.Clear();
     ResetTerrain.Active = false;
+    Object.Destroy(root);
+    zs.m_zones.Remove(zone);
   }
 }
