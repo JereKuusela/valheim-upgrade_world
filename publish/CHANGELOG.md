@@ -1,3 +1,6 @@
+- v1.64
+  - Fixes the command `locations_remove zone` removing all locations instead of the location in the current zone.
+
 - v1.63
   - Adds a new parameter `empty` to the command `zones_generate` to instantly generate empty zones.
   - Fixes location autocomplete not working without Server Devcommands mod.

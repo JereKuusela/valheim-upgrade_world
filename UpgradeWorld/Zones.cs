@@ -30,7 +30,7 @@ public static class Zones
     }
     return GetZones(args.TargetZones);
   }
-  public static Vector2i[] GetZones(TargetZones zones)
+  private static Vector2i[] GetZones(TargetZones zones)
   {
     if (zones == TargetZones.All) return GetAllZones();
     var zs = ZoneSystem.instance;

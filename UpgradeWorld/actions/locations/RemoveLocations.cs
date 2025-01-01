@@ -73,7 +73,8 @@ public class RemoveLocations : ExecutedOperation
     var filterers = FiltererFactory.Create(Args);
     filterers = [.. filterers, new LocationFilterer(Ids, false)];
     List<string> messages = [];
-    var notSpawnedZones = filterers.Aggregate(Zones.GetZones(TargetZones.All), (zones, filterer) => filterer.FilterZones(zones, ref messages));
+    Args.TargetZones = TargetZones.All;
+    var notSpawnedZones = filterers.Aggregate(Zones.GetZones(Args), (zones, filterer) => filterer.FilterZones(zones, ref messages));
     var removed = 0;
     foreach (var zone in notSpawnedZones)
     {
