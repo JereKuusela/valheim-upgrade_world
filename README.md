@@ -135,7 +135,7 @@ Overview of available commands (remember that tab key can be used for autocomple
   - Biomes will change in the outer areas.
   - Rivers will move everywhere in the world and can destroy bases (even with the player base protection).
 - `world_reset [...args]`: Resets locations and zones.
-- `zones_generate [...args]`: Pre-generates areas without having to visit them.
+- `zones_generate [...args]`: Pre-generates areas without having to visit them. `empty` flag can be used to instantly generate empty zones.
 - `zones_reset [...args]`: Destroys areas making them ungenerated. These areas will be generated when visited. Can be also used to reduce save file size. `chance` determines how many of the zones are reseted.
 - `zones_restore [...args]`: Adds missing zone control objects (responsible for random spawns).
 

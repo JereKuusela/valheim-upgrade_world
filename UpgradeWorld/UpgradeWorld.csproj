@@ -27,17 +27,17 @@
     <Reference Include="BepInEx.Harmony">
       <HintPath>..\..\Libs\BepInEx.Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="SoftReferenceableAssets_publicized">
-      <HintPath>..\..\Libs\SoftReferenceableAssets_publicized.dll</HintPath>
+    <Reference Include="SoftReferenceableAssets">
+      <HintPath>..\..\Libs\SoftReferenceableAssets.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_valheim_publicized">
-      <HintPath>..\..\Libs\assembly_valheim_publicized.dll</HintPath>
+    <Reference Include="assembly_valheim">
+      <HintPath>..\..\Libs\assembly_valheim.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_utils_publicized">
-      <HintPath>..\..\Libs\assembly_utils_publicized.dll</HintPath>
+    <Reference Include="assembly_utils">
+      <HintPath>..\..\Libs\assembly_utils.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_guiutils_publicized">
-      <HintPath>..\..\Libs\assembly_guiutils_publicized.dll</HintPath>
+    <Reference Include="assembly_guiutils">
+      <HintPath>..\..\Libs\assembly_guiutils.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

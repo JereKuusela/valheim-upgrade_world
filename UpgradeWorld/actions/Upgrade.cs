@@ -43,7 +43,7 @@ public class Upgrade : BaseOperation
       }
       args.Pos = new(0, 4000f);
       args.MinDistance = 11600;
-      var ids = ZoneSystem.instance.m_locations.Where(loc => loc.m_biome == Heightmap.Biome.AshLands && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
+      var ids = ZoneSystem.instance.m_locations.Where(loc => Helper.IsValid(loc) && loc.m_biome == Heightmap.Biome.AshLands && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
       Executor.AddOperation(new RemoveLocations(Context, [], args));
       Executor.AddOperation(new ResetZones(Context, args));
       if (ids.Count() > 0)
@@ -59,7 +59,7 @@ public class Upgrade : BaseOperation
       }
       args.Pos = new(0, -4000f);
       args.MinDistance = 11600;
-      var ids = ZoneSystem.instance.m_locations.Where(loc => loc.m_biome == Heightmap.Biome.DeepNorth && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
+      var ids = ZoneSystem.instance.m_locations.Where(loc => Helper.IsValid(loc) && loc.m_biome == Heightmap.Biome.DeepNorth && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
       Executor.AddOperation(new RemoveLocations(Context, [], args));
       Executor.AddOperation(new ResetZones(Context, args));
       if (ids.Count() > 0)
@@ -98,7 +98,7 @@ public class Upgrade : BaseOperation
       }
       args.Biomes = [Heightmap.Biome.Mistlands];
       Executor.AddOperation(new ResetZones(Context, args));
-      var ids = ZoneSystem.instance.m_locations.Where(loc => loc.m_biome == Heightmap.Biome.Mistlands && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
+      var ids = ZoneSystem.instance.m_locations.Where(loc => Helper.IsValid(loc) && loc.m_biome == Heightmap.Biome.Mistlands && loc.m_enable).Select(loc => loc.m_prefab.Name).ToHashSet();
       Executor.AddOperation(new DistributeLocations(Context, ids, args));
     }
     else if (type == "mistlands_worldgen")

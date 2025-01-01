@@ -1,3 +1,7 @@
+- v1.63
+  - Adds a new parameter `empty` to the command `zones_generate` to instantly generate empty zones.
+  - Fixes location autocomplete not working without Server Devcommands mod.
+
 - v1.62
   - Fixes compatibility issue with location maps from the Better Continents mod.
   - Fixes compatibility issue with blueprint locations from the Expand World Data mod.
