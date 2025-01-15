@@ -45,6 +45,7 @@ public class RemoveVegetation : ZoneOperation
   }
   protected override void OnEnd()
   {
+    base.OnEnd();
     var text = $"{Operation} completed. {Removed} vegetations removed.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);

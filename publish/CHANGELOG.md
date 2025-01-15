@@ -1,3 +1,6 @@
+- v1.65
+  - Fixes the command `vegetation_reset` messing up vegetation generation until the game is restarted.
+
 - v1.64
   - Fixes the command `locations_remove zone` removing all locations instead of the location in the current zone.
 
@@ -12,13 +15,3 @@
 - v1.61
   - Adds a new command `upgrade bogwitch`.
   - Fixed for the new game version.
-
-- v1.60
-  - Adds a new command `vegetation_remove`.
-  - Fixes the command `vegetation_reset` missing.
-
-- v1.59
-  - Fixes locations adding getting stuck.
-
-- v1.58
-  - Fixed for the new update.

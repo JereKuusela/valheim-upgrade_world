@@ -64,7 +64,9 @@ public class ResetVegetation : VegetationOperation
     ResetTerrain.Active = Args.TerrainReset != 0f;
     var clearAreas = AddVegetation.GetClearAreas(zone);
     zs.m_tempSpawnedObjects.Clear();
+    OverrideVegetation();
     zs.PlaceVegetation(zone, zonePos, root.transform, heightmap, clearAreas, ZoneSystem.SpawnMode.Ghost, zs.m_tempSpawnedObjects);
+    RestoreVegetation();
     Counter += zs.m_tempSpawnedObjects.Count;
     foreach (var obj in zs.m_tempSpawnedObjects)
     {
@@ -79,6 +81,7 @@ public class ResetVegetation : VegetationOperation
   }
   protected override void OnEnd()
   {
+    base.OnEnd();
     var text = $"{Operation} completed. {Removed} vegetations removed. {Counter} vegetations added.";
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
