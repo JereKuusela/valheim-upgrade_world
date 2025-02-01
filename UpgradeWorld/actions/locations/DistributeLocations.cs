@@ -19,7 +19,12 @@ public class DistributeLocations : ExecutedOperation
   {
     Ids = [.. ids];
     if (Ids.Length == 0)
-      Ids = [.. ZoneSystem.instance.m_locations.Where(loc => Helper.IsValid(loc) && loc.m_enable && loc.m_quantity != 0).OrderByDescending(loc => loc.m_prioritized).Select(loc => loc.m_prefab.Name)];
+      Ids = [.. ZoneSystem.instance.m_locations
+        .Where(Helper.IsValid)
+        .Where(loc => loc.m_enable && loc.m_quantity != 0)
+        .Where(loc => (loc.m_biome & args.BiomeMask) != Heightmap.Biome.None)
+        .OrderByDescending(loc => loc.m_prioritized)
+        .Select(loc => loc.m_prefab.Name)];
     Chance = args.Chance;
     args = new(args)
     {
@@ -35,6 +40,11 @@ public class DistributeLocations : ExecutedOperation
     if (Attempts == 0)
     {
       LoadingIndicator.SetProgressVisibility(true);
+      if (Ids.Length == 0)
+      {
+        Print("No locations to generate.");
+        return true;
+      }
       Print($"Generating locations {Ids[Attempts]}. This may take a while...");
       ClearNotSpawned(Ids);
       return false;

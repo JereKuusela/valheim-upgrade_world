@@ -1,3 +1,6 @@
+- v1.66
+  - Improves the speed of location distribution when biome filters are used.
+
 - v1.65
   - Fixes the command `vegetation_reset` messing up vegetation generation until the game is restarted.
 

@@ -13,6 +13,7 @@ public enum TargetZones
 public class FiltererParameters
 {
   public HashSet<Heightmap.Biome> Biomes = [];
+  public Heightmap.Biome BiomeMask = (Heightmap.Biome)(-1);
   public int Limit = 0;
   public bool NoEdges = false;
   public bool Start = false;
@@ -34,6 +35,7 @@ public class FiltererParameters
   public FiltererParameters(FiltererParameters pars)
   {
     Biomes = pars.Biomes;
+    BiomeMask = pars.BiomeMask;
     NoEdges = pars.NoEdges;
     Start = pars.Start;
     Pos = pars.Pos;
@@ -85,6 +87,9 @@ public class FiltererParameters
     if (Chance > 1f) Chance /= 100f;
     if (!Zone.HasValue && !Pos.HasValue)
       Pos = new(0, 0);
+
+    if (Biomes.Count() > 0)
+      BiomeMask = Biomes.Aggregate((mask, biome) => mask | biome);
   }
   public virtual bool Valid(Terminal terminal)
   {
