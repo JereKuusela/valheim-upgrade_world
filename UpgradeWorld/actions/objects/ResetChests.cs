@@ -10,7 +10,7 @@ public class ResetChests : EntityOperation
   private readonly HashSet<string> AllowedItems;
   public ResetChests(string[] chestIds, IEnumerable<string> allowedItems, bool looted, DataParameters args, Terminal context) : base(context, args.Pin)
   {
-    AllowedItems = allowedItems.Select(Helper.Normalize).ToHashSet();
+    AllowedItems = [.. allowedItems.Select(Helper.Normalize)];
     Reroll(chestIds, looted, args);
   }
   public static List<string> ChestNames()

@@ -66,7 +66,7 @@ public class TempleVersion(Terminal context, string version, bool start) : Execu
       var zone = ZoneSystem.GetZone(loc.Value.m_position);
       var zdos = Helper.GetZDOs(zone);
       if (zdos == null) continue;
-      zdos = zdos.Where(zdo => BossStones.Contains(zdo.m_prefab)).ToList();
+      zdos = [.. zdos.Where(zdo => BossStones.Contains(zdo.m_prefab))];
       var pos = loc.Value.m_position;
       var rot = loc.Value.GetRotation();
       foreach (var zdo in zdos)

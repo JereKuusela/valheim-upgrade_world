@@ -44,7 +44,7 @@ public class PlayerBaseFilterer(int size) : IZoneFilterer
   {
     CalculateExcluded();
     var amount = zones.Length;
-    zones = zones.Where(zone => !ExcludedZones.Contains(zone)).ToArray();
+    zones = [.. zones.Where(zone => !ExcludedZones.Contains(zone))];
     var skipped = amount - zones.Length;
     if (skipped > 0) messages.Add(skipped + " skipped by having a player base");
     return zones;

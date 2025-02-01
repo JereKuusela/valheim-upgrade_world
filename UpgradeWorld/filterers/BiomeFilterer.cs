@@ -19,7 +19,7 @@ public class BiomeFilterer(IEnumerable<Heightmap.Biome> Biomes, bool IncludeEdge
   {
     var zoneSystem = ZoneSystem.instance;
     var halfZone = zoneSystem.m_zoneSize / 2.0f;
-    return zones.Where(zone =>
+    return [.. zones.Where(zone =>
     {
       var center = ZoneSystem.GetZonePos(zone);
       var corner1 = center + new Vector3(halfZone, 0f, halfZone);
@@ -32,6 +32,6 @@ public class BiomeFilterer(IEnumerable<Heightmap.Biome> Biomes, bool IncludeEdge
       var biome4 = WorldGenerator.instance.GetBiome(corner4);
       if (!IncludeEdges && (biome1 != biome2 || biome1 != biome3 || biome1 != biome4)) return false;
       return Biomes.Any(biome => biome == biome1 || biome == biome2 || biome == biome3 || biome == biome4);
-    }).ToArray();
+    })];
   }
 }

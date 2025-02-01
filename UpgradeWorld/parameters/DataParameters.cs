@@ -111,7 +111,7 @@ public class DataParameters : IdParameters
     get
     {
       if (parameterComponents.Count == 0)
-        parameterComponents = ComponentInfo.Types.Select(t => t.Name).ToList();
+        parameterComponents = [.. ComponentInfo.Types.Select(t => t.Name)];
       return parameterComponents;
     }
   }

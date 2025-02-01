@@ -20,7 +20,7 @@ public class ChestsResetCommand
       if (pars.Ids.Count() > 0)
       {
         chestIds = [pars.Ids.First()];
-        pars.Ids = pars.Ids.Skip(1).ToList();
+        pars.Ids = [.. pars.Ids.Skip(1)];
       }
       if (Helper.IsClient(args)) return;
       new ResetChests(chestIds, pars.Ids, looted, pars, args.Context);

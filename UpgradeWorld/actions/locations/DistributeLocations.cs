@@ -19,7 +19,7 @@ public class DistributeLocations : ExecutedOperation
   {
     Ids = [.. ids];
     if (Ids.Length == 0)
-      Ids = ZoneSystem.instance.m_locations.Where(loc => Helper.IsValid(loc) && loc.m_enable && loc.m_quantity != 0).OrderByDescending(loc => loc.m_prioritized).Select(loc => loc.m_prefab.Name).ToArray();
+      Ids = [.. ZoneSystem.instance.m_locations.Where(loc => Helper.IsValid(loc) && loc.m_enable && loc.m_quantity != 0).OrderByDescending(loc => loc.m_prioritized).Select(loc => loc.m_prefab.Name)];
     Chance = args.Chance;
     args = new(args)
     {

@@ -16,7 +16,7 @@ public class ComponentInfo
     List<Assembly> assemblies = [Assembly.GetAssembly(typeof(ZNetView)), .. Chainloader.PluginInfos.Values.Where(p => p.Instance != null).Select(p => p.Instance.GetType().Assembly)];
     var assembly = Assembly.GetAssembly(typeof(ZNetView));
     var baseType = typeof(MonoBehaviour);
-    return assemblies.SelectMany(s =>
+    return [.. assemblies.SelectMany(s =>
     {
       try
       {
@@ -36,7 +36,7 @@ public class ComponentInfo
       {
         return false;
       }
-    }).ToArray();
+    })];
   }
   private static readonly Dictionary<string, HashSet<int>> PrefabComponents = [];
   public static IEnumerable<KeyValuePair<int, GameObject>> HaveComponent(IEnumerable<KeyValuePair<int, GameObject>> objs, List<string[]> typeSets)

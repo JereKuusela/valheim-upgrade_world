@@ -10,7 +10,7 @@ public class ChanceFilterer(float chance) : IZoneFilterer
   public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
   {
     var amount = zones.Length;
-    zones = zones.Where(zone => random.NextDouble() < Chance).ToArray();
+    zones = [.. zones.Where(zone => random.NextDouble() < Chance)];
     var skipped = amount - zones.Length;
     if (skipped > 0) messages.Add(skipped + " skipped by chance");
     return zones;

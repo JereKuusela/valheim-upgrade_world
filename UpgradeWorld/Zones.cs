@@ -35,7 +35,7 @@ public static class Zones
     if (zones == TargetZones.All) return GetAllZones();
     var zs = ZoneSystem.instance;
     if (zones == TargetZones.Generated) return Sort(zs.m_generatedZones);
-    return GetAllZones().Where(zone => !zs.m_generatedZones.Contains(zone)).ToArray();
+    return [.. GetAllZones().Where(zone => !zs.m_generatedZones.Contains(zone))];
   }
   private static Vector2i[]? AllZones;
   public static Vector2i[] GetAllZones() => AllZones ??= GetWorldZones();

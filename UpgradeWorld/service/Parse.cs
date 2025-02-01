@@ -270,7 +270,7 @@ public static class Parse
     return range;
   }
 
-  public static string[] Split(string arg, char separator = ',') => arg.Split(separator).Select(s => s.Trim()).Where(s => s != "").ToArray();
+  public static string[] Split(string arg, char separator = ',') => [.. arg.Split(separator).Select(s => s.Trim()).Where(s => s != "")];
   public static string[] Split(string[] args, int index, char separator) => args.Length <= index ? ([]) : Split(args[index], separator);
   private static readonly HashSet<string> Truthies = [
     "1",
@@ -320,5 +320,5 @@ public static class Parse
     if (values.Length > 1) vector.y = Float(values[1]);
     return vector;
   }
-  public static HashSet<Heightmap.Biome> Biomes(string arg) => Split(arg).Select(Helper.GetBiome).ToHashSet();
+  public static HashSet<Heightmap.Biome> Biomes(string arg) => [.. Split(arg).Select(Helper.GetBiome)];
 }

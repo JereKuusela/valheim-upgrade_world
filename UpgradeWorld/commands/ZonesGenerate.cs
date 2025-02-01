@@ -22,6 +22,6 @@ public class ZonesGenerateCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       Executor.AddOperation(new Generate(args.Context, pars, empty));
-    }, optionsFetcher: () => Enum.GetNames(typeof(Heightmap.Biome)).ToList());
+    }, optionsFetcher: () => [.. Enum.GetNames(typeof(Heightmap.Biome))]);
   }
 }

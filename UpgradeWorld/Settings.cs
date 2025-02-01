@@ -25,9 +25,9 @@ public static class Settings
   public static ConfigEntry<int> configWorldEdge;
   public static int WorldEdge => configWorldEdge.Value;
   public static ConfigEntry<string> configSafeZoneItems;
-  public static HashSet<int> SafeZoneItems => configSafeZoneItems.Value.Split(',').Select(name => name.Trim().GetStableHashCode()).ToHashSet();
+  public static HashSet<int> SafeZoneItems => [.. configSafeZoneItems.Value.Split(',').Select(name => name.Trim().GetStableHashCode())];
   public static ConfigEntry<string> configSafeZoneObjects;
-  public static HashSet<int> SafeZoneObjects => configSafeZoneObjects.Value.Split(',').Select(name => name.Trim().GetStableHashCode()).ToHashSet();
+  public static HashSet<int> SafeZoneObjects => [.. configSafeZoneObjects.Value.Split(',').Select(name => name.Trim().GetStableHashCode())];
   public static ConfigEntry<int> configSafeZoneSize;
   public static int SafeZoneSize => configSafeZoneSize.Value;
   public static ConfigEntry<int> configThrottle;
@@ -42,7 +42,7 @@ public static class Settings
   public static ConfigEntry<string> configRootUsers;
   private static HashSet<string> RootUsers = [];
 #nullable enable
-  private static void UpdateRootUsers() => RootUsers = configRootUsers.Value.Split(',').Select(s => s.Trim()).Where(s => s != "").ToHashSet();
+  private static void UpdateRootUsers() => RootUsers = [.. configRootUsers.Value.Split(',').Select(s => s.Trim()).Where(s => s != "")];
   public static bool IsRoot(string id)
   {
     if (RootUsers.Count == 0) return id == "-1" || ZNet.instance.ListContainsId(ZNet.instance.m_adminList, id);

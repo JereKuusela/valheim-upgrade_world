@@ -7,7 +7,7 @@ namespace UpgradeWorld;
 public static class Helper
 {
   public static bool IsValid(ZoneSystem.ZoneLocation loc) => loc != null && loc.m_prefab != null && (loc.m_prefab.IsValid || loc.m_prefab.m_name != null);
-  public static List<string> LocationIds() => ZoneSystem.instance.m_locations.Where(IsValid).Select(location => location.m_prefab.Name).Distinct().ToList();
+  public static List<string> LocationIds() => [.. ZoneSystem.instance.m_locations.Where(IsValid).Select(location => location.m_prefab.Name).Distinct()];
   public static string Normalize(string value) => value.Trim().ToLower();
   public static string JoinRows(IEnumerable<string> values) => string.Join(", ", values);
 

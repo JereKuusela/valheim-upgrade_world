@@ -12,7 +12,7 @@ public class RemoveLocations : ExecutedOperation
     {
       TargetZones = TargetZones.All
     };
-    Ids = ids.ToHashSet();
+    Ids = [.. ids];
   }
   protected override void OnStart()
   {

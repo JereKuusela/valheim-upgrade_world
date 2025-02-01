@@ -9,11 +9,11 @@ public class PrefabFilterer(string id) : IZoneFilterer
     HashSet<Vector2i> IncludedZones;
     var hash = id.GetStableHashCode();
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => zdo.m_prefab == hash);
-    IncludedZones = zdos.Select(zdo => ZoneSystem.GetZone(zdo.GetPosition())).Distinct().ToHashSet();
+    IncludedZones = [.. zdos.Select(zdo => ZoneSystem.GetZone(zdo.GetPosition())).Distinct()];
     if (IncludedZones == null)
     {
       var amount = zones.Length;
-      zones = zones.Where(zone => false).ToArray();
+      zones = [.. zones.Where(zone => false)];
       var skipped = amount - zones.Length;
       if (skipped > 0) messages.Add(skipped + " skipped by having invalid entity id");
       return zones;
@@ -21,7 +21,7 @@ public class PrefabFilterer(string id) : IZoneFilterer
     else
     {
       var amount = zones.Length;
-      zones = zones.Where(IncludedZones.Contains).ToArray();
+      zones = [.. zones.Where(IncludedZones.Contains)];
       var skipped = amount - zones.Length;
       if (skipped > 0) messages.Add(skipped + " skipped by not having the entity");
       return zones;

@@ -18,7 +18,7 @@ public class DistanceFilterer(Vector3 center, float minDistance, float maxDistan
   /// <summary>Returns only zones which center point is included within a given range..</summary>
   private static Vector2i[] FilterByDistance(Vector2i[] zones, Vector3 position, float minDistance, float maxDistance)
   {
-    return zones.Where(zone =>
+    return [.. zones.Where(zone =>
     {
       var center = ZoneSystem.GetZonePos(zone);
       center.y = 0f;
@@ -26,6 +26,6 @@ public class DistanceFilterer(Vector3 center, float minDistance, float maxDistan
       var withinMin = delta.sqrMagnitude >= minDistance * minDistance;
       var withinMax = maxDistance == 0 || delta.sqrMagnitude <= maxDistance * maxDistance;
       return withinMin && withinMax;
-    }).ToArray();
+    })];
   }
 }

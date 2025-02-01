@@ -22,7 +22,7 @@ public class LocationIdParameters : FiltererParameters
   }
   public override bool Valid(Terminal terminal)
   {
-    Ids = Unhandled.SelectMany(kvp => Parse.Split(kvp)).Distinct().ToHashSet();
+    Ids = [.. Unhandled.SelectMany(kvp => Parse.Split(kvp)).Distinct()];
     Unhandled.Clear();
     if (!base.Valid(terminal)) return false;
     var invalidIds = Ids.Where(id => ZoneSystem.instance.GetLocation(id) == null);

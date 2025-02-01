@@ -19,9 +19,9 @@ public class ResetVegetation : VegetationOperation
     Filterers = FiltererFactory.Create(args);
     // No parameter -> all vegetation.
     if (ids.Count == 0)
-      ids = ZoneSystem.instance.m_vegetation.Select(veg => veg.m_prefab.name).ToHashSet();
+      ids = [.. ZoneSystem.instance.m_vegetation.Select(veg => veg.m_prefab.name)];
     // Automatically clean up fractions as well.
-    Hashes = ids.Select(id => id.GetStableHashCode()).ToHashSet();
+    Hashes = [.. ids.Select(id => id.GetStableHashCode())];
     // Automatically clean up fractions as well.
     foreach (var id in ids)
     {

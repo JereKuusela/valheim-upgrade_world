@@ -18,7 +18,7 @@ public class IdParameters : FiltererParameters
   }
   public override bool Valid(Terminal terminal)
   {
-    Ids = Unhandled.SelectMany(kvp => Parse.Split(kvp)).ToList();
+    Ids = [.. Unhandled.SelectMany(kvp => Parse.Split(kvp))];
     Unhandled.Clear();
     if (!base.Valid(terminal)) return false;
     if (RequireId && Ids.Count() == 0)

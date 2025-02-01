@@ -22,7 +22,7 @@ public abstract class EntityOperation(Terminal context, bool pin) : BaseOperatio
   private static readonly int PlayerHash = "Player".GetStableHashCode();
   private static Dictionary<int, string> HashToName = [];
   public static string GetName(int prefab) => HashToName.TryGetValue(prefab, out var name) ? name : "";
-  public static HashSet<int> GetPrefabs(IEnumerable<string> id, List<string[]> types) => id.Count() == 0 ? GetPrefabs("*", types) : id.SelectMany(id => GetPrefabs(id, types)).ToHashSet();
+  public static HashSet<int> GetPrefabs(IEnumerable<string> id, List<string[]> types) => id.Count() == 0 ? GetPrefabs("*", types) : [.. id.SelectMany(id => GetPrefabs(id, types))];
   public static HashSet<int> GetPrefabs(string id, List<string[]> types)
   {
     if (HashToName.Count == 0)
@@ -39,26 +39,26 @@ public abstract class EntityOperation(Terminal context, bool pin) : BaseOperatio
 
     if (types.Count > 0)
       values = ComponentInfo.HaveComponent(values.ToArray(), types);
-    return values.Select(kvp => kvp.Key).ToHashSet();
+    return [.. values.Select(kvp => kvp.Key)];
   }
   public static ZDO[] GetZDOs(ZDO[] zdos, int hash)
   {
-    return zdos.Where(zdo => hash == zdo.m_prefab).ToArray();
+    return [.. zdos.Where(zdo => hash == zdo.m_prefab)];
   }
   public static ZDO[] GetZDOs(FiltererParameters args, HashSet<int> prefabs)
   {
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => prefabs.Contains(zdo.m_prefab));
-    return FilterZdos(zdos, args).ToArray();
+    return [.. FilterZdos(zdos, args)];
   }
   public static ZDO[] GetZDOs(DataParameters args, HashSet<int> prefabs)
   {
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => prefabs.Contains(zdo.m_prefab));
-    return FilterZdos(zdos, args).ToArray();
+    return [.. FilterZdos(zdos, args)];
   }
-  public static ZDO[] GetZDOs(FiltererParameters args) => FilterZdos(ZDOMan.instance.m_objectsByID.Values, args).ToArray();
-  public static ZDO[] GetZDOs(DataParameters args) => FilterZdos(ZDOMan.instance.m_objectsByID.Values, args).ToArray();
+  public static ZDO[] GetZDOs(FiltererParameters args) => [.. FilterZdos(ZDOMan.instance.m_objectsByID.Values, args)];
+  public static ZDO[] GetZDOs(DataParameters args) => [.. FilterZdos(ZDOMan.instance.m_objectsByID.Values, args)];
   public static ZDO[] GetZDOs(string id) => GetZDOs(id.GetStableHashCode());
-  public static ZDO[] GetZDOs(int hash) => ZDOMan.instance.m_objectsByID.Values.Where(zdo => hash == zdo.m_prefab).ToArray();
+  public static ZDO[] GetZDOs(int hash) => [.. ZDOMan.instance.m_objectsByID.Values.Where(zdo => hash == zdo.m_prefab)];
 
   public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, DataParameters args) => args.LimitZdos(args.FilterZdos(zdos, false));
   public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.LimitZdos(args.FilterZdos(zdos, false));
