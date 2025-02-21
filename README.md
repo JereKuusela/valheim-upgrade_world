@@ -35,14 +35,14 @@ Note: The default base detection is very conservative. Single workbenches, campf
 
 For `upgrade` command:
 
-- `ashlands`: Fully regenerates ashlands biomes and nearby water areas. Terrain is automatically updated by the base game and not affected by this operation.
+- `ashlands`: Fully regenerates Ashlands biomes and nearby water areas. Terrain is automatically updated by the base game and not affected by this operation.
 - `bogwitch`: Adds possible spawn locations to already explored areas.
-- `deepnorth`: Fully regenerates ashlands biomes and nearby water areas. Terrain is automatically updated by the base game and not affected by this operation.
+- `deepnorth`: Fully regenerates Deep North biomes and nearby water areas. Terrain is automatically updated by the base game and not affected by this operation.
 - `hildir`: Adds new locations to already explored areas.
 - `mountain_caves`: Adds mountain caves to already explored areas.
 - `tarpits`: Adds tar pits to already explored areas.
 - `onions`: Rerolls already generated and unlooted mountain chests.
-- `mistlands`: Fully regenerates mistlands biomes. Terrain is automatically updated by the base game and not affected by this operation.
+- `mistlands`: Fully regenerates Mistlands biomes. Terrain is automatically updated by the base game and not affected by this operation.
 - `mistlands_worldgen`: Upgrades biome distribution to the Mistlands version. Biomes will change in the outer areas. Areas past 5900 meters will be reseted. Rivers will move everywhere in the world and can destroy bases (even with the player base protection).
 - `hh_worldgen`: Downgrades biome distribution to the Heart & Home version.
 - `legacy_worldgen`: Downgrades biome distribution to the Early access release version.
@@ -94,6 +94,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `chests_search [id1,id2,...] [...args]`: Searches chests and stands for given items.
 - `clean_chests [...args]`: Removes missing objects from chests.
 - `clean_dungeons [...args]`: Optimizes old dungeons.
+- `clean_duplicates [...args]`: Removes objects that already have the same object at the same position.
 - `clean_health [...args]`: Removes excess health data from creatures and structures.
   - This removes the current health if it equals the maximum health. When current health is missing, the game uses the maximum health as the default value.
   - This will affect creatures that have taken damage but healed back to full health.

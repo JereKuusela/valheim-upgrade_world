@@ -18,6 +18,8 @@ public class CleanObjects : EntityOperation
       AddPin(zdo.m_position);
       Helper.RemoveZDO(zdo);
       removed++;
+      if (Settings.Verbose)
+        Print($"Removed missing object {zdo.m_prefab} at {zdo.m_position}.");
     }
     if (alwaysPrint || removed > 0)
       Print($"Removed {removed} missing object{S(removed)}.");

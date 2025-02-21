@@ -9,7 +9,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.66";
+  const string VERSION = "1.67";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -120,6 +120,7 @@ public class SetCommands
     new CleanHealthCommand();
     new CleanSpawnsCommand();
     new CleanStandsCommand();
+    new CleanDuplicatesCommand();
     if (Terminal.commands.TryGetValue("genloc", out var genloc))
     {
       genloc.IsCheat = false;

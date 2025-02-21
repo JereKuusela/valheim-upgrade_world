@@ -10,6 +10,7 @@ public class WorldCleanCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       var zdos = EntityOperation.GetZDOs(pars);
+      new CleanDuplicates(args.Context, pars.Pin, false);
       new CleanLocations(args.Context, zdos, pars.Pin, false);
       new CleanObjects(args.Context, zdos, pars.Pin, false);
       new CleanChests(args.Context, zdos, pars.Pin, false);
