@@ -25,7 +25,7 @@ public class CleanDuplicates : EntityOperation
         for (var j = i + 1; j < sectorObjects.Count; j++)
         {
           var other = sectorObjects[j];
-          if (zdo.m_prefab == other.m_prefab && zdo.m_position == other.m_position)
+          if (zdo.m_prefab == other.m_prefab && zdo.m_position == other.m_position && zdo.m_rotation == other.m_rotation)
             toRemove.Add(other);
         }
       }

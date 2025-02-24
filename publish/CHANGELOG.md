@@ -1,3 +1,6 @@
+- v1.68
+  - Adds rotation check to the command `clean_duplicates` (accidentally removed some player built pieces).
+
 - v1.67
   - Adds a new command `clean_duplicates` to remove duplicate objects.
 
