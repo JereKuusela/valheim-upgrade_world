@@ -39,5 +39,8 @@
     <Reference Include="assembly_guiutils">
       <HintPath>..\..\Libs\assembly_guiutils.dll</HintPath>
     </Reference>
+    <Reference Include="SPlatform">
+      <HintPath>..\..\Libs\SPlatform.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

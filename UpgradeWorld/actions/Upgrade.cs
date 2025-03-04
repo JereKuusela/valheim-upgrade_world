@@ -105,8 +105,8 @@ public class Upgrade : BaseOperation
     {
       Executor.AddOperation(new WorldVersion(Context, 2, args.Start));
       args.MinDistance = 5901;
-      Executor.AddOperation(new RemoveLocations(Context, [], args));
-      Executor.AddOperation(new DistributeLocations(Context, [], args));
+      Executor.AddOperation(new RemoveLocations(Context, [.. LocationOperation.AllIds()], args));
+      Executor.AddOperation(new DistributeLocations(Context, [.. LocationOperation.AllIds()], args));
       Executor.AddOperation(new ResetZones(Context, args));
       Executor.AddOperation(new Print(Context, "If you don't want to automatically reset outer areas, use <color=yellow>stop</color> and then <color=yellow>world_gen mistlands</color> commands.", "", args.Start));
     }

@@ -3,8 +3,8 @@ public class CleanDuplicatesCommand
 {
   public CleanDuplicatesCommand()
   {
-    CommandWrapper.Register("clean_duplicates", (int index) => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("clean_duplicates", "[...args] - Removes duplicated objects.", (args) =>
+    CommandWrapper.Register("clean_duplicates", index => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
+    Helper.Command("clean_duplicates", "[...args] - Removes duplicated objects.", (args) =>
     {
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;

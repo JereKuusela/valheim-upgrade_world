@@ -66,11 +66,6 @@ public static class CommandWrapper
     if (ServerDevcommands == null) return [];
     return InfoType().GetProperty("ObjectIds", PublicBinding).GetValue(null) as List<string>;
   }
-  public static List<string> LocationIds()
-  {
-    if (ServerDevcommands == null) return [];
-    return InfoType().GetProperty("LocationIds", PublicBinding).GetValue(null) as List<string>;
-  }
   public static void RegisterEmpty(string command)
   {
     if (ServerDevcommands == null) return;

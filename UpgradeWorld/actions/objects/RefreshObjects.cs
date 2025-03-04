@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Respawns spawners, pickables, chests, etc..</summary>
 public class RefreshObjects : EntityOperation
 {
-  public RefreshObjects(Terminal context, List<string> ids, DataParameters args) : base(context, args.Pin)
+  public RefreshObjects(Terminal context, HashSet<string> ids, DataParameters args) : base(context, args.Pin)
   {
     Execute(ids, args);
   }
@@ -54,7 +54,7 @@ public class RefreshObjects : EntityOperation
     }
     return updated;
   }
-  private void Execute(List<string> ids, DataParameters args)
+  private void Execute(HashSet<string> ids, DataParameters args)
   {
     var prefabs = GetPrefabs(ids, args.Types);
     var zdos = GetZDOs(args, prefabs);

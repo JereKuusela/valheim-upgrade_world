@@ -3,8 +3,8 @@ public class CleanHealthCommand
 {
   public CleanHealthCommand()
   {
-    CommandWrapper.Register("clean_health", (int index) => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("clean_health", "[...args] - Removes excess health data from creatures and structures.", (args) =>
+    CommandWrapper.Register("clean_health", index => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
+    Helper.Command("clean_health", "[...args] - Removes excess health data from creatures and structures.", (args) =>
     {
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;

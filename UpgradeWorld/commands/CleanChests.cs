@@ -3,8 +3,8 @@ public class CleanChestsCommand
 {
   public CleanChestsCommand()
   {
-    CommandWrapper.Register("clean_chests", (int index) => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("clean_chests", "[...args] - Removes missing objects from chests.", (args) =>
+    CommandWrapper.Register("clean_chests", index => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
+    Helper.Command("clean_chests", "[...args] - Removes missing objects from chests.", (args) =>
     {
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;

@@ -6,13 +6,13 @@ public class WorldVersionCommand
   private static readonly List<string> Versions = ["legacy", "hh", "mistlands"];
   public WorldVersionCommand()
   {
-    CommandWrapper.Register("world_gen", (int index) =>
+    CommandWrapper.Register("world_gen", index =>
     {
       if (index == 0) return Versions;
       if (index == 1) return ["start"];
       return null;
     });
-    new Terminal.ConsoleCommand("world_gen", "[version] - Sets the world generation version.", (args) =>
+    Helper.Command("world_gen", "[version] - Sets the world generation version.", (args) =>
     {
       FiltererParameters pars = new(args);
 
@@ -27,6 +27,6 @@ public class WorldVersionCommand
       }
       if (Helper.IsClient(args)) return;
       Executor.AddOperation(new WorldVersion(args.Context, version, pars.Start));
-    }, optionsFetcher: () => Versions);
+    }, () => Versions);
   }
 }

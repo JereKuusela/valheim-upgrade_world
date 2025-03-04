@@ -17,14 +17,18 @@ public class DistributeLocations : ExecutedOperation
   private readonly Dictionary<string, int> Counts = [];
   public DistributeLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Start)
   {
-    Ids = [.. ids];
-    if (Ids.Length == 0)
-      Ids = [.. ZoneSystem.instance.m_locations
+    Ids = [.. ZoneSystem.instance.m_locations
         .Where(Helper.IsValid)
+        .Where(loc => ids.Contains(loc.m_prefab.Name))
         .Where(loc => loc.m_enable && loc.m_quantity != 0)
         .Where(loc => (loc.m_biome & args.BiomeMask) != Heightmap.Biome.None)
         .OrderByDescending(loc => loc.m_prioritized)
         .Select(loc => loc.m_prefab.Name)];
+    if (Ids.Length == 0)
+    {
+      Print("Error: No valid location ids.");
+      return;
+    }
     Chance = args.Chance;
     args = new(args)
     {
@@ -100,15 +104,15 @@ public class DistributeLocations : ExecutedOperation
   protected override void OnEnd()
   {
     if (Added >= 0)
-      Print($"{Added} locations{Helper.LocationIdString(Ids)} added to the world (total amount in the world: {Total}).");
+      Print($"{Added} locations{LocationOperation.IdString(Ids)} added to the world (total amount in the world: {Total}).");
     else
-      Print($"{Math.Abs(Added)} locations{Helper.LocationIdString(Ids)} removed from the world (total amount in the world: {Total}).");
+      Print($"{Math.Abs(Added)} locations{LocationOperation.IdString(Ids)} removed from the world (total amount in the world: {Total}).");
   }
 
 
   protected override string OnInit()
   {
-    return $"Generate locations{Helper.LocationIdString(Ids)}.";
+    return $"Generate locations{LocationOperation.IdString(Ids)}.";
   }
 
   // Copy paste for now.

@@ -4,13 +4,13 @@ public class StartStopCommand
   public StartStopCommand()
   {
     CommandWrapper.RegisterEmpty("start");
-    new Terminal.ConsoleCommand("start", "- Starts execution of operations.", (args) =>
+    Helper.Command("start", "- Starts execution of operations.", (args) =>
     {
       if (Helper.IsClient(args)) return;
       Executor.DoExecute(ServerExecution.User);
     });
     CommandWrapper.RegisterEmpty("stop");
-    new Terminal.ConsoleCommand("stop", "- Stops execution of operations.", (args) =>
+    Helper.Command("stop", "- Stops execution of operations.", (args) =>
     {
       if (Helper.IsClient(args)) return;
       Executor.RemoveOperations();

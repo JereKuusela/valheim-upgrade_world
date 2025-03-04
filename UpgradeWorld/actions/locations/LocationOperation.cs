@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 namespace UpgradeWorld;
 public abstract class LocationOperation : ZoneOperation
@@ -44,9 +46,37 @@ public abstract class LocationOperation : ZoneOperation
     zs.m_tempClearAreas.Clear();
     zs.PlaceLocations(zone, zonePos, root.transform, heightmap, zs.m_tempClearAreas, ZoneSystem.SpawnMode.Ghost, zs.m_tempSpawnedObjects);
     foreach (var obj in zs.m_tempSpawnedObjects)
-      Object.Destroy(obj);
+      UnityEngine.Object.Destroy(obj);
     zs.m_tempSpawnedObjects.Clear();
-    Object.Destroy(root);
+    UnityEngine.Object.Destroy(root);
     zs.m_zones.Remove(zone);
   }
+  public static HashSet<string> Ids(List<string> ids, List<string> ignore)
+  {
+    return [.. AllIds().Where(id => (ids.Count == 0 || ids.Contains(id)) && (ignore.Count == 0 || !ignore.Contains(id)))];
+  }
+  public static List<string> AllIds() => [.. ZoneSystem.instance.m_locations.Where(Helper.IsValid).Select(location => location.m_prefab.Name).Distinct()];
+
+  public static string IdString(IEnumerable<string> ids)
+  {
+    if (ids.Count() == AllIds().Count) return "";
+    if (ids.Count() == 0) return "";
+    return " " + Helper.JoinRows(ids);
+  }
+  public static void Register(string name)
+  {
+    CommandWrapper.Register(name, AutoComplete, Named);
+  }
+  private static Dictionary<string, Func<int, List<string>?>> CreateNamed()
+  {
+    var named = FiltererParameters.GetAutoComplete();
+    named["id"] = index => AllIds();
+    named["ignore"] = index => AllIds();
+    return named;
+  }
+
+  private static readonly Dictionary<string, Func<int, List<string>?>> Named = CreateNamed();
+
+  private static readonly List<string> Parameters = [.. FiltererParameters.Parameters.Concat(["id", "ignore"]).OrderBy(x => x)];
+  private static readonly Func<int, List<string>> AutoComplete = index => index == 0 ? AllIds() : Parameters;
 }

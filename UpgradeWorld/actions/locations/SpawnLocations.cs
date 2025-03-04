@@ -4,20 +4,20 @@ namespace UpgradeWorld;
 ///<summary>Spawns locations in explored areas.</summary>
 public class SpawnLocations : LocationOperation
 {
-  private readonly HashSet<string> Ids;
+  private readonly HashSet<string> Id;
   public SpawnLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args)
   {
     Operation = "Spawn missing locations";
     InitString = args.Print("Spawn missing locations to");
     Verb = "spawned to already generated areas";
     args.Chance = 1f;
-    Ids = ids;
+    Id = ids;
   }
   protected override void OnStart()
   {
     // This must be done right before execution to get the latest location data.
     // Doing it on the contructor would result in wrong zones if location distribute was executed before.
-    var filterer = new LocationFilterer(Ids, true);
+    var filterer = new LocationFilterer(Id, true);
     List<string> messages = [];
     ZonesToUpgrade = filterer.FilterZones(ZonesToUpgrade, ref messages);
   }

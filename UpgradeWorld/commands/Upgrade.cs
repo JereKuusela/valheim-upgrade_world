@@ -5,8 +5,8 @@ public class UpgradeCommand
 {
   public UpgradeCommand()
   {
-    CommandWrapper.Register("upgrade", (int index) => index == 0 ? Upgrade.Types : FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("upgrade", "[operation] [...args] - Performs a predefined upgrade operation.", (args) =>
+    CommandWrapper.Register("upgrade", index => index == 0 ? Upgrade.Types : FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
+    Helper.Command("upgrade", "[operation] [...args] - Performs a predefined upgrade operation.", (args) =>
     {
       FiltererParameters pars = new(args);
       var selectedType = "";
@@ -17,6 +17,6 @@ public class UpgradeCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       new Upgrade(args.Context, selectedType, pars.Unhandled, pars);
-    }, optionsFetcher: () => Upgrade.Types);
+    }, () => Upgrade.Types);
   }
 }

@@ -7,7 +7,6 @@ namespace UpgradeWorld;
 public static class Helper
 {
   public static bool IsValid(ZoneSystem.ZoneLocation loc) => loc != null && loc.m_prefab != null && (loc.m_prefab.IsValid || loc.m_prefab.m_name != null);
-  public static List<string> LocationIds() => [.. ZoneSystem.instance.m_locations.Where(IsValid).Select(location => location.m_prefab.Name).Distinct()];
   public static string Normalize(string value) => value.Trim().ToLower();
   public static string JoinRows(IEnumerable<string> values) => string.Join(", ", values);
 
@@ -145,12 +144,6 @@ public static class Helper
     if (ids.Count() == 0) return "";
     return " " + JoinRows(ids);
   }
-  public static string LocationIdString(IEnumerable<string> ids)
-  {
-    if (ids.Count() == LocationIds().Count) return "";
-    if (ids.Count() == 0) return "";
-    return " " + JoinRows(ids);
-  }
 
 
   public static string PrintPin(Vector3 vector) => vector.x.ToString("F0") + ", " + vector.z.ToString("F0") + ", " + vector.y.ToString("F0");
@@ -169,6 +162,66 @@ public static class Helper
     {
       hm.m_buildData = null;
       hm.Poke(true);
+    }
+  }
+
+  public static void Command(string name, string description, Terminal.ConsoleEvent action, Terminal.ConsoleOptionsFetcher? fetcter = null)
+  {
+    new Terminal.ConsoleCommand(name, description, Catch(action), isCheat: true, isNetwork: true, optionsFetcher: fetcter);
+  }
+  public static Terminal.ConsoleEvent Catch(Terminal.ConsoleEvent action) =>
+    (args) =>
+    {
+      try
+      {
+        action(args);
+      }
+      catch (InvalidOperationException e)
+      {
+        AddError(args.Context, e.Message);
+      }
+    };
+  public static void Command(string name, string description, Terminal.ConsoleEventFailable action, Terminal.ConsoleOptionsFetcher? fetcter = null)
+  {
+    new Terminal.ConsoleCommand(name, description, Catch(action), isCheat: true, isNetwork: true, optionsFetcher: fetcter);
+  }
+  public static Terminal.ConsoleEventFailable Catch(Terminal.ConsoleEventFailable action) =>
+    (args) =>
+    {
+      try
+      {
+        return action(args);
+      }
+      catch (InvalidOperationException e)
+      {
+        AddError(args.Context, e.Message);
+      }
+      return null;
+    };
+
+  public static void AddError(Terminal context, string message, bool priority = false)
+  {
+    AddMessage(context, $"Error: {message}", priority);
+  }
+  public static void AddMessage(Terminal context, string message, bool priority = false)
+  {
+    if (context == Console.instance)
+      context.AddString(message);
+    var hud = MessageHud.instance;
+    if (!hud) return;
+    if (!Player.m_localPlayer) return;
+    if (priority)
+    {
+      var items = hud.m_msgQeue.ToArray();
+      hud.m_msgQeue.Clear();
+      Player.m_localPlayer.Message(MessageHud.MessageType.TopLeft, message);
+      foreach (var item in items)
+        hud.m_msgQeue.Enqueue(item);
+      hud.m_msgQueueTimer = 10f;
+    }
+    else
+    {
+      Player.m_localPlayer.Message(MessageHud.MessageType.TopLeft, message);
     }
   }
 }

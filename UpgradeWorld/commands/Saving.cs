@@ -6,14 +6,14 @@ public class SavingCommands
   public SavingCommands()
   {
     CommandWrapper.RegisterEmpty("save_disable");
-    new Terminal.ConsoleCommand("save_disable", "- Disables saving.", (args) =>
+    Helper.Command("save_disable", "- Disables saving.", (args) =>
     {
       if (Helper.IsClient(args)) return;
       SavingDisabled = true;
       Helper.Print(args.Context, "Saving disabled.");
     });
     CommandWrapper.RegisterEmpty("save_enable");
-    new Terminal.ConsoleCommand("save_enable", "- Enables saving.", (args) =>
+    Helper.Command("save_enable", "- Enables saving.", (args) =>
     {
       if (Helper.IsClient(args)) return;
       SavingDisabled = false;

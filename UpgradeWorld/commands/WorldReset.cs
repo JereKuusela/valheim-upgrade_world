@@ -3,11 +3,11 @@ public class WorldResetCommand
 {
   public WorldResetCommand()
   {
-    CommandWrapper.Register("world_reset", (int index) =>
+    CommandWrapper.Register("world_reset", index =>
     {
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("world_reset", "[...args] - Resets zones and locations.", (args) =>
+    Helper.Command("world_reset", "[...args] - Resets zones and locations.", (args) =>
     {
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
@@ -15,6 +15,6 @@ public class WorldResetCommand
       Executor.AddOperation(new RemoveLocations(args.Context, [], pars));
       Executor.AddOperation(new DistributeLocations(args.Context, [], pars));
       Executor.AddOperation(new ResetZones(args.Context, pars));
-    }, optionsFetcher: () => FiltererParameters.Parameters);
+    }, () => FiltererParameters.Parameters);
   }
 }

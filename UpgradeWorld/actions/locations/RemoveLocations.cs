@@ -6,13 +6,13 @@ public class RemoveLocations : ExecutedOperation
 {
   readonly HashSet<string> Ids;
   readonly FiltererParameters Args;
-  public RemoveLocations(Terminal context, IEnumerable<string> ids, FiltererParameters args) : base(context, args.Start)
+  public RemoveLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Start)
   {
     Args = new(args)
     {
       TargetZones = TargetZones.All
     };
-    Ids = [.. ids];
+    Ids = ids;
   }
   protected override void OnStart()
   {
@@ -97,6 +97,6 @@ public class RemoveLocations : ExecutedOperation
 
   protected override string OnInit()
   {
-    return Args.Print($"Remove locations{Helper.LocationIdString(Ids)} from");
+    return Args.Print($"Remove locations{LocationOperation.IdString(Ids)} from");
   }
 }

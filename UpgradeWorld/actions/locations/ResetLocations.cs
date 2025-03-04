@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+
 namespace UpgradeWorld;
 ///<summary>Destroys and spawns given locations.</summary>
 public class RegenerateLocations : LocationOperation

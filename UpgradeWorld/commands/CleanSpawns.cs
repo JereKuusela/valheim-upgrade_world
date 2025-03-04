@@ -3,8 +3,8 @@ public class CleanSpawnsCommand
 {
   public CleanSpawnsCommand()
   {
-    CommandWrapper.Register("clean_spawns", (int index) => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("clean_spawns", "[...args] - Removes timtestamps from the spawn system.", (args) =>
+    CommandWrapper.Register("clean_spawns", index => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
+    Helper.Command("clean_spawns", "[...args] - Removes timtestamps from the spawn system.", (args) =>
     {
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;

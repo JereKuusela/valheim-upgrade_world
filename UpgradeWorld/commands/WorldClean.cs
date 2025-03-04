@@ -3,8 +3,8 @@ public class WorldCleanCommand
 {
   public WorldCleanCommand()
   {
-    CommandWrapper.Register("world_clean", (int index) => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("world_clean", "[...args] - Removes missing locations and objects.", (args) =>
+    CommandWrapper.Register("world_clean", index => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
+    Helper.Command("world_clean", "[...args] - Removes missing locations and objects.", (args) =>
     {
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;

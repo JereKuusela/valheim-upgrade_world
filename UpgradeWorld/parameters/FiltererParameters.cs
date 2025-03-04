@@ -211,23 +211,23 @@ public class FiltererParameters
   public static Dictionary<string, Func<int, List<string>?>> GetAutoComplete()
   {
     return new() {
-      { "pos", (int index) => CommandWrapper.XZ("pos", "Coordinates for the center point. If not given, player's position is used", index)},
-      { "limit", (int index) => CommandWrapper.Info("limit=<color=yellow>amount</color> | Limits the amount of objects.")},
-      { "zone", (int index) => CommandWrapper.XZ("zone" , "Indices for the center zone", index) },
-      { "biomes", (int index) => Enum.GetNames(typeof(Heightmap.Biome)).ToList() },
-      { "min", (int index) => index == 0 ? CommandWrapper.Info("min=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
-      { "minDistance", (int index) => index == 0 ? CommandWrapper.Info("minDistance=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
-      { "max", (int index) => index == 0 ? CommandWrapper.Info("max=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
-      { "maxDistance", (int index) => index == 0 ? CommandWrapper.Info("maxDistance=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
-      { "safeZones", (int index) => index == 0 ? CommandWrapper.Info("safezones=<color=yellow>amount</color> | The size of protected areas around player base structures.") : null },
-      { "chance", (int index) => index == 0 ? CommandWrapper.Info("chance=<color=yellow>percentage</color> (from 0 to 100) | The chance of a single operation being done.") : null },
-      { "terrain", (int index) => index == 0 ? CommandWrapper.Info("terrain=<color=yellow>meters</color> | Radius of reseted terrain.") : null },
-      { "clear", (int index) => index == 0 ? CommandWrapper.Info("clear=<color=yellow>meters</color> | Overrides the radius of removed objects.") : null },
-      { "start", (int index) => CommandWrapper.Flag("start", "Starts the operation instantly") },
-      { "force", (int index) => CommandWrapper.Flag("force", "Disables the player base detection") },
-      { "pin", (int index) => CommandWrapper.Flag("pin", "Pins results on the map") },
-      { "noEdges", (int index) => CommandWrapper.Flag("noedges", "Excludes zones with multiple biomes") },
-      { "distance", (int index) => {
+      { "pos", index => CommandWrapper.XZ("pos", "Coordinates for the center point. If not given, player's position is used", index)},
+      { "limit", index => CommandWrapper.Info("limit=<color=yellow>amount</color> | Limits the amount of objects.")},
+      { "zone", index => CommandWrapper.XZ("zone" , "Indices for the center zone", index) },
+      { "biomes", index => Enum.GetNames(typeof(Heightmap.Biome)).ToList() },
+      { "min", index => index == 0 ? CommandWrapper.Info("min=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
+      { "minDistance", index => index == 0 ? CommandWrapper.Info("minDistance=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
+      { "max", index => index == 0 ? CommandWrapper.Info("max=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
+      { "maxDistance", index => index == 0 ? CommandWrapper.Info("maxDistance=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
+      { "safeZones", index => index == 0 ? CommandWrapper.Info("safezones=<color=yellow>amount</color> | The size of protected areas around player base structures.") : null },
+      { "chance", index => index == 0 ? CommandWrapper.Info("chance=<color=yellow>percentage</color> (from 0 to 100) | The chance of a single operation being done.") : null },
+      { "terrain", index => index == 0 ? CommandWrapper.Info("terrain=<color=yellow>meters</color> | Radius of reseted terrain.") : null },
+      { "clear", index => index == 0 ? CommandWrapper.Info("clear=<color=yellow>meters</color> | Overrides the radius of removed objects.") : null },
+      { "start", index => CommandWrapper.Flag("start", "Starts the operation instantly") },
+      { "force", index => CommandWrapper.Flag("force", "Disables the player base detection") },
+      { "pin", index => CommandWrapper.Flag("pin", "Pins results on the map") },
+      { "noEdges", index => CommandWrapper.Flag("noedges", "Excludes zones with multiple biomes") },
+      { "distance", index => {
           if (index == 0) return CommandWrapper.Info("distance=<color=yellow>min</color>,max | Minimum distance from the center point / zone.");
           if (index == 1) return CommandWrapper.Info("distance=min,<color=yellow>max</color> | Maximum distance from the center point / zone.");
           return null;

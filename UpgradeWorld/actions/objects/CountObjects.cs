@@ -6,11 +6,11 @@ namespace UpgradeWorld;
 /// <summary>Counts the amounts of given entities.</summary>
 public class CountObjects : EntityOperation
 {
-  public CountObjects(Terminal context, List<string> ids, DataParameters args, Range<int> countRange) : base(context, args.Pin)
+  public CountObjects(Terminal context, HashSet<string> ids, DataParameters args, Range<int> countRange) : base(context, args.Pin)
   {
     Count(ids, args, countRange);
   }
-  private void Count(List<string> ids, DataParameters args, Range<int> countRange)
+  private void Count(HashSet<string> ids, DataParameters args, Range<int> countRange)
   {
     var prefabs = GetPrefabs(ids, args.Types);
     var zdos = GetZDOs(args, prefabs);

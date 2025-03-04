@@ -4,11 +4,11 @@ namespace UpgradeWorld;
 /// <summary>Lists position and biome of each location.</summary>
 public class ListLocationPositions : EntityOperation
 {
-  public ListLocationPositions(Terminal context, HashSet<string> ids, LocationIdParameters args) : base(context, args.Pin)
+  public ListLocationPositions(Terminal context, HashSet<string> ids, bool log, FiltererParameters args) : base(context, args.Pin)
   {
-    ListPositions(ids, args);
+    ListPositions(ids, log, args);
   }
-  private void ListPositions(HashSet<string> ids, LocationIdParameters args)
+  private void ListPositions(HashSet<string> ids, bool log, FiltererParameters args)
   {
     var zs = ZoneSystem.instance;
     List<string> texts = [];
@@ -20,7 +20,7 @@ public class ListLocationPositions : EntityOperation
       texts.Add($"{name}: {Helper.PrintVectorXZY(loc.m_position)} {WorldGenerator.instance.GetBiome(loc.m_position)}");
       AddPin(loc.m_position);
     }
-    if (args.Log) Log(texts);
+    if (log) Log(texts);
     else Print(texts, false);
     PrintPins();
   }

@@ -3,8 +3,8 @@ public class CleanLocationsCommand
 {
   public CleanLocationsCommand()
   {
-    CommandWrapper.Register("clean_locations", (int index) => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("clean_locations", "[...args] - Removes missing locations.", (args) =>
+    CommandWrapper.Register("clean_locations", index => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
+    Helper.Command("clean_locations", "[...args] - Removes missing locations.", (args) =>
     {
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;

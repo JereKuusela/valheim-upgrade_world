@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
+using Splatform;
 namespace UpgradeWorld;
 public struct FilterPoint
 {
@@ -45,15 +46,18 @@ public static class Settings
   private static void UpdateRootUsers() => RootUsers = [.. configRootUsers.Value.Split(',').Select(s => s.Trim()).Where(s => s != "")];
   public static bool IsRoot(string id)
   {
-    if (RootUsers.Count == 0) return id == "-1" || ZNet.instance.ListContainsId(ZNet.instance.m_adminList, id);
-    if (RootUsers.Contains(id)) return true;
-    if (id.StartsWith(PrivilegeManager.GetPlatformPrefix(PrivilegeManager.Platform.Steam)))
-      return RootUsers.Contains(id.Substring(PrivilegeManager.GetPlatformPrefix(PrivilegeManager.Platform.Steam).Length));
-    if (!id.Contains("_"))
-      return RootUsers.Contains(PrivilegeManager.GetPlatformPrefix(PrivilegeManager.Platform.Steam) + id);
+    var user = GetUser(id);
+    if (RootUsers.Count == 0) return id == "-1" || ZNet.instance.ListContainsId(ZNet.instance.m_adminList, user.ToString());
+    if (RootUsers.Contains(user.m_userID)) return true;
+    if (RootUsers.Contains(user.ToString())) return true;
     return false;
   }
 
+  private static PlatformUserID GetUser(string id)
+  {
+    if (id.Contains("_")) return new PlatformUserID(id);
+    return new PlatformUserID(ZNet.instance.m_steamPlatform, id);
+  }
   public static void Init(ConfigFile config)
   {
     var section = "1. General";

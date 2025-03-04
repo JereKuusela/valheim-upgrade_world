@@ -3,8 +3,8 @@ public class CleanDungeonsCommand
 {
   public CleanDungeonsCommand()
   {
-    CommandWrapper.Register("clean_dungeons", (int index) => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("clean_dungeons", "[...args] - Optimizes old dungeons.", (args) =>
+    CommandWrapper.Register("clean_dungeons", index => FiltererParameters.Parameters, FiltererParameters.GetAutoComplete());
+    Helper.Command("clean_dungeons", "[...args] - Optimizes old dungeons.", (args) =>
     {
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;

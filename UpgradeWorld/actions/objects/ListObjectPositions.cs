@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Lists positon and biome of each entity.</summary>
 public class ListObjectPositions : EntityOperation
 {
-  public ListObjectPositions(Terminal context, List<string> ids, DataParameters args) : base(context, args.Pin)
+  public ListObjectPositions(Terminal context, HashSet<string> ids, DataParameters args) : base(context, args.Pin)
   {
     ListPositions(ids, args);
   }
@@ -19,7 +19,7 @@ public class ListObjectPositions : EntityOperation
       return DataHelper.GetData(zdo, split[0], type);
     }).ToList());
   }
-  private void ListPositions(List<string> ids, DataParameters args)
+  private void ListPositions(HashSet<string> ids, DataParameters args)
   {
     var zdos = GetZDOs(args, GetPrefabs(ids, args.Types));
     var texts = zdos.Select(zdo =>

@@ -7,11 +7,11 @@ public class ZonesGenerateCommand
 {
   public ZonesGenerateCommand()
   {
-    CommandWrapper.Register("zones_generate", (int index) =>
+    CommandWrapper.Register("zones_generate", index =>
     {
       return FiltererParameters.Parameters;
     }, FiltererParameters.GetAutoComplete());
-    new Terminal.ConsoleCommand("zones_generate", "[...args] [empty] - Pre-generates areas without having to visit them.", (args) =>
+    Helper.Command("zones_generate", "[...args] [empty] - Pre-generates areas without having to visit them.", (args) =>
     {
       FiltererParameters pars = new(args)
       {
@@ -22,6 +22,6 @@ public class ZonesGenerateCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       Executor.AddOperation(new Generate(args.Context, pars, empty));
-    }, optionsFetcher: () => [.. Enum.GetNames(typeof(Heightmap.Biome))]);
+    }, () => [.. Enum.GetNames(typeof(Heightmap.Biome))]);
   }
 }

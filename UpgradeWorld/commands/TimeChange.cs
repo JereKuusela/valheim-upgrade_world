@@ -6,12 +6,12 @@ public class TimeChangeCommand
 {
   public TimeChangeCommand()
   {
-    CommandWrapper.Register("time_change", (int index) =>
+    CommandWrapper.Register("time_change", index =>
     {
       if (index == 0) return CommandWrapper.Info("Amount of seconds to go forward or backward.");
       return null;
     });
-    new Terminal.ConsoleCommand("time_change", "[seconds] - Changes the world time and updates object timestamps.", (args) =>
+    Helper.Command("time_change", "[seconds] - Changes the world time and updates object timestamps.", (args) =>
     {
       if (args.Args.Count() == 0)
       {
@@ -32,12 +32,12 @@ public class TimeChangeCommand
       if (Helper.IsClient(args)) return;
       new ChangeTime(args.Context, time);
     });
-    CommandWrapper.Register("time_change_day", (int index) =>
+    CommandWrapper.Register("time_change_day", index =>
     {
       if (index == 0) return CommandWrapper.Info("Amount of days to go forward or backward.");
       return null;
     });
-    new Terminal.ConsoleCommand("time_change_day", "[days] - Changes the world time and updates object timestamps.", (args) =>
+    Helper.Command("time_change_day", "[days] - Changes the world time and updates object timestamps.", (args) =>
     {
       if (args.Args.Count() == 0)
       {

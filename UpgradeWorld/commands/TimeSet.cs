@@ -6,12 +6,12 @@ public class TimeSetCommand
 {
   public TimeSetCommand()
   {
-    CommandWrapper.Register("time_set", (int index) =>
+    CommandWrapper.Register("time_set", index =>
     {
       if (index == 0) return CommandWrapper.Info("The amount of seconds to set the time.");
       return null;
     });
-    new Terminal.ConsoleCommand("time_set", "[seconds] - Sets the world time and updates object timestamps.", (args) =>
+    Helper.Command("time_set", "[seconds] - Sets the world time and updates object timestamps.", (args) =>
     {
       if (args.Args.Count() == 0)
       {
@@ -32,12 +32,12 @@ public class TimeSetCommand
       if (Helper.IsClient(args)) return;
       new SetTime(args.Context, time);
     });
-    CommandWrapper.Register("time_set_day", (int index) =>
+    CommandWrapper.Register("time_set_day", index =>
     {
       if (index == 0) return CommandWrapper.Info("The day to set the time.");
       return null;
     });
-    new Terminal.ConsoleCommand("time_set_day", "[days] - Sets the world time and updates object timestamps.", (args) =>
+    Helper.Command("time_set_day", "[days] - Sets the world time and updates object timestamps.", (args) =>
     {
       if (args.Args.Count() == 0)
       {

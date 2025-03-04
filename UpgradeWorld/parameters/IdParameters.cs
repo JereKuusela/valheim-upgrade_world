@@ -5,7 +5,9 @@ using Service;
 namespace UpgradeWorld;
 public class IdParameters : FiltererParameters
 {
-  public List<string> Ids = [];
+  private List<string> Include = [];
+  private readonly List<string> Ignore = [];
+  public HashSet<string> Ids() => VegetationOperation.GetIds(Include, Ignore);
   public bool RequireId;
   public bool Validate;
   public IdParameters(FiltererParameters pars) : base(pars)
@@ -15,18 +17,29 @@ public class IdParameters : FiltererParameters
   {
     RequireId = requireId;
     Validate = validate;
+    foreach (var par in Unhandled.ToList())
+    {
+      var split = par.Split('=');
+      var name = split[0];
+      if (name == "id")
+        Include = [.. split[1].Split(',')];
+      else if (name == "ignore")
+        Ignore = [.. split[1].Split(',')];
+      else continue;
+      Unhandled.Remove(par);
+    }
   }
   public override bool Valid(Terminal terminal)
   {
-    Ids = [.. Unhandled.SelectMany(kvp => Parse.Split(kvp))];
+    Include = [.. Unhandled.SelectMany(kvp => Parse.Split(kvp))];
     Unhandled.Clear();
     if (!base.Valid(terminal)) return false;
-    if (RequireId && Ids.Count() == 0)
+    if (RequireId && Include.Count() == 0)
     {
       Helper.Print(terminal, "Error: Missing ids.");
       return false;
     }
-    var invalidIds = Ids.Where(id => !id.Contains("*") && ZNetScene.instance.GetPrefab(id) == null);
+    var invalidIds = Include.Where(id => !id.Contains("*") && ZNetScene.instance.GetPrefab(id) == null);
     if (Validate && invalidIds.Count() > 0)
       Helper.Print(terminal, $"Warning: Entity id {string.Join(", ", invalidIds)} not recognized.");
     return true;

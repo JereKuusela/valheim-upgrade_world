@@ -75,14 +75,14 @@ public class DataParameters : IdParameters
     List<string> types = ["float", "id", "int", "long", "quat", "string", "vector"];
     List<string> truths = ["true", "false"];
     var autoComplete = FiltererParameters.GetAutoComplete();
-    autoComplete["level"] = (int index) => index == 0 ? CommandWrapper.Info("level=<color=yellow>amount</color> or level=<color=yellow>min-max</color> | Levels of the creature.") : null;
-    autoComplete["print"] = (int index) =>
+    autoComplete["level"] = index => index == 0 ? CommandWrapper.Info("level=<color=yellow>amount</color> or level=<color=yellow>min-max</color> | Levels of the creature.") : null;
+    autoComplete["print"] = index =>
     {
       if (index == 0) return CommandWrapper.Info("print=<color=yellow>key</color>,type | Prints data with a given key.");
       if (index == 1) return types;
       return null;
     };
-    autoComplete["data"] = (int index) =>
+    autoComplete["data"] = index =>
     {
       if (index == 0) return CommandWrapper.Info("data=<color=yellow>key</color>,value,type | Sets data to a given key. Type is required for new entries.");
       if (index == 1) return CommandWrapper.Info("data=key,<color=yellow>value</color>,type | Data value.");
@@ -90,16 +90,16 @@ public class DataParameters : IdParameters
       return null;
     };
 
-    autoComplete["filter"] = (int index) =>
+    autoComplete["filter"] = index =>
     {
       if (index == 0) return CommandWrapper.Info("filter=<color=yellow>key</color>,value,includeEmpty | Filter by a data value.");
       if (index == 1) return CommandWrapper.Info("filter=key,<color=yellow>value</color>,includeEmpty | Value or data type for new entries.");
       if (index == 2) return truths;
       return null;
     };
-    autoComplete["type"] = (int index) => ParameterComponents;
-    autoComplete["log"] = (int index) => index == 0 ? CommandWrapper.Info("Out put to log file instead of console.") : null;
-    autoComplete["location"] = (int index) => Helper.LocationIds();
+    autoComplete["type"] = index => ParameterComponents;
+    autoComplete["log"] = index => index == 0 ? CommandWrapper.Info("Out put to log file instead of console.") : null;
+    autoComplete["location"] = index => LocationOperation.AllIds();
     return autoComplete;
   }
   public static new List<string> Parameters = [.. GetAutoComplete().Keys.OrderBy(s => s)];
