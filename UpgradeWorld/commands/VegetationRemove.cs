@@ -9,7 +9,7 @@ public class VegetationRemoveCommand
       IdParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new RemoveVegetation(args.Context, pars.Ids(), pars));
+      Executor.AddOperation(new RemoveVegetation(args.Context, pars.VegIds(), pars));
     }, VegetationOperation.AllIds);
   }
 }

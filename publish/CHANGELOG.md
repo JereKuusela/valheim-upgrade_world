@@ -1,3 +1,5 @@
+- v1.70
+  - Fixes objects related commands not working correctly.
 
 - v1.69
   - Adds a new parameter `ignore` to exclude specific locations or vegetations.

@@ -7,7 +7,8 @@ public class IdParameters : FiltererParameters
 {
   private List<string> Include = [];
   private readonly List<string> Ignore = [];
-  public HashSet<string> Ids() => VegetationOperation.GetIds(Include, Ignore);
+  public HashSet<string> VegIds() => VegetationOperation.GetIds(Include, Ignore);
+  public HashSet<string> Ids() => [.. Include];
   public bool RequireId;
   public bool Validate;
   public IdParameters(FiltererParameters pars) : base(pars)
