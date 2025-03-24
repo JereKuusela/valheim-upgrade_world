@@ -13,6 +13,11 @@ public class RemoveLocations : ExecutedOperation
       TargetZones = TargetZones.All
     };
     Ids = ids;
+    if (Ids.Count == 0)
+    {
+      Print("Error: No valid location ids.");
+      return;
+    }
   }
   protected override void OnStart()
   {
@@ -33,7 +38,7 @@ public class RemoveLocations : ExecutedOperation
       if (zs.m_locationsByHash.TryGetValue(zdo.GetInt(LocationHash), out var location))
       {
         name = location.m_prefab.Name;
-        if (Ids.Count > 0 && !Ids.Contains(name)) continue;
+        if (!Ids.Contains(name)) continue;
         var clearRadius = location.m_exteriorRadius;
         if (Args.ObjectReset.HasValue) clearRadius = Args.ObjectReset.Value;
         AddPin(zdo.GetPosition());

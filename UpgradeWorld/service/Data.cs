@@ -3,8 +3,10 @@ using UpgradeWorld;
 
 namespace Service;
 
-public class DataHelper {
-  public static string GetData(ZDO zdo, string key, string type) {
+public class DataHelper
+{
+  public static string GetData(ZDO zdo, string key, string type)
+  {
     var id = zdo.m_uid;
     var hash = key.GetStableHashCode();
     var hashId = (key + "_u").GetStableHashCode();
@@ -18,7 +20,8 @@ public class DataHelper {
     var hasId = ZDOExtraData.s_longs.ContainsKey(id) && ZDOExtraData.s_longs[id].ContainsKey(hashId) && ZDOExtraData.s_longs[id].ContainsKey(hashValue);
     if (hasVec && (type == "" || type == "vector")) return Helper.PrintVectorXZY(ZDOExtraData.s_vec3[id][hash]) + " (vector)";
     if (hasQuat && (type == "" || type == "quat")) return Helper.PrintAngleYXZ(ZDOExtraData.s_quats[id][hash]) + " (quat)";
-    if (hasLong && (type == "" || type == "long")) {
+    if (hasLong && (type == "" || type == "long"))
+    {
       if (hash == ZDOVars.s_timeOfDeath) return Helper.PrintDay(ZDOExtraData.s_longs[id][hash]) + " (long)";
       return ZDOExtraData.s_longs[id][hash].ToString() + " (long)";
     }
@@ -29,7 +32,8 @@ public class DataHelper {
     return "No data";
   }
 
-  public static bool SetData(ZDO zdo, string key, string data, string type) {
+  public static bool SetData(ZDO zdo, string key, string data, string type)
+  {
     var id = zdo.m_uid;
     var hash = key.GetStableHashCode();
     var hashId = (key + "_u").GetStableHashCode();
@@ -41,29 +45,44 @@ public class DataHelper {
     var hasFloat = ZDOExtraData.s_floats.ContainsKey(id) && ZDOExtraData.s_floats[id].ContainsKey(hash);
     var hasId = ZDOExtraData.s_longs.ContainsKey(id) && ZDOExtraData.s_longs[id].ContainsKey(hashId);
 
-    if (type == "vector" || (type == "" && hasVec)) {
+    if (type == "vector" || (type == "" && hasVec))
+    {
       zdo.Set(hash, Parse.VectorXZY(Parse.Split(data), Vector3.zero));
-    } else if (type == "quat" || (type == "" && hasQuat)) {
+    }
+    else if (type == "quat" || (type == "" && hasQuat))
+    {
       zdo.Set(hash, Parse.AngleYXZ(data));
-    } else if (type == "long" || (type == "" && hasLong)) {
+    }
+    else if (type == "long" || (type == "" && hasLong))
+    {
       if (hash == ZDOVars.s_timeOfDeath) zdo.Set(hash, Helper.ToTick(Parse.Long(data)));
       else zdo.Set(hash, Parse.Long(data));
-    } else if (type == "string" || (type == "" && hasString)) {
-      zdo.Set(hash, data.Replace('_', ' '));
-    } else if (type == "int" || (type == "" && hasInt)) {
+    }
+    else if (type == "string" || (type == "" && hasString))
+    {
+      zdo.Set(hash, data);
+    }
+    else if (type == "int" || (type == "" && hasInt))
+    {
       zdo.Set(hash, Parse.Int(data));
-    } else if (type == "float" || (type == "" && hasFloat)) {
+    }
+    else if (type == "float" || (type == "" && hasFloat))
+    {
       zdo.Set(hash, Parse.Float(data));
-    } else if (type == "id" || (type == "" && hasId)) {
+    }
+    else if (type == "id" || (type == "" && hasId))
+    {
       var split = Parse.Split(data, '/');
       var hashValue = (key + "_i").GetStableHashCode();
       zdo.Set(hashId, Parse.Long(split[0]));
       zdo.Set(hashValue, Parse.Long(split, 1));
-    } else
+    }
+    else
       return false;
     return true;
   }
-  public static bool HasData(ZDO zdo, string key, string data, bool includeEmpty) {
+  public static bool HasData(ZDO zdo, string key, string data, bool includeEmpty)
+  {
     var id = zdo.m_uid;
     var hash = key.GetStableHashCode();
     var hashId = (key + "_u").GetStableHashCode();
@@ -74,13 +93,14 @@ public class DataHelper {
     if (hasQuat)
       return Parse.AngleYXZ(data) == ZDOExtraData.s_quats[id][hash];
     var hasLong = ZDOExtraData.s_longs.ContainsKey(id) && ZDOExtraData.s_longs[id].ContainsKey(hash);
-    if (hasLong) {
+    if (hasLong)
+    {
       if (hash == ZDOVars.s_timeOfDeath) return Parse.LongRange(data).Includes(Helper.ToDay(ZDOExtraData.s_longs[id][hash]));
       return Parse.LongRange(data).Includes(ZDOExtraData.s_longs[id][hash]);
     }
     var hasString = ZDOExtraData.s_strings.ContainsKey(id) && ZDOExtraData.s_strings[id].ContainsKey(hash);
     if (hasString)
-      return data.Replace('_', ' ') == ZDOExtraData.s_strings[id][hash];
+      return data == ZDOExtraData.s_strings[id][hash];
     var hasInt = ZDOExtraData.s_ints.ContainsKey(id) && ZDOExtraData.s_ints[id].ContainsKey(hash);
     if (hasInt)
       return Parse.IntRange(data).Includes(ZDOExtraData.s_ints[id][hash]);

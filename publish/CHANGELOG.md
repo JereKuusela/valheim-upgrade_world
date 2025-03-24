@@ -1,3 +1,10 @@
+- v1.72
+  - Fixes to some location related commands.
+
+- v1.71
+  - Fixes the command `world_reset` not working correctly.
+  - Removes conversion of underscores to spacebars in some commands (use Server Devcommands if needed).
+
 - v1.70
   - Fixes objects related commands not working correctly.
 
@@ -12,9 +19,3 @@
 
 - v1.67
   - Adds a new command `clean_duplicates` to remove duplicate objects.
-
-- v1.66
-  - Improves the speed of location distribution when biome filters are used.
-
-- v1.65
-  - Fixes the command `vegetation_reset` messing up vegetation generation until the game is restarted.

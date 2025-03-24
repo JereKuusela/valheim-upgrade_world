@@ -12,7 +12,7 @@ public class LocationFilterer(IEnumerable<string> Ids, bool OnlyMissing) : IZone
     zones = [.. zones.Where(zone =>
       zs.m_locationInstances.TryGetValue(zone, out var instance) &&
       (!OnlyMissing || !instance.m_placed) &&
-      (locationObjects.Count == 0 || locationObjects.Contains(instance.m_location.Hash))
+      locationObjects.Contains(instance.m_location.Hash)
     )];
     var skipped = amount - zones.Length;
     if (skipped > 0) messages.Add(skipped + " skipped by not having the location");
