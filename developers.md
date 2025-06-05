@@ -6,6 +6,8 @@ Add a new file to your project `UpgradeWorld.cs`
 
 ```cs
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using BepInEx.Bootstrap;
 using HarmonyLib;
 
@@ -21,25 +23,35 @@ public class CommandRegistration
   {
     new Console.ConsoleCommand(name, description, (args) =>
     {
-     foreach (var command in commands)
-       args.Context.TryRunCommand(command);
+      foreach (var command in commands)
+        args.Context.TryRunCommand(command);
     });
   }
 }
 
-[HarmonyPatch(typeof(Terminal), nameof(Terminal.InitTerminal))]
 public static class Upgrade
 {
   private static List<CommandRegistration> registrations = new();
-  
+
   public const string GUID = "upgrade_world";
+  private static bool Patched = false;
   public static void Register(string name, string description, params string[] commands)
   {
     if (!Chainloader.PluginInfos.ContainsKey(GUID)) return;
+    PatchIfNeeded();
     registrations.Add(new() { name = name, description = description, commands = commands });
   }
-  
-  static void Postfix()
+  private static void PatchIfNeeded()
+  {
+    if (Patched) return;
+    Patched = true;
+    Harmony harmony = new("helpers.upgrade_world");
+    var toPatch = AccessTools.Method(typeof(Terminal), nameof(Terminal.InitTerminal));
+    var postfix = AccessTools.Method(typeof(Upgrade), nameof(AddCommands));
+    harmony.Patch(toPatch, postfix: new HarmonyMethod(postfix));
+  }
+
+  static void AddCommands()
   {
     foreach (var registration in registrations)
       registration.AddCommand();
