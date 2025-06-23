@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 namespace UpgradeWorld;
+
 public abstract class LocationOperation : ZoneOperation
 {
   protected int Operated = 0;
@@ -14,15 +15,16 @@ public abstract class LocationOperation : ZoneOperation
   }
   protected override bool ExecuteZone(Vector2i zone)
   {
-    var zoneSystem = ZoneSystem.instance;
-    var locations = zoneSystem.m_locationInstances;
+    var zs = ZoneSystem.instance;
+    var locations = zs.m_locationInstances;
     if (!locations.TryGetValue(zone, out var location)) return true;
-    if (zoneSystem.IsZoneLoaded(zone))
+    if (zs.IsZoneLoaded(zone))
     {
       if (ExecuteLocation(zone, location)) Operated++;
+      Zones.ReleaseZone(zone);
       return true;
     }
-    zoneSystem.PokeLocalZone(zone);
+    Zones.PokeZone(zone);
     return false;
   }
   protected abstract bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location);
@@ -48,8 +50,6 @@ public abstract class LocationOperation : ZoneOperation
     foreach (var obj in zs.m_tempSpawnedObjects)
       UnityEngine.Object.Destroy(obj);
     zs.m_tempSpawnedObjects.Clear();
-    UnityEngine.Object.Destroy(root);
-    zs.m_zones.Remove(zone);
   }
   public static HashSet<string> Ids(List<string> ids, List<string> ignore)
   {

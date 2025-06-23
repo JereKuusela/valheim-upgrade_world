@@ -4,6 +4,7 @@ using System.Linq;
 using Service;
 using UnityEngine;
 namespace UpgradeWorld;
+
 public static class Helper
 {
   public static bool IsValid(ZoneSystem.ZoneLocation loc) => loc != null && loc.m_prefab != null && (loc.m_prefab.IsValid || loc.m_prefab.m_name != null);

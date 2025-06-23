@@ -4,12 +4,13 @@ using BepInEx.Logging;
 using HarmonyLib;
 
 namespace UpgradeWorld;
+
 [BepInPlugin(GUID, NAME, VERSION)]
 public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.72";
+  const string VERSION = "1.73";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable

@@ -18,9 +18,10 @@ public class AddVegetation : VegetationOperation
     if (zs.IsZoneLoaded(zone))
     {
       SpawnVegetation(zone);
+      Zones.ReleaseZone(zone);
       return true;
     }
-    zs.PokeLocalZone(zone);
+    Zones.PokeZone(zone);
     return false;
   }
   protected override void OnEnd()
@@ -62,7 +63,5 @@ public class AddVegetation : VegetationOperation
     }
     zs.m_tempSpawnedObjects.Clear();
     ResetTerrain.Active = false;
-    Object.Destroy(root);
-    zs.m_zones.Remove(zone);
   }
 }

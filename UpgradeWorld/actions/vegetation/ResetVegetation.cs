@@ -37,9 +37,10 @@ public class ResetVegetation : VegetationOperation
     {
       Remove(zone);
       SpawnVegetation(zone);
+      Zones.ReleaseZone(zone);
       return true;
     }
-    zs.PokeLocalZone(zone);
+    Zones.PokeZone(zone);
     return false;
   }
   protected void Remove(Vector2i zone)
@@ -76,8 +77,6 @@ public class ResetVegetation : VegetationOperation
     }
     zs.m_tempSpawnedObjects.Clear();
     ResetTerrain.Active = false;
-    Object.Destroy(root);
-    zs.m_zones.Remove(zone);
   }
   protected override void OnEnd()
   {

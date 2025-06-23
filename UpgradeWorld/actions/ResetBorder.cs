@@ -15,7 +15,6 @@ public class ResetBorder : EntityOperation
   private void Execute(Dictionary<Vector2i, Direction> zones)
   {
     var zdos = GetZDOs(Settings.TerrainCompilerHash);
-    var zs = ZoneSystem.instance;
     var reseted = 0;
     foreach (var zdo in zdos)
     {

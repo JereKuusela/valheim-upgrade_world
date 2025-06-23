@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 namespace UpgradeWorld;
+
 public abstract class VegetationOperation : ZoneOperation
 {
   public static List<string> AllIds()

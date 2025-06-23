@@ -64,4 +64,31 @@ public static class Zones
     if (max == 0 && min > 0) max = int.MaxValue;
     return distance >= min && distance <= max;
   }
+  // Manually loaded zones must be tracked to not release active zones.
+  // Otherwise terrain compiler loses track of the height map.
+  private static readonly HashSet<Vector2i> LoadedZones = [];
+
+  public static void PokeZone(Vector2i zone)
+  {
+    LoadedZones.Add(zone);
+    ZoneSystem.instance.PokeLocalZone(zone);
+  }
+  public static void ReleaseZone(Vector2i zone)
+  {
+    if (!LoadedZones.Contains(zone)) return;
+    LoadedZones.Remove(zone);
+    var zdos = Helper.GetZDOs(zone);
+    if (zdos != null)
+    {
+      var scene = ZNetScene.instance;
+      foreach (var zdo in zdos)
+      {
+        if (!scene.m_instances.TryGetValue(zdo, out var instance)) continue;
+        instance.ResetZDO();
+        UnityEngine.Object.Destroy(instance);
+        scene.m_instances.Remove(zdo);
+      }
+    }
+    ZoneSystem.instance.m_zones.Remove(zone);
+  }
 }
