@@ -57,6 +57,7 @@ If you wish to restrict this, edit the config file and add Steam IDs to the root
 
 Most commands allow fine-tuning the affected area. Following parameters are available:
 
+- `amount=number`: Multiplies affected objects. Only affects vegetation commands.
 - `biomes=biome1,biome2,...`: Only includes given biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
 - `chance=percentage`: Makes a single operation to be applied randomly.
 - `clear=meters`: Overrides the cleared radius when using `locations_remove`.

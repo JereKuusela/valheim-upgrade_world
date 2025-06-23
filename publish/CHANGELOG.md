@@ -1,4 +1,5 @@
 - v1.73
+  - Adds a new parameter `amount` to multiply affected vegetation objects.
   - Fixes heightmap error when resetting vegetation near the player on single player.
   - Improves performance of commands that require loading the area (for example vegetation commands).
 

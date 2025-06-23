@@ -4,6 +4,7 @@ using System.Linq;
 using Service;
 using UnityEngine;
 namespace UpgradeWorld;
+
 public enum TargetZones
 {
   Generated,
@@ -22,6 +23,7 @@ public class FiltererParameters
   public float MinDistance = 0f;
   public float MaxDistance = 0f;
   public float Chance = 1f;
+  public float Amount = 1f;
   public float TerrainReset = 0f;
   public float? ObjectReset;
   public int SafeZones = Settings.SafeZoneSize;
@@ -43,6 +45,7 @@ public class FiltererParameters
     MinDistance = pars.MinDistance;
     MaxDistance = pars.MaxDistance;
     Chance = pars.Chance;
+    Amount = pars.Amount;
     SafeZones = pars.SafeZones;
     TargetZones = pars.TargetZones;
     Unhandled = pars.Unhandled;
@@ -66,6 +69,7 @@ public class FiltererParameters
         else if (name == "min" || name == "mindistance") MinDistance = Parse.Float(value);
         else if (name == "max" || name == "maxdistance") MaxDistance = Parse.Float(value);
         else if (name == "chance") Chance = Parse.Float(value);
+        else if (name == "amount") Amount = Parse.Float(value);
         else if (name == "terrain") TerrainReset = Parse.Float(value);
         else if (name == "clear") ObjectReset = Parse.Float(value);
         else if (name == "distance")
@@ -221,6 +225,7 @@ public class FiltererParameters
       { "maxDistance", index => index == 0 ? CommandWrapper.Info("maxDistance=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },
       { "safeZones", index => index == 0 ? CommandWrapper.Info("safezones=<color=yellow>amount</color> | The size of protected areas around player base structures.") : null },
       { "chance", index => index == 0 ? CommandWrapper.Info("chance=<color=yellow>percentage</color> (from 0 to 100) | The chance of a single operation being done.") : null },
+      { "amount", index => index == 0 ? CommandWrapper.Info("amount=<color=yellow>number</color> | Multiplies the affected objects.") : null },
       { "terrain", index => index == 0 ? CommandWrapper.Info("terrain=<color=yellow>meters</color> | Radius of reseted terrain.") : null },
       { "clear", index => index == 0 ? CommandWrapper.Info("clear=<color=yellow>meters</color> | Overrides the radius of removed objects.") : null },
       { "start", index => CommandWrapper.Flag("start", "Starts the operation instantly") },
@@ -236,9 +241,6 @@ public class FiltererParameters
     };
   }
   public static System.Random random = new();
-  public bool Roll()
-  {
-    if (Chance >= 1f) return true;
-    return random.NextDouble() < Chance;
-  }
+  public bool Roll() => Chance >= 1f || random.NextDouble() < Chance;
+  public bool RollAmount() => Amount >= 1f || random.NextDouble() < Amount;
 }

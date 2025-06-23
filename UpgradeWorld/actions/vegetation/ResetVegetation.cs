@@ -49,7 +49,7 @@ public class ResetVegetation : VegetationOperation
     if (zdos == null) return;
     foreach (var zdo in zdos)
     {
-      if (!Args.Roll()) continue;
+      if (!Args.RollAmount()) continue;
       if (!Hashes.Contains(zdo.m_prefab)) continue;
       AddPin(zdo.GetPosition());
       Helper.RemoveZDO(zdo);
