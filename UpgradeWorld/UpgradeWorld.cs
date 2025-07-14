@@ -122,6 +122,8 @@ public class SetCommands
     new CleanSpawnsCommand();
     new CleanStandsCommand();
     new CleanDuplicatesCommand();
+    new LocationsFixCommand();
+    new LocationUnregisterCommand();
     if (Terminal.commands.TryGetValue("genloc", out var genloc))
     {
       genloc.IsCheat = false;
