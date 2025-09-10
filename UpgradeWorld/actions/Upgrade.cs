@@ -17,7 +17,8 @@ public class Upgrade : BaseOperation
     "hildir",
     "ashlands",
     "deepnorth",
-    "bogwitch"
+    "bogwitch",
+    "combatruins"
   ];
 
   public Upgrade(Terminal context, string type, List<string> extra, FiltererParameters args) : base(context)
@@ -74,6 +75,11 @@ public class Upgrade : BaseOperation
     {
       Executor.AddOperation(new DistributeLocations(Context, ["BogWitch_Camp"], args));
       Executor.AddOperation(new SpawnLocations(Context, ["BogWitch_Camp"], args));
+    }
+    else if (type == "combatruins")
+    {
+      Executor.AddOperation(new DistributeLocations(Context, ["CombatRuin01"], args));
+      Executor.AddOperation(new SpawnLocations(Context, ["CombatRuin01"], args));
     }
     else if (type == "tarpits")
     {

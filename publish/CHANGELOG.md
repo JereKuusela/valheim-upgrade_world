@@ -1,3 +1,6 @@
+- v1.74
+  - Adds a new upgrade `combatruins` to add the new location from combat update to already explored areas.
+
 - v1.73
   - Adds a new parameter `amount` to multiply affected vegetation objects.
   - Fixes heightmap error when resetting vegetation near the player on single player.

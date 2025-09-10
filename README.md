@@ -36,7 +36,8 @@ Note: The default base detection is very conservative. Single workbenches, campf
 For `upgrade` command:
 
 - `ashlands`: Fully regenerates Ashlands biomes and nearby water areas. Terrain is automatically updated by the base game and not affected by this operation.
-- `bogwitch`: Adds possible spawn locations to already explored areas.
+- `bogwitch`: Adds possible spawn locations for the Bog Witch camp to already explored areas.
+- `combatruins`: Adds the new location from combat update to already explored areas.
 - `deepnorth`: Fully regenerates Deep North biomes and nearby water areas. Terrain is automatically updated by the base game and not affected by this operation.
 - `hildir`: Adds new locations to already explored areas.
 - `mountain_caves`: Adds mountain caves to already explored areas.
