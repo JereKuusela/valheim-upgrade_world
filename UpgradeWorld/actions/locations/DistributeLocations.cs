@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using HarmonyLib;
 using UnityEngine;
@@ -38,7 +40,7 @@ public class DistributeLocations : ExecutedOperation
     List<string> messages = [];
     AllowedZones = [.. filterers.Aggregate(Zones.GetZones(args), (zones, filterer) => filterer.FilterZones(zones, ref messages)).Distinct()];
   }
-  protected override bool OnExecute()
+  protected override IEnumerator OnExecute(Stopwatch sw)
   {
     // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
     if (Attempts == 0)
@@ -47,11 +49,12 @@ public class DistributeLocations : ExecutedOperation
       if (Ids.Length == 0)
       {
         Print("No locations to generate.");
-        return true;
+        yield break;
       }
       Print($"Generating locations {Ids[Attempts]}. This may take a while...");
       ClearNotSpawned(Ids);
-      return false;
+      yield return null; // Continue to next execution
+      yield break;
     }
     if (Attempts <= Ids.Length)
     {
@@ -59,13 +62,20 @@ public class DistributeLocations : ExecutedOperation
       var zs = ZoneSystem.instance;
       var id = Ids[Attempts - 1];
       var locations = zs.m_locations.Where(location => Helper.IsValid(location) && location.m_prefab.Name == id).ToArray();
-      if (locations.Length == 0) return false;
+      if (locations.Length == 0)
+      {
+        yield return null; // Continue to next execution
+        yield break;
+      }
       // Note: Printing is done one step before the execution, otherwise it would get printed afterwards.
       if (Attempts < Ids.Length)
         Print($"Generating locations {Ids[Attempts]}. This may take a while...");
       var before = Counts.TryGetValue(id, out var count) ? count : 0;
       foreach (var location in locations)
+      {
         GenerateLocations(location);
+        yield return null; // Yield between location generations for performance
+      }
       if (Chance < 1f)
       {
         zs.m_locationInstances = zs.m_locationInstances
@@ -78,10 +88,10 @@ public class DistributeLocations : ExecutedOperation
       Added += Total - before;
       SpawnToAlreadyGenerated = false;
       LoadingIndicator.SetProgress(Attempts / (float)Ids.Length);
-      return false;
+      yield return null; // Continue to next execution
+      yield break;
     }
     LoadingIndicator.SetProgressVisibility(false);
-    return true;
   }
   private void ClearNotSpawned(string[] ids)
   {

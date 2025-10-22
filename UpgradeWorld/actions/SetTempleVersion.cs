@@ -1,8 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
 namespace UpgradeWorld;
+
 public class TempleVersion(Terminal context, string version, bool start) : ExecutedOperation(context, start)
 {
   readonly string Version = version;
@@ -52,14 +55,14 @@ public class TempleVersion(Terminal context, string version, bool start) : Execu
     {HashQueen, new Quaternion(0.00000f, 0.93423f, 0.00000f, -0.35667f)}
   };
 
-  protected override bool OnExecute()
+  protected override IEnumerator OnExecute(Stopwatch sw)
   {
     // Find StartTemple location.
     var locs = ZDOMan.instance.m_objectsByID.Where(kvp => kvp.Value.m_prefab == HashProxy && kvp.Value.GetInt(ZDOVars.s_location) == HashTemple).ToArray();
     if (locs.Length == 0)
     {
       Print("Error: StartTemple location not found.");
-      return true;
+      yield break;
     }
     foreach (var loc in locs)
     {
@@ -92,11 +95,12 @@ public class TempleVersion(Terminal context, string version, bool start) : Execu
           var localRot = Quaternion.Inverse(rot) * zdo.GetRotation();
           Log([$"Stone {name} at pos {localPos} and rot {localRot}."]);
         }
+        yield return null; // Yield between processing each boss stone
       }
+      yield return null; // Yield between processing each temple location
     }
     if (Version != "")
       Print($"Updated start temple version to {Version}.");
-    return true;
   }
 
   protected override string OnInit()

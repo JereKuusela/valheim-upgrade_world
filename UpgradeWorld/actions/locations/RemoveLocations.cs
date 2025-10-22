@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Destroys given locations.</summary>
@@ -93,11 +95,11 @@ public class RemoveLocations : ExecutedOperation
     return removed;
   }
 
-  protected override bool OnExecute()
+  protected override IEnumerator OnExecute(Stopwatch sw)
   {
     var removed = RemoveSpawned() + RemoveNotSpawned();
     Print($"Removed {removed} locations.");
-    return true;
+    yield break;
   }
 
   protected override string OnInit()

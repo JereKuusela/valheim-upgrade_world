@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Base class for all zone based operations. Provides the "zone by zone" execution logic.</summary>
@@ -25,22 +27,30 @@ public abstract class ZoneOperation(Terminal context, FiltererParameters args) :
     return InitString;
   }
   protected abstract bool ExecuteZone(Vector2i zone);
-  protected override bool OnExecute()
+  protected override IEnumerator OnExecute(Stopwatch sw)
   {
-    if (ZonesToUpgrade == null || ZonesToUpgrade.Length == 0) return true;
+    if (ZonesToUpgrade == null || ZonesToUpgrade.Length == 0)
+      yield break;
 
-    for (var i = 0; i < ZonesPerUpdate && ZoneIndex < ZonesToUpgrade.Length; i++)
+    while (ZoneIndex < ZonesToUpgrade.Length)
     {
-      var zone = ZonesToUpgrade[ZoneIndex];
-      var success = ExecuteZone(zone);
-      // Makes the zone unload as soon as possible.
-      if (success && ZoneSystem.instance.m_zones.TryGetValue(zone, out var zoneObj))
-        zoneObj.m_ttl = ZoneSystem.instance.m_zoneTTL;
-      MoveToNextZone(success);
-      if (!success) break;
+      // Process zones in batches to maintain performance
+      for (var i = 0; i < ZonesPerUpdate && ZoneIndex < ZonesToUpgrade.Length; i++)
+      {
+        var zone = ZonesToUpgrade[ZoneIndex];
+        var success = ExecuteZone(zone);
+        // Makes the zone unload as soon as possible.
+        if (success && ZoneSystem.instance.m_zones.TryGetValue(zone, out var zoneObj))
+          zoneObj.m_ttl = ZoneSystem.instance.m_zoneTTL;
+        MoveToNextZone(success);
+        if (!success) break;
+      }
+
+      UpdateConsole();
+
+      // Yield to next frame after processing a batch of zones
+      yield return null;
     }
-    UpdateConsole();
-    return ZoneIndex >= ZonesToUpgrade.Length;
   }
 
   private void MoveToNextZone(bool success = true)

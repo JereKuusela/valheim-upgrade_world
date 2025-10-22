@@ -1,3 +1,6 @@
+- v1.75
+  - Reworked the execution flow to work more smoothly and efficiently.
+
 - v1.74
   - Adds a new upgrade `combatruins` to add the new location from combat update to already explored areas.
 
@@ -12,6 +15,3 @@
 - v1.71
   - Fixes the command `world_reset` not working correctly.
   - Removes conversion of underscores to spacebars in some commands (use Server Devcommands if needed).
-
-- v1.70
-  - Fixes objects related commands not working correctly.

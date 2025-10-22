@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Diagnostics;
 namespace UpgradeWorld;
 ///<summary>Base class for all operations that need execution. Provides the execution logic.</summary>
 public abstract class ExecutedOperation(Terminal context, bool autoStart, bool pin = false) : BaseOperation(context, pin)
@@ -8,32 +10,44 @@ public abstract class ExecutedOperation(Terminal context, bool autoStart, bool p
   public bool AutoStart = autoStart;
   public bool First = true;
 
-  public bool Execute()
+  public IEnumerator Execute(Stopwatch sw)
   {
-    try
+    if (First)
     {
-      if (First)
+      try
       {
         OnStart();
-        First = false;
       }
-      var ret = OnExecute();
-      Attempts++;
-      if (ret)
+      catch (InvalidOperationException e)
       {
-        PrintPins();
+        Helper.Print(Context, User, e.Message);
         OnEnd();
+        yield break;
       }
-      return ret;
+      First = false;
+      yield return null; // Yield after initialization
+    }
+    // Execute the operation as a coroutine
+    IEnumerator? executeEnumerator;
+    try
+    {
+      executeEnumerator = OnExecute(sw);
     }
     catch (InvalidOperationException e)
     {
       Helper.Print(Context, User, e.Message);
       OnEnd();
-      return true;
+      yield break;
     }
+
+    if (executeEnumerator != null)
+      yield return executeEnumerator;
+
+    Attempts++;
+    PrintPins();
+    OnEnd();
   }
-  protected abstract bool OnExecute();
+  protected abstract IEnumerator OnExecute(Stopwatch sw);
   public void Init()
   {
     var output = OnInit();

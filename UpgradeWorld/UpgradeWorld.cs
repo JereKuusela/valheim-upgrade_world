@@ -10,7 +10,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.74";
+  const string VERSION = "1.74.1";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -23,16 +23,10 @@ public class UpgradeWorld : BaseUnityPlugin
   }
   public void Start()
   {
+    Executor.SetContext(this);
     CommandWrapper.Init();
     FiltererParameters.Parameters.Sort();
-    // Too high tick rate probably just wasted processing power.
-    InvokeRepeating("Execute", 1f, 0.1f);
   }
-  public void Execute()
-  {
-    Executor.Execute();
-  }
-
 
   private void SetupWatcher()
   {
@@ -49,6 +43,7 @@ public class UpgradeWorld : BaseUnityPlugin
   private void OnDestroy()
   {
 #pragma warning restore IDE0051
+    Executor.StopExecution();
     Config.Save();
   }
   private void ReadConfigValues(object sender, FileSystemEventArgs e)

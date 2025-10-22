@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class StartStopCommand
 {
   public StartStopCommand()
@@ -7,7 +8,9 @@ public class StartStopCommand
     Helper.Command("start", "- Starts execution of operations.", (args) =>
     {
       if (Helper.IsClient(args)) return;
-      Executor.DoExecute(ServerExecution.User);
+      // Redirect all messsage to the starter.
+      Executor.SetUser(ServerExecution.User);
+      Executor.StartExecution();
     });
     CommandWrapper.RegisterEmpty("stop");
     Helper.Command("stop", "- Stops execution of operations.", (args) =>

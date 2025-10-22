@@ -1,22 +1,46 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
 namespace UpgradeWorld;
+
 public static class Executor
 {
   private static readonly List<ExecutedOperation> operations = [];
   private static readonly List<Action> cleanUps = [];
-  private static bool ShouldExecute = false;
-  private static bool PrintInit = false;
-  public static void DoExecute(ZRpc? user)
+  private static Coroutine? executionCoroutine;
+  private static MonoBehaviour? context;
+  public static void SetUser(ZRpc? user)
   {
     foreach (var operation in operations) operation.User = user;
-    ShouldExecute = true;
+  }
+  public static void SetContext(MonoBehaviour context)
+  {
+    Executor.context = context;
+  }
+
+  public static void StartExecution()
+  {
+    if (context == null) throw new Exception("Executor context is not set. Call Executor.SetContext from a MonoBehaviour before starting execution.");
+    if (executionCoroutine != null) return;
+    executionCoroutine = context.StartCoroutine(ExecuteCoroutine());
+  }
+
+  public static void StopExecution()
+  {
+    if (context == null) throw new Exception("Executor context is not set. Call Executor.SetContext from a MonoBehaviour before stopping execution.");
+    if (executionCoroutine == null) return;
+    context.StopCoroutine(executionCoroutine);
+    executionCoroutine = null;
   }
   public static void AddOperation(ExecutedOperation operation)
   {
     operation.Init();
-    PrintInit = true;
     operations.Add(operation);
+
+    if (executionCoroutine == null && (Settings.AutoStart || operation.AutoStart))
+      StartExecution();
   }
   public static void AddCleanUp(Action cleanUp)
   {
@@ -27,35 +51,32 @@ public static class Executor
   {
     foreach (var cleanUp in cleanUps) cleanUp();
     cleanUps.Clear();
+    StopExecution();
   }
   public static void RemoveOperations()
   {
     operations.Clear();
     DoClean();
-    ShouldExecute = false;
     LoadingIndicator.SetProgressVisibility(false);
   }
-  private static DateTime LastCommand = DateTime.MinValue;
-  public static void Execute()
+  private static IEnumerator ExecuteCoroutine()
   {
-    if (operations.Count == 0)
+    var sw = Stopwatch.StartNew();
+    while (true)
     {
-      ShouldExecute = false;
-      return;
-    }
-    if (!ShouldExecute && !Settings.AutoStart && !operations[0].AutoStart)
-    {
-      if (PrintInit) operations[operations.Count - 1].Print("Use <color=yellow>start</color> to begin execution or <color=yellow>stop</color> to cancel.");
-      PrintInit = false;
-      return;
-    }
-    if (DateTime.Now - LastCommand < TimeSpan.FromMilliseconds(Settings.Throttle)) return;
-    if (operations[0].Execute())
-    {
-      LastCommand = DateTime.Now;
+      if (operations.Count == 0)
+      {
+        sw.Stop();
+        DoClean();
+        yield break;
+      }
+
+      // Execute the operation as a coroutine - let it yield its own progress
+      yield return operations[0].Execute(sw);
+
+      // Operation is complete, remove it
       operations.RemoveAt(0);
     }
-    if (operations.Count == 0)
-      DoClean();
   }
+  public const float ProgressMin = 0.1f;
 }
