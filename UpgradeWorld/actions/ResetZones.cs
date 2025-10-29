@@ -9,7 +9,6 @@ public class ResetZones : ZoneOperation
   public ResetZones(Terminal context, FiltererParameters args) : base(context, args)
   {
     Operation = "Reset";
-    ZonesPerUpdate = Settings.DestroysPerUpdate;
     args.TargetZones = TargetZones.Generated;
     InitString = args.Print("Reset");
     Filterers = FiltererFactory.Create(args);

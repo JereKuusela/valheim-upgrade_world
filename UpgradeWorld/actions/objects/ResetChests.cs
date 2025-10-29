@@ -4,15 +4,45 @@ using Service;
 
 namespace UpgradeWorld;
 /// <summary>Rerolls given chests.</summary>
-public class ResetChests : EntityOperation
+public class ResetChests(string[] chestIds, IEnumerable<string> allowedItems, bool looted, DataParameters args, Terminal context) : ExecutedEntityOperation(context, chestIds, args)
 {
   private static List<string> chestNames = [];
-  private readonly HashSet<string> AllowedItems;
-  public ResetChests(string[] chestIds, IEnumerable<string> allowedItems, bool looted, DataParameters args, Terminal context) : base(context, args.Pin)
+  private readonly HashSet<string> AllowedItems = [.. allowedItems.Select(Helper.Normalize)];
+  private readonly string[] ChestIds = chestIds;
+  private readonly bool Looted = looted;
+  private Dictionary<int, UnityEngine.GameObject> ChestPrefabs = [];
+
+  protected override HashSet<int> GetPrefabsForOperation()
   {
-    AllowedItems = [.. allowedItems.Select(Helper.Normalize)];
-    Reroll(chestIds, looted, args);
+    ChestPrefabs = ChestIds.ToDictionary(id => id.GetStableHashCode(), id => ZNetScene.instance.GetPrefab(id));
+    if (ChestPrefabs.Values.Any(prefab => prefab == null || prefab.GetComponent<Container>() == null))
+      throw new System.InvalidOperationException("Error: Invalid chest ID.");
+
+    return [.. ChestPrefabs.Keys];
   }
+
+  protected override bool ProcessZDO(ZDO zdo)
+  {
+    if (!ShouldResetChest(zdo)) return false;
+
+    ZDOData data = new(zdo);
+    data.Ints.Remove(ZDOVars.s_addedDefaultItems);
+    data.Strings.Remove(ZDOVars.s_items);
+    data.Clone();
+    Helper.RemoveZDO(zdo);
+
+    ResetTerrain.Execute(zdo.GetPosition(), Args.TerrainReset);
+    return true;
+  }
+
+  protected override string GetNoObjectsMessage() => "No chests found to reset.";
+
+  protected override string GetInitMessage() => $"Resetting {TotalCount} chest{(TotalCount > 1 ? "s" : "")}";
+
+  protected override string GetProcessedMessage() => $"Chests reseted ({ProcessedCount} of {TotalCount}).";
+
+  protected override string GetCountMessage(int count, int prefab) => "";
+
   public static List<string> ChestNames()
   {
     if (chestNames.Count == 0)
@@ -23,53 +53,35 @@ public class ResetChests : EntityOperation
     }
     return chestNames;
   }
-  private void Reroll(string[] chestIds, bool looted, DataParameters args)
+
+  private bool ShouldResetChest(ZDO zdo)
   {
-    var totalChests = 0;
-    var resetedChests = 0;
-    var prefabs = chestIds.ToDictionary(id => id.GetStableHashCode(), id => ZNetScene.instance.GetPrefab(id));
-    if (prefabs.Values.Any(prefab => prefab == null || prefab.GetComponent<Container>() == null))
+    if (!zdo.GetBool(ZDOVars.s_addedDefaultItems))
     {
-      Print("Error: Invalid chest ID.");
-      return;
+      if (Settings.Verbose)
+        Print("Skipping a chest: Drops already unrolled.");
+      return false;
     }
-    var zdos = GetZDOs(args, [.. prefabs.Keys]);
-    foreach (var zdo in zdos)
+
+    if (!Looted || AllowedItems.Count > 0)
     {
-      totalChests++;
-      if (!zdo.GetBool(ZDOVars.s_addedDefaultItems))
+      var container = ChestPrefabs[zdo.m_prefab].GetComponent<Container>();
+      Inventory inventory = new(container.m_name, container.m_bkg, container.m_width, container.m_height);
+      ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
+      inventory.Load(loadPackage);
+
+      if (inventory.GetAllItems().Count == 0 && !Looted)
       {
         if (Settings.Verbose)
-          Print("Skipping a chest: Drops already unrolled.");
-        continue;
-      }
-      if (!looted || AllowedItems.Count > 0)
-      {
-        var container = prefabs[zdo.m_prefab].GetComponent<Container>();
-        Inventory inventory = new(container.m_name, container.m_bkg, container.m_width, container.m_height);
-        ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
-        inventory.Load(loadPackage);
-        if (inventory.GetAllItems().Count == 0 && !looted)
-        {
-          if (Settings.Verbose)
-            Print("Skipping a chest: Already looted.");
-          continue;
-        }
-        if (AllowedItems.Count > 0 && !inventory.GetAllItems().All(IsValid)) continue;
+          Print("Skipping a chest: Already looted.");
+        return false;
       }
 
-      ZDOData data = new(zdo);
-      data.Ints.Remove(ZDOVars.s_addedDefaultItems);
-      data.Strings.Remove(ZDOVars.s_items);
-      data.Clone();
-      resetedChests++;
-      AddPin(zdo.m_position);
-      Helper.RemoveZDO(zdo);
-
-      ResetTerrain.Execute(zdo.GetPosition(), args.TerrainReset);
+      if (AllowedItems.Count > 0 && !inventory.GetAllItems().All(IsValid))
+        return false;
     }
-    Print("Chests reseted (" + resetedChests + " of " + totalChests + ").");
-    PrintPins();
+
+    return true;
   }
   private bool IsValid(ItemDrop.ItemData item)
   {

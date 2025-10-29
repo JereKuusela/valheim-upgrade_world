@@ -4,13 +4,12 @@ namespace UpgradeWorld;
 /// <summary>Generates zones.</summary>
 public class Generate : ZoneOperation
 {
-  private bool Empty = false;
+  private readonly bool Empty = false;
   public Generate(Terminal context, FiltererParameters args, bool empty) : base(context, args)
   {
     Operation = "Generate";
     InitString = args.Print("Generate");
     Filterers = FiltererFactory.Create(args);
-    if (empty) ZonesPerUpdate = 100000;
     Empty = empty;
   }
 

@@ -7,7 +7,6 @@ public class RestoreZones : ZoneOperation
   public RestoreZones(Terminal context, FiltererParameters args) : base(context, args)
   {
     Operation = "Restore zones";
-    ZonesPerUpdate = Settings.DestroysPerUpdate;
     args.TargetZones = TargetZones.Generated;
     args.SafeZones = 0;
     InitString = args.Print($"Restore");

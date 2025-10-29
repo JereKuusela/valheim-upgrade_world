@@ -1,30 +1,21 @@
 using System.Collections.Generic;
-using System.Linq;
+
 namespace UpgradeWorld;
 /// <summary>Removes given entity ids within a given distance.</summary>
-public class RemoveObjects : EntityOperation
+public class RemoveObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : ExecutedEntityOperation(context, ids, args)
 {
-  public RemoveObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context, args.Pin)
+
+  protected override bool ProcessZDO(ZDO zdo)
   {
-    Remove(ids, args);
+    Helper.RemoveZDO(zdo);
+    return true;
   }
-  private void Remove(IEnumerable<string> ids, DataParameters args)
-  {
-    var prefabs = GetPrefabs(ids, args.Types);
-    var zdos = GetZDOs(args, prefabs);
-    var total = 0;
-    var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);
-    foreach (var zdo in zdos)
-    {
-      counts[zdo.m_prefab] += 1;
-      total += 1;
-      AddPin(zdo.GetPosition());
-      Helper.RemoveZDO(zdo);
-    }
-    var linq = counts.Where(kvp => kvp.Value > 0).Select(kvp => $"Removed {kvp.Value} of {GetName(kvp.Key)}.");
-    string[] texts = [$"Removed: {total}", .. linq];
-    if (args.Log) Log(texts);
-    else Print(texts, false);
-    PrintPins();
-  }
+
+  protected override string GetNoObjectsMessage() => "No objects found to remove.";
+
+  protected override string GetInitMessage() => $"Removing {TotalCount} object{(TotalCount > 1 ? "s" : "")}";
+
+  protected override string GetProcessedMessage() => $"Removed: {ProcessedCount}";
+
+  protected override string GetCountMessage(int count, int prefab) => $"Removed {count} of {EntityOperation.GetName(prefab)}.";
 }

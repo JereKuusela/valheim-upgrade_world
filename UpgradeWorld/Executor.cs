@@ -70,13 +70,12 @@ public static class Executor
         DoClean();
         yield break;
       }
-
-      // Execute the operation as a coroutine - let it yield its own progress
+      sw.Restart();
       yield return operations[0].Execute(sw);
 
-      // Operation is complete, remove it
       operations.RemoveAt(0);
     }
   }
-  public const float ProgressMin = 0.1f;
+  public const long ProgressMin = 500; // 0.5 seconds
+  public const int ZdoMaxUpdates = 10000;
 }

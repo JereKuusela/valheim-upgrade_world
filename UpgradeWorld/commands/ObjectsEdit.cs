@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class ObjectsEditCommand
 {
   public ObjectsEditCommand()
@@ -13,7 +14,7 @@ public class ObjectsEditCommand
       DataParameters pars = new(args, true);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      new EditObjects(args.Context, pars.Ids(), pars);
+      Executor.AddOperation(new EditObjects(args.Context, pars.Ids(), pars));
     }, () => ZNetScene.instance.GetPrefabNames());
   }
 }

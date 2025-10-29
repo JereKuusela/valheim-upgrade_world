@@ -10,7 +10,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.74.1";
+  const string VERSION = "1.74.2";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -72,7 +72,7 @@ public class IsConsoleEnabled
   }
 }
 
-[HarmonyPatch(typeof(Terminal), "InitTerminal")]
+[HarmonyPatch(typeof(Terminal), nameof(Terminal.InitTerminal))]
 public class SetCommands
 {
   public static void Postfix()
@@ -124,5 +124,23 @@ public class SetCommands
       genloc.IsCheat = false;
       genloc.OnlyServer = false;
     }
+  }
+}
+
+// Prevent crashes when too many ZDOs are being removed at once.
+[HarmonyPatch(typeof(ZDOMan), nameof(ZDOMan.SendDestroyed))]
+public class SendDestroyed
+{
+  public static bool Prefix(ZDOMan __instance)
+  {
+    if (__instance.m_destroySendList.Count < 10000)
+      return true;
+    ZPackage zpackage = new ZPackage();
+    zpackage.Write(10000);
+    for (int i = 0; i < 10000; i++)
+      zpackage.Write(__instance.m_destroySendList[i]);
+    __instance.m_destroySendList.RemoveRange(0, 10000);
+    ZRoutedRpc.instance.InvokeRoutedRPC(ZRoutedRpc.Everybody, "DestroyZDO", [zpackage]);
+    return false;
   }
 }

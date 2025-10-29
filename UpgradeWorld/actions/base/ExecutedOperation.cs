@@ -12,25 +12,14 @@ public abstract class ExecutedOperation(Terminal context, bool autoStart, bool p
 
   public IEnumerator Execute(Stopwatch sw)
   {
-    if (First)
-    {
-      try
-      {
-        OnStart();
-      }
-      catch (InvalidOperationException e)
-      {
-        Helper.Print(Context, User, e.Message);
-        OnEnd();
-        yield break;
-      }
-      First = false;
-      yield return null; // Yield after initialization
-    }
-    // Execute the operation as a coroutine
     IEnumerator? executeEnumerator;
     try
     {
+      if (First)
+      {
+        OnStart();
+        First = false;
+      }
       executeEnumerator = OnExecute(sw);
     }
     catch (InvalidOperationException e)

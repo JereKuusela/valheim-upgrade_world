@@ -29,6 +29,11 @@ public static class Helper
       return list;
     return null;
   }
+  public static bool CanRemoveZdos()
+  {
+    // Not sure if 10000 is the right limit, but can be tweaked if still causes crashes.
+    return ZDOMan.instance.m_destroySendList.Count < 10000;
+  }
   public static void RemoveZDO(ZDO zdo)
   {
     if (zdo == null || !zdo.IsValid()) return;

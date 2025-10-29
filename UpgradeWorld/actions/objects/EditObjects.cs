@@ -3,12 +3,8 @@ using System.Linq;
 using Service;
 namespace UpgradeWorld;
 /// <summary>Lists positon and biome of each entity.</summary>
-public class EditObjects : EntityOperation
+public class EditObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : ExecutedEntityOperation(context, ids, args)
 {
-  public EditObjects(Terminal context, IEnumerable<string> ids, DataParameters args) : base(context, args.Pin)
-  {
-    Execute(ids, args);
-  }
   private bool SetData(ZDO zdo, List<string> datas)
   {
     var revision = zdo.DataRevision;
@@ -24,27 +20,16 @@ public class EditObjects : EntityOperation
       if (!zdo.IsOwner())
         zdo.SetOwner(ZDOMan.GetSessionID());
       zdo.DataRevision = revision + 1;
-      AddPin(zdo.GetPosition());
     }
     return result;
   }
-  private void Execute(IEnumerable<string> ids, DataParameters args)
-  {
-    var prefabs = GetPrefabs(ids, args.Types);
-    var zdos = GetZDOs(args, prefabs);
-    var total = 0;
-    var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);
-    foreach (var zdo in zdos)
-    {
-      if (!SetData(zdo, args.Datas))
-        continue;
-      counts[zdo.m_prefab] += 1;
-      total += 1;
-    }
-    var linq = counts.Where(kvp => kvp.Value > 0).Select(kvp => $"Updated {kvp.Value} of {GetName(kvp.Key)}.");
-    string[] texts = [$"Updated: {total}", .. linq];
-    if (args.Log) Log(texts);
-    else Print(texts, false);
-    PrintPins();
-  }
+  protected override bool ProcessZDO(ZDO zdo) => SetData(zdo, Args.Datas);
+
+  protected override string GetNoObjectsMessage() => "No objects found to update.";
+
+  protected override string GetInitMessage() => $"Updating {TotalCount} object{(TotalCount > 1 ? "s" : "")}";
+
+  protected override string GetProcessedMessage() => $"Updated: {ProcessedCount}";
+
+  protected override string GetCountMessage(int count, int prefab) => $"Updated {count} of {EntityOperation.GetName(prefab)}.";
 }

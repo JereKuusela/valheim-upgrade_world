@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class ObjectsSwapCommand
 {
   public ObjectsSwapCommand()
@@ -13,7 +14,7 @@ public class ObjectsSwapCommand
       DataParameters pars = new(args, true);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      new SwapObjects(args.Context, pars.Ids(), pars);
+      Executor.AddOperation(new SwapObjects(args.Context, pars.Ids(), pars));
     }, () => ZNetScene.instance.GetPrefabNames());
   }
 }

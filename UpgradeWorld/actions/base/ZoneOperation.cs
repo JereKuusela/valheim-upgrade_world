@@ -9,7 +9,6 @@ public abstract class ZoneOperation(Terminal context, FiltererParameters args) :
 {
   public string Operation = "BaseOperation";
   protected Vector2i[] ZonesToUpgrade = Zones.GetZones(args);
-  protected int ZonesPerUpdate = 1;
   protected int ZoneIndex = 0;
   ///<summary>Some operations can be done outside the zone loading logic.</summary>
   protected int PreOperated = 0;
@@ -32,25 +31,28 @@ public abstract class ZoneOperation(Terminal context, FiltererParameters args) :
     if (ZonesToUpgrade == null || ZonesToUpgrade.Length == 0)
       yield break;
 
+
     while (ZoneIndex < ZonesToUpgrade.Length)
     {
-      // Process zones in batches to maintain performance
-      for (var i = 0; i < ZonesPerUpdate && ZoneIndex < ZonesToUpgrade.Length; i++)
+      var zone = ZonesToUpgrade[ZoneIndex];
+      var success = ExecuteZone(zone);
+      // Makes the zone unload as soon as possible.
+      if (success && ZoneSystem.instance.m_zones.TryGetValue(zone, out var zoneObj))
+        zoneObj.m_ttl = ZoneSystem.instance.m_zoneTTL;
+      MoveToNextZone(success);
+      if (!success) continue;
+
+      // Check if enough time has passed to yield control
+      var currentTime = sw.ElapsedMilliseconds;
+      if (currentTime >= Executor.ProgressMin)
       {
-        var zone = ZonesToUpgrade[ZoneIndex];
-        var success = ExecuteZone(zone);
-        // Makes the zone unload as soon as possible.
-        if (success && ZoneSystem.instance.m_zones.TryGetValue(zone, out var zoneObj))
-          zoneObj.m_ttl = ZoneSystem.instance.m_zoneTTL;
-        MoveToNextZone(success);
-        if (!success) break;
+        UpdateConsole();
+        yield return null;
       }
-
-      UpdateConsole();
-
-      // Yield to next frame after processing a batch of zones
-      yield return null;
     }
+
+    // Final console update
+    UpdateConsole();
   }
 
   private void MoveToNextZone(bool success = true)

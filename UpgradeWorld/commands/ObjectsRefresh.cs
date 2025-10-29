@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class ObjetsRefreshCommand
 {
   public ObjetsRefreshCommand()
@@ -13,7 +14,7 @@ public class ObjetsRefreshCommand
       DataParameters pars = new(args, false);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      new RefreshObjects(args.Context, pars.Ids(), pars);
+      Executor.AddOperation(new RefreshObjects(args.Context, pars.Ids(), pars));
     }, () => ZNetScene.instance.GetPrefabNames());
   }
 }

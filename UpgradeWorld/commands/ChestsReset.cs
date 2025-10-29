@@ -3,6 +3,7 @@ using System.Linq;
 using Service;
 
 namespace UpgradeWorld;
+
 public class ChestsResetCommand
 {
   public ChestsResetCommand()
@@ -25,7 +26,7 @@ public class ChestsResetCommand
         ids = [.. pars.Ids().Skip(1)];
       }
       if (Helper.IsClient(args)) return;
-      new ResetChests(chestIds, ids, looted, pars, args.Context);
+      Executor.AddOperation(new ResetChests(chestIds, ids, looted, pars, args.Context));
     }, ResetChests.ChestNames);
   }
 }

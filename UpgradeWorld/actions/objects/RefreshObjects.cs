@@ -1,14 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using Service;
 namespace UpgradeWorld;
 /// <summary>Respawns spawners, pickables, chests, etc..</summary>
-public class RefreshObjects : EntityOperation
+public class RefreshObjects(Terminal context, HashSet<string> ids, DataParameters args) : ExecutedEntityOperation(context, ids, args)
 {
-  public RefreshObjects(Terminal context, HashSet<string> ids, DataParameters args) : base(context, args.Pin)
-  {
-    Execute(ids, args);
-  }
   private bool SetData(ZDO zdo)
   {
     var updated = false;
@@ -50,29 +45,18 @@ public class RefreshObjects : EntityOperation
     {
       if (!zdo.IsOwner())
         zdo.SetOwner(ZDOMan.GetSessionID());
-      AddPin(zdo.GetPosition());
     }
     return updated;
   }
-  private void Execute(HashSet<string> ids, DataParameters args)
-  {
-    var prefabs = GetPrefabs(ids, args.Types);
-    var zdos = GetZDOs(args, prefabs);
-    var total = 0;
-    var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);
-    foreach (var zdo in zdos)
-    {
-      if (!SetData(zdo))
-        continue;
-      counts[zdo.m_prefab] += 1;
-      total += 1;
-    }
-    var linq = counts.Where(kvp => kvp.Value > 0).Select(kvp => $"Refreshed {kvp.Value} of {GetName(kvp.Key)}.");
-    string[] texts = [$"Refreshed: {total}", .. linq];
-    if (args.Log) Log(texts);
-    else Print(texts, false);
-    PrintPins();
-  }
+  protected override bool ProcessZDO(ZDO zdo) => SetData(zdo);
+
+  protected override string GetNoObjectsMessage() => "No objects found to refresh.";
+
+  protected override string GetInitMessage() => $"Refreshing {TotalCount} object{(TotalCount > 1 ? "s" : "")}";
+
+  protected override string GetProcessedMessage() => $"Refreshed: {ProcessedCount}";
+
+  protected override string GetCountMessage(int count, int prefab) => $"Refreshed {count} of {EntityOperation.GetName(prefab)}.";
 
   private string ClearChest(ZDO zdo)
   {

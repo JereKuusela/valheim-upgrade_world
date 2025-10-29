@@ -12,7 +12,6 @@ public class ResetVegetation : VegetationOperation
   public HashSet<int> Hashes = [];
   public ResetVegetation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, ids, args)
   {
-    ZonesPerUpdate = Settings.DestroysPerUpdate;
     Operation = "Reset vegetation";
     InitString = args.Print($"Reset vegetation{Helper.IdString(ids)} from");
     args.TargetZones = TargetZones.Generated;

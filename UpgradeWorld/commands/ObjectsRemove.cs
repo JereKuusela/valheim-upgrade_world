@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class ObjectsRemoveCommand
 {
   public ObjectsRemoveCommand()
@@ -13,7 +14,8 @@ public class ObjectsRemoveCommand
       DataParameters pars = new(args, true);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      new RemoveObjects(args.Context, pars.Ids(), pars);
+      Executor.AddOperation(new RemoveObjects(args.Context, pars.Ids(), pars));
+
     }, () => ZNetScene.instance.GetPrefabNames());
   }
 }
