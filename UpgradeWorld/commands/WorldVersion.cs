@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 
 namespace UpgradeWorld;
+
 public class WorldVersionCommand
 {
   private static readonly List<string> Versions = ["legacy", "hh", "mistlands"];
@@ -26,7 +27,7 @@ public class WorldVersionCommand
         return;
       }
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new WorldVersion(args.Context, version, pars.Start));
+      Executor.AddOperation(new WorldVersion(args.Context, version), pars.Start);
     }, () => Versions);
   }
 }

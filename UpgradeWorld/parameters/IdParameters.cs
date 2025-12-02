@@ -3,6 +3,7 @@ using System.Linq;
 using Service;
 
 namespace UpgradeWorld;
+
 public class IdParameters : FiltererParameters
 {
   private List<string> Include = [];
@@ -42,7 +43,10 @@ public class IdParameters : FiltererParameters
     }
     var invalidIds = Include.Where(id => !id.Contains("*") && ZNetScene.instance.GetPrefab(id) == null);
     if (Validate && invalidIds.Count() > 0)
-      Helper.Print(terminal, $"Warning: Entity id {string.Join(", ", invalidIds)} not recognized.");
+    {
+      Helper.Print(terminal, $"Error: Entity id {string.Join(", ", invalidIds)} not recognized.");
+      return false;
+    }
     return true;
   }
   public IdParameters(Terminal.ConsoleEventArgs args) : base(args)

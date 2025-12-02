@@ -2,7 +2,7 @@ using System.Collections;
 using System.Diagnostics;
 namespace UpgradeWorld;
 
-public class Print(Terminal context, string initText, string text, bool start) : ExecutedOperation(context, start)
+public class Print(Terminal context, string initText, string text) : ExecutedOperation(context)
 {
   protected override IEnumerator OnExecute(Stopwatch sw)
   {

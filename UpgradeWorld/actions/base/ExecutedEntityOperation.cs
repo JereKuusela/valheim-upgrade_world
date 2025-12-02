@@ -6,7 +6,7 @@ using System.Linq;
 namespace UpgradeWorld;
 
 /// <summary>Base class for executed entity operations that process ZDOs in batches.</summary>
-public abstract class ExecutedEntityOperation(Terminal context, IEnumerable<string> ids, DataParameters args) : ExecutedOperation(context, args.Start, args.Pin)
+public abstract class ExecutedEntityOperation(Terminal context, IEnumerable<string> ids, DataParameters args) : ExecutedOperation(context, args.Pin)
 {
   protected readonly IEnumerable<string> Ids = ids;
   protected readonly DataParameters Args = args;

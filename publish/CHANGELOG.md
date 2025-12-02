@@ -1,4 +1,7 @@
 - v1.75
+  - Add support for wildcard `*` in locations ids.
+  - Changes commands not to run if any invalid ids are provided.
+  - Changes location commands to not run if no ids are provided.
   - Reworked the execution flow to work more smoothly and efficiently.
 
 - v1.74

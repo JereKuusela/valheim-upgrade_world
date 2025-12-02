@@ -8,17 +8,7 @@ namespace UpgradeWorld;
 public abstract class EntityOperation(Terminal context, bool pin) : BaseOperation(context, pin)
 {
   protected static string S(int i) => i > 1 ? "s" : "";
-  private static bool IsIncluded(string id, string name)
-  {
-    if (id == "*") return true;
-    if (id[0] == '*' && id[id.Length - 1] == '*')
-    {
-      return name.Contains(id.Substring(1, id.Length - 2));
-    }
-    if (id[0] == '*') return name.EndsWith(id.Substring(1), StringComparison.OrdinalIgnoreCase);
-    if (id[id.Length - 1] == '*') return name.StartsWith(id.Substring(0, id.Length - 1), StringComparison.OrdinalIgnoreCase);
-    return id == name;
-  }
+
   private static readonly int PlayerHash = "Player".GetStableHashCode();
   private static Dictionary<int, string> HashToName = [];
   public static string GetName(int prefab) => HashToName.TryGetValue(prefab, out var name) ? name : "";
@@ -33,7 +23,7 @@ public abstract class EntityOperation(Terminal context, bool pin) : BaseOperatio
       // Empty on purpose.
     }
     else if (id.Contains("*"))
-      values = values.Where(kvp => IsIncluded(id, kvp.Value.name));
+      values = values.Where(kvp => Helper.IsIncluded(id, kvp.Value.name));
     else
       values = values.Where(kvp => string.Equals(kvp.Value.name, id, StringComparison.OrdinalIgnoreCase));
 

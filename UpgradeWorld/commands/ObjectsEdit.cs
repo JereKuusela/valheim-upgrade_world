@@ -14,7 +14,7 @@ public class ObjectsEditCommand
       DataParameters pars = new(args, true);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new EditObjects(args.Context, pars.Ids(), pars));
+      Executor.AddOperation(new EditObjects(args.Context, pars.Ids(), pars), pars.Start);
     }, () => ZNetScene.instance.GetPrefabNames());
   }
 }

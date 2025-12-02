@@ -3,6 +3,7 @@ using System.Linq;
 using Service;
 
 namespace UpgradeWorld;
+
 public class ZonesGenerateCommand
 {
   public ZonesGenerateCommand()
@@ -21,7 +22,7 @@ public class ZonesGenerateCommand
       var empty = Parse.Flag(pars.Unhandled, "empty");
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new Generate(args.Context, pars, empty));
+      Executor.AddOperation(new Generate(args.Context, pars, empty), pars.Start);
     }, () => [.. Enum.GetNames(typeof(Heightmap.Biome))]);
   }
 }

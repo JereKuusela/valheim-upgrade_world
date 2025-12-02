@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 namespace UpgradeWorld;
 ///<summary>Base class for all zone based operations. Provides the "zone by zone" execution logic.</summary>
-public abstract class ZoneOperation(Terminal context, FiltererParameters args) : ExecutedOperation(context, args.Start, args.Pin)
+public abstract class ZoneOperation(Terminal context, FiltererParameters args) : ExecutedOperation(context, args.Pin)
 {
   public string Operation = "BaseOperation";
   protected Vector2i[] ZonesToUpgrade = Zones.GetZones(args);
@@ -40,7 +40,6 @@ public abstract class ZoneOperation(Terminal context, FiltererParameters args) :
       if (success && ZoneSystem.instance.m_zones.TryGetValue(zone, out var zoneObj))
         zoneObj.m_ttl = ZoneSystem.instance.m_zoneTTL;
       MoveToNextZone(success);
-      if (!success) continue;
 
       // Check if enough time has passed to yield control
       var currentTime = sw.ElapsedMilliseconds;
@@ -55,6 +54,7 @@ public abstract class ZoneOperation(Terminal context, FiltererParameters args) :
     UpdateConsole();
   }
 
+  private int Attempts = 0;
   private void MoveToNextZone(bool success = true)
   {
     if (success)

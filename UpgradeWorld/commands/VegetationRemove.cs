@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class VegetationRemoveCommand
 {
   public VegetationRemoveCommand()
@@ -9,7 +10,7 @@ public class VegetationRemoveCommand
       IdParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new RemoveVegetation(args.Context, pars.VegIds(), pars));
+      Executor.AddOperation(new RemoveVegetation(args.Context, pars.VegIds(), pars), pars.Start);
     }, VegetationOperation.AllIds);
   }
 }

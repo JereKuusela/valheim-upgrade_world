@@ -29,11 +29,6 @@ public static class Helper
       return list;
     return null;
   }
-  public static bool CanRemoveZdos()
-  {
-    // Not sure if 10000 is the right limit, but can be tweaked if still causes crashes.
-    return ZDOMan.instance.m_destroySendList.Count < 10000;
-  }
   public static void RemoveZDO(ZDO zdo)
   {
     if (zdo == null || !zdo.IsValid()) return;
@@ -149,6 +144,18 @@ public static class Helper
   {
     if (ids.Count() == 0) return "";
     return " " + JoinRows(ids);
+  }
+
+  public static bool IsIncluded(string id, string name)
+  {
+    if (id == "*") return true;
+    if (id[0] == '*' && id[id.Length - 1] == '*')
+    {
+      return name.Contains(id.Substring(1, id.Length - 2));
+    }
+    if (id[0] == '*') return name.EndsWith(id.Substring(1), StringComparison.OrdinalIgnoreCase);
+    if (id[id.Length - 1] == '*') return name.StartsWith(id.Substring(0, id.Length - 1), StringComparison.OrdinalIgnoreCase);
+    return id == name;
   }
 
 

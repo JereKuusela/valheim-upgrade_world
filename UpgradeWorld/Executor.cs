@@ -34,12 +34,12 @@ public static class Executor
     context.StopCoroutine(executionCoroutine);
     executionCoroutine = null;
   }
-  public static void AddOperation(ExecutedOperation operation)
+  public static void AddOperation(ExecutedOperation operation, bool autoStart)
   {
     operation.Init();
     operations.Add(operation);
 
-    if (executionCoroutine == null && (Settings.AutoStart || operation.AutoStart))
+    if (executionCoroutine == null && (Settings.AutoStart || autoStart))
       StartExecution();
   }
   public static void AddCleanUp(Action cleanUp)
@@ -76,6 +76,6 @@ public static class Executor
       operations.RemoveAt(0);
     }
   }
-  public const long ProgressMin = 500; // 0.5 seconds
+  public const long ProgressMin = 100; // 0.1 seconds
   public const int ZdoMaxUpdates = 10000;
 }

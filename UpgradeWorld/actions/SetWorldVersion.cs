@@ -2,7 +2,7 @@ using System.Collections;
 using System.Diagnostics;
 namespace UpgradeWorld;
 
-public class WorldVersion(Terminal context, int version, bool start) : ExecutedOperation(context, start)
+public class WorldVersion(Terminal context, int version) : ExecutedOperation(context)
 {
   readonly int Version = version;
 

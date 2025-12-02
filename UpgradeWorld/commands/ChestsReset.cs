@@ -26,7 +26,7 @@ public class ChestsResetCommand
         ids = [.. pars.Ids().Skip(1)];
       }
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new ResetChests(chestIds, ids, looted, pars, args.Context));
+      Executor.AddOperation(new ResetChests(chestIds, ids, looted, pars, args.Context), pars.Start);
     }, ResetChests.ChestNames);
   }
 }

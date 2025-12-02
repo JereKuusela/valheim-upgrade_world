@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class LocationsListCommand
 {
   public LocationsListCommand()
@@ -9,7 +10,7 @@ public class LocationsListCommand
       LocationIdParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      new ListLocationPositions(args.Context, pars.Ids(), pars.Log, pars);
+      new ListLocationPositions(args.Context, pars.Ids, pars.Log, pars);
     }, LocationOperation.AllIds);
   }
 }

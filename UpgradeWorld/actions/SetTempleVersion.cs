@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace UpgradeWorld;
 
-public class TempleVersion(Terminal context, string version, bool start) : ExecutedOperation(context, start)
+public class TempleVersion(Terminal context, string version) : ExecutedOperation(context)
 {
   readonly string Version = version;
 

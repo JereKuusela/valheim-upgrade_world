@@ -14,7 +14,7 @@ public class ObjetsRefreshCommand
       DataParameters pars = new(args, false);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new RefreshObjects(args.Context, pars.Ids(), pars));
+      Executor.AddOperation(new RefreshObjects(args.Context, pars.Ids(), pars), pars.Start);
     }, () => ZNetScene.instance.GetPrefabNames());
   }
 }

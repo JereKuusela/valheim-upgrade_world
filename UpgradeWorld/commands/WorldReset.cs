@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class WorldResetCommand
 {
   public WorldResetCommand()
@@ -13,9 +14,9 @@ public class WorldResetCommand
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
       var ids = LocationOperation.AllIds();
-      Executor.AddOperation(new RemoveLocations(args.Context, [.. LocationOperation.AllIds()], pars));
-      Executor.AddOperation(new DistributeLocations(args.Context, [.. LocationOperation.AllIds()], pars));
-      Executor.AddOperation(new ResetZones(args.Context, pars));
+      Executor.AddOperation(new RemoveLocations(args.Context, [.. LocationOperation.AllIds()], pars), false);
+      Executor.AddOperation(new DistributeLocations(args.Context, [.. LocationOperation.AllIds()], pars), false);
+      Executor.AddOperation(new ResetZones(args.Context, pars), pars.Start);
     }, () => FiltererParameters.Parameters);
   }
 }

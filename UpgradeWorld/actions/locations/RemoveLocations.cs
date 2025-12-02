@@ -15,11 +15,6 @@ public class RemoveLocations : ExecutedOperation
       TargetZones = TargetZones.All
     };
     Ids = ids;
-    if (Ids.Count == 0)
-    {
-      Print("Error: No valid location ids.");
-      return;
-    }
   }
   protected override void OnStart()
   {

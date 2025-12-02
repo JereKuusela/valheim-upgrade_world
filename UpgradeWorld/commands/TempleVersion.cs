@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 
 namespace UpgradeWorld;
+
 public class TempleVersionCommand
 {
   private static readonly List<string> Versions = ["mistlands", "ashlands"];
@@ -20,7 +21,7 @@ public class TempleVersionCommand
       if (pars.Unhandled.Contains("mistlands")) version = "mistlands";
       if (pars.Unhandled.Contains("ashlands")) version = "ashlands";
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new TempleVersion(args.Context, version, pars.Start));
+      Executor.AddOperation(new TempleVersion(args.Context, version), pars.Start);
     }, () => Versions);
   }
 }

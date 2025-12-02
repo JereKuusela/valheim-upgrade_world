@@ -1,5 +1,6 @@
 using System.Linq;
 namespace UpgradeWorld;
+
 public class LocationsResetCommand
 {
   public LocationsResetCommand()
@@ -10,7 +11,7 @@ public class LocationsResetCommand
       LocationIdParameters pars = new(args);
       if (Helper.IsClient(args)) return;
       if (!pars.Valid(args.Context)) return;
-      Executor.AddOperation(new RegenerateLocations(args.Context, pars.Ids(), pars));
+      Executor.AddOperation(new RegenerateLocations(args.Context, pars.Ids, pars), pars.Start);
     }, LocationOperation.AllIds);
   }
 }

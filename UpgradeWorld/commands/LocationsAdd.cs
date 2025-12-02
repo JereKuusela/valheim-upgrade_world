@@ -1,6 +1,7 @@
 using System.Linq;
 
 namespace UpgradeWorld;
+
 public class LocationsAddCommand
 {
   public LocationsAddCommand()
@@ -11,8 +12,8 @@ public class LocationsAddCommand
       LocationIdParameters pars = new(args);
       if (Helper.IsClient(args)) return;
       if (!pars.Valid(args.Context)) return;
-      Executor.AddOperation(new DistributeLocations(args.Context, pars.Ids(), pars));
-      Executor.AddOperation(new SpawnLocations(args.Context, pars.Ids(), pars));
+      Executor.AddOperation(new DistributeLocations(args.Context, pars.Ids, pars), false);
+      Executor.AddOperation(new SpawnLocations(args.Context, pars.Ids, pars), pars.Start);
     }, LocationOperation.AllIds);
   }
 }

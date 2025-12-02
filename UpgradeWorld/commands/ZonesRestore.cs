@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class ZonesRestoreCommand
 {
   public ZonesRestoreCommand()
@@ -9,7 +10,7 @@ public class ZonesRestoreCommand
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      Executor.AddOperation(new RestoreZones(args.Context, pars));
+      Executor.AddOperation(new RestoreZones(args.Context, pars), pars.Start);
     });
   }
 }
