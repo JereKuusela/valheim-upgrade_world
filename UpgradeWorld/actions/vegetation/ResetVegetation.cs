@@ -30,7 +30,6 @@ public class ResetVegetation : VegetationOperation
   }
   protected override bool ExecuteZone(Vector2i zone)
   {
-
     var zs = ZoneSystem.instance;
     if (zs.IsZoneLoaded(zone))
     {

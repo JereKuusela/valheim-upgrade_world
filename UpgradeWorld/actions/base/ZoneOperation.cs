@@ -31,7 +31,7 @@ public abstract class ZoneOperation(Terminal context, FiltererParameters args) :
     if (ZonesToUpgrade == null || ZonesToUpgrade.Length == 0)
       yield break;
 
-
+    LastSuccessTimer.Restart();
     while (ZoneIndex < ZonesToUpgrade.Length)
     {
       var zone = ZonesToUpgrade[ZoneIndex];
@@ -41,34 +41,41 @@ public abstract class ZoneOperation(Terminal context, FiltererParameters args) :
         zoneObj.m_ttl = ZoneSystem.instance.m_zoneTTL;
       MoveToNextZone(success);
 
-      // Check if enough time has passed to yield control
-      var currentTime = sw.ElapsedMilliseconds;
-      if (currentTime >= Executor.ProgressMin)
+      if (success)
       {
-        UpdateConsole();
+        // Yield periodically to avoid freezing.
+        var currentTime = sw.ElapsedMilliseconds;
+        if (currentTime >= Executor.ProgressMin)
+        {
+          UpdateConsole();
+          yield return null;
+        }
+      }
+      // Also yield on failure to allow zone loading to complete.
+      else
+      {
         yield return null;
       }
     }
 
-    // Final console update
     UpdateConsole();
   }
 
-  private int Attempts = 0;
-  private void MoveToNextZone(bool success = true)
+  private readonly Stopwatch LastSuccessTimer = Stopwatch.StartNew();
+  private void MoveToNextZone(bool success)
   {
     if (success)
     {
-      Attempts = 0;
+      LastSuccessTimer.Restart();
       ZoneIndex++;
     }
     else
     {
-      Attempts++;
-      if (Attempts > 1000)
+      // 10 seconds waiting may seem long, but it's only purpose is to avoid complete stalling.
+      if (LastSuccessTimer.ElapsedMilliseconds >= 10000)
       {
         Failed++;
-        Attempts = 0;
+        LastSuccessTimer.Restart();
         ZoneIndex++;
       }
     }

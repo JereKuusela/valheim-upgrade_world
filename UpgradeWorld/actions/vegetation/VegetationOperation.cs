@@ -14,7 +14,7 @@ public abstract class VegetationOperation : ZoneOperation
     return [.. AllIds().Where(id => (ids.Count == 0 || ids.Contains(id)) && (ignore.Count == 0 || !ignore.Contains(id)))];
   }
   public HashSet<string> Ids = [];
-  private float Amount = 1f;
+  private readonly float Amount = 1f;
   private static List<ZoneSystem.ZoneVegetation> OriginalVegetation = [];
   private static List<ZoneSystem.ZoneVegetation> Vegetation = [];
   public VegetationOperation(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args)
