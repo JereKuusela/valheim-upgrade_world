@@ -4,10 +4,10 @@ using System.Linq;
 using Service;
 
 namespace UpgradeWorld;
+
 public class DataParameters : IdParameters
 {
   public Range<int>? Level;
-  public string LocationIds = "";
   public List<string> Prints = [];
   public List<string> Datas = [];
   public List<string> Filters = [];
@@ -28,8 +28,6 @@ public class DataParameters : IdParameters
         Level = Parse.IntRange(value);
       else if (name == "log")
         Log = true;
-      else if (name == "location")
-        LocationIds = value;
       else if (name == "print")
         Prints.Add(value);
       else if (name == "data")
@@ -54,9 +52,9 @@ public class DataParameters : IdParameters
         return Level.Min <= value && value <= Level.Max;
       });
     }
-    if (LocationIds != "")
+    if (LocationIds.Count > 0)
     {
-      var ids = Parse.Split(LocationIds).Select(s => s.GetStableHashCode()).ToHashSet();
+      var ids = LocationIds.Select(s => s.GetStableHashCode()).ToHashSet();
       zdos = zdos.Where(zdo => ids.Contains(zdo.GetInt(ZDOVars.s_location)));
     }
     foreach (var filter in Filters)

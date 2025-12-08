@@ -51,11 +51,11 @@ public abstract class LocationOperation : ZoneOperation
       UnityEngine.Object.Destroy(obj);
     zs.m_tempSpawnedObjects.Clear();
   }
-  public static HashSet<string> Ids(List<string> ids, List<string> ignore)
+  public static HashSet<string> Ids(IEnumerable<string> ids, IEnumerable<string> ignore)
   {
     // Safeguard against missing the argument.
-    if (ids.Count == 0) return [];
-    return [.. AllIds().Where(id => ids.Any(x => Helper.IsIncluded(x, id)) && (ignore.Count == 0 || !ignore.Contains(id)))];
+    if (ids.Count() == 0) return [];
+    return [.. AllIds().Where(id => ids.Any(x => Helper.IsIncluded(x, id)) && (ignore.Count() == 0 || !ignore.Contains(id)))];
   }
   public static List<string> AllIds() => [.. ZoneSystem.instance.m_locations.Where(Helper.IsValid).Select(location => location.m_prefab.Name).Distinct()];
 

@@ -27,6 +27,7 @@ public class FiltererParameters
   public float TerrainReset = 0f;
   public float? ObjectReset;
   public int SafeZones = Settings.SafeZoneSize;
+  public HashSet<string> LocationIds = [];
   public TargetZones TargetZones = TargetZones.Generated;
   public bool Pin;
   public List<string> Unhandled = [];
@@ -79,6 +80,7 @@ public class FiltererParameters
           MaxDistance = distance.Max;
         }
         else if (name == "biomes") Biomes = Parse.Biomes(value);
+        else if (name == "locations") LocationIds = LocationOperation.Ids(value.Split(','), []);
         else Unhandled.Add(par);
       }
       else if (name == "noedges") NoEdges = true;
@@ -138,6 +140,13 @@ public class FiltererParameters
       if (MaxDistance > 0 && Utils.DistanceXZ(pos, position) > MaxDistance) return false;
     }
     if (checkExcludedZones && PlayerBaseFilterer.ExcludedZones.Contains(ZoneSystem.GetZone(pos))) return false;
+    if (LocationIds.Count > 0)
+    {
+      var zone = ZoneSystem.GetZone(pos);
+      var zs = ZoneSystem.instance;
+      if (zs.m_locationInstances.TryGetValue(zone, out var location) && LocationIds.Contains(location.m_location.m_prefab.Name))
+        return false;
+    }
     return true;
   }
   public virtual IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, bool checkExcludedZones) => zdos
@@ -151,18 +160,6 @@ public class FiltererParameters
   }
   public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position, true));
 
-  public override string ToString()
-  {
-    var position = "";
-    if (Zone.HasValue) position = $"{Zone.Value.x} {Zone.Value.y}";
-    if (Pos.HasValue) position = $"{Pos.Value.x} {Pos.Value.y}";
-    var texts = new[]{
-        "Position: " + position,
-        "Distance: " + MinDistance + " " + MaxDistance,
-        "Biomes: " + string.Join(", ", Biomes)
-      };
-    return string.Join("\n", texts);
-  }
   public string Print(string operation)
   {
     var str = operation + " ";
@@ -207,10 +204,12 @@ public class FiltererParameters
       str += ". No player base detection.";
     else
       str += ". Player base detection (" + size + "x" + size + " safe zones).";
+    if (LocationIds.Count > 0)
+      str += "\nOnly locations" + LocationOperation.IdString(LocationIds);
     return str;
   }
   public static List<string> Parameters = [
-    "clear", "terrain", "pos", "zone", "biomes", "min", "minDistance", "max", "maxDistance", "distance", "start", "noEdges", "safeZones", "chance", "force"
+    "clear", "terrain", "pos", "zone", "biomes", "locations", "min", "minDistance", "max", "maxDistance", "distance", "start", "noEdges", "safeZones", "chance", "force"
   ];
   public static Dictionary<string, Func<int, List<string>?>> GetAutoComplete()
   {
@@ -219,6 +218,7 @@ public class FiltererParameters
       { "limit", index => CommandWrapper.Info("limit=<color=yellow>amount</color> | Limits the amount of objects.")},
       { "zone", index => CommandWrapper.XZ("zone" , "Indices for the center zone", index) },
       { "biomes", index => Enum.GetNames(typeof(Heightmap.Biome)).ToList() },
+      { "locations", index => LocationOperation.AllIds() },
       { "min", index => index == 0 ? CommandWrapper.Info("min=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
       { "minDistance", index => index == 0 ? CommandWrapper.Info("minDistance=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },
       { "max", index => index == 0 ? CommandWrapper.Info("max=<color=yellow>meters or zones</color> | Maximum distance from the center point / zone.") : null },

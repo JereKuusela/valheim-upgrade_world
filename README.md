@@ -71,7 +71,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `ignore`: Excludes objects or locations from the operation.
 - `level=min-max`: Filters objects by their creature level. Only applies to `objects_*` commands.
 - `limit=amount`: Limits the amount of affected objects. Only applies to `objects_*` commands.
-- `location=id`: Filters objects by their location. Only applies to `objects_*` commands.
+- `locations=id1,id2,...`: Includes only objects or zones if the zone has any of the given locations.
 - `log`: Object commands print to the log file instead of the console.
 - `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
