@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -10,7 +11,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.74.7";
+  const string VERSION = "1.74.8";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -37,6 +38,21 @@ public class UpgradeWorld : BaseUnityPlugin
     watcher.IncludeSubdirectories = true;
     watcher.SynchronizingObject = ThreadingHelper.SynchronizingObject;
     watcher.EnableRaisingEvents = true;
+  }
+  bool WasConsoleVisible = false;
+  public void LateUpdate()
+  {
+    if (!ZNet.instance)
+    {
+      LocationOperation.SetServerIds(null);
+      VegetationOperation.SetServerIds(null);
+      return;
+    }
+    var isConsoleVisible = Console.IsVisible();
+    if (isConsoleVisible && !WasConsoleVisible)
+      ServerExecution.RequestSync();
+
+    WasConsoleVisible = isConsoleVisible;
   }
 
 #pragma warning disable IDE0051 // Remove unused private members
@@ -119,6 +135,7 @@ public class SetCommands
     new CleanDuplicatesCommand();
     new LocationsFixCommand();
     new LocationUnregisterCommand();
+    new LocationsCountCommand();
     if (Terminal.commands.TryGetValue("genloc", out var genloc))
     {
       genloc.IsCheat = false;

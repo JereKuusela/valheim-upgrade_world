@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 namespace UpgradeWorld;
 
@@ -25,6 +26,8 @@ public class ServerExecution
   public static string RPC_Pins = "DEV_Pins";
 
   public static string RPC_RemotePrintOnce = "UpgradeWorld_RemotePrintOnce";
+  public static string RPC_RequestSync = "UpgradeWorld_RequestSync";
+  public static string RPC_SyncData = "UpgradeWorld_SyncData";
   private static bool IsAllowed(ZRpc rpc)
   {
     var zNet = ZNet.instance;
@@ -46,11 +49,43 @@ public class ServerExecution
   {
     Helper.PrintOnce(Console.instance, null, value);
   }
+  private static void RPC_Do_RequestSync(ZRpc rpc, int clientLocationHash, int clientVegetationHash)
+  {
+    if (!IsAllowed(rpc)) return;
+    var locationIds = string.Join("|", LocationOperation.AllIds());
+    var vegetationIds = string.Join("|", VegetationOperation.AllIds());
+    var serverLocationHash = locationIds.GetStableHashCode();
+    var serverVegetationHash = vegetationIds.GetStableHashCode();
+    // Only send data if hashes differ
+    if (serverLocationHash != clientLocationHash || serverVegetationHash != clientVegetationHash)
+      rpc.Invoke(RPC_SyncData, [locationIds, vegetationIds]);
+  }
+  private static void RPC_Do_SyncData(ZRpc rpc, string locationIds, string vegetationIds)
+  {
+    LocationOperation.SetServerIds(locationIds);
+    VegetationOperation.SetServerIds(vegetationIds);
+  }
+  ///<summary>Requests location and vegetation IDs from the server.</summary>
+  public static void RequestSync()
+  {
+    var server = ZNet.instance.GetServerRPC();
+    if (server == null)
+      return;
+    var locationHash = LocationOperation.GetServerIdsHash();
+    var vegetationHash = VegetationOperation.GetServerIdsHash();
+    server.Invoke(RPC_RequestSync, [locationHash, vegetationHash]);
+  }
   static void Postfix(ZNet __instance, ZRpc rpc)
   {
     if (__instance.IsDedicated())
+    {
       rpc.Register<string>(RPC_Command, new(RPC_Do_Command));
+      rpc.Register<int, int>(RPC_RequestSync, new(RPC_Do_RequestSync));
+    }
     else
+    {
       rpc.Register<string>(RPC_RemotePrintOnce, new(RPC_PrintOnce));
+      rpc.Register<string, string>(RPC_SyncData, new(RPC_Do_SyncData));
+    }
   }
 }

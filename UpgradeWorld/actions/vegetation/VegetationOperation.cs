@@ -5,10 +5,27 @@ namespace UpgradeWorld;
 
 public abstract class VegetationOperation : ZoneOperation
 {
+  private static List<string>? ServerIds = null;
+  private static int ServerIdsHash = 0;
   public static List<string> AllIds()
   {
+    if (ServerIds != null) return ServerIds;
     return [.. ZoneSystem.instance.m_vegetation.Select(veg => veg.m_prefab.name).Distinct()];
   }
+  public static void SetServerIds(string? data)
+  {
+    if (data == null)
+    {
+      ServerIds = null;
+      ServerIdsHash = 0;
+      return;
+    }
+    var hash = data.GetStableHashCode();
+    if (ServerIdsHash == hash) return;
+    ServerIdsHash = hash;
+    ServerIds = [.. data.Split('|').Where(s => !string.IsNullOrEmpty(s))];
+  }
+  public static int GetServerIdsHash() => ServerIdsHash;
   public static HashSet<string> GetIds(List<string> ids, List<string> ignore)
   {
     return [.. AllIds().Where(id => (ids.Count == 0 || ids.Contains(id)) && (ignore.Count == 0 || !ignore.Contains(id)))];

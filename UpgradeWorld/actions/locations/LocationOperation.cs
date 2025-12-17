@@ -8,6 +8,8 @@ public abstract class LocationOperation : ZoneOperation
 {
   protected int Operated = 0;
   protected string Verb = "";
+  private static List<string>? ServerIds = null;
+  private static int ServerIdsHash = 0;
   public LocationOperation(Terminal context, FiltererParameters args) : base(context, args)
   {
     args.TargetZones = TargetZones.Generated;
@@ -57,7 +59,25 @@ public abstract class LocationOperation : ZoneOperation
     if (ids.Count() == 0) return [];
     return [.. AllIds().Where(id => ids.Any(x => Helper.IsIncluded(x, id)) && (ignore.Count() == 0 || !ignore.Contains(id)))];
   }
-  public static List<string> AllIds() => [.. ZoneSystem.instance.m_locations.Where(Helper.IsValid).Select(location => location.m_prefab.Name).Distinct()];
+  public static List<string> AllIds()
+  {
+    if (ServerIds != null) return ServerIds;
+    return [.. ZoneSystem.instance.m_locations.Where(Helper.IsValid).Select(location => location.m_prefab.Name).Distinct()];
+  }
+  public static void SetServerIds(string? data)
+  {
+    if (data == null)
+    {
+      ServerIds = null;
+      ServerIdsHash = 0;
+      return;
+    }
+    var hash = data.GetStableHashCode();
+    if (ServerIdsHash == hash) return;
+    ServerIdsHash = hash;
+    ServerIds = [.. data.Split('|').Where(s => !string.IsNullOrEmpty(s))];
+  }
+  public static int GetServerIdsHash() => ServerIdsHash;
 
   public static string IdString(IEnumerable<string> ids)
   {

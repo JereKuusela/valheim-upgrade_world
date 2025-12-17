@@ -1,6 +1,8 @@
 - v1.75
   - Add support for wildcard `*` in locations ids.
   - Adds a new parameter `locations` to include only objects or zones that have any of the given locations.
+  - Adds a new command `locations_count` to count locations of specified types.
+  - Adds server sync for location and vegetation ids to provide better autocompletion.
   - Changes commands not to run if any invalid ids are provided.
   - Changes location commands to not run if no ids are provided.
   - Reworked the execution flow to work more smoothly and efficiently.
