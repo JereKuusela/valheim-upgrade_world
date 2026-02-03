@@ -5,6 +5,8 @@
   - Adds server sync for location and vegetation ids to provide better autocompletion.
   - Changes commands not to run if any invalid ids are provided.
   - Changes location commands to not run if no ids are provided.
+  - Fixed for the new update.
+  - Fixes `pos=x,z,y` not working for the command `location_register`.
   - Reworked the execution flow to work more smoothly and efficiently.
 
 - v1.74

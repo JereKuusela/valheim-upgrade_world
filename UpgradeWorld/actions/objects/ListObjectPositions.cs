@@ -21,7 +21,19 @@ public class ListObjectPositions : EntityOperation
   }
   private void ListPositions(HashSet<string> ids, DataParameters args)
   {
-    var zdos = GetZDOs(args, GetPrefabs(ids, args.Types));
+    if (ids.Count > 0 && ids.All(id => int.TryParse(id, out _)))
+    {
+      var hashCodes = new HashSet<int>(ids.Select(int.Parse));
+      ListPositions(hashCodes, args);
+    }
+    else
+    {
+      ListPositions(GetPrefabs(ids, args.Types), args);
+    }
+  }
+  private void ListPositions(HashSet<int> ids, DataParameters args)
+  {
+    var zdos = GetZDOs(args, ids);
     var texts = zdos.Select(zdo =>
     {
       AddPin(zdo.GetPosition());

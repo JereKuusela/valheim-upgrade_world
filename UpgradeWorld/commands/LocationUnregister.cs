@@ -6,7 +6,7 @@ public class LocationUnregisterCommand
 {
   public LocationUnregisterCommand()
   {
-    CommandWrapper.Register("location_unregister", (int index, int subIndex) =>
+    CommandWrapper.Register("location_unregister", (index, subIndex) =>
     {
       if (index == 0) return CommandWrapper.XZY("pos", "Coordinates for the position. If not given, player's position is used", subIndex);
       return null;

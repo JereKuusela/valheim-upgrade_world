@@ -47,7 +47,6 @@ public class DistributeLocations : ExecutedOperation
       Print("No locations to generate.");
       yield break;
     }
-    LoadingIndicator.SetProgressVisibility(true);
     var counter = 0;
     foreach (var id in Ids)
     {
@@ -74,9 +73,10 @@ public class DistributeLocations : ExecutedOperation
       Total += Count(id);
       Added += Total - before;
       SpawnToAlreadyGenerated = false;
-      LoadingIndicator.SetProgress(counter / (float)Ids.Length);
     }
-    LoadingIndicator.SetProgressVisibility(false);
+    // Needed to indicate end of generation for some mods.
+    if (Hud.instance)
+      Hud.instance.m_loadingIndicator.SetShowProgress(false);
   }
   private void ClearNotSpawned(string[] ids)
   {

@@ -41,7 +41,8 @@ public class IdParameters : FiltererParameters
       Helper.Print(terminal, "Error: Missing ids.");
       return false;
     }
-    var invalidIds = Include.Where(id => !id.Contains("*") && ZNetScene.instance.GetPrefab(id) == null);
+    // Direct hashes are not validated so that they can be used to target missing prefabs.
+    var invalidIds = Include.Where(id => !id.Contains("*") && !int.TryParse(id, out _) && ZNetScene.instance.GetPrefab(id) == null);
     if (Validate && invalidIds.Count() > 0)
     {
       Helper.Print(terminal, $"Error: Entity id {string.Join(", ", invalidIds)} not recognized.");

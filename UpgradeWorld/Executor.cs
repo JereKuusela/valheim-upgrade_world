@@ -57,7 +57,9 @@ public static class Executor
   {
     operations.Clear();
     DoClean();
-    LoadingIndicator.SetProgressVisibility(false);
+    // Needed to indicate end of generation for some mods.
+    if (Hud.instance)
+      Hud.instance.m_loadingIndicator.SetShowProgress(false);
   }
   private static IEnumerator ExecuteCoroutine()
   {

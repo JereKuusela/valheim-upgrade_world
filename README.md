@@ -110,6 +110,7 @@ Overview of available commands (remember that tab key can be used for autocomple
   - Note: This resets the spawn delays, which may cause creatures to respawn immediately.
 - `clean_stands [...args]`: Removes missing objects from armor and item stands.
 - `locations_add [id1,id2,...] [...args]`: Adds locations to already explored areas. `chance` determines how many of the locations are added.
+- `locations_count [id1,id2,...] [...args]`: Counts locations. If no ids given then counts all locations.
 - `locations_list [id1,id2,...] [...args]`: Lists locations showing their position and biome.
 - `location_register [id] [x,z,y=player position]`: Registers a location to the database (without spawning it). If the location already exists, then its position is automatically used.
 - `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used). `chance` determines how many of the locations are removed.

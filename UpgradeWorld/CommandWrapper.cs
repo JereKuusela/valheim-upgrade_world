@@ -41,6 +41,11 @@ public static class CommandWrapper
     if (ServerDevcommands == null) return;
     GetMethod(Type(), "Register", [typeof(string), typeof(Func<int, List<string>>), typeof(Dictionary<string, Func<int, List<string>>>)]).Invoke(null, [command, action, named]);
   }
+  public static void Register(string command, Func<int, int, List<string>> action, Dictionary<string, Func<int, List<string>>> named)
+  {
+    if (ServerDevcommands == null) return;
+    GetMethod(Type(), "Register", [typeof(string), typeof(Func<int, int, List<string>>), typeof(Dictionary<string, Func<int, List<string>>>)]).Invoke(null, [command, action, named]);
+  }
   public static List<string> Info(string value)
   {
     if (ServerDevcommands == null) return [];
