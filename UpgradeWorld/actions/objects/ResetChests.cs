@@ -37,7 +37,7 @@ public class ResetChests(string[] chestIds, IEnumerable<string> allowedItems, bo
 
   protected override string GetNoObjectsMessage() => "No chests found to reset.";
 
-  protected override string GetInitMessage() => $"Resetting {TotalCount} chest{(TotalCount > 1 ? "s" : "")}";
+  protected override string GetInitMessage() => $"Resetting {TotalCount} chest{(TotalCount > 1 ? "s" : "")}.";
 
   protected override string GetProcessedMessage() => $"Chests reseted ({ProcessedCount} of {TotalCount}).";
 

@@ -1,3 +1,9 @@
+- v1.76
+- Adds a new command `uw_check` which prints currently queued operations.
+- Adds info to the console when a command requires `start` to begin.
+- Fixes error when trying to remove already removed objects.
+- Removes the command `backup` as obsolete.
+
 - v1.75
   - Add support for wildcard `*` in locations ids.
   - Adds a new parameter `locations` to include only objects or zones that have any of the given locations.

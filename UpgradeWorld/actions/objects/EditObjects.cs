@@ -27,7 +27,7 @@ public class EditObjects(Terminal context, IEnumerable<string> ids, DataParamete
 
   protected override string GetNoObjectsMessage() => "No objects found to update.";
 
-  protected override string GetInitMessage() => $"Updating {TotalCount} object{(TotalCount > 1 ? "s" : "")}";
+  protected override string GetInitMessage() => $"Updating {TotalCount} object{(TotalCount > 1 ? "s" : "")}.";
 
   protected override string GetProcessedMessage() => $"Updated: {ProcessedCount}";
 

@@ -94,7 +94,7 @@ public class DistributeLocations : ExecutedOperation
   private int Count(string id)
   {
     var zs = ZoneSystem.instance;
-    return zs.m_locationInstances.Where(kvp => kvp.Value.m_location.m_prefab.Name == id).Count();
+    return zs.m_locationInstances.Count(kvp => kvp.Value.m_location.m_prefab.Name == id);
   }
   protected override void OnEnd()
   {

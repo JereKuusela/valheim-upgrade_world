@@ -6,18 +6,13 @@ namespace UpgradeWorld;
 public abstract class ExecutedOperation(Terminal context, bool pin = false) : BaseOperation(context, pin)
 {
   protected int Failed = 0;
-  public bool First = true;
 
   public IEnumerator Execute(Stopwatch sw)
   {
-    IEnumerator? executeEnumerator;
+    IEnumerator executeEnumerator;
     try
     {
-      if (First)
-      {
-        OnStart();
-        First = false;
-      }
+      OnStart();
       executeEnumerator = OnExecute(sw);
     }
     catch (InvalidOperationException e)
@@ -26,21 +21,27 @@ public abstract class ExecutedOperation(Terminal context, bool pin = false) : Ba
       OnEnd();
       yield break;
     }
-
-    if (executeEnumerator != null)
-      yield return executeEnumerator;
-
+    yield return executeEnumerator;
     PrintPins();
     OnEnd();
   }
+
   protected abstract IEnumerator OnExecute(Stopwatch sw);
-  public void Init()
+  public bool Init(bool autoStart)
   {
     var output = OnInit();
-    if (output != "")
-      Print(output);
+    if (output == "") return false;
+    if (!autoStart)
+      output += Helper.GetStartMessage();
+    Print(output);
+    return true;
   }
   protected abstract string OnInit();
+  public string GetInfo()
+  {
+    var info = OnInit();
+    return info != "" ? info : GetType().Name;
+  }
   protected virtual void OnStart()
   {
   }

@@ -11,7 +11,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.75";
+  const string VERSION = "1.75.1";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -118,7 +118,6 @@ public class SetCommands
     new VegetationAddCommand();
     new VegetationRemoveCommand();
     new SavingCommands();
-    new BackupCommand();
     new WorldResetCommand();
     new ZonesRestoreCommand();
     new WorldVersionCommand();

@@ -16,7 +16,24 @@ public class StartStopCommand
     Helper.Command("stop", "- Stops execution of operations.", (args) =>
     {
       if (Helper.IsClient(args)) return;
-      Executor.RemoveOperations();
+      Executor.StopExecution();
+    });
+    CommandWrapper.RegisterEmpty("uw_check");
+    Helper.Command("uw_check", "- Prints list of queued operations.", (args) =>
+    {
+      if (Helper.IsClient(args)) return;
+      var operations = Executor.GetOperations();
+      if (operations.Count == 0)
+      {
+        Helper.Print(args.Context, "No operations queued.");
+        return;
+      }
+      Helper.Print(args.Context, $"Queued operations ({operations.Count}):");
+      for (int i = 0; i < operations.Count; i++)
+      {
+        var info = operations[i].GetInfo();
+        Helper.Print(args.Context, $"{i + 1}. {info}");
+      }
     });
   }
 }

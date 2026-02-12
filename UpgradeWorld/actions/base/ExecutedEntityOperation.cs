@@ -22,10 +22,12 @@ public abstract class ExecutedEntityOperation(Terminal context, IEnumerable<stri
     ZdosToProcess = EntityOperation.GetZDOs(Args, Prefabs);
     TotalCount = ZdosToProcess.Length;
     Counts = Prefabs.ToDictionary(prefab => prefab, prefab => 0);
-
     if (TotalCount == 0)
-      return GetNoObjectsMessage();
-
+    {
+      Print(GetNoObjectsMessage());
+      // Must return empty to not queue the operation.
+      return "";
+    }
     return GetInitMessage();
   }
 

@@ -52,7 +52,7 @@ public class RefreshObjects(Terminal context, HashSet<string> ids, DataParameter
 
   protected override string GetNoObjectsMessage() => "No objects found to refresh.";
 
-  protected override string GetInitMessage() => $"Refreshing {TotalCount} object{(TotalCount > 1 ? "s" : "")}";
+  protected override string GetInitMessage() => $"Refreshing {TotalCount} object{(TotalCount > 1 ? "s" : "")}.";
 
   protected override string GetProcessedMessage() => $"Refreshed: {ProcessedCount}";
 
