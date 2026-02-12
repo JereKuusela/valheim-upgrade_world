@@ -92,7 +92,6 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 
 Overview of available commands (remember that tab key can be used for autocomplete / cycle through options):
 
-- `backup`: Saves the game with a timestamped file name.
 - `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
 - `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Without chest name, all treasure chests are rerolled. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items. `chance` determines how many of the chests are reseted.
 - `chests_search [id1,id2,...] [...args]`: Searches chests and stands for given items.
@@ -132,6 +131,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `time_set [seconds]`: Sets the world time and updates object timestamps.
 - `time_set_day [days]`: Sets the world time and updates object timestamps.
 - `upgrade [operation] [...args]`: Short-hand for using common operations (mainly to add new content).
+- `uw_check`: Prints currently queued operations (can be useful for debugging or just to check what is going to happen when you use `start`).
 - `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation.
 - `vegetation_remove [id1,id2,...] [...args]`: Removes vegetation from generated areas. If ids are not given, removes every vegetation.
 - `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation.
@@ -178,11 +178,10 @@ Filtering options in the config:
 Other settings are:
 
 - Verbose output: Prints more output which gives a better understanding how the mod operators. However this can spoil things of your world.
+- Verbose locations: Prints more detailed information about location generation. This can be useful for debugging location generation works.
 - Automatic start: Starts commands automatically without having to use the start command. This allows using the commands more easily but can lead to more mistakes.
-- Disable automatic genloc: After new content updates, Valheim automatically redistributes unplaced locations with genloc command. This can mess up custom worlds with manually defined locations.
-- Operations per update: How many zones are destroyed per Unity update. Can be useful if destroying large parts of a world, but recommended to keep it as it is.
+- Disable automatic genloc: After new content updates, Valheim automatically redistributes unplaced
 - Root users: SteamIds that are allowed to execute commands (-1 for the dedicated server). If not set, all admins can use the commands.
-- Operation delay: Milliseconds between each command. Prevents lots of small operations overloading the dedicated server.
 - World size: Max radius for operations (if using a mod to change the world size or need to affect areas outside the play area).
 
 ## How it works

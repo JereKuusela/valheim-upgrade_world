@@ -46,12 +46,14 @@ public abstract class ZoneOperation(Terminal context, FiltererParameters args) :
         {
           UpdateConsole();
           yield return null;
+          sw.Restart();
         }
       }
       // Also yield on failure to allow zone loading to complete.
       else
       {
         yield return null;
+        sw.Restart();
       }
     }
 

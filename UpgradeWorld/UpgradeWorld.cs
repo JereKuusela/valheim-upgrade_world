@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -11,7 +10,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   const string GUID = "upgrade_world";
   const string NAME = "Upgrade World";
-  const string VERSION = "1.75.1";
+  const string VERSION = "1.76";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable

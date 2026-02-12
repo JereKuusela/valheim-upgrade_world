@@ -20,6 +20,8 @@ public static class Settings
   public static bool DisableAutomaticGenloc => configDisableAutomaticGenloc.Value;
   public static ConfigEntry<bool> configVerbose;
   public static bool Verbose => configVerbose.Value;
+  public static ConfigEntry<bool> configVerboseLocations;
+  public static bool VerboseLocations => configVerboseLocations.Value;
   public static ConfigEntry<bool> configAutoStart;
   public static bool AutoStart => configAutoStart.Value;
   public static ConfigEntry<int> configWorldRadius;
@@ -59,6 +61,7 @@ public static class Settings
   {
     var section = "1. General";
     configVerbose = config.Bind(section, "Verbose output", false, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
+    configVerboseLocations = config.Bind(section, "Verbose locations", false, "If true, more detailed location generation information is printed.");
     configAutoStart = config.Bind(section, "Automatic start", false, "If true, operations start automatically without having to use the start command.");
     configWorldRadius = config.Bind(section, "World radius", 10500, "Max radius for operations.");
     configWorldEdge = config.Bind(section, "World edge", 500, "Size of world edge.");

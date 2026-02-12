@@ -42,7 +42,11 @@ public class ServerExecution
   {
     User = rpc;
     if (IsAllowed(rpc))
+    {
+      // Server doesn't have cheats enabled by default, so ensure it is set to run commands.
+      Terminal.m_cheat = true;
       Console.instance.TryRunCommand(command);
+    }
     User = null;
   }
   private static void RPC_PrintOnce(ZRpc rpc, string value)

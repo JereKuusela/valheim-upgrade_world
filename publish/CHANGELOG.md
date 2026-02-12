@@ -1,7 +1,11 @@
 - v1.76
 - Adds a new command `uw_check` which prints currently queued operations.
 - Adds info to the console when a command requires `start` to begin.
+- Adds a new setting `Verbose locations` to print more detailed information about location generation.
 - Fixes error when trying to remove already removed objects.
+- Fixes the command `location_add` causing vegetation to generate on nearby areas.
+- Fixes the server not having devcommands automatically enabled.
+- Possibly fixes some commands getting stuck (unverified).
 - Removes the command `backup` as obsolete.
 
 - v1.75
@@ -22,10 +26,3 @@
   - Adds a new parameter `amount` to multiply affected vegetation objects.
   - Fixes heightmap error when resetting vegetation near the player on single player.
   - Improves performance of commands that require loading the area (for example vegetation commands).
-
-- v1.72
-  - Fixes to some location related commands.
-
-- v1.71
-  - Fixes the command `world_reset` not working correctly.
-  - Removes conversion of underscores to spacebars in some commands (use Server Devcommands if needed).
