@@ -46,11 +46,11 @@ public class DistributeLocations : ExecutedOperation
       Print("No locations to generate.");
       yield break;
     }
+    ClearNotSpawned(Ids);
     var counter = 0;
     foreach (var id in Ids)
     {
       counter += 1;
-      ClearNotSpawned(Ids);
       var zs = ZoneSystem.instance;
       var locations = zs.m_locations.Where(location => Helper.IsValid(location) && location.m_prefab.Name == id).ToArray();
       if (locations.Length == 0)
