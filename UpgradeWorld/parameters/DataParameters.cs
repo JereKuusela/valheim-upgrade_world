@@ -76,7 +76,7 @@ public class DataParameters : IdParameters
     autoComplete["level"] = index => index == 0 ? CommandWrapper.Info("level=<color=yellow>amount</color> or level=<color=yellow>min-max</color> | Levels of the creature.") : null;
     autoComplete["print"] = index =>
     {
-      if (index == 0) return CommandWrapper.Info("print=<color=yellow>key</color>,type | Prints data with a given key.");
+      if (index == 0) return CommandWrapper.Info("print=<color=yellow>key</color>,type | Prints data with a given key. Use key=* to print all data.");
       if (index == 1) return types;
       return null;
     };
@@ -90,7 +90,7 @@ public class DataParameters : IdParameters
 
     autoComplete["filter"] = index =>
     {
-      if (index == 0) return CommandWrapper.Info("filter=<color=yellow>key</color>,value,includeEmpty | Filter by a data value.");
+      if (index == 0) return CommandWrapper.Info("filter=<color=yellow>key</color>,value,includeEmpty | Filter by a data value. Use key=* to match any key.");
       if (index == 1) return CommandWrapper.Info("filter=key,<color=yellow>value</color>,includeEmpty | Value or data type for new entries.");
       if (index == 2) return truths;
       return null;

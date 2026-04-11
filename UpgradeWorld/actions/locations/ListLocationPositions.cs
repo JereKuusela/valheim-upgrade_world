@@ -13,6 +13,12 @@ public class ListLocationPositions : EntityOperation
     var zs = ZoneSystem.instance;
     List<string> texts = [];
     var locs = args.FilterLocations(zs.m_locationInstances.Values).Where(l => ids.Count() == 0 || ids.Contains(l.m_location?.m_prefab.Name ?? "")).ToList();
+    if (locs.Count == 0)
+    {
+      Print("No locations found.");
+      PrintPins();
+      return;
+    }
     foreach (var loc in locs)
     {
       var location = loc.m_location;

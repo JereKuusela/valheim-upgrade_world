@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using UnityEngine;
 using UpgradeWorld;
 
@@ -5,8 +8,36 @@ namespace Service;
 
 public class DataHelper
 {
+  public static bool ClearData(ZDO zdo, string key)
+  {
+    var id = zdo.m_uid;
+    var hash = key.GetStableHashCode();
+    var hashId = (key + "_u").GetStableHashCode();
+    var hashValue = (key + "_i").GetStableHashCode();
+
+    var cleared = false;
+    if (ZDOExtraData.s_vec3.TryGetValue(id, out var vecs)) cleared |= vecs.Remove(hash);
+    if (ZDOExtraData.s_quats.TryGetValue(id, out var quats)) cleared |= quats.Remove(hash);
+    if (ZDOExtraData.s_longs.TryGetValue(id, out var longs))
+    {
+      cleared |= longs.Remove(hash);
+      cleared |= longs.Remove(hashId);
+      cleared |= longs.Remove(hashValue);
+    }
+    if (ZDOExtraData.s_strings.TryGetValue(id, out var strings)) cleared |= strings.Remove(hash);
+    if (ZDOExtraData.s_ints.TryGetValue(id, out var ints)) cleared |= ints.Remove(hash);
+    if (ZDOExtraData.s_floats.TryGetValue(id, out var floats)) cleared |= floats.Remove(hash);
+    return cleared;
+  }
+
   public static string GetData(ZDO zdo, string key, string type)
   {
+    if (key == "*")
+    {
+      var allData = GetAllData(zdo, type);
+      return allData.Count > 0 ? string.Join("; ", allData) : "No data";
+    }
+
     var id = zdo.m_uid;
     var hash = key.GetStableHashCode();
     var hashId = (key + "_u").GetStableHashCode();
@@ -83,6 +114,8 @@ public class DataHelper
   }
   public static bool HasData(ZDO zdo, string key, string data, bool includeEmpty)
   {
+    if (key == "*") return HasAnyData(zdo, data);
+
     var id = zdo.m_uid;
     var hash = key.GetStableHashCode();
     var hashId = (key + "_u").GetStableHashCode();
@@ -112,5 +145,61 @@ public class DataHelper
     if (hasId)
       return data == ZDOExtraData.s_longs[id][hashId] + "/" + ZDOExtraData.s_longs[id][hashValue];
     return includeEmpty;
+  }
+
+  private static List<string> GetAllData(ZDO zdo, string type)
+  {
+    var id = zdo.m_uid;
+    var values = new List<string>();
+
+    if ((type == "" || type == "vector") && ZDOExtraData.s_vec3.TryGetValue(id, out var vecs))
+      values.AddRange(vecs.Select(pair => pair.Key + "=" + Helper.PrintVectorXZY(pair.Value) + " (vector)"));
+
+    if ((type == "" || type == "quat") && ZDOExtraData.s_quats.TryGetValue(id, out var quats))
+      values.AddRange(quats.Select(pair => pair.Key + "=" + Helper.PrintAngleYXZ(pair.Value) + " (quat)"));
+
+    if ((type == "" || type == "long") && ZDOExtraData.s_longs.TryGetValue(id, out var longs))
+    {
+      values.AddRange(longs.Select(pair =>
+      {
+        if (pair.Key == ZDOVars.s_timeOfDeath) return pair.Key + "=" + Helper.PrintDay(pair.Value) + " (long)";
+        return pair.Key + "=" + pair.Value + " (long)";
+      }));
+    }
+
+    if ((type == "" || type == "string") && ZDOExtraData.s_strings.TryGetValue(id, out var strings))
+      values.AddRange(strings.Select(pair => pair.Key + "=" + pair.Value + " (string)"));
+
+    if ((type == "" || type == "int") && ZDOExtraData.s_ints.TryGetValue(id, out var ints))
+      values.AddRange(ints.Select(pair => pair.Key + "=" + pair.Value + " (int)"));
+
+    if ((type == "" || type == "float") && ZDOExtraData.s_floats.TryGetValue(id, out var floats))
+      values.AddRange(floats.Select(pair => pair.Key + "=" + pair.Value.ToString("F1") + " (float)"));
+
+    return values;
+  }
+
+  private static bool HasAnyData(ZDO zdo, string data)
+  {
+    var id = zdo.m_uid;
+    if (ZDOExtraData.s_strings.TryGetValue(id, out var strings) && strings.Any(pair => data == pair.Value))
+      return true;
+
+    if (int.TryParse(data, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue)
+      && ZDOExtraData.s_ints.TryGetValue(id, out var ints)
+      && ints.Any(pair => pair.Value == intValue))
+      return true;
+
+    if (long.TryParse(data, NumberStyles.Integer, CultureInfo.InvariantCulture, out var longValue)
+      && ZDOExtraData.s_longs.TryGetValue(id, out var longs)
+      && longs.Any(pair => pair.Value == longValue))
+      return true;
+
+    if (Parse.TryFloat(data, out var floatValue)
+      && ZDOExtraData.s_floats.TryGetValue(id, out var floats)
+      && floats.Any(pair => Mathf.Approximately(pair.Value, floatValue)))
+      return true;
+
+    return false;
   }
 }

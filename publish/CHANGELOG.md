@@ -1,3 +1,11 @@
+- v1.79
+  - Adds wildcard `*` support for data based filtering to check any data key.
+  - Fixes vegetation reset sometimes not cleaning up the spawned terrain object. Thanks warp!
+
+- v1.78
+  - Adds output to commands `location_list` and `object_list` when no objects or locations are found.
+  - Changes the command `object_edit` to allow clearing data by providing only the key as a parameter.
+
 - v1.77
   - Fixes the command `location_add` not always spawning all locations properly (related to location groups).
 
@@ -21,11 +29,3 @@
   - Fixed for the new update.
   - Fixes `pos=x,z,y` not working for the command `location_register`.
   - Reworked the execution flow to work more smoothly and efficiently.
-
-- v1.74
-  - Adds a new upgrade `combatruins` to add the new location from combat update to already explored areas.
-
-- v1.73
-  - Adds a new parameter `amount` to multiply affected vegetation objects.
-  - Fixes heightmap error when resetting vegetation near the player on single player.
-  - Improves performance of commands that require loading the area (for example vegetation commands).

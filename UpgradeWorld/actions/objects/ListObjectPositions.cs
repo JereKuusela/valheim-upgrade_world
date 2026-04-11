@@ -34,6 +34,12 @@ public class ListObjectPositions : EntityOperation
   private void ListPositions(HashSet<int> ids, DataParameters args)
   {
     var zdos = GetZDOs(args, ids);
+    if (zdos.Length == 0)
+    {
+      Print("No objects found.");
+      PrintPins();
+      return;
+    }
     var texts = zdos.Select(zdo =>
     {
       AddPin(zdo.GetPosition());

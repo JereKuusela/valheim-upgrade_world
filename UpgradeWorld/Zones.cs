@@ -89,6 +89,10 @@ public static class Zones
         scene.m_instances.Remove(zdo);
       }
     }
-    ZoneSystem.instance.m_zones.Remove(zone);
+    if (ZoneSystem.instance.m_zones.TryGetValue(zone, out var z))
+    {
+      UnityEngine.Object.Destroy(z.m_root);
+      ZoneSystem.instance.m_zones.Remove(zone);
+    }
   }
 }

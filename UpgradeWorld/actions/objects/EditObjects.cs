@@ -8,13 +8,15 @@ public class EditObjects(Terminal context, IEnumerable<string> ids, DataParamete
   private bool SetData(ZDO zdo, List<string> datas)
   {
     var revision = zdo.DataRevision;
-    var result = datas.Where(data =>
+    var result = datas.Count(data =>
     {
       var split = Parse.Split(data);
+      if (split.Length == 1)
+        return DataHelper.ClearData(zdo, split[0]);
       var value = split.Length > 1 ? split[1] : "";
       var type = split.Length > 2 ? split[2] : "";
       return DataHelper.SetData(zdo, split[0], value, type);
-    }).Count() > 0;
+    }) > 0;
     if (result)
     {
       if (!zdo.IsOwner())
