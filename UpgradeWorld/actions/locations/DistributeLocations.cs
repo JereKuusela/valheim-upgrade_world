@@ -83,8 +83,7 @@ public class DistributeLocations : ExecutedOperation
       }
     }
 
-    // Post-processing: identical for both paths. Runs per-id over whatever
-    // is currently in m_locationInstances.
+    // Post-processing should be identical for both paths.
     foreach (var id in Ids)
     {
       var before = Counts.TryGetValue(id, out var count) ? count : 0;
