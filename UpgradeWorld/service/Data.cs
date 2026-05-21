@@ -8,6 +8,55 @@ namespace Service;
 
 public class DataHelper
 {
+  private static readonly HashSet<string> DataTypes = ["float", "id", "int", "long", "quat", "string", "vector"];
+
+  public static bool IsDataType(string type) => DataTypes.Contains(type.ToLowerInvariant());
+
+  public static bool HasDataOfType(ZDO zdo, string type)
+  {
+    var id = zdo.m_uid;
+    return type.ToLowerInvariant() switch
+    {
+      "vector" => ZDOExtraData.s_vec3.TryGetValue(id, out var vecs) && vecs.Count > 0,
+      "quat" => ZDOExtraData.s_quats.TryGetValue(id, out var quats) && quats.Count > 0,
+      "long" => ZDOExtraData.s_longs.TryGetValue(id, out var longs) && longs.Count > 0,
+      // Ids are stored in the long data table as key_u/key_i pairs.
+      "id" => ZDOExtraData.s_longs.TryGetValue(id, out var idLongs) && idLongs.Count > 0,
+      "string" => ZDOExtraData.s_strings.TryGetValue(id, out var strings) && strings.Count > 0,
+      "int" => ZDOExtraData.s_ints.TryGetValue(id, out var ints) && ints.Count > 0,
+      "float" => ZDOExtraData.s_floats.TryGetValue(id, out var floats) && floats.Count > 0,
+      _ => false,
+    };
+  }
+
+  public static bool HasDataOfType(ZDO zdo, string type, string data)
+  {
+    if (data == "") return HasDataOfType(zdo, type);
+
+    var id = zdo.m_uid;
+    return type.ToLowerInvariant() switch
+    {
+      "vector" => ZDOExtraData.s_vec3.TryGetValue(id, out var vecs) && vecs.Any(pair => Parse.VectorXZYRange(data, Vector3.zero).Includes(pair.Value)),
+      "quat" => ZDOExtraData.s_quats.TryGetValue(id, out var quats) && quats.Any(pair => Parse.AngleYXZ(data) == pair.Value),
+      "long" => ZDOExtraData.s_longs.TryGetValue(id, out var longs) && longs.Any(pair => pair.Key == ZDOVars.s_timeOfDeath
+          ? Parse.LongRange(data).Includes(Helper.ToDay(pair.Value))
+          : Parse.LongRange(data).Includes(pair.Value)),
+      "string" => ZDOExtraData.s_strings.TryGetValue(id, out var strings) && strings.Any(pair => data == pair.Value),
+      "int" => ZDOExtraData.s_ints.TryGetValue(id, out var ints) && ints.Any(pair => Parse.IntRange(data).Includes(pair.Value)),
+      "float" => ZDOExtraData.s_floats.TryGetValue(id, out var floats) && floats.Any(pair => Parse.FloatRange(data).Includes(pair.Value)),
+      "id" => ZDOExtraData.s_longs.TryGetValue(id, out var idLongs) && HasAnyIdData(idLongs.Values, data),
+      _ => false,
+    };
+  }
+
+  private static bool HasAnyIdData(IEnumerable<long> values, string data)
+  {
+    var split = Parse.SplitWithEmpty(data, '/');
+    var userId = Parse.Long(split[0]);
+    var valueId = Parse.Long(split, 1);
+    return values.Any(value => value == userId) && values.Any(value => value == valueId);
+  }
+
   public static bool ClearData(ZDO zdo, string key)
   {
     var id = zdo.m_uid;
@@ -78,7 +127,7 @@ public class DataHelper
 
     if (type == "vector" || (type == "" && hasVec))
     {
-      zdo.Set(hash, Parse.VectorXZY(Parse.Split(data), Vector3.zero));
+      zdo.Set(hash, Parse.VectorXZY(Parse.SplitWithEmpty(data), Vector3.zero));
     }
     else if (type == "quat" || (type == "" && hasQuat))
     {
@@ -103,7 +152,7 @@ public class DataHelper
     }
     else if (type == "id" || (type == "" && hasId))
     {
-      var split = Parse.Split(data, '/');
+      var split = Parse.SplitWithEmpty(data, '/');
       var hashValue = (key + "_i").GetStableHashCode();
       zdo.Set(hashId, Parse.Long(split[0]));
       zdo.Set(hashValue, Parse.Long(split, 1));

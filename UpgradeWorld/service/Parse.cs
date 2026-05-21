@@ -6,6 +6,7 @@ using UnityEngine;
 using UpgradeWorld;
 
 namespace Service;
+
 public class Range<T> where T : IComparable
 {
   public T Min;
@@ -163,11 +164,11 @@ public static class Parse
   public static Quaternion AngleYXZ(string arg) => AngleYXZ(arg, Quaternion.identity);
   public static Quaternion AngleYXZ(string arg, Quaternion defaultValue)
   {
-    var values = Split(arg);
+    var values = SplitWithEmpty(arg);
     var angle = Vector3.zero;
-    angle.y = Parse.Float(values, 0, defaultValue.eulerAngles.y);
-    angle.x = Parse.Float(values, 1, defaultValue.eulerAngles.x);
-    angle.z = Parse.Float(values, 2, defaultValue.eulerAngles.z);
+    angle.y = Float(values, 0, defaultValue.eulerAngles.y);
+    angle.x = Float(values, 1, defaultValue.eulerAngles.x);
+    angle.z = Float(values, 2, defaultValue.eulerAngles.z);
     return Quaternion.Euler(angle);
   }
 
@@ -188,7 +189,7 @@ public static class Parse
   }
   public static Vector3Range VectorXZYRange(string arg, Vector3 defaultValue)
   {
-    var parts = Split(arg);
+    var parts = SplitWithEmpty(arg);
     var x = FloatRange(parts, 0, defaultValue.x);
     var y = FloatRange(parts, 2, defaultValue.y);
     var z = FloatRange(parts, 1, defaultValue.z);
@@ -211,7 +212,7 @@ public static class Parse
   }
   public static Vector3Range VectorZXYRange(string arg, Vector3 defaultValue)
   {
-    var parts = Split(arg);
+    var parts = SplitWithEmpty(arg);
     var x = FloatRange(parts, 1, defaultValue.x);
     var y = FloatRange(parts, 2, defaultValue.y);
     var z = FloatRange(parts, 0, defaultValue.z);
@@ -240,7 +241,7 @@ public static class Parse
   }
   public static Vector3Range VectorYXZRange(string arg, Vector3 defaultValue)
   {
-    var parts = Split(arg);
+    var parts = SplitWithEmpty(arg);
     var x = FloatRange(parts, 1, defaultValue.x);
     var y = FloatRange(parts, 0, defaultValue.y);
     var z = FloatRange(parts, 2, defaultValue.z);
@@ -260,7 +261,7 @@ public static class Parse
   }
   public static Vector3Range ScaleRange(string arg)
   {
-    var parts = Split(arg);
+    var parts = SplitWithEmpty(arg);
     var x = FloatRange(parts, 0, 0f);
     var y = FloatRange(parts, 1, 0f);
     var z = FloatRange(parts, 2, 0f);
@@ -271,6 +272,7 @@ public static class Parse
   }
 
   public static string[] Split(string arg, char separator = ',') => [.. arg.Split(separator).Select(s => s.Trim()).Where(s => s != "")];
+  public static string[] SplitWithEmpty(string arg, char separator = ',') => [.. arg.Split(separator)];
   public static string[] Split(string[] args, int index, char separator) => args.Length <= index ? ([]) : Split(args[index], separator);
   private static readonly HashSet<string> Truthies = [
     "1",
@@ -306,7 +308,7 @@ public static class Parse
 
   public static Vector2i Zone(string arg)
   {
-    var values = Split(arg).ToArray();
+    var values = SplitWithEmpty(arg).ToArray();
     Vector2i vector = new();
     if (values.Length > 0) vector.x = Int(values[0]);
     if (values.Length > 1) vector.y = Int(values[1]);
@@ -314,7 +316,7 @@ public static class Parse
   }
   public static Vector2 Pos(string arg)
   {
-    var values = Split(arg).ToArray();
+    var values = SplitWithEmpty(arg).ToArray();
     Vector2 vector = new();
     if (values.Length > 0) vector.x = Float(values[0]);
     if (values.Length > 1) vector.y = Float(values[1]);

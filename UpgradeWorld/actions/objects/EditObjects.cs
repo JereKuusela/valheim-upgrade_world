@@ -10,8 +10,8 @@ public class EditObjects(Terminal context, IEnumerable<string> ids, DataParamete
     var revision = zdo.DataRevision;
     var result = datas.Count(data =>
     {
-      var split = Parse.Split(data);
-      if (split.Length == 1)
+      var split = Parse.SplitWithEmpty(data);
+      if (split.Length == 1 || split.Length > 1 && split[1] == "")
         return DataHelper.ClearData(zdo, split[0]);
       var value = split.Length > 1 ? split[1] : "";
       var type = split.Length > 2 ? split[2] : "";

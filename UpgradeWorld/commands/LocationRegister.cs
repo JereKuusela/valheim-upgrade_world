@@ -35,11 +35,11 @@ public class LocationRegisterCommand
         var pieces = Parse.Split(args[2], '=');
         if (pieces.Length == 1)
         {
-          pos = Parse.VectorXZY(Parse.Split(pieces[0]));
+          pos = Parse.VectorXZY(Parse.SplitWithEmpty(pieces[0]));
         }
         else if (pieces[0].ToLower() == "pos")
         {
-          pos = Parse.VectorXZY(Parse.Split(pieces[1]));
+          pos = Parse.VectorXZY(Parse.SplitWithEmpty(pieces[1]));
         }
         else
         {

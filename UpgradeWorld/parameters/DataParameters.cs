@@ -59,10 +59,14 @@ public class DataParameters : IdParameters
     }
     foreach (var filter in Filters)
     {
-      var split = Parse.Split(filter);
+      var split = Parse.SplitWithEmpty(filter);
+      var key = split[0];
       var value = split.Length > 1 ? split[1] : "";
       var includeEmpty = split.Length > 2 && (Parse.Boolean(split[2]) ?? false);
-      zdos = zdos.Where(zdo => DataHelper.HasData(zdo, split[0], value, includeEmpty));
+      if (DataHelper.IsDataType(key))
+        zdos = zdos.Where(zdo => DataHelper.HasDataOfType(zdo, key, value));
+      else
+        zdos = zdos.Where(zdo => DataHelper.HasData(zdo, key, value, includeEmpty));
     }
     return zdos;
   }

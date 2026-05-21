@@ -66,6 +66,9 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `data=key,value,type`: Sets object data. Type is only needed if the key doesn't already exist. Only applies to `objects_edit`. Multiple data values can be set at once. For space bars, you need to use quotes with Server Devcommands mod.
 - `distance=min-max`: Short-hand for setting both distances.
 - `filter=key,value,includeMissing`: Filters object by data value. Third parameter must be truthy to include objects that don't have the data value set. Only applies to `objects_*` commands. Multiple filters can be set at once. For space bars, you need to use quotes with Server Devcommands mod.
+- `filter=type,value`: Filters object by data value, for any key of a given type.
+  - Possible types are float, id, int, long, quat, string and vector.
+- `filter=*,value`: Filters object by data value, for any key.
 - `force`: Disables player base detection (same as `safeZones=0`).
 - `id`: Alternative way for specifying objects or locations.
 - `ignore`: Excludes objects or locations from the operation.

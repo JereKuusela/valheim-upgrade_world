@@ -15,7 +15,7 @@ public class LocationUnregisterCommand
     {
       if (Helper.IsClient(args)) return;
       var pos = Helper.GetPlayerPosition();
-      if (args.Length > 1) pos = Parse.VectorXZY(Parse.Split(args[1]));
+      if (args.Length > 1) pos = Parse.VectorXZY(Parse.SplitWithEmpty(args[1]));
       new UnregisterLocation(args.Context, pos);
     });
   }
