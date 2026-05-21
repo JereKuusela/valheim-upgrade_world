@@ -16,14 +16,14 @@ public class ResetZones : ZoneOperation
   private int Reseted = 0;
   protected override bool ExecuteZone(Vector2i zone)
   {
-    var zoneSystem = ZoneSystem.instance;
+    var zs = ZoneSystem.instance;
     var scene = ZNetScene.instance;
-    var sectorObjects = Helper.GetZDOs(zone);
+    var objs = Helper.GetZDOs(zone);
 
     var players = ZNet.instance.m_players.Select(player => player.m_characterID).ToHashSet();
-    if (sectorObjects != null)
+    if (objs != null)
     {
-      foreach (var zdo in sectorObjects)
+      foreach (var zdo in objs)
       {
         if (players.Contains(zdo.m_uid)) continue;
         var position = zdo.GetPosition();
@@ -31,14 +31,19 @@ public class ResetZones : ZoneOperation
           Helper.RemoveZDO(zdo);
       }
     }
-    var locations = zoneSystem.m_locationInstances;
+    var locations = zs.m_locationInstances;
     if (locations.TryGetValue(zone, out var location))
     {
       location.m_placed = false;
       location.m_position = new(location.m_position.x, WorldGenerator.instance.GetHeight(location.m_position.x, location.m_position.z), location.m_position.z);
-      zoneSystem.m_locationInstances[zone] = location;
+      zs.m_locationInstances[zone] = location;
     }
-    zoneSystem.m_generatedZones.Remove(zone);
+    zs.m_generatedZones.Remove(zone);
+    if (zs.m_zones.TryGetValue(zone, out var z))
+    {
+      UnityEngine.Object.Destroy(z.m_root);
+      zs.m_zones.Remove(zone);
+    }
     Reseted++;
     AddBorder(zone, Direction.North);
     AddBorder(zone, Direction.East);
