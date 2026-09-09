@@ -8,7 +8,7 @@ namespace UpgradeWorld;
 public abstract class ZoneOperation(Terminal context, FiltererParameters args) : ExecutedOperation(context, args.Pin)
 {
   public string Operation = "BaseOperation";
-  protected Vector2i[] ZonesToUpgrade = Zones.GetZones(args);
+  protected Vector2s[] ZonesToUpgrade = Zones.GetZones(args);
   protected int ZoneIndex = 0;
   ///<summary>Some operations can be done outside the zone loading logic.</summary>
   protected int PreOperated = 0;
@@ -25,7 +25,7 @@ public abstract class ZoneOperation(Terminal context, FiltererParameters args) :
     InitString += $".";
     return InitString;
   }
-  protected abstract bool ExecuteZone(Vector2i zone);
+  protected abstract bool ExecuteZone(Vector2s zone);
   protected override IEnumerator OnExecute(Stopwatch sw)
   {
     if (ZonesToUpgrade == null || ZonesToUpgrade.Length == 0)
@@ -94,3 +94,4 @@ public abstract class ZoneOperation(Terminal context, FiltererParameters args) :
     }
   }
 }
+

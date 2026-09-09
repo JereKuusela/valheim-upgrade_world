@@ -20,15 +20,12 @@ public static class Helper
       return biome;
     return Heightmap.Biome.None;
   }
-  public static List<ZDO>? GetZDOs(Vector2i zone)
+  public static List<ZDO>? GetZDOs(Vector2s zone)
   {
     var zman = ZDOMan.instance;
-    var index = zman.SectorToIndex(zone);
-    if (index >= 0 && index < zman.m_objectsBySector.Length)
-      return zman.m_objectsBySector[index];
-    if (zman.m_objectsByOutsideSector.TryGetValue(zone, out var list))
-      return list;
-    return null;
+    var list = new List<ZDO>();
+    zman.FindObjects(zone, list, null);
+    return list;
   }
   public static void RemoveZDO(ZDO zdo)
   {
@@ -52,14 +49,14 @@ public static class Helper
   }
 
   /// <summary>Clears the area around the location to prevent overlapping entities.</summary>
-  public static void ClearAreaForLocation(Vector2i zone, ZoneSystem.LocationInstance location, float radius)
+  public static void ClearAreaForLocation(Vector2s zone, ZoneSystem.LocationInstance location, float radius)
   {
     if (radius > 0f)
       ClearZDOsWithinDistance(zone, location.m_position, radius);
   }
 
   /// <summary>Clears entities too close to a given position.</summary>
-  public static void ClearZDOsWithinDistance(Vector2i zone, Vector3 center, float distance)
+  public static void ClearZDOsWithinDistance(Vector2s zone, Vector3 center, float distance)
   {
     if (distance == 0f) return;
     var sectorObjects = GetZDOs(zone);
@@ -85,7 +82,7 @@ public static class Helper
     return Vector3.zero;
   }
   /// <summary>Returns the player's zone while also handling the server-side.</summary>
-  public static Vector2i GetPlayerZone() => ZoneSystem.GetZone(GetPlayerPosition());
+  public static Vector2s GetPlayerZone() => ZoneSystem.GetZone(GetPlayerPosition());
   public static bool CheckUnhandled(Terminal.ConsoleEventArgs args, IEnumerable<string> extra, int handled = 0)
   {
     if (extra.Count() > handled)
@@ -175,7 +172,7 @@ public static class Helper
     foreach (var hm in Heightmap.s_heightmaps)
     {
       hm.m_buildData = null;
-      hm.Poke(true);
+      hm.Poke(1);
     }
   }
 
@@ -239,3 +236,4 @@ public static class Helper
     }
   }
 }
+

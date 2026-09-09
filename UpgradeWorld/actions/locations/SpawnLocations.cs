@@ -21,7 +21,7 @@ public class SpawnLocations : LocationOperation
     List<string> messages = [];
     ZonesToUpgrade = filterer.FilterZones(ZonesToUpgrade, ref messages);
   }
-  protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location)
+  protected override bool ExecuteLocation(Vector2s zone, ZoneSystem.LocationInstance location)
   {
     if (location.m_placed) return false;
     if (location.m_location?.m_prefab == null)
@@ -38,3 +38,4 @@ public class SpawnLocations : LocationOperation
     return true;
   }
 }
+

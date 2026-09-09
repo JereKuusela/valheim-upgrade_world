@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 ///<summary>Filters zones based on given biomes.</summary>
 public class BiomeFilterer(IEnumerable<Heightmap.Biome> Biomes, bool IncludeEdges) : IZoneFilterer
 {
-  public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
+  public Vector2s[] FilterZones(Vector2s[] zones, ref List<string> messages)
   {
     if (Biomes.Count() == 0) return zones;
     var amount = zones.Length;
@@ -15,7 +15,7 @@ public class BiomeFilterer(IEnumerable<Heightmap.Biome> Biomes, bool IncludeEdge
     return zones;
   }
 
-  private Vector2i[] FilterByBiomes(Vector2i[] zones)
+  private Vector2s[] FilterByBiomes(Vector2s[] zones)
   {
     var zoneSystem = ZoneSystem.instance;
     var halfZone = zoneSystem.m_zoneSize / 2.0f;
@@ -35,3 +35,4 @@ public class BiomeFilterer(IEnumerable<Heightmap.Biome> Biomes, bool IncludeEdge
     })];
   }
 }
+

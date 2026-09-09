@@ -69,7 +69,7 @@ public class SearchChests : EntityOperation
       var stack = from.ReadInt();
       // Durability.
       from.ReadSingle();
-      from.ReadVector2i();
+      from.ReadVector2s();
       from.ReadBool();
       var quality = "";
       if (version >= 101)
@@ -113,3 +113,4 @@ public class SearchChests : EntityOperation
     return amounts;
   }
 }
+

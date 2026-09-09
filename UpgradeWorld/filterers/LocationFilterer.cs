@@ -4,7 +4,7 @@ namespace UpgradeWorld;
 ///<summary>Filters zones based on whether they have given locations.</summary>
 public class LocationFilterer(IEnumerable<string> Ids, bool OnlyMissing) : IZoneFilterer
 {
-  public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
+  public Vector2s[] FilterZones(Vector2s[] zones, ref List<string> messages)
   {
     var locationObjects = Ids.Select(id => id.GetStableHashCode()).ToHashSet();
     var zs = ZoneSystem.instance;
@@ -19,3 +19,4 @@ public class LocationFilterer(IEnumerable<string> Ids, bool OnlyMissing) : IZone
     return zones;
   }
 }
+

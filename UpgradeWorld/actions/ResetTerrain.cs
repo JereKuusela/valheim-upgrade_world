@@ -11,7 +11,7 @@ namespace UpgradeWorld;
 [HarmonyPatch(typeof(ZoneSystem))]
 public class ResetTerrain
 {
-  public static ILookup<Vector2i, ZDO>? TCZdos = null;
+  public static ILookup<Vector2s, ZDO>? TCZdos = null;
   public static DateTime LastUpdate = DateTime.MinValue;
   public static bool Active = false;
 
@@ -52,7 +52,7 @@ public class ResetTerrain
     {
       for (var j = centerZone.y - d; j <= centerZone.y + d; j++)
       {
-        var zone = new Vector2i(i, j);
+        var zone = new Vector2s(i, j);
         if (TCZdos == null || !TCZdos.Contains(zone)) continue;
         var zdos = TCZdos[zone];
         ResetTerrainInZdo(pos, radius, zone, zdos.First());
@@ -69,7 +69,7 @@ public class ResetTerrain
     }
     if (removed) TCZdos = null;
   }
-  private static void ResetTerrainInZdo(Vector3 pos, float radius, Vector2i zone, ZDO zdo)
+  private static void ResetTerrainInZdo(Vector3 pos, float radius, Vector2s zone, ZDO zdo)
   {
     var byteArray = zdo.GetByteArray(ZDOVars.s_TCData);
     if (byteArray == null) return;

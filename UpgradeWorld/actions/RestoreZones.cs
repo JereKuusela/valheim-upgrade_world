@@ -12,7 +12,7 @@ public class RestoreZones : ZoneOperation
     InitString = args.Print($"Restore");
     Filterers = FiltererFactory.Create(args);
   }
-  protected override bool ExecuteZone(Vector2i zone)
+  protected override bool ExecuteZone(Vector2s zone)
   {
     var zs = ZoneSystem.instance;
     var zonePos = ZoneSystem.GetZonePos(zone);
@@ -36,4 +36,5 @@ public class RestoreZones : ZoneOperation
     Print(text);
   }
 }
+
 

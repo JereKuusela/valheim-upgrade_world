@@ -7,7 +7,7 @@ public class ChanceFilterer(float chance) : IZoneFilterer
   private static Random random = new();
   public float Chance = chance;
 
-  public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
+  public Vector2s[] FilterZones(Vector2s[] zones, ref List<string> messages)
   {
     var amount = zones.Length;
     zones = [.. zones.Where(zone => random.NextDouble() < Chance)];
@@ -16,3 +16,4 @@ public class ChanceFilterer(float chance) : IZoneFilterer
     return zones;
   }
 }
+

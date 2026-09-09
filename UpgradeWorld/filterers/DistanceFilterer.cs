@@ -6,7 +6,7 @@ namespace UpgradeWorld;
 public class DistanceFilterer(Vector3 center, float minDistance, float maxDistance) : IZoneFilterer
 {
 
-  public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
+  public Vector2s[] FilterZones(Vector2s[] zones, ref List<string> messages)
   {
     var amount = zones.Length;
     zones = FilterByDistance(zones, center, minDistance, maxDistance);
@@ -16,7 +16,7 @@ public class DistanceFilterer(Vector3 center, float minDistance, float maxDistan
   }
 
   /// <summary>Returns only zones which center point is included within a given range..</summary>
-  private static Vector2i[] FilterByDistance(Vector2i[] zones, Vector3 position, float minDistance, float maxDistance)
+  private static Vector2s[] FilterByDistance(Vector2s[] zones, Vector3 position, float minDistance, float maxDistance)
   {
     return [.. zones.Where(zone =>
     {
@@ -29,3 +29,4 @@ public class DistanceFilterer(Vector3 center, float minDistance, float maxDistan
     })];
   }
 }
+

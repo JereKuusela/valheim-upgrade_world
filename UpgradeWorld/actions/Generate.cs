@@ -13,7 +13,7 @@ public class Generate : ZoneOperation
     Empty = empty;
   }
 
-  protected override bool ExecuteZone(Vector2i zone)
+  protected override bool ExecuteZone(Vector2s zone)
   {
     var zs = ZoneSystem.instance;
     if (Empty)
@@ -32,3 +32,4 @@ public class Generate : ZoneOperation
     Print(text);
   }
 }
+

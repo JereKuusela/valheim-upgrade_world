@@ -12,7 +12,7 @@ public class AddVegetation : VegetationOperation
     args.TargetZones = TargetZones.Generated;
     Filterers = FiltererFactory.Create(args);
   }
-  protected override bool ExecuteZone(Vector2i zone)
+  protected override bool ExecuteZone(Vector2s zone)
   {
     var zs = ZoneSystem.instance;
     if (zs.IsZoneLoaded(zone))
@@ -31,7 +31,7 @@ public class AddVegetation : VegetationOperation
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
   }
-  public static List<ZoneSystem.ClearArea> GetClearAreas(Vector2i zone)
+  public static List<ZoneSystem.ClearArea> GetClearAreas(Vector2s zone)
   {
     var zs = ZoneSystem.instance;
     zs.m_tempClearAreas.Clear();
@@ -42,7 +42,7 @@ public class AddVegetation : VegetationOperation
     }
     return zs.m_tempClearAreas;
   }
-  protected void SpawnVegetation(Vector2i zone)
+  protected void SpawnVegetation(Vector2s zone)
   {
     var zs = ZoneSystem.instance;
     var root = zs.m_zones[zone].m_root;
@@ -65,3 +65,4 @@ public class AddVegetation : VegetationOperation
     ResetTerrain.Active = false;
   }
 }
+

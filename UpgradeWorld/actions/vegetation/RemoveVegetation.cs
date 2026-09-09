@@ -24,12 +24,12 @@ public class RemoveVegetation : ZoneOperation
         Hashes.Add((id + "_frac").GetStableHashCode());
     }
   }
-  protected override bool ExecuteZone(Vector2i zone)
+  protected override bool ExecuteZone(Vector2s zone)
   {
     Remove(zone);
     return true;
   }
-  protected void Remove(Vector2i zone)
+  protected void Remove(Vector2s zone)
   {
     var zdos = Helper.GetZDOs(zone);
     if (zdos == null) return;
@@ -50,3 +50,4 @@ public class RemoveVegetation : ZoneOperation
     Print(text);
   }
 }
+

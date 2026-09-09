@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
 public class ResetZones : ZoneOperation
 {
-  private Dictionary<Vector2i, Direction> BorderZones = [];
+  private Dictionary<Vector2s, Direction> BorderZones = [];
   public ResetZones(Terminal context, FiltererParameters args) : base(context, args)
   {
     Operation = "Reset";
@@ -14,7 +14,7 @@ public class ResetZones : ZoneOperation
     Filterers = FiltererFactory.Create(args);
   }
   private int Reseted = 0;
-  protected override bool ExecuteZone(Vector2i zone)
+  protected override bool ExecuteZone(Vector2s zone)
   {
     var zs = ZoneSystem.instance;
     var scene = ZNetScene.instance;
@@ -55,7 +55,7 @@ public class ResetZones : ZoneOperation
     AddBorder(zone, Direction.SouthEast);
     return true;
   }
-  private void AddBorder(Vector2i zone, Direction direction)
+  private void AddBorder(Vector2s zone, Direction direction)
   {
     if (direction == Direction.North) zone.y -= 1;
     if (direction == Direction.East) zone.x -= 1;
@@ -97,3 +97,4 @@ public class ResetZones : ZoneOperation
     Minimap.instance?.UpdateLocationPins(1000);
   }
 }
+

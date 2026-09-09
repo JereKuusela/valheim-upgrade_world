@@ -12,7 +12,7 @@ public class RegenerateLocations : LocationOperation
     Filterers = [.. Filterers, new LocationFilterer(ids, false)];
   }
 
-  protected override bool ExecuteLocation(Vector2i zone, ZoneSystem.LocationInstance location)
+  protected override bool ExecuteLocation(Vector2s zone, ZoneSystem.LocationInstance location)
   {
     if (!location.m_placed) return false;
     location.m_placed = false;
@@ -32,3 +32,4 @@ public class RegenerateLocations : LocationOperation
     return true;
   }
 }
+

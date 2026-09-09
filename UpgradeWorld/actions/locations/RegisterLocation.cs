@@ -16,8 +16,7 @@ public class RegisterLocation : BaseOperation
     if (!zs.m_locationsByHash.TryGetValue(hash, out var location))
       throw new InvalidOperationException($"Location {id} not found.");
     var zone = ZoneSystem.GetZone(position);
-    var num = ZDOMan.instance.SectorToIndex(zone);
-    var zdos = ZDOMan.instance.m_objectsBySector[num];
+    var zdos = Helper.GetZDOs(zone);
     if (zdos != null)
     {
       foreach (var zdo in zdos)
