@@ -16,4 +16,3 @@ public class ChanceFilterer(float chance) : IZoneFilterer
     return zones;
   }
 }
-

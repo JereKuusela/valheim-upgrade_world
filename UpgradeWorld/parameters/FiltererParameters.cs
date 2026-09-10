@@ -28,6 +28,7 @@ public class FiltererParameters
   public float? ObjectReset;
   public int SafeZones = Settings.SafeZoneSize;
   public HashSet<string> LocationIds = [];
+  private bool hasLocationFilter;
   public TargetZones TargetZones = TargetZones.Generated;
   public bool Pin;
   public List<string> Unhandled = [];
@@ -38,6 +39,10 @@ public class FiltererParameters
   public FiltererParameters(FiltererParameters pars)
   {
     Biomes = pars.Biomes;
+    Limit = pars.Limit;
+    Pin = pars.Pin;
+    LocationIds = pars.LocationIds;
+    hasLocationFilter = pars.hasLocationFilter;
     BiomeMask = pars.BiomeMask;
     NoEdges = pars.NoEdges;
     Start = pars.Start;
@@ -80,7 +85,11 @@ public class FiltererParameters
           MaxDistance = distance.Max;
         }
         else if (name == "biomes") Biomes = Parse.Biomes(value);
-        else if (name == "locations") LocationIds = LocationOperation.Ids(value.Split(','), []);
+        else if (name == "locations")
+        {
+          hasLocationFilter = true;
+          LocationIds = LocationOperation.Ids(value.Split(','), []);
+        }
         else Unhandled.Add(par);
       }
       else if (name == "noedges") NoEdges = true;
@@ -99,6 +108,11 @@ public class FiltererParameters
   }
   public virtual bool Valid(Terminal terminal)
   {
+    if (hasLocationFilter && LocationIds.Count == 0)
+    {
+      Helper.Print(terminal, "Error: No locations matched the locations filter.");
+      return false;
+    }
     if (Unhandled.Count() > 0)
     {
       Helper.Print(terminal, "Error: Unhandled parameters " + string.Join(", ", Unhandled));
@@ -144,7 +158,7 @@ public class FiltererParameters
     {
       var zone = ZoneSystem.GetZone(pos);
       var zs = ZoneSystem.instance;
-      if (zs.m_locationInstances.TryGetValue(zone, out var location) && LocationIds.Contains(location.m_location.m_prefab.Name))
+      if (!zs.m_locationInstances.TryGetValue(zone, out var location) || !LocationIds.Contains(location.m_location.m_prefab.Name))
         return false;
     }
     return true;
@@ -244,4 +258,3 @@ public class FiltererParameters
   public bool Roll() => Chance >= 1f || random.NextDouble() < Chance;
   public bool RollAmount() => Amount >= 1f || random.NextDouble() < Amount;
 }
-

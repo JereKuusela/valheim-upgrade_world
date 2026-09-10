@@ -32,4 +32,3 @@ public class Generate : ZoneOperation
     Print(text);
   }
 }
-

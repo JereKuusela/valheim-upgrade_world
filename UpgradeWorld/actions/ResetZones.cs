@@ -17,12 +17,15 @@ public class ResetZones : ZoneOperation
   protected override bool ExecuteZone(Vector2s zone)
   {
     var zs = ZoneSystem.instance;
+    var scene = ZNetScene.instance;
     var objs = Helper.GetZDOs(zone);
 
+    var players = ZNet.instance.m_players.Select(player => player.m_characterID).ToHashSet();
     if (objs != null)
     {
       foreach (var zdo in objs)
       {
+        if (players.Contains(zdo.m_uid)) continue;
         var position = zdo.GetPosition();
         if (ZoneSystem.GetZone(position) == zone)
           Helper.RemoveZDO(zdo);
@@ -94,4 +97,3 @@ public class ResetZones : ZoneOperation
     Minimap.instance?.UpdateLocationPins(1000);
   }
 }
-

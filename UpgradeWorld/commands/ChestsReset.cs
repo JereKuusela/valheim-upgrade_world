@@ -10,10 +10,10 @@ public class ChestsResetCommand
   {
     CommandWrapper.Register("chests_reset", index =>
     {
-      if (index == 0) return ResetChests.ChestNames();
+      if (index == 0) return ["*", .. ResetChests.ChestNames()];
       return DataParameters.Parameters;
     }, DataParameters.GetAutoComplete());
-    Helper.Command("chests_reset", "[chest_name] [looted] [...item_ids] [...args] - Rerolls items at given chests, if they only have given items (all chests if no items specified).", (args) =>
+    Helper.Command("chests_reset", "[chest_name|*] [looted] [...item_ids] [...args] - Replaces treasure chest contents. looted includes empty chests too; item IDs form an allowlist. Without an allowlist, stored items can be lost.", (args) =>
     {
       DataParameters pars = new(args, false);
       var looted = Parse.Flag(pars.Unhandled, "looted");
@@ -22,7 +22,7 @@ public class ChestsResetCommand
       HashSet<string> ids = [];
       if (pars.Ids().Count() > 0)
       {
-        chestIds = [pars.Ids().First()];
+        if (pars.Ids().First() != "*") chestIds = [pars.Ids().First()];
         ids = [.. pars.Ids().Skip(1)];
       }
       if (Helper.IsClient(args)) return;

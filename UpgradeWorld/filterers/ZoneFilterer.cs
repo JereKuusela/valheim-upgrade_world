@@ -20,4 +20,3 @@ public static class FiltererFactory
     return filters;
   }
 }
-

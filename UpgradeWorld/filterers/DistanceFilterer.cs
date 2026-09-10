@@ -29,4 +29,3 @@ public class DistanceFilterer(Vector3 center, float minDistance, float maxDistan
     })];
   }
 }
-

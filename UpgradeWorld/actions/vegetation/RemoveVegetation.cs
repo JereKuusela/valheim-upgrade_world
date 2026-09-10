@@ -50,4 +50,3 @@ public class RemoveVegetation : ZoneOperation
     Print(text);
   }
 }
-

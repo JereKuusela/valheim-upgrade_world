@@ -1,126 +1,50 @@
+using System.Linq;
+using Service;
 
 namespace UpgradeWorld;
-/// <summary>Removes missing objects from chests.</summary>
+/// <summary>Removes missing item records without rewriting surviving items.</summary>
 public class CleanChests : EntityOperation
 {
   public CleanChests(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
   {
-    Clean(zdos, alwaysPrint);
-  }
-
-  private void Clean(ZDO[] zdos, bool alwaysPrint)
-  {
     var removed = 0;
+    var skipped = 0;
     foreach (var zdo in zdos)
     {
-      var items = zdo.GetString(ZDOVars.s_items);
-      if (items == "") continue;
-      ZPackage loadPackage = new(items);
-      ZPackage savePackage = new();
-      var result = CleanChest(loadPackage, savePackage);
-      if (result == 0) continue;
-      AddPin(zdo.m_position);
-      removed += result;
-      if (!zdo.IsOwner())
-        zdo.SetOwner(ZDOMan.GetSessionID());
-      zdo.Set(ZDOVars.s_items, savePackage.GetBase64());
-    }
-    if (alwaysPrint || removed > 0)
-      Print($"Removed {removed} missing object{S(removed)} from chests");
-  }
-
-  private int CleanChest(ZPackage from, ZPackage to)
-  {
-    int version = from.ReadInt();
-    // Item Drawers mod uses the same ZDO key.
-    // But luckily it writes 0 as version, so it can be detected.
-    if (version == 0) return 0;
-    to.Write(version);
-    int items = from.ReadInt();
-    to.Write(items);
-    var removed = 0;
-    try
-    {
-      for (int i = 0; i < items; i++)
+      var prefab = ZNetScene.instance.GetPrefab(zdo.m_prefab);
+      if (prefab == null || prefab.GetComponent<Container>() == null) continue;
+      if (!ChestInventory.CanModify(zdo, out var reason))
       {
-        string text = from.ReadString();
-        if (ZNetScene.instance.m_namedPrefabs.ContainsKey(text.GetStableHashCode()))
-        {
-          to.Write(text);
-          to.Write(from.ReadInt());
-          to.Write(from.ReadSingle());
-          to.Write(from.ReadVector2s());
-          to.Write(from.ReadBool());
-          if (version >= 101)
-            to.Write(from.ReadInt());
-          if (version >= 102)
-            to.Write(from.ReadInt());
-          if (version >= 103)
-          {
-            to.Write(from.ReadLong());
-            to.Write(from.ReadString());
-          }
-          if (version >= 104)
-          {
-            var dataAmount = from.ReadInt();
-            to.Write(dataAmount);
-            for (int j = 0; j < dataAmount; j++)
-            {
-              to.Write(from.ReadString());
-              to.Write(from.ReadString());
-            }
-          }
-          if (version >= 105)
-            to.Write(from.ReadInt());
-          if (version >= 106)
-            to.Write(from.ReadBool());
-        }
-        else
-        {
-          removed++;
-          from.ReadInt();
-          from.ReadSingle();
-          from.ReadVector2s();
-          from.ReadBool();
-          if (version >= 101)
-            from.ReadInt();
-          if (version >= 102)
-            from.ReadInt();
-          if (version >= 103)
-          {
-            from.ReadLong();
-            from.ReadString();
-          }
-          if (version >= 104)
-          {
-            var dataAmount = from.ReadInt();
-            for (int j = 0; j < dataAmount; j++)
-            {
-              from.ReadString();
-              from.ReadString();
-            }
-          }
-          if (version >= 105)
-            from.ReadInt();
-          if (version >= 106)
-            from.ReadBool();
-        }
+        skipped++;
+        if (Settings.Verbose) Print($"Skipping chest {zdo.m_uid}: {reason}");
+        continue;
       }
+      if (!ChestInventory.TryRead(zdo, out var inventory, out var error))
+      {
+        skipped++;
+        if (Settings.Verbose) Print($"Skipping chest {zdo.m_uid}: {error}");
+        continue;
+      }
+      bool Exists(ChestInventory.Entry item) => ZNetScene.instance.GetPrefab(item.Hash) is UnityEngine.GameObject itemPrefab &&
+        itemPrefab.GetComponent<ItemDrop>() != null;
+      var missing = inventory.Items.Count(item => !Exists(item));
+      if (missing == 0) continue;
+      // Loaded inventories can save a stale in-memory copy over this edit.
+      // Defer these until unloaded, instead of causing an ownership/load race.
+      if (ZNetScene.instance.m_instances.ContainsKey(zdo))
+      {
+        skipped++;
+        if (Settings.Verbose) Print($"Skipping loaded chest {zdo.m_uid}; retry after unloading the area.");
+        continue;
+      }
+      var bytes = inventory.Keep(Exists); // prepare fully before touching the ZDO
+      if (!zdo.IsOwner()) zdo.SetOwner(ZDOMan.GetSessionID());
+      zdo.Set(ZDOVars.s_items, bytes);
+      zdo.Set(ZDOVars.s_items, "");
+      AddPin(zdo.m_position);
+      removed += missing;
     }
-    catch
-    {
-      // Fallback for truly corrupted chests.
-      removed = items;
-    }
-
-
-    if (removed > 0)
-    {
-      to.SetPos(4);
-      to.Write(items - removed);
-    }
-    return removed;
+    if (alwaysPrint || removed > 0 || skipped > 0)
+      Print($"Removed {removed} missing item records from chests. Skipped {skipped} unsafe/unreadable chests (unchanged; verbose for reasons).");
   }
-
 }
-

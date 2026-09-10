@@ -38,4 +38,3 @@ public class SpawnLocations : LocationOperation
     return true;
   }
 }
-

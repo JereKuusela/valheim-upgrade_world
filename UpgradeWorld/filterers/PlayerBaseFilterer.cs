@@ -50,4 +50,3 @@ public class PlayerBaseFilterer(int size) : IZoneFilterer
     return zones;
   }
 }
-

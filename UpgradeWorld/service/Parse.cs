@@ -309,10 +309,9 @@ public static class Parse
   public static Vector2s Zone(string arg)
   {
     var values = SplitWithEmpty(arg).ToArray();
-    Vector2s vector = new();
-    if (values.Length > 0) vector.x = (short)Int(values[0]);
-    if (values.Length > 1) vector.y = (short)Int(values[1]);
-    return vector;
+    var x = values.Length > 0 ? Int(values[0]) : 0;
+    var y = values.Length > 1 ? Int(values[1]) : 0;
+    return new(x, y);
   }
   public static Vector2 Pos(string arg)
   {
@@ -324,4 +323,3 @@ public static class Parse
   }
   public static HashSet<Heightmap.Biome> Biomes(string arg) => [.. Split(arg).Select(Helper.GetBiome)];
 }
-

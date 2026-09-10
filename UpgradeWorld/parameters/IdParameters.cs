@@ -7,7 +7,7 @@ namespace UpgradeWorld;
 public class IdParameters : FiltererParameters
 {
   private List<string> Include = [];
-  private readonly List<string> Ignore = [];
+  protected readonly List<string> Ignore = [];
   public HashSet<string> VegIds() => VegetationOperation.GetIds(Include, Ignore);
   public HashSet<string> Ids() => [.. Include];
   public bool RequireId;
@@ -33,7 +33,7 @@ public class IdParameters : FiltererParameters
   }
   public override bool Valid(Terminal terminal)
   {
-    Include = [.. Unhandled.SelectMany(kvp => Parse.Split(kvp))];
+    Include.AddRange(Unhandled.SelectMany(kvp => Parse.Split(kvp)));
     Unhandled.Clear();
     if (!base.Valid(terminal)) return false;
     if (RequireId && Include.Count() == 0)

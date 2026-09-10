@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Service;
 
 namespace UpgradeWorld;
 /// <summary>Searchs objects from chests.</summary>
@@ -11,12 +12,12 @@ public class SearchChests : EntityOperation
   }
   private string SearchStand(ZDO zdo, string prefix, HashSet<int> ids)
   {
-    var item = zdo.GetString(prefix + "item", "");
-    if (item == "") return "";
-    if (!ids.Contains(item.GetStableHashCode())) return "";
+    var hash = StandItems.GetHash(zdo, prefix);
+    if (hash == 0 || !ids.Contains(hash)) return "";
+    var item = ZNetScene.instance.GetPrefab(hash)?.name ?? $"hash:{hash}";
     var variant = zdo.GetInt(prefix + "variant");
     var quality = zdo.GetInt(prefix + "quality");
-    if (variant > 1) item += ", style " + variant + "";
+    if (variant > 0) item += ", style " + variant + "";
     if (quality > 1) item += ", level " + quality + "";
     return item;
   }
@@ -26,12 +27,11 @@ public class SearchChests : EntityOperation
     var zdos = GetZDOs(args);
 
     var zs = ZNetScene.instance;
-    string[] prefixes = ["", "0_", "1_", "2_", "3_", "4_", "5_", "6_", "7_", "8_", "9_"];
     var standContents = zdos.Select(zdo =>
     {
-      var content = prefixes.Select(prefix => SearchStand(zdo, prefix, prefabs)).Where(x => x != "").ToList();
+      var content = StandItems.Prefixes(zdo).Select(prefix => SearchStand(zdo, prefix, prefabs)).Where(x => x != "").ToList();
       if (content.Count == 0) return "";
-      var name = zs.m_namedPrefabs[zdo.m_prefab].name;
+      var name = zs.GetPrefab(zdo.m_prefab)?.name ?? $"hash:{zdo.m_prefab}";
       var id = name + " " + zdo.m_uid.ID + " " + Helper.PrintVectorXZY(zdo.GetPosition());
       return id + "\n" + string.Join("\n", content);
     }).Where(x => x != "").ToList();
@@ -41,13 +41,15 @@ public class SearchChests : EntityOperation
 
     var chestContents = zdos.Select(zdo =>
     {
-      var items = zdo.GetString(ZDOVars.s_items);
-      if (items == "") return "";
-      ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
-      var content = SearchChest(loadPackage, prefabs);
+      if (!ChestInventory.TryRead(zdo, out var inventory, out var error))
+      {
+        if (Settings.Verbose) Print($"Skipping inventory {zdo.m_uid}: {error}");
+        return "";
+      }
+      var content = SearchChest(inventory, prefabs);
       if (content.Count == 0) return "";
       AddPin(zdo.GetPosition());
-      var name = zs.m_namedPrefabs[zdo.m_prefab].name;
+      var name = zs.GetPrefab(zdo.m_prefab)?.name ?? $"hash:{zdo.m_prefab}";
       var id = name + " " + zdo.m_uid.ID + " " + Helper.PrintVectorXZY(zdo.GetPosition());
       return id + "\n" + string.Join("\n", content.Select(x => x.Key + ": " + x.Value));
     }).Where(x => x != "").ToList();
@@ -58,59 +60,16 @@ public class SearchChests : EntityOperation
     PrintPins();
   }
 
-  private Dictionary<string, int> SearchChest(ZPackage from, HashSet<int> ids)
+  private Dictionary<string, int> SearchChest(ChestInventory inventory, HashSet<int> ids)
   {
     Dictionary<string, int> amounts = [];
-    var version = from.ReadInt();
-    var items = from.ReadInt();
-    for (int i = 0; i < items; i++)
+    foreach (var item in inventory.Items)
     {
-      var text = from.ReadString();
-      var stack = from.ReadInt();
-      // Durability.
-      from.ReadSingle();
-      from.ReadVector2s();
-      from.ReadBool();
-      var quality = "";
-      if (version >= 101)
-      {
-        var value = from.ReadInt();
-        if (value > 1) quality = " , level " + value + "";
-      }
-      var variant = "";
-      if (version >= 102)
-      {
-        var value = from.ReadInt();
-        if (value > 0) variant = ", style " + value;
-      }
-      if (version >= 103)
-      {
-        from.ReadLong();
-        from.ReadString();
-      }
-      if (version >= 104)
-      {
-        var dataAmount = from.ReadInt();
-        for (int j = 0; j < dataAmount; j++)
-        {
-          from.ReadString();
-          from.ReadString();
-        }
-      }
-      if (version >= 105)
-        from.ReadInt();
-      if (version >= 106)
-        from.ReadBool();
-      if (ids.Contains(text.GetStableHashCode()))
-      {
-        var key = text + variant + quality;
-        if (amounts.ContainsKey(key))
-          amounts[key] += stack;
-        else
-          amounts.Add(key, stack);
-      }
+      if (!ids.Contains(item.Hash)) continue;
+      var name = ZNetScene.instance.GetPrefab(item.Hash)?.name ?? (item.Name != "" ? item.Name : $"hash:{item.Hash}");
+      var key = name + (item.Variant > 0 ? $", style {item.Variant}" : "") + (item.Quality > 1 ? $", level {item.Quality}" : "");
+      amounts[key] = amounts.TryGetValue(key, out var count) ? count + item.Stack : item.Stack;
     }
     return amounts;
   }
 }
-
