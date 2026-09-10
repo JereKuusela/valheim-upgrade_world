@@ -52,10 +52,10 @@ public class DataParameters : IdParameters
         return Level.Min <= value && value <= Level.Max;
       });
     }
-    if (LocationIds.Count > 0)
+    if (Ignore.Count > 0)
     {
-      var ids = LocationIds.Select(s => s.GetStableHashCode()).ToHashSet();
-      zdos = zdos.Where(zdo => ids.Contains(zdo.GetInt(ZDOVars.s_location)));
+      var excluded = EntityOperation.GetPrefabs(Ignore, []);
+      zdos = zdos.Where(zdo => !excluded.Contains(zdo.m_prefab));
     }
     foreach (var filter in Filters)
     {

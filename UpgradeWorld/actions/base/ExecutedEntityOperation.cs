@@ -12,6 +12,7 @@ public abstract class ExecutedEntityOperation(Terminal context, IEnumerable<stri
   protected readonly DataParameters Args = args;
   protected HashSet<int> Prefabs = [];
   protected ZDO[] ZdosToProcess = [];
+  private ZDOID[] selectedIds = [];
   protected Dictionary<int, int> Counts = [];
   protected int ProcessedCount = 0;
   protected int TotalCount = 0;
@@ -20,6 +21,7 @@ public abstract class ExecutedEntityOperation(Terminal context, IEnumerable<stri
   {
     Prefabs = GetPrefabsForOperation();
     ZdosToProcess = EntityOperation.GetZDOs(Args, Prefabs);
+    selectedIds = ZdosToProcess.Select(zdo => zdo.m_uid).ToArray();
     TotalCount = ZdosToProcess.Length;
     Counts = Prefabs.ToDictionary(prefab => prefab, prefab => 0);
     if (TotalCount == 0)
@@ -38,13 +40,18 @@ public abstract class ExecutedEntityOperation(Terminal context, IEnumerable<stri
 
     var processed = 0;
 
-    foreach (var zdo in ZdosToProcess)
+    for (var i = 0; i < ZdosToProcess.Length; ++i)
     {
+      var zdo = ZdosToProcess[i];
+      // Prior queued commands may destroy an object or recycle its ZDO instance.
+      if (zdo.m_uid != selectedIds[i] || ZDOMan.instance.GetZDO(selectedIds[i]) != zdo) continue;
+      var prefab = zdo.m_prefab;
+      var position = zdo.GetPosition();
       if (ProcessZDO(zdo))
       {
-        Counts[zdo.m_prefab] += 1;
+        Counts[prefab] += 1;
         ProcessedCount += 1;
-        AddPin(zdo.GetPosition());
+        AddPin(position);
       }
 
       processed++;

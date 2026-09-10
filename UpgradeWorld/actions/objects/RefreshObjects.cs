@@ -6,7 +6,20 @@ public class RefreshObjects(Terminal context, HashSet<string> ids, DataParameter
 {
   private bool SetData(ZDO zdo)
   {
-    var updated = false;
+    var prefab = ZNetScene.instance.GetPrefab(zdo.m_prefab);
+    var container = prefab != null ? prefab.GetComponent<Container>() : null;
+    var resetChest = container != null && zdo.GetBool(ZDOVars.s_addedDefaultItems) &&
+      (zdo.GetString(Hash.OverrideItems) != "" || !container.m_defaultItems.IsEmpty());
+    if (resetChest)
+    {
+      if (!ChestInventory.CanModify(zdo, out var reason) ||
+          !ChestInventory.TryRead(zdo, out _, out reason))
+      {
+        Print($"Skipping chest {zdo.m_uid} (unchanged): {reason}");
+        return false;
+      }
+    }
+    var updated = resetChest;
     var spawnId = zdo.GetConnectionZDOID(ZDOExtraData.ConnectionType.Spawned);
     if (!spawnId.IsNone())
     {
@@ -26,16 +39,6 @@ public class RefreshObjects(Terminal context, HashSet<string> ids, DataParameter
       updated = true;
       zdo.Set(ZDOVars.s_spawnTime, 0L);
     }
-    if (zdo.GetBool(ZDOVars.s_addedDefaultItems))
-    {
-      var prefab = ZNetScene.instance.GetPrefab(zdo.m_prefab);
-      if (zdo.GetString(Hash.OverrideItems) != "" || prefab.GetComponent<Container>()?.m_defaultItems.IsEmpty() != true)
-      {
-        updated = true;
-        zdo.Set(ZDOVars.s_addedDefaultItems, false);
-        zdo.Set(ZDOVars.s_items, ClearChest(zdo));
-      }
-    }
     if (zdo.GetLong(Hash.Changed) != 0)
     {
       updated = true;
@@ -46,26 +49,19 @@ public class RefreshObjects(Terminal context, HashSet<string> ids, DataParameter
       if (!zdo.IsOwner())
         zdo.SetOwner(ZDOMan.GetSessionID());
     }
+    // Container rolls default items in Awake, not in CheckForChanges. Recreate
+    // it so already-loaded chests reroll too, using the native/modded loot path.
+    if (resetChest) ChestInventory.Respawn(zdo);
     return updated;
   }
   protected override bool ProcessZDO(ZDO zdo) => SetData(zdo);
 
   protected override string GetNoObjectsMessage() => "No objects found to refresh.";
 
-  protected override string GetInitMessage() => $"Refreshing {TotalCount} object{(TotalCount > 1 ? "s" : "")}.";
+  protected override string GetInitMessage() => $"Refreshing {TotalCount} object{(TotalCount > 1 ? "s" : "")}. Treasure chest contents are replaced without an item allowlist.";
 
   protected override string GetProcessedMessage() => $"Refreshed: {ProcessedCount}";
 
   protected override string GetCountMessage(int count, int prefab) => $"Refreshed {count} of {EntityOperation.GetName(prefab)}.";
 
-  private string ClearChest(ZDO zdo)
-  {
-    var str = zdo.GetString(ZDOVars.s_items);
-    if (string.IsNullOrEmpty(str)) return "";
-    ZPackage current = new(str);
-    ZPackage empty = new();
-    empty.Write(current.ReadInt());
-    empty.Write(0);
-    return empty.GetBase64();
-  }
 }

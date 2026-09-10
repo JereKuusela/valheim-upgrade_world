@@ -23,17 +23,17 @@ public static class Helper
   public static List<ZDO>? GetZDOs(Vector2s zone)
   {
     var zman = ZDOMan.instance;
-    zman.m_visitedSectorIndices.Clear();
-    var list = new List<ZDO>();
-    zman.FindObjects(zone, list, zman.m_visitedSectorIndices);
-    return list;
+    var index = (int)ZoneSystem.SectorToIndex(zone).Sector;
+    if (index >= 0 && index < zman.m_objectsBySector.Length)
+      return zman.m_objectsBySector[index];
+    return null;
   }
   public static void RemoveZDO(ZDO zdo)
   {
     if (zdo == null || !zdo.IsValid()) return;
     if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid) return;
     if (ZNet.instance.m_peers.Any(peer => peer.m_characterID == zdo.m_uid)) return;
-    zdo.SetOwnerInternal(ZDOMan.GetSessionID());
+    zdo.SetOwner(ZDOMan.GetSessionID());
     var spawned = zdo.GetConnectionZDOID(ZDOExtraData.ConnectionType.Spawned);
     if (spawned != ZDOID.None && ZDOMan.instance.m_objectsByID.TryGetValue(spawned, out var spawnedZdo) && spawnedZdo != zdo)
       RemoveZDO(spawnedZdo);
@@ -173,7 +173,7 @@ public static class Helper
     foreach (var hm in Heightmap.s_heightmaps)
     {
       hm.m_buildData = null;
-      hm.Poke(1);
+      hm.Poke(1, false);
     }
   }
 
@@ -237,4 +237,3 @@ public static class Helper
     }
   }
 }
-

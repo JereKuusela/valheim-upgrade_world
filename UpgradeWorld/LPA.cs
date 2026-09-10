@@ -1,4 +1,4 @@
-// v1.1
+﻿// v1.1
 /**
 * Reflection bridge from Upgrade World to Location Placement Accelerator (LPA).
 *

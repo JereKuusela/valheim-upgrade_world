@@ -23,7 +23,7 @@ public class CleanSpawns : EntityOperation
       AddPin(zdo.m_position);
       count += longs.Count;
       zdo.SetOwner(ZDOMan.GetSessionID());
-      ZDOExtraData.s_longs.Remove(id);
+      ZDOHelper.Release(ZDOExtraData.s_longs, id);
       zdo.IncreaseDataRevision();
       reseted++;
     }

@@ -28,4 +28,3 @@ public class PrefabFilterer(string id) : IZoneFilterer
     }
   }
 }
-

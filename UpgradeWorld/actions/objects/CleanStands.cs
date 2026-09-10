@@ -1,3 +1,4 @@
+using Service;
 
 namespace UpgradeWorld;
 /// <summary>Removes missing objects from armor and item stands.</summary>
@@ -5,66 +6,36 @@ public class CleanStands : EntityOperation
 {
   public CleanStands(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
   {
-    Clean(zdos, alwaysPrint);
-  }
-
-  private void Clean(ZDO[] zdos, bool alwaysPrint)
-  {
     var removed = 0;
+    var skipped = 0;
     foreach (var zdo in zdos)
     {
-      var r = removed;
-      if (Clean(zdo, "0_"))
-        removed++;
-      if (Clean(zdo, "1_"))
-        removed++;
-      if (Clean(zdo, "2_"))
-        removed++;
-      if (Clean(zdo, "3_"))
-        removed++;
-      if (Clean(zdo, "4_"))
-        removed++;
-      if (Clean(zdo, "5_"))
-        removed++;
-      if (Clean(zdo, "6_"))
-        removed++;
-      if (Clean(zdo, "7_"))
-        removed++;
-      if (Clean(zdo, "8_"))
-        removed++;
-      if (Clean(zdo, "9_"))
-        removed++;
-      if (removed > r)
-        AddPin(zdo.m_position);
-    }
-    if (alwaysPrint || removed > 0)
-      Print($"Removed {removed} missing object{S(removed)} from armor stands");
-
-    removed = 0;
-    foreach (var zdo in zdos)
-    {
-      if (Clean(zdo, ""))
+      var changed = false;
+      foreach (var prefix in StandItems.Prefixes(zdo))
       {
-        AddPin(zdo.m_position);
+        var hash = StandItems.GetHash(zdo, prefix);
+        if (hash == 0 || ZNetScene.instance.GetPrefab(hash) != null) continue;
+        if (!ChestInventory.CanModify(zdo, out var reason))
+        {
+          skipped++;
+          if (Settings.Verbose) Print($"Skipping stand {zdo.m_uid}: {reason}");
+          break;
+        }
+        if (!zdo.IsOwner()) zdo.SetOwner(ZDOMan.GetSessionID());
+        zdo.Set(prefix + "item", 0);
+        zdo.Set(prefix + "item", "");
+        zdo.Set(prefix + "variant", 0);
+        if (prefix == "")
+        {
+          zdo.Set(prefix + "quality", 1);
+          zdo.Set(ZDOVars.s_type, 0);
+        }
         removed++;
+        changed = true;
       }
+      if (changed) AddPin(zdo.GetPosition());
     }
-    if (alwaysPrint || removed > 0)
-      Print($"Removed {removed} missing object{S(removed)} from item stands");
-  }
-
-  private bool Clean(ZDO zdo, string prefix)
-  {
-    var zs = ZNetScene.instance;
-    var item = zdo.GetString(prefix + "item", "");
-    if (item == "") return false;
-    if (zs.m_namedPrefabs.ContainsKey(item.GetStableHashCode())) return false;
-    if (!zdo.IsOwner())
-      zdo.SetOwner(ZDOMan.GetSessionID());
-    zdo.Set(prefix + "item", "");
-    zdo.Set(prefix + "variant", 0);
-    if (prefix == "")
-      zdo.Set(prefix + "quality", 1);
-    return true;
+    if (alwaysPrint || removed > 0 || skipped > 0)
+      Print($"Removed {removed} missing items from stands; skipped {skipped} unsafe stands (unchanged).");
   }
 }

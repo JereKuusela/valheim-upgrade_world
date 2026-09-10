@@ -35,4 +35,3 @@ public class BiomeFilterer(IEnumerable<Heightmap.Biome> Biomes, bool IncludeEdge
     })];
   }
 }
-

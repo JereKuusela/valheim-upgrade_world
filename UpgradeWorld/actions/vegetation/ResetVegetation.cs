@@ -84,4 +84,3 @@ public class ResetVegetation : VegetationOperation
     Print(text);
   }
 }
-

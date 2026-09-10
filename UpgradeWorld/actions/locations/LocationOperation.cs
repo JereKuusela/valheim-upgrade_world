@@ -101,4 +101,3 @@ public abstract class LocationOperation : ZoneOperation
   private static readonly List<string> Parameters = [.. FiltererParameters.Parameters.Concat(["id", "ignore"]).OrderBy(x => x)];
   private static readonly Func<int, List<string>> AutoComplete = index => index == 0 ? AllIds() : Parameters;
 }
-

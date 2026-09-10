@@ -93,7 +93,7 @@ public class Upgrade : BaseOperation
         Print("Error: This operation doesn't support extra parameters " + string.Join(", ", extra));
         return;
       }
-      new ResetChests(["TreasureChest_mountains"], ["Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds"], args.Start, new(args), Context);
+      Executor.AddOperation(new ResetChests(["TreasureChest_mountains"], ["Amber", "Coins", "AmberPearl", "Ruby", "Obsidian", "ArrowFrost", "OnionSeeds"], false, new(args), Context), args.Start);
     }
     else if (type == "mistlands")
     {
