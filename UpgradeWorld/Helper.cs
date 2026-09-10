@@ -23,8 +23,9 @@ public static class Helper
   public static List<ZDO>? GetZDOs(Vector2s zone)
   {
     var zman = ZDOMan.instance;
+    zman.m_visitedSectorIndices.Clear();
     var list = new List<ZDO>();
-    zman.FindObjects(zone, list, null);
+    zman.FindObjects(zone, list, zman.m_visitedSectorIndices);
     return list;
   }
   public static void RemoveZDO(ZDO zdo)
@@ -32,7 +33,7 @@ public static class Helper
     if (zdo == null || !zdo.IsValid()) return;
     if (Player.m_localPlayer && Player.m_localPlayer.GetZDOID() == zdo.m_uid) return;
     if (ZNet.instance.m_peers.Any(peer => peer.m_characterID == zdo.m_uid)) return;
-    zdo.SetOwner(ZDOMan.GetSessionID());
+    zdo.SetOwnerInternal(ZDOMan.GetSessionID());
     var spawned = zdo.GetConnectionZDOID(ZDOExtraData.ConnectionType.Spawned);
     if (spawned != ZDOID.None && ZDOMan.instance.m_objectsByID.TryGetValue(spawned, out var spawnedZdo) && spawnedZdo != zdo)
       RemoveZDO(spawnedZdo);

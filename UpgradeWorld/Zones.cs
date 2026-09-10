@@ -15,7 +15,7 @@ public static class Zones
   private static Vector2s[] Sort(IEnumerable<Vector2s> zones)
   {
     // Magnitude doesn't work with int.MinValue, so needs special handling.
-    return [.. zones.OrderBy(zone => zone.x == int.MinValue || zone.y == int.MinValue ? int.MinValue : zone.Magnitude())];
+    return [.. zones.OrderBy(zone => zone.x == short.MinValue || zone.y == short.MinValue ? int.MinValue : zone.Magnitude())];
   }
   public static Vector2s[] GetZones(FiltererParameters args)
   {
