@@ -1,0 +1,100 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
+namespace UpgradeWorld;
+
+public static class Executor
+{
+  private static readonly List<ExecutedOperation> operations = [];
+  private static Coroutine? executionCoroutine;
+  private static bool executing;
+  private static MonoBehaviour? context;
+  public static void SetUser(ZRpc? user)
+  {
+    foreach (var operation in operations) operation.User = user;
+  }
+  public static void SetContext(MonoBehaviour context)
+  {
+    Executor.context = context;
+  }
+
+  public static void StartExecution()
+  {
+    if (context == null) throw new Exception("Executor context is not set. Call Executor.SetContext from a MonoBehaviour before starting execution.");
+    if (executing) return;
+    executing = true;
+    try
+    {
+      var started = context.StartCoroutine(ExecuteCoroutine());
+      // A small operation may finish before StartCoroutine returns.
+      executionCoroutine = executing ? started : null;
+    }
+    catch
+    {
+      executing = false;
+      executionCoroutine = null;
+      throw;
+    }
+  }
+
+  public static void StopExecution()
+  {
+    if (context == null) throw new Exception("Executor context is not set. Call Executor.SetContext from a MonoBehaviour before stopping execution.");
+    operations.Clear();
+    executing = false;
+    // Needed to indicate end of generation for some mods.
+    if (Hud.instance)
+      Hud.instance.m_loadingIndicator.SetShowProgress(false);
+
+    if (executionCoroutine == null) return;
+    context.StopCoroutine(executionCoroutine);
+    executionCoroutine = null;
+  }
+  public static void AddOperation(ExecutedOperation operation, bool autoStart)
+  {
+    bool start = Settings.AutoStart || autoStart;
+    if (!operation.Init(start))
+      return;
+    operations.Add(operation);
+
+    if (!executing && start)
+      StartExecution();
+  }
+
+  public static List<ExecutedOperation> GetOperations()
+  {
+    return operations;
+  }
+
+  private static IEnumerator ExecuteCoroutine()
+  {
+    var sw = Stopwatch.StartNew();
+    try
+    {
+      while (operations.Count > 0)
+      {
+        sw.Restart();
+        var operation = operations[0];
+        yield return operation.Execute(sw);
+        if (operation.ExecutionFailed)
+        {
+          operations.Clear();
+          break;
+        }
+        operations.Remove(operation);
+      }
+    }
+    finally
+    {
+      sw.Stop();
+      executionCoroutine = null;
+      executing = false;
+      if (Hud.instance) Hud.instance.m_loadingIndicator.SetShowProgress(false);
+    }
+  }
+
+  public const long ProgressMin = 100; // 0.1 seconds
+  public const int ZdoMaxUpdates = 10000;
+}
