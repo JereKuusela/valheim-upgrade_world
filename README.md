@@ -1,7 +1,5 @@
 # Upgrade World
 
-Private Deep North handoff, iteration 3 (plugin 1.80.3). See the handoff playtest notes before deploying this build.
-
 This tool includes console commands to add new content to already explored areas (and more).
 
 Always back up your world before making any changes!
@@ -62,7 +60,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 
 - `amount=number`: Multiplies affected objects. Only affects vegetation commands.
 - `biomes=biome1,biome2,...`: Only includes given biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
-- `chance=number`: Selects candidates randomly. Values 0–1 are fractions; values above 1 are divided by 100. `chance=1` is 100%, `chance=0.01` is 1%, and `chance=20` is 20%.
+- `chance=percentage`: Makes a single operation to be applied randomly.
 - `clear=meters`: Overrides the cleared radius when using `locations_remove`.
 - `count=min-max`: Filters objects by their amount. Only applies to `objects_count`.
 - `data=key,value,type`: Sets object data. Type is only needed if the key doesn't already exist. Only applies to `objects_edit`. Multiple data values can be set at once. For space bars, you need to use quotes with Server Devcommands mod.
@@ -98,9 +96,9 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 Overview of available commands (remember that tab key can be used for autocomplete / cycle through options):
 
 - `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
-- `chests_reset [chest name|*] [looted] [...item_ids] [...args]`: Replaces the contents of selected treasure chest prefabs. Without a chest name, considers every registered Container prefab with a non-empty default loot table. `looted` includes both empty and non-empty chests; it does not mean empty-only. Item IDs after the chest name form an allowlist: any other item skips the entire chest. Without an allowlist, player-stored items can be replaced. See the implementation details below.
+- `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Without chest name, all treasure chests are rerolled. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items. `chance` determines how many of the chests are reseted.
 - `chests_search [id1,id2,...] [...args]`: Searches chests and stands for given items.
-- `clean_chests [...args]`: Immediately removes missing item records from registered Container prefabs, including player storage. Preserves surviving serialized records exactly. Skips loaded, in-use, owned by a connected remote peer and unreadable inventories. This is cleanup, not a loot reroll, and is not queued by `start`.
+- `clean_chests [...args]`: Removes missing objects from chests.
 - `clean_dungeons [...args]`: Optimizes old dungeons.
 - `clean_duplicates [...args]`: Removes objects that already have the same object at the same position.
 - `clean_health [...args]`: Removes excess health data from creatures and structures.
@@ -123,7 +121,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. Parameter `count=1` can be used to exclude non-existing objects.
 - `objects_edit [id1,id2,...] [data=key,value,type] [...args]`: Edits data of objects.
 - `objects_list [id1,id2,...] [print=key,type] [...args]`: Lists objects showing their position and biome. `print` allows displaying custom data.
-- `objects_refresh [id1,id2,...] [...args]`: Refreshes/respawns objects. Its treasure chest branch replaces contents without an item allowlist and recreates the chest so default loot can roll on load. Use `chests_reset` when item-based protection is needed.
+- `objects_refresh [id1,id2,...] [...args]`: Refresh/respawns objects.
 - `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `objects_count` to check that you don't remove too much.
 - `objects_swap [new id,id1,id2,...] [...args]`: Replaces objects with a new one.
 - `save_disable`: Disables world saving. But still a good idea to make backups.
@@ -154,7 +152,7 @@ Examples:
 
 - `biomes_count 100 min=5000`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
 - `chests_reset TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds`: Rerolls mountain treasure chests which only have naturally occurring items.
-- `chests_reset looted min=1500`: Includes empty and non-empty treasure chests at least 1500 meters from the world center, with no item allowlist.
+- `chests_reset looted min=1500`: Resets all chests which are 1500 meters away from the world center.
 - `locations_remove Meteorite`: Removes all flametal ores.
 - `locations_reset SunkenCrypt4,Crypt2,Crypt3,Crypt4,MountainCave02,TrollCave02`: To regenerate dungeons. Some entraces will randomly rotate which will also randomize the dungeon layout.
 - `objects_count Spawner_\*`: Counts all creature spawnpoints.
@@ -219,17 +217,9 @@ Portals in the loaded area won't be automatically disconnected but relogging fix
 
 ### Resetting chests
 
-1. Selects existing ZDOs from the running world's in-memory database by chest prefab and the supplied filters. This does not open/edit an offline save or generate unexplored chests. It does not require proof that the chest originated in a location. Normal player-built storage prefabs without default loot are excluded, but player-used treasure chests are still candidates.
-2. Captures the candidate selection once when queued. `uw_check` displays that same selection. `limit` applies before inventory eligibility, so `limit=1` can legitimately reset zero chests. Eligibility is checked again at execution; deleted/recycled candidates are skipped.
-3. Skips already-unrolled, in-use, owned by a connected remote peer or unreadable inventories. Without `looted`, skips empty chests. If an allowlist is provided, any unlisted or unresolved item skips the whole chest. Items placed by a player that are also on the allowlist cannot be distinguished from natural loot.
-4. Reads current byte-array inventories first, with legacy Base64 fallback only when the byte entry is absent. Supports inventory formats 100–109, including the packed 108/109 item records. A damaged byte entry never falls back to an old text copy.
-5. Recreates the chest with a new ZDO ID, preserving its other data while removing both inventory representations and the `addedDefaultItems` flag. The native/modded `Container.Awake` loot path rolls when the replacement loads. A loaded chest is recreated through normal scene processing; an unloaded one remains unrolled until loaded.
-6. Sets integer `upgradeWorld•chestReset=1` on successful replacements for optional loot integrations. Consumers can clear it after processing. `chests_reset *` explicitly selects all default-loot chest prefabs while allowing following item IDs to remain an allowlist.
-7. Reports candidates, successful resets and skip reasons. The queued command does not save the world automatically. Wait for completion, inspect the results and use the normal world-save process.
-
-Object/chest commands do not use player-base exclusion zones. `safeZones` does not protect player-used treasure chests. Restrict the area and provide an allowlist when that protection is required. `locations=` selects location **zones**, not exact chest provenance or an interior radius. A location filter that matches no known IDs is rejected.
-
-`chests_search` reads current/legacy inventories and current integer-hash/legacy text item-stand slots. `clean_stands` clears missing attachment hashes and stale text values; armor slots are taken from the prefab's slot count.
+1. Gets all chests from the save file. Filters chests that are empty (looted or loot not rolled yet) or include a wrong item (to not replace manually put items).
+2. If the chest is in a loaded area, remove all items and roll loot.
+3. Otherwise remove all items and set the chest as "not rolled yet" so that the loot is rolled when the chest is loaded. This is done directly by modifying the save file without actually loading the chest.
 
 ### Counting biomes
 
