@@ -8,11 +8,11 @@ public enum Direction { None, North, East, South = 4, West = 8, NorthEast = 16, 
 /// <summary>Destroys everything in a zone so that the world generator can regenerate it.</summary>
 public class ResetBorder : EntityOperation
 {
-  public ResetBorder(Terminal context, Dictionary<Vector2i, Direction> zones) : base(context, false)
+  public ResetBorder(Terminal context, Dictionary<Vector2s, Direction> zones) : base(context, false)
   {
     Execute(zones);
   }
-  private void Execute(Dictionary<Vector2i, Direction> zones)
+  private void Execute(Dictionary<Vector2s, Direction> zones)
   {
     var zdos = GetZDOs(Settings.TerrainCompilerHash);
     var reseted = 0;
@@ -98,3 +98,4 @@ public class ResetBorder : EntityOperation
   }
 
 }
+

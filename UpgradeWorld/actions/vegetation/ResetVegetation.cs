@@ -28,7 +28,7 @@ public class ResetVegetation : VegetationOperation
         Hashes.Add((id + "_frac").GetStableHashCode());
     }
   }
-  protected override bool ExecuteZone(Vector2i zone)
+  protected override bool ExecuteZone(Vector2s zone)
   {
     var zs = ZoneSystem.instance;
     if (zs.IsZoneLoaded(zone))
@@ -41,7 +41,7 @@ public class ResetVegetation : VegetationOperation
     Zones.PokeZone(zone);
     return false;
   }
-  protected void Remove(Vector2i zone)
+  protected void Remove(Vector2s zone)
   {
     var zdos = Helper.GetZDOs(zone);
     if (zdos == null) return;
@@ -54,7 +54,7 @@ public class ResetVegetation : VegetationOperation
       Removed++;
     }
   }
-  protected void SpawnVegetation(Vector2i zone)
+  protected void SpawnVegetation(Vector2s zone)
   {
     var zs = ZoneSystem.instance;
     var root = zs.m_zones[zone].m_root;
@@ -84,3 +84,4 @@ public class ResetVegetation : VegetationOperation
     Print(text);
   }
 }
+

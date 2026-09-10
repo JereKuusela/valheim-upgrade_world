@@ -49,7 +49,7 @@ public class CleanChests : EntityOperation
           to.Write(text);
           to.Write(from.ReadInt());
           to.Write(from.ReadSingle());
-          to.Write(from.ReadVector2i());
+          to.Write(from.ReadVector2s());
           to.Write(from.ReadBool());
           if (version >= 101)
             to.Write(from.ReadInt());
@@ -80,7 +80,7 @@ public class CleanChests : EntityOperation
           removed++;
           from.ReadInt();
           from.ReadSingle();
-          from.ReadVector2i();
+          from.ReadVector2s();
           from.ReadBool();
           if (version >= 101)
             from.ReadInt();
@@ -123,3 +123,4 @@ public class CleanChests : EntityOperation
   }
 
 }
+

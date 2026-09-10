@@ -4,9 +4,9 @@ namespace UpgradeWorld;
 ///<summary>Filters zones based on whether they have a given prefab.</summary>
 public class PrefabFilterer(string id) : IZoneFilterer
 {
-  public Vector2i[] FilterZones(Vector2i[] zones, ref List<string> messages)
+  public Vector2s[] FilterZones(Vector2s[] zones, ref List<string> messages)
   {
-    HashSet<Vector2i> IncludedZones;
+    HashSet<Vector2s> IncludedZones;
     var hash = id.GetStableHashCode();
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => zdo.m_prefab == hash);
     IncludedZones = [.. zdos.Select(zdo => ZoneSystem.GetZone(zdo.GetPosition())).Distinct()];
@@ -28,3 +28,4 @@ public class PrefabFilterer(string id) : IZoneFilterer
     }
   }
 }
+

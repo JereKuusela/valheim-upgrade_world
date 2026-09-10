@@ -19,12 +19,11 @@ public class CleanSpawns : EntityOperation
     {
       if (zdo.m_prefab != zoneCtrlHash) continue;
       var id = zdo.m_uid;
-      var longs = ZDOExtraData.GetLongs(id);
-      if (longs.Count < 1) continue;
+      if (!ZDOExtraData.s_longs.TryGetValue(id, out var longs) || longs.Count < 1) continue;
       AddPin(zdo.m_position);
       count += longs.Count;
       zdo.SetOwner(ZDOMan.GetSessionID());
-      ZDOHelper.Release(ZDOExtraData.s_longs, id);
+      ZDOExtraData.s_longs.Remove(id);
       zdo.IncreaseDataRevision();
       reseted++;
     }

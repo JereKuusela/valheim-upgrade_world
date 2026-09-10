@@ -14,7 +14,7 @@ public class DistributeLocations : ExecutedOperation
   public float Chance = 1f;
   public int Added = 0;
   private int Total = 0;
-  public static HashSet<Vector2i> AllowedZones = [];
+  public static HashSet<Vector2s> AllowedZones = [];
   private readonly Dictionary<string, int> Counts = [];
   public DistributeLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Start)
   {
@@ -176,7 +176,7 @@ public class DistributeLocations : ExecutedOperation
           state = UnityEngine.Random.state;
           UnityEngine.Random.state = insideState;
         }
-        Vector2i zoneID = ZoneSystem.GetRandomZone(maxRange);
+        Vector2s zoneID = ZoneSystem.GetRandomZone(maxRange);
         if (location.m_centerFirst)
         {
           maxRange += 1f;
@@ -267,12 +267,12 @@ public class DistributeLocations : ExecutedOperation
                       num = errorTerrainDelta + 1;
                       errorTerrainDelta = num;
                     }
-                    else if (location.m_minDistanceFromSimilar > 0f && zs.HaveLocationInRange(location.m_prefab.Name, location.m_group, randomPointInZone, location.m_minDistanceFromSimilar, false))
+                    else if (location.m_minDistanceFromSimilar > 0f && zs.HaveLocationInRange(location.m_prefab.m_assetID, location.m_group, randomPointInZone, location.m_minDistanceFromSimilar, false))
                     {
                       num = errorSimilar + 1;
                       errorSimilar = num;
                     }
-                    else if (location.m_maxDistanceFromSimilar > 0f && !zs.HaveLocationInRange(location.m_prefab.Name, location.m_groupMax, randomPointInZone, location.m_maxDistanceFromSimilar, true))
+                    else if (location.m_maxDistanceFromSimilar > 0f && !zs.HaveLocationInRange(location.m_prefab.m_assetID, location.m_groupMax, randomPointInZone, location.m_maxDistanceFromSimilar, true))
                     {
                       num = errorNotSimilar + 1;
                       errorNotSimilar = num;
