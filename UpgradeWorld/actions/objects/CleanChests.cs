@@ -21,9 +21,8 @@ public class CleanChests : EntityOperation
       if (result == 0) continue;
       AddPin(zdo.m_position);
       removed += result;
-      if (!zdo.IsOwner())
-        zdo.SetOwner(ZDOMan.GetSessionID());
       zdo.Set(ZDOVars.s_items, savePackage.GetBase64());
+      zdo.DataRevision += 100;
     }
     if (alwaysPrint || removed > 0)
       Print($"Removed {removed} missing object{S(removed)} from chests");

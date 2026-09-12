@@ -24,9 +24,8 @@ public class CleanHealth : EntityOperation
       if (field > 0 && health != field) continue;
       var component = scene.GetPrefab(zdo.m_prefab)?.GetComponent<WearNTear>();
       if (component?.m_health != health) continue;
-      zdo.SetOwner(ZDOMan.GetSessionID());
       zdo.RemoveFloat(ZDOVars.s_health);
-      zdo.IncreaseDataRevision();
+      zdo.DataRevision += 100;
       updated++;
     }
     if (alwaysPrint || updated > 0)
@@ -40,9 +39,8 @@ public class CleanHealth : EntityOperation
       if (health <= 0f) continue;
       var field = zdo.GetFloat(ZDOVars.s_maxHealth);
       if (health != field) continue;
-      zdo.SetOwner(ZDOMan.GetSessionID());
       zdo.RemoveFloat(ZDOVars.s_health);
-      zdo.IncreaseDataRevision();
+      zdo.DataRevision += 100;
       updated++;
     }
     if (alwaysPrint || updated > 0)

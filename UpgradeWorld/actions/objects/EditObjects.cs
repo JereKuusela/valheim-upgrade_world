@@ -19,9 +19,7 @@ public class EditObjects(Terminal context, IEnumerable<string> ids, DataParamete
     }) > 0;
     if (result)
     {
-      if (!zdo.IsOwner())
-        zdo.SetOwner(ZDOMan.GetSessionID());
-      zdo.DataRevision = revision + 1;
+      zdo.DataRevision = revision + 100;
     }
     return result;
   }

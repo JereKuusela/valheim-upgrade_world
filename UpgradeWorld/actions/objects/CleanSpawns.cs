@@ -22,9 +22,8 @@ public class CleanSpawns : EntityOperation
       if (!ZDOExtraData.s_longs.TryGetValue(id, out var longs) || longs.Count < 1) continue;
       AddPin(zdo.m_position);
       count += longs.Count;
-      zdo.SetOwner(ZDOMan.GetSessionID());
-      ZDOExtraData.s_longs.Remove(id);
-      zdo.IncreaseDataRevision();
+      ZDOHelper.Release(ZDOExtraData.s_longs, id);
+      zdo.DataRevision += 100;
       reseted++;
     }
     if (alwaysPrint || count > 0)

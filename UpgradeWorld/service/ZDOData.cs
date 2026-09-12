@@ -21,7 +21,6 @@ public class ZDOData
     zdo.Distant = Zdo.Distant;
     zdo.m_prefab = Prefab;
     zdo.m_rotation = Zdo.m_rotation;
-    zdo.SetOwnerInternal(Zdo.GetOwner());
     Write(zdo);
     return zdo;
   }
@@ -33,7 +32,6 @@ public class ZDOData
     zdo.Distant = Zdo.Distant;
     zdo.m_prefab = Prefab;
     zdo.m_rotation = rot.eulerAngles;
-    zdo.SetOwnerInternal(Zdo.GetOwner());
     Write(zdo);
     return zdo;
   }
@@ -80,6 +78,7 @@ public class ZDOData
 
     HandleConnection(zdo);
     HandleHashConnection(zdo);
+    zdo.DataRevision += 100;
   }
   private void HandleConnection(ZDO ownZdo)
   {

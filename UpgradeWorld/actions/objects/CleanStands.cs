@@ -59,12 +59,11 @@ public class CleanStands : EntityOperation
     var item = zdo.GetString(prefix + "item", "");
     if (item == "") return false;
     if (zs.m_namedPrefabs.ContainsKey(item.GetStableHashCode())) return false;
-    if (!zdo.IsOwner())
-      zdo.SetOwner(ZDOMan.GetSessionID());
     zdo.Set(prefix + "item", "");
     zdo.Set(prefix + "variant", 0);
     if (prefix == "")
       zdo.Set(prefix + "quality", 1);
+    zdo.DataRevision += 100;
     return true;
   }
 }

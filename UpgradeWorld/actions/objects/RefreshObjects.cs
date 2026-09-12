@@ -42,10 +42,7 @@ public class RefreshObjects(Terminal context, HashSet<string> ids, DataParameter
       zdo.Set(Hash.Changed, 0L);
     }
     if (updated)
-    {
-      if (!zdo.IsOwner())
-        zdo.SetOwner(ZDOMan.GetSessionID());
-    }
+      zdo.DataRevision += 100;
     return updated;
   }
   protected override bool ProcessZDO(ZDO zdo) => SetData(zdo);

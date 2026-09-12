@@ -1,6 +1,7 @@
 - v1.82
   - Fixes possible error when objects have been removed before processing. Thanks JPValheim!
   - Improves error handling when multiple operations are queued. Thanks JPValheim!
+  - Improves object modification to not take ownership of the object.
 
 - v1.81
   - Fixes for the new game update. Thanks andrewstevenson91!

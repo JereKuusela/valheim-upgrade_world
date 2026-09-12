@@ -18,9 +18,8 @@ public class SwapLocations : EntityOperation
     {
       if (!prefabs.Contains(zdo.GetInt(LocationHash))) continue;
       swappedObjects++;
-      if (!zdo.IsOwner())
-        zdo.SetOwner(ZDOMan.GetSessionID());
       zdo.Set(LocationHash, toSwap);
+      zdo.DataRevision += 100;
       AddPin(zdo.GetPosition());
       Refresh(zdo);
     }
