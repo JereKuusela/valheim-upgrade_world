@@ -71,7 +71,7 @@ public abstract class ExecutedEntityOperation(Terminal context, IEnumerable<stri
   }
 
   /// <summary>Gets the prefabs to operate on. Override for custom prefab selection logic.</summary>
-  protected virtual HashSet<int> GetPrefabsForOperation() => EntityOperation.GetPrefabs(Ids, Args.Types);
+  protected virtual HashSet<int> GetPrefabsForOperation() => EntityOperation.GetPrefabs(Ids, Args.Ignore, Args.Types);
 
   /// <summary>Processes a single ZDO. Return true if the ZDO was modified and should be counted.</summary>
   protected abstract bool ProcessZDO(ZDO zdo);

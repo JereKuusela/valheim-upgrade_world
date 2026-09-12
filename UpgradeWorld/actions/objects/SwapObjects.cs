@@ -10,7 +10,7 @@ public class SwapObjects(Terminal context, IEnumerable<string> ids, DataParamete
   protected override HashSet<int> GetPrefabsForOperation()
   {
     ToSwap = Ids.FirstOrDefault().GetStableHashCode();
-    return EntityOperation.GetPrefabs(Ids.Skip(1).ToList(), Args.Types);
+    return EntityOperation.GetPrefabs(Ids.Skip(1).ToList(), Args.Ignore, Args.Types);
   }
 
   protected override bool ProcessZDO(ZDO zdo)

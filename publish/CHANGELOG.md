@@ -2,6 +2,7 @@
   - Fixes possible error when objects have been removed before processing. Thanks JPValheim!
   - Improves error handling when multiple operations are queued. Thanks JPValheim!
   - Improves object modification to not take ownership of the object.
+  - Improves support for `ignore` parameter in entity operations. Thanks JPValheim!
 
 - v1.81
   - Fixes for the new game update. Thanks andrewstevenson91!

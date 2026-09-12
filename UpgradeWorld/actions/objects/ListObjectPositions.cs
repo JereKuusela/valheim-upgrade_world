@@ -21,15 +21,7 @@ public class ListObjectPositions : EntityOperation
   }
   private void ListPositions(HashSet<string> ids, DataParameters args)
   {
-    if (ids.Count > 0 && ids.All(id => int.TryParse(id, out _)))
-    {
-      var hashCodes = new HashSet<int>(ids.Select(int.Parse));
-      ListPositions(hashCodes, args);
-    }
-    else
-    {
-      ListPositions(GetPrefabs(ids, args.Types), args);
-    }
+    ListPositions(GetPrefabs(ids, args.Ignore, args.Types), args);
   }
   private void ListPositions(HashSet<int> ids, DataParameters args)
   {

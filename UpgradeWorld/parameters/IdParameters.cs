@@ -7,7 +7,7 @@ namespace UpgradeWorld;
 public class IdParameters : FiltererParameters
 {
   private List<string> Include = [];
-  private readonly List<string> Ignore = [];
+  public readonly List<string> Ignore = [];
   public HashSet<string> VegIds() => VegetationOperation.GetIds(Include, Ignore);
   public HashSet<string> Ids() => [.. Include];
   public bool RequireId;
@@ -46,6 +46,12 @@ public class IdParameters : FiltererParameters
     if (Validate && invalidIds.Count() > 0)
     {
       Helper.Print(terminal, $"Error: Entity id {string.Join(", ", invalidIds)} not recognized.");
+      return false;
+    }
+    var invalidIgnores = Ignore.Where(id => !id.Contains("*") && !int.TryParse(id, out _) && ZNetScene.instance.GetPrefab(id) == null);
+    if (Validate && invalidIgnores.Count() > 0)
+    {
+      Helper.Print(terminal, $"Error: Entity id {string.Join(", ", invalidIgnores)} not recognized.");
       return false;
     }
     return true;

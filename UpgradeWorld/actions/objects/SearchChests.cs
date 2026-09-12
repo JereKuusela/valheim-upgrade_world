@@ -22,7 +22,7 @@ public class SearchChests : EntityOperation
   }
   private void Search(IEnumerable<string> ids, DataParameters args)
   {
-    var prefabs = GetPrefabs(ids, args.Types);
+    var prefabs = GetPrefabs(ids, args.Ignore, args.Types);
     var zdos = GetZDOs(args);
 
     var zs = ZNetScene.instance;

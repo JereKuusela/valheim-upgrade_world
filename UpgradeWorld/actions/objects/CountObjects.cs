@@ -12,7 +12,7 @@ public class CountObjects : EntityOperation
   }
   private void Count(HashSet<string> ids, DataParameters args, Range<int> countRange)
   {
-    var prefabs = GetPrefabs(ids, args.Types);
+    var prefabs = GetPrefabs(ids, args.Ignore, args.Types);
     var zdos = GetZDOs(args, prefabs);
     var total = 0;
     var counts = prefabs.ToDictionary(prefab => prefab, prefab => 0);

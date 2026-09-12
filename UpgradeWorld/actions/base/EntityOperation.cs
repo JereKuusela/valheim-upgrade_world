@@ -12,9 +12,21 @@ public abstract class EntityOperation(Terminal context, bool pin) : BaseOperatio
   private static readonly int PlayerHash = "Player".GetStableHashCode();
   private static Dictionary<int, string> HashToName = [];
   public static string GetName(int prefab) => HashToName.TryGetValue(prefab, out var name) ? name : "";
-  public static HashSet<int> GetPrefabs(IEnumerable<string> id, List<string[]> types) => id.Count() == 0 ? GetPrefabs("*", types) : [.. id.SelectMany(id => GetPrefabs(id, types))];
+  public static HashSet<int> GetPrefabs(IEnumerable<string> id, IEnumerable<string> ignore, List<string[]> types)
+  {
+    var prefabs = id.Count() == 0 ? GetPrefabs("*", types) : [.. id.SelectMany(id => GetPrefabs(id, types))];
+    if (ignore.Count() > 0)
+    {
+      var excluded = GetPrefabs(ignore, [], []);
+      prefabs.ExceptWith(excluded);
+    }
+    return prefabs;
+  }
+  public static HashSet<int> GetPrefabs(IEnumerable<string> id, List<string[]> types) => GetPrefabs(id, [], types);
   public static HashSet<int> GetPrefabs(string id, List<string[]> types)
   {
+    if (int.TryParse(id, out var hash))
+      return [hash];
     if (HashToName.Count == 0)
       HashToName = ZNetScene.instance.m_namedPrefabs.ToDictionary(kvp => kvp.Value.name.GetStableHashCode(), kvp => kvp.Value.name);
     IEnumerable<KeyValuePair<int, GameObject>> values = ZNetScene.instance.m_namedPrefabs.Where(kvp => kvp.Key != PlayerHash);
