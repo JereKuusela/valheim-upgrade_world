@@ -1,5 +1,6 @@
 - v1.82
   - Fixes possible error when objects have been removed before processing. Thanks JPValheim!
+  - Fixes filtering zones by location not working. Thanks JPValheim!
   - Improves error handling when multiple operations are queued. Thanks JPValheim!
   - Improves object modification to not take ownership of the object.
   - Improves support for `ignore` parameter in entity operations. Thanks JPValheim!

@@ -309,18 +309,16 @@ public static class Parse
   public static Vector2s Zone(string arg)
   {
     var values = SplitWithEmpty(arg).ToArray();
-    Vector2s vector = new();
-    if (values.Length > 0) vector.x = (short)Int(values[0]);
-    if (values.Length > 1) vector.y = (short)Int(values[1]);
-    return vector;
+    var x = values.Length > 0 ? Int(values[0]) : 0;
+    var y = values.Length > 1 ? Int(values[1]) : 0;
+    return new(x, y);
   }
   public static Vector2 Pos(string arg)
   {
     var values = SplitWithEmpty(arg).ToArray();
-    Vector2 vector = new();
-    if (values.Length > 0) vector.x = Float(values[0]);
-    if (values.Length > 1) vector.y = Float(values[1]);
-    return vector;
+    var x = values.Length > 0 ? Float(values[0]) : 0f;
+    var y = values.Length > 1 ? Float(values[1]) : 0f;
+    return new(x, y);
   }
   public static HashSet<Heightmap.Biome> Biomes(string arg) => [.. Split(arg).Select(Helper.GetBiome)];
 }

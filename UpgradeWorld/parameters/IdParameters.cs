@@ -33,7 +33,7 @@ public class IdParameters : FiltererParameters
   }
   public override bool Valid(Terminal terminal)
   {
-    Include = [.. Unhandled.SelectMany(kvp => Parse.Split(kvp))];
+    Include.AddRange(Unhandled.SelectMany(kvp => Parse.Split(kvp)));
     Unhandled.Clear();
     if (!base.Valid(terminal)) return false;
     if (RequireId && Include.Count() == 0)

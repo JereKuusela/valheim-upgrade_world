@@ -24,20 +24,29 @@ public static class Executor
     if (context == null) throw new Exception("Executor context is not set. Call Executor.SetContext from a MonoBehaviour before starting execution.");
     if (executionCoroutine != null) return;
     executionCoroutine = context.StartCoroutine(ExecuteCoroutine());
+    // Execute could finish before executionCoroutine is assigned.
+    if (operations.Count == 0)
+      Stop();
   }
 
   public static void StopExecution()
   {
-    if (context == null) throw new Exception("Executor context is not set. Call Executor.SetContext from a MonoBehaviour before stopping execution.");
     operations.Clear();
     // Needed to indicate end of generation for some mods.
     if (Hud.instance)
       Hud.instance.m_loadingIndicator.SetShowProgress(false);
 
     if (executionCoroutine == null) return;
+    Stop();
+  }
+
+  private static void Stop()
+  {
+    if (context == null) throw new Exception("Executor context is not set. Call Executor.SetContext from a MonoBehaviour before stopping execution.");
     context.StopCoroutine(executionCoroutine);
     executionCoroutine = null;
   }
+
   public static void AddOperation(ExecutedOperation operation, bool autoStart)
   {
     bool start = Settings.AutoStart || autoStart;
@@ -57,21 +66,27 @@ public static class Executor
   private static IEnumerator ExecuteCoroutine()
   {
     var sw = Stopwatch.StartNew();
-    while (operations.Count > 0)
+    try
     {
-      sw.Restart();
-      var operation = operations[0];
-      yield return operation.Execute(sw);
-      operations.RemoveAt(0);
-      // If operation fails, probably good idea to stop everything.
-      if (operation.ExecutionFailed)
+      while (operations.Count > 0)
       {
-        operations.Clear();
-        break;
+        sw.Restart();
+        var operation = operations[0];
+        yield return operation.Execute(sw);
+        // If operation fails, probably good idea to stop everything.
+        if (operation.ExecutionFailed)
+        {
+          operations.Clear();
+          break;
+        }
+        operations.Remove(operation);
       }
     }
-    sw.Stop();
-    StopExecution();
+    finally
+    {
+      sw.Stop();
+      StopExecution();
+    }
   }
   public const long ProgressMin = 100; // 0.1 seconds
   public const int ZdoMaxUpdates = 10000;

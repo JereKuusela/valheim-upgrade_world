@@ -31,6 +31,7 @@ public class FiltererParameters
   public TargetZones TargetZones = TargetZones.Generated;
   public bool Pin;
   public List<string> Unhandled = [];
+  private bool HasLocationFilter;
   public bool IsBiomeValid(Heightmap.Biome biome) => Biomes.Count() == 0 || Biomes.Contains(biome);
   public bool IsBiomeValid(Vector3 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos));
   public bool IsBiomeValid(Vector2 pos) => IsBiomeValid(WorldGenerator.instance.GetBiome(pos.x, pos.y));
@@ -38,6 +39,10 @@ public class FiltererParameters
   public FiltererParameters(FiltererParameters pars)
   {
     Biomes = pars.Biomes;
+    Limit = pars.Limit;
+    Pin = pars.Pin;
+    LocationIds = pars.LocationIds;
+    HasLocationFilter = pars.HasLocationFilter;
     BiomeMask = pars.BiomeMask;
     NoEdges = pars.NoEdges;
     Start = pars.Start;
@@ -80,7 +85,11 @@ public class FiltererParameters
           MaxDistance = distance.Max;
         }
         else if (name == "biomes") Biomes = Parse.Biomes(value);
-        else if (name == "locations") LocationIds = LocationOperation.Ids(value.Split(','), []);
+        else if (name == "locations")
+        {
+          HasLocationFilter = true;
+          LocationIds = LocationOperation.Ids(value.Split(','), []);
+        }
         else Unhandled.Add(par);
       }
       else if (name == "noedges") NoEdges = true;
@@ -99,6 +108,11 @@ public class FiltererParameters
   }
   public virtual bool Valid(Terminal terminal)
   {
+    if (HasLocationFilter && LocationIds.Count == 0)
+    {
+      Helper.Print(terminal, "Error: No locations matched the locations filter.");
+      return false;
+    }
     if (Unhandled.Count() > 0)
     {
       Helper.Print(terminal, "Error: Unhandled parameters " + string.Join(", ", Unhandled));
@@ -144,7 +158,7 @@ public class FiltererParameters
     {
       var zone = ZoneSystem.GetZone(pos);
       var zs = ZoneSystem.instance;
-      if (zs.m_locationInstances.TryGetValue(zone, out var location) && LocationIds.Contains(location.m_location.m_prefab.Name))
+      if (!zs.m_locationInstances.TryGetValue(zone, out var location) || !LocationIds.Contains(location.m_location.m_prefab.Name))
         return false;
     }
     return true;

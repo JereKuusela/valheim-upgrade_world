@@ -60,7 +60,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 
 - `amount=number`: Multiplies affected objects. Only affects vegetation commands.
 - `biomes=biome1,biome2,...`: Only includes given biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
-- `chance=percentage`: Makes a single operation to be applied randomly.
+- `chance=number`: Selects candidates randomly. Values 0–1 are fractions; values above 1 are divided by 100. `chance=1` is 100%, `chance=0.01` is 1%, and `chance=20` is 20%.
 - `clear=meters`: Overrides the cleared radius when using `locations_remove`.
 - `count=min-max`: Filters objects by their amount. Only applies to `objects_count`.
 - `data=key,value,type`: Sets object data. Type is only needed if the key doesn't already exist. Only applies to `objects_edit`. Multiple data values can be set at once. For space bars, you need to use quotes with Server Devcommands mod.
@@ -96,9 +96,9 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 Overview of available commands (remember that tab key can be used for autocomplete / cycle through options):
 
 - `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
-- `chests_reset [chest name] [looted] [...item_ids] [...args]`: Rerolls contents of a given treasure chest (use tab key to cycle through available treasure chests). Without chest name, all treasure chests are rerolled. Empty (looted) chests are only rerolled with `looted` flag. Item ids can be used to detect and prevent rerolling chests which players are using to store items. `chance` determines how many of the chests are reseted.
+- `chests_reset [chest name|*] [looted] [...item_ids] [...args]`: Replaces the contents of selected treasure chest prefabs. Without a chest name, considers every registered Container prefab with a non-empty default loot table. Using `looted` will also include empty chests. Item IDs after the chest name form an allowlist: any other item skips the entire chest. Without an allowlist, player-stored items can be replaced. See the implementation details below.
 - `chests_search [id1,id2,...] [...args]`: Searches chests and stands for given items.
-- `clean_chests [...args]`: Removes missing objects from chests.
+- `clean_chests [...args]`: Removes missing item records from chests and other containers.
 - `clean_dungeons [...args]`: Optimizes old dungeons.
 - `clean_duplicates [...args]`: Removes objects that already have the same object at the same position.
 - `clean_health [...args]`: Removes excess health data from creatures and structures.

@@ -12,11 +12,7 @@ public static class Zones
     return root.GetComponentInChildren<Heightmap>();
   }
 
-  private static Vector2s[] Sort(IEnumerable<Vector2s> zones)
-  {
-    // Magnitude doesn't work with int.MinValue, so needs special handling.
-    return [.. zones.OrderBy(zone => zone.x == short.MinValue || zone.y == short.MinValue ? int.MinValue : zone.Magnitude())];
-  }
+  private static Vector2s[] Sort(IEnumerable<Vector2s> zones) => [.. zones.OrderBy(zone => zone.Magnitude())];
   public static Vector2s[] GetZones(FiltererParameters args)
   {
     var zs = ZoneSystem.instance;
