@@ -60,8 +60,15 @@ public static class Executor
     while (operations.Count > 0)
     {
       sw.Restart();
-      yield return operations[0].Execute(sw);
+      var operation = operations[0];
+      yield return operation.Execute(sw);
       operations.RemoveAt(0);
+      // If operation fails, probably good idea to stop everything.
+      if (operation.ExecutionFailed)
+      {
+        operations.Clear();
+        break;
+      }
     }
     sw.Stop();
     StopExecution();
