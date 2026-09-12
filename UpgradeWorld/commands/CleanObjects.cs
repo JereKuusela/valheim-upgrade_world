@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class CleanObjectsCommand
 {
   public CleanObjectsCommand()

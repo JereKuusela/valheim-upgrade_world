@@ -11,7 +11,7 @@ public abstract class ExecutedEntityOperation(Terminal context, IEnumerable<stri
   protected readonly IEnumerable<string> Ids = ids;
   protected readonly DataParameters Args = args;
   protected HashSet<int> Prefabs = [];
-  protected ZDO[] ZdosToProcess = [];
+  protected ZDOID[] ZdosToProcess = [];
   protected Dictionary<int, int> Counts = [];
   protected int ProcessedCount = 0;
   protected int TotalCount = 0;
@@ -19,7 +19,7 @@ public abstract class ExecutedEntityOperation(Terminal context, IEnumerable<stri
   protected override string OnInit()
   {
     Prefabs = GetPrefabsForOperation();
-    ZdosToProcess = EntityOperation.GetZDOs(Args, Prefabs);
+    ZdosToProcess = EntityOperation.GetZDOIDs(Args, Prefabs);
     TotalCount = ZdosToProcess.Length;
     Counts = Prefabs.ToDictionary(prefab => prefab, prefab => 0);
     if (TotalCount == 0)
@@ -38,8 +38,12 @@ public abstract class ExecutedEntityOperation(Terminal context, IEnumerable<stri
 
     var processed = 0;
 
-    foreach (var zdo in ZdosToProcess)
+    foreach (var id in ZdosToProcess)
     {
+      // The ZDO may have been removed.
+      if (!ZDOMan.instance.m_objectsByID.TryGetValue(id, out var zdo))
+        continue;
+
       if (ProcessZDO(zdo))
       {
         Counts[zdo.m_prefab] += 1;

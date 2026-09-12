@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class CleanHealthCommand
 {
   public CleanHealthCommand()

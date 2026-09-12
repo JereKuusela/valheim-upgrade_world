@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class CleanChestsCommand
 {
   public CleanChestsCommand()

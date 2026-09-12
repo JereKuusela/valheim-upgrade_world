@@ -50,6 +50,9 @@ public abstract class EntityOperation(Terminal context, bool pin) : BaseOperatio
   public static ZDO[] GetZDOs(string id) => GetZDOs(id.GetStableHashCode());
   public static ZDO[] GetZDOs(int hash) => [.. ZDOMan.instance.m_objectsByID.Values.Where(zdo => hash == zdo.m_prefab)];
 
+  // ZDOID variants: use these when the result is stored and processed later (e.g. across frames), since the ZDO may be removed or recycled by then.
+  public static ZDOID[] GetZDOIDs(DataParameters args, HashSet<int> prefabs) => [.. GetZDOs(args, prefabs).Select(zdo => zdo.m_uid)];
+
   public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, DataParameters args) => args.LimitZdos(args.FilterZdos(zdos, false));
   public static IEnumerable<ZDO> FilterZdos(IEnumerable<ZDO> zdos, FiltererParameters args) => args.LimitZdos(args.FilterZdos(zdos, false));
 }

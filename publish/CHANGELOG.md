@@ -1,3 +1,6 @@
+- v1.82
+  - Fixes possible error when objects have been removed before processing. Thanks JPValheim!
+
 - v1.81
   - Fixes for the new game update. Thanks andrewstevenson91!
   - More upgrade operations will probably come a bit later.
@@ -12,6 +15,3 @@
 - v1.78
   - Adds output to commands `location_list` and `object_list` when no objects or locations are found.
   - Changes the command `object_edit` to allow clearing data by providing only the key as a parameter.
-
-- v1.77
-  - Fixes the command `location_add` not always spawning all locations properly (related to location groups).
