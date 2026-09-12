@@ -10,8 +10,11 @@ public class CleanHealthCommand
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      var zdos = EntityOperation.GetZDOs(pars);
-      new CleanHealth(args.Context, zdos, pars.Pin, true);
+      Executor.AddOperation(new QueuedOperation(args.Context, pars.Pin, "Clean health.", () =>
+      {
+        var zdos = EntityOperation.GetZDOs(pars);
+        new CleanHealth(args.Context, zdos, pars.Pin, true);
+      }), pars.Start);
     });
   }
 }

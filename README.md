@@ -121,7 +121,8 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. Parameter `count=1` can be used to exclude non-existing objects.
 - `objects_edit [id1,id2,...] [data=key,value,type] [...args]`: Edits data of objects.
 - `objects_list [id1,id2,...] [print=key,type] [...args]`: Lists objects showing their position and biome. `print` allows displaying custom data.
-- `objects_refresh [id1,id2,...] [...args]`: Refresh/respawns objects.
+- `objects_refresh [id1,id2,...] [...args]`: Refreshes/respawns objects.
+  - Chest loot is refreshed without any checks. Use `chests_reset` if more precise control is needed.
 - `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `objects_count` to check that you don't remove too much.
 - `objects_swap [new id,id1,id2,...] [...args]`: Replaces objects with a new one.
 - `save_disable`: Disables world saving. But still a good idea to make backups.
@@ -152,7 +153,7 @@ Examples:
 
 - `biomes_count 100 min=5000`: Counts only biomes after 5000 meters from the world center by checking the biom every 100 meters.
 - `chests_reset TreasureChest_mountains Amber Coins AmberPearl Ruby Obsidian ArrowFrost OnionSeeds`: Rerolls mountain treasure chests which only have naturally occurring items.
-- `chests_reset looted min=1500`: Resets all chests which are 1500 meters away from the world center.
+- `chests_reset looted min=1500`: Resets all chests (both empty and non-empty) which are 1500 meters away from the world center.
 - `locations_remove Meteorite`: Removes all flametal ores.
 - `locations_reset SunkenCrypt4,Crypt2,Crypt3,Crypt4,MountainCave02,TrollCave02`: To regenerate dungeons. Some entraces will randomly rotate which will also randomize the dungeon layout.
 - `objects_count Spawner_\*`: Counts all creature spawnpoints.

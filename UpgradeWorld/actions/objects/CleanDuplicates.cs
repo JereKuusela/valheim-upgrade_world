@@ -5,14 +5,14 @@ namespace UpgradeWorld;
 /// <summary>Removes missing objects from the world.</summary>
 public class CleanDuplicates : EntityOperation
 {
-  public CleanDuplicates(Terminal context, bool pin, bool alwaysPrint) : base(context, pin)
+  public CleanDuplicates(Terminal context, bool pin, bool alwaysPrint, FiltererParameters args) : base(context, pin)
   {
-    Clean(alwaysPrint);
+    Clean(alwaysPrint, args);
   }
 
-  private void Clean(bool alwaysPrint)
+  private void Clean(bool alwaysPrint, FiltererParameters args)
   {
-    var zones = ZoneSystem.instance.m_generatedZones;
+    var zones = Zones.GetZones(args);
 
     HashSet<ZDO> toRemove = [];
     foreach (var zone in zones)

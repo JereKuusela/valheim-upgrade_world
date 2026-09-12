@@ -1,6 +1,8 @@
 - v1.82
+  - Changes `clean_*` commands to be queued operations (requires using `start` to execute).
   - Fixes possible error when objects have been removed before processing. Thanks JPValheim!
   - Fixes filtering zones by location not working. Thanks JPValheim!
+  - Fixes `clean_duplicates` command not using zone based filters.
   - Improves error handling when multiple operations are queued. Thanks JPValheim!
   - Improves object modification to not take ownership of the object.
   - Improves support for `ignore` parameter in entity operations. Thanks JPValheim!

@@ -10,16 +10,19 @@ public class WorldCleanCommand
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      var zdos = EntityOperation.GetZDOs(pars);
-      new CleanDuplicates(args.Context, pars.Pin, false);
-      new CleanLocations(args.Context, zdos, pars.Pin, false);
-      new CleanObjects(args.Context, zdos, pars.Pin, false);
-      new CleanChests(args.Context, zdos, pars.Pin, false);
-      new CleanStands(args.Context, zdos, pars.Pin, false);
-      new CleanDungeons(args.Context, zdos, pars.Pin, false);
-      new CleanSpawns(args.Context, zdos, pars.Pin, false);
-      new CleanHealth(args.Context, zdos, pars.Pin, false);
-      args.Context.AddString("World cleaned.");
+      Executor.AddOperation(new QueuedOperation(args.Context, pars.Pin, "World clean.", () =>
+      {
+        var zdos = EntityOperation.GetZDOs(pars);
+        new CleanDuplicates(args.Context, pars.Pin, false, pars);
+        new CleanLocations(args.Context, zdos, pars.Pin, false);
+        new CleanObjects(args.Context, zdos, pars.Pin, false);
+        new CleanChests(args.Context, zdos, pars.Pin, false);
+        new CleanStands(args.Context, zdos, pars.Pin, false);
+        new CleanDungeons(args.Context, zdos, pars.Pin, false);
+        new CleanSpawns(args.Context, zdos, pars.Pin, false);
+        new CleanHealth(args.Context, zdos, pars.Pin, false);
+        args.Context.AddString("World cleaned.");
+      }), pars.Start);
     });
   }
 }

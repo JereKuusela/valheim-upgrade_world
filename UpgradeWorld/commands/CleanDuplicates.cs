@@ -1,4 +1,5 @@
 namespace UpgradeWorld;
+
 public class CleanDuplicatesCommand
 {
   public CleanDuplicatesCommand()
@@ -9,7 +10,10 @@ public class CleanDuplicatesCommand
       FiltererParameters pars = new(args);
       if (!pars.Valid(args.Context)) return;
       if (Helper.IsClient(args)) return;
-      new CleanDuplicates(args.Context, pars.Pin, true);
+      Executor.AddOperation(new QueuedOperation(args.Context, pars.Pin, "Clean duplicates.", () =>
+      {
+        new CleanDuplicates(args.Context, pars.Pin, true, pars);
+      }), pars.Start);
     });
   }
 }
