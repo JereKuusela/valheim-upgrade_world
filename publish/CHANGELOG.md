@@ -1,4 +1,5 @@
 - v1.82
+  - Adds support for new inventory format (including old format for compatibility). Thanks JPValheim!
   - Changes `clean_*` commands to be queued operations (requires using `start` to execute).
   - Fixes possible error when objects have been removed before processing. Thanks JPValheim!
   - Fixes filtering zones by location not working. Thanks JPValheim!

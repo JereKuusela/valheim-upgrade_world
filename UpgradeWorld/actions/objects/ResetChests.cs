@@ -65,29 +65,26 @@ public class ResetChests(string[] chestIds, IEnumerable<string> allowedItems, bo
 
     if (!Looted || AllowedItems.Count > 0)
     {
-      var container = ChestPrefabs[zdo.m_prefab].GetComponent<Container>();
-      Inventory inventory = new(container.m_name, container.m_bkg, container.m_width, container.m_height);
-      ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
-      inventory.Load(loadPackage);
+      var records = ItemDataHelper.Load(zdo);
 
-      if (inventory.GetAllItems().Count == 0 && !Looted)
+      if (records.Count == 0 && !Looted)
       {
         if (Settings.Verbose)
           Print("Skipping a chest: Already looted.");
         return false;
       }
 
-      if (AllowedItems.Count > 0 && !inventory.GetAllItems().All(IsValid))
+      if (AllowedItems.Count > 0 && !records.All(IsValid))
         return false;
     }
 
     return true;
   }
-  private bool IsValid(ItemDrop.ItemData item)
+  private bool IsValid(ItemRecord record)
   {
-    var isValid = AllowedItems.Contains(Helper.Normalize(item.m_dropPrefab.name));
+    var isValid = AllowedItems.Contains(Helper.Normalize(record.PrefabName));
     if (Settings.Verbose && !isValid)
-      Print("Skipping a chest: Extra item " + item.m_dropPrefab.name + ".");
+      Print("Skipping a chest: Extra item " + record.PrefabName + ".");
     return isValid;
   }
 }

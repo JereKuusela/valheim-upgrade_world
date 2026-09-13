@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Service;
 
 namespace UpgradeWorld;
 /// <summary>Searchs objects from chests.</summary>
@@ -41,11 +42,8 @@ public class SearchChests : EntityOperation
 
     var chestContents = zdos.Select(zdo =>
     {
-      var items = zdo.GetString(ZDOVars.s_items);
-      if (items == "") return "";
-      ZPackage loadPackage = new(zdo.GetString(ZDOVars.s_items));
-      var content = SearchChest(loadPackage, prefabs);
-      if (content.Count == 0) return "";
+      var content = SearchChest(zdo, prefabs);
+      if (content == null || content.Count == 0) return "";
       AddPin(zdo.GetPosition());
       var name = zs.m_namedPrefabs[zdo.m_prefab].name;
       var id = name + " " + zdo.m_uid.ID + " " + Helper.PrintVectorXZY(zdo.GetPosition());
@@ -58,57 +56,22 @@ public class SearchChests : EntityOperation
     PrintPins();
   }
 
-  private Dictionary<string, int> SearchChest(ZPackage from, HashSet<int> ids)
+  private Dictionary<string, int>? SearchChest(ZDO zdo, HashSet<int> ids)
   {
+    var items = ItemDataHelper.Load(zdo);
+    if (items.Count == 0) return null;
     Dictionary<string, int> amounts = [];
-    var version = from.ReadInt();
-    var items = from.ReadInt();
-    for (int i = 0; i < items; i++)
+    foreach (var record in items)
     {
-      var text = from.ReadString();
-      var stack = from.ReadInt();
-      // Durability.
-      from.ReadSingle();
-      from.ReadVector2s();
-      from.ReadBool();
-      var quality = "";
-      if (version >= 101)
-      {
-        var value = from.ReadInt();
-        if (value > 1) quality = " , level " + value + "";
-      }
-      var variant = "";
-      if (version >= 102)
-      {
-        var value = from.ReadInt();
-        if (value > 0) variant = ", style " + value;
-      }
-      if (version >= 103)
-      {
-        from.ReadLong();
-        from.ReadString();
-      }
-      if (version >= 104)
-      {
-        var dataAmount = from.ReadInt();
-        for (int j = 0; j < dataAmount; j++)
-        {
-          from.ReadString();
-          from.ReadString();
-        }
-      }
-      if (version >= 105)
-        from.ReadInt();
-      if (version >= 106)
-        from.ReadBool();
-      if (ids.Contains(text.GetStableHashCode()))
-      {
-        var key = text + variant + quality;
-        if (amounts.ContainsKey(key))
-          amounts[key] += stack;
-        else
-          amounts.Add(key, stack);
-      }
+      var text = record.PrefabName;
+      if (text == "" || !ids.Contains(text.GetStableHashCode())) continue;
+      var variant = record.Variant > 0 ? ", style " + record.Variant : "";
+      var quality = record.Quality > 1 ? " , level " + record.Quality : "";
+      var key = text + variant + quality;
+      if (amounts.ContainsKey(key))
+        amounts[key] += record.Stack;
+      else
+        amounts.Add(key, record.Stack);
     }
     return amounts;
   }

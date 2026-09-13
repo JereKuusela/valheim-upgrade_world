@@ -33,7 +33,7 @@ public class RefreshObjects(Terminal context, HashSet<string> ids, DataParameter
       {
         updated = true;
         zdo.Set(ZDOVars.s_addedDefaultItems, false);
-        zdo.Set(ZDOVars.s_items, ClearChest(zdo));
+        zdo.Set(ZDOVars.s_items, EmptyChest());
       }
     }
     if (zdo.GetLong(Hash.Changed) != 0)
@@ -55,14 +55,5 @@ public class RefreshObjects(Terminal context, HashSet<string> ids, DataParameter
 
   protected override string GetCountMessage(int count, int prefab) => $"Refreshed {count} of {EntityOperation.GetName(prefab)}.";
 
-  private string ClearChest(ZDO zdo)
-  {
-    var str = zdo.GetString(ZDOVars.s_items);
-    if (string.IsNullOrEmpty(str)) return "";
-    ZPackage current = new(str);
-    ZPackage empty = new();
-    empty.Write(current.ReadInt());
-    empty.Write(0);
-    return empty.GetBase64();
-  }
+  private static byte[] EmptyChest() => ItemDataHelper.Save([]);
 }
