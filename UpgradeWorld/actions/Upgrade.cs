@@ -18,7 +18,8 @@ public class Upgrade : BaseOperation
     "ashlands",
     "deepnorth",
     "bogwitch",
-    "combatruins"
+    "combatruins",
+    "bearcave",
   ];
 
   public Upgrade(Terminal context, string type, List<string> extra, FiltererParameters args) : base(context)
@@ -75,6 +76,11 @@ public class Upgrade : BaseOperation
     {
       Executor.AddOperation(new DistributeLocations(Context, ["BogWitch_Camp"], args), false);
       Executor.AddOperation(new SpawnLocations(Context, ["BogWitch_Camp"], args), args.Start);
+    }
+    else if (type == "bearcave")
+    {
+      Executor.AddOperation(new DistributeLocations(Context, ["BearCave", "BigRockClearing", "AncientUpgradeStation"], args), false);
+      Executor.AddOperation(new SpawnLocations(Context, ["BearCave", "BigRockClearing", "AncientUpgradeStation"], args), args.Start);
     }
     else if (type == "combatruins")
     {

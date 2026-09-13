@@ -28,7 +28,7 @@ public static class ItemDataHelper
   public static ZPackage? GetPackage(ZDO zdo)
   {
     var bytes = zdo.GetByteArray(ZDOVars.s_items);
-    if (bytes.Length > 0) return new ZPackage(bytes);
+    if (bytes != null && bytes.Length > 0) return new ZPackage(bytes);
     var str = zdo.GetString(ZDOVars.s_items, "");
     return str != "" ? new ZPackage(str) : null;
   }
@@ -45,6 +45,8 @@ public static class ItemDataHelper
     try
     {
       var version = (Version.Item)pkg.ReadInt();
+      // Item Drawers mod uses the same ZDO key but writes 0 as version, so it's detected and skipped here.
+      if (version == 0) return records;
       if (version >= Version.Item.Smaller)
         LoadNew(pkg, version, records);
       else
@@ -135,9 +137,9 @@ public static class ItemDataHelper
     }
   }
 
-  public static int CountInvalid(List<ItemRecord> records) => records.Count(r => r.PrefabHash == 0);
+  public static int CountInvalid(List<ItemRecord> records) => records.Count(r => r.PrefabName == "");
 
-  public static List<ItemRecord> RemoveInvalid(List<ItemRecord> records) => [.. records.Where(r => r.PrefabHash != 0)];
+  public static List<ItemRecord> RemoveInvalid(List<ItemRecord> records) => [.. records.Where(r => r.PrefabName != "")];
 
   public static byte[] Save(List<ItemRecord> records)
   {

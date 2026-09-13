@@ -12,14 +12,16 @@ public class SearchChests : EntityOperation
   }
   private string SearchStand(ZDO zdo, string prefix, HashSet<int> ids)
   {
-    var item = zdo.GetString(prefix + "item", "");
-    if (item == "") return "";
-    if (!ids.Contains(item.GetStableHashCode())) return "";
+    var item = zdo.GetInt(prefix + "item", 0);
+    if (item == 0) return "";
+    if (!ids.Contains(item)) return "";
+    var obj = ZNetScene.instance.GetPrefab(item);
+    var name = obj ? obj.name : $"hash:{item}";
     var variant = zdo.GetInt(prefix + "variant");
     var quality = zdo.GetInt(prefix + "quality");
-    if (variant > 1) item += ", style " + variant + "";
-    if (quality > 1) item += ", level " + quality + "";
-    return item;
+    if (variant > 1) name += ", style " + variant + "";
+    if (quality > 1) name += ", level " + quality + "";
+    return name;
   }
   private void Search(IEnumerable<string> ids, DataParameters args)
   {

@@ -15,9 +15,8 @@ public class CleanChests : EntityOperation
     var removed = 0;
     foreach (var zdo in zdos)
     {
-      var items = zdo.GetByteArray(ZDOVars.s_items);
-      if (items.Length == 0) continue;
-      ZPackage loadPackage = new(items);
+      var loadPackage = ItemDataHelper.GetPackage(zdo);
+      if (loadPackage == null) continue;
       ZPackage savePackage = new();
       var result = CleanChest(loadPackage, savePackage);
       if (result == 0) continue;
@@ -32,11 +31,6 @@ public class CleanChests : EntityOperation
 
   private int CleanChest(ZPackage from, ZPackage to)
   {
-    var version = (Version.Item)from.ReadInt();
-    from.SetPos(0);
-    // Item Drawers mod uses the same ZDO key.
-    // But luckily it writes 0 as version, so it can be detected.
-    if (version == 0) return 0;
     var records = ItemDataHelper.Load(from);
     var removed = ItemDataHelper.CountInvalid(records);
     if (removed > 0)

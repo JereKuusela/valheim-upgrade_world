@@ -35,7 +35,10 @@ public class CleanStands : EntityOperation
       if (Clean(zdo, "9_"))
         removed++;
       if (removed > r)
+      {
         AddPin(zdo.m_position);
+        zdo.DataRevision += 100;
+      }
     }
     if (alwaysPrint || removed > 0)
       Print($"Removed {removed} missing object{S(removed)} from armor stands");
@@ -46,6 +49,7 @@ public class CleanStands : EntityOperation
       if (Clean(zdo, ""))
       {
         AddPin(zdo.m_position);
+        zdo.DataRevision += 100;
         removed++;
       }
     }
@@ -56,14 +60,16 @@ public class CleanStands : EntityOperation
   private bool Clean(ZDO zdo, string prefix)
   {
     var zs = ZNetScene.instance;
-    var item = zdo.GetString(prefix + "item", "");
-    if (item == "") return false;
-    if (zs.m_namedPrefabs.ContainsKey(item.GetStableHashCode())) return false;
-    zdo.Set(prefix + "item", "");
+    var item = zdo.GetInt(prefix + "item", 0);
+    if (item == 0) return false;
+    if (zs.m_namedPrefabs.ContainsKey(item)) return false;
+    zdo.Set(prefix + "item", 0);
     zdo.Set(prefix + "variant", 0);
     if (prefix == "")
+    {
       zdo.Set(prefix + "quality", 1);
-    zdo.DataRevision += 100;
+      zdo.Set(ZDOVars.s_type, 0);
+    }
     return true;
   }
 }
