@@ -11,29 +11,15 @@ public class CleanStands : EntityOperation
   private void Clean(ZDO[] zdos, bool alwaysPrint)
   {
     var removed = 0;
+    string[] prefixes = ["0_", "1_", "2_", "3_", "4_", "5_", "6_", "7_", "8_", "9_", "10_", "11_", "12_", "13_", "14_", "15_"];
     foreach (var zdo in zdos)
     {
       var r = removed;
-      if (Clean(zdo, "0_"))
-        removed++;
-      if (Clean(zdo, "1_"))
-        removed++;
-      if (Clean(zdo, "2_"))
-        removed++;
-      if (Clean(zdo, "3_"))
-        removed++;
-      if (Clean(zdo, "4_"))
-        removed++;
-      if (Clean(zdo, "5_"))
-        removed++;
-      if (Clean(zdo, "6_"))
-        removed++;
-      if (Clean(zdo, "7_"))
-        removed++;
-      if (Clean(zdo, "8_"))
-        removed++;
-      if (Clean(zdo, "9_"))
-        removed++;
+      foreach (var prefix in prefixes)
+      {
+        if (Clean(zdo, prefix))
+          removed++;
+      }
       if (removed > r)
       {
         AddPin(zdo.m_position);

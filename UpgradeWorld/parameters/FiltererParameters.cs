@@ -14,6 +14,7 @@ public enum TargetZones
 public class FiltererParameters
 {
   public HashSet<Heightmap.Biome> Biomes = [];
+  public HashSet<string> AltBiomes = [];
   public Heightmap.Biome BiomeMask = (Heightmap.Biome)(-1);
   public int Limit = 0;
   public bool NoEdges = false;
@@ -39,6 +40,7 @@ public class FiltererParameters
   public FiltererParameters(FiltererParameters pars)
   {
     Biomes = pars.Biomes;
+    AltBiomes = pars.AltBiomes;
     Limit = pars.Limit;
     Pin = pars.Pin;
     LocationIds = pars.LocationIds;
@@ -85,6 +87,7 @@ public class FiltererParameters
           MaxDistance = distance.Max;
         }
         else if (name == "biomes") Biomes = Parse.Biomes(value);
+        else if (name == "altbiomes") AltBiomes = [.. value.Split(',')];
         else if (name == "locations")
         {
           HasLocationFilter = true;
@@ -223,7 +226,7 @@ public class FiltererParameters
     return str;
   }
   public static List<string> Parameters = [
-    "clear", "terrain", "pos", "zone", "biomes", "locations", "min", "minDistance", "max", "maxDistance", "distance", "start", "noEdges", "safeZones", "chance", "force"
+    "clear", "terrain", "pos", "zone", "biomes", "altbiomes", "locations", "min", "minDistance", "max", "maxDistance", "distance", "start", "noEdges", "safeZones", "chance", "force"
   ];
   public static Dictionary<string, Func<int, List<string>?>> GetAutoComplete()
   {
@@ -231,6 +234,7 @@ public class FiltererParameters
       { "pos", index => CommandWrapper.XZ("pos", "Coordinates for the center point. If not given, player's position is used", index)},
       { "limit", index => CommandWrapper.Info("limit=<color=yellow>amount</color> | Limits the amount of objects.")},
       { "zone", index => CommandWrapper.XZ("zone" , "Indices for the center zone", index) },
+      { "altbiomes", index => AltBiomeList.m_altBiomes.Select(biome => biome.m_name).ToList() },
       { "biomes", index => Enum.GetNames(typeof(Heightmap.Biome)).ToList() },
       { "locations", index => LocationOperation.AllIds() },
       { "min", index => index == 0 ? CommandWrapper.Info("min=<color=yellow>meters or zones</color> | Minimum distance from the center point / zone.") : null },

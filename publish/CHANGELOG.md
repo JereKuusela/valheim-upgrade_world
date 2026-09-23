@@ -1,3 +1,8 @@
+- v1.83
+  - Adds more locations to the `bearcave` upgrade operation.
+  - Adds new filter `altbiomes` to filter zones based on alternate biomes.
+  - Fixes `locations_add` command always pinning added locations.
+
 - v1.82
   - Adds new upgrade operation `bearcave` for some latest locations.
   - Adds support for new inventory format (including old format for compatibility). Thanks JPValheim!
@@ -20,7 +25,3 @@
 - v1.79
   - Adds wildcard `*` support for data based filtering to check any data key.
   - Fixes vegetation reset sometimes not cleaning up the spawned terrain object. Thanks warp!
-
-- v1.78
-  - Adds output to commands `location_list` and `object_list` when no objects or locations are found.
-  - Changes the command `object_edit` to allow clearing data by providing only the key as a parameter.

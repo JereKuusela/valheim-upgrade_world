@@ -79,8 +79,9 @@ public class Upgrade : BaseOperation
     }
     else if (type == "bearcave")
     {
-      Executor.AddOperation(new DistributeLocations(Context, ["BearCave", "BigRockClearing", "AncientUpgradeStation"], args), false);
-      Executor.AddOperation(new SpawnLocations(Context, ["BearCave", "BigRockClearing", "AncientUpgradeStation"], args), args.Start);
+      HashSet<string> locs = ["BearCave", "BigRockClearing", "AncientUpgradeStation", "WoodVillage2", "StoneTowerRuins07_sunk", "SwampHut1_1", "StoneTowerRuins05_leet", "GoblinCamp2_1", "TarPit1_1"];
+      Executor.AddOperation(new DistributeLocations(Context, locs, args), false);
+      Executor.AddOperation(new SpawnLocations(Context, locs, args), args.Start);
     }
     else if (type == "combatruins")
     {

@@ -16,7 +16,7 @@ public class DistributeLocations : ExecutedOperation
   private int Total = 0;
   public static HashSet<Vector2s> AllowedZones = [];
   private readonly Dictionary<string, int> Counts = [];
-  public DistributeLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Start)
+  public DistributeLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Pin)
   {
     Ids = [.. ZoneSystem.instance.m_locations
         .Where(Helper.IsValid)

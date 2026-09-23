@@ -60,6 +60,7 @@ If you wish to restrict this, edit the config file and add Steam IDs to the root
 Most commands allow fine-tuning the affected area. Following parameters are available:
 
 - `amount=number`: Multiplies affected objects. Only affects vegetation commands.
+- `altbiomes=altbiome1,altbiome2,...`: Filters zones by alternate biome.
 - `biomes=biome1,biome2,...`: Only includes given biomes. If not given, all biomes are included. Available options are: "AshLands", "BlackForest", "DeepNorth", "Meadows", "Mistlands", "Mountain", "Ocean", "Plains" and "Swamp".
 - `chance=number`: Selects candidates randomly. Values 0–1 are fractions; values above 1 are divided by 100. `chance=1` is 100%, `chance=0.01` is 1%, and `chance=20` is 20%.
 - `clear=meters`: Overrides the cleared radius when using `locations_remove`.
@@ -195,7 +196,7 @@ Other settings are:
 
 - Generated area: The world generator generates up to 500 meters from places any player has visited (usually abour 350 meters). This is much bigger area than what gets revelead on the minimap.
 - Location: Special places like rune stones, dungeon entrances or abandoned houses that are spawned to the world by the world generator.
-- Zone: The world is split to tiles of 64 m x 64 m size. This is the granularity of the world generation. See <https://valheim.fandom.com/wiki/Zones> for more info.
+- Zone: The world is split to tiles of 64 m x 64 m size. This is the granularity of the world generation. See <https://valheim.wiki/Zones> for more info.
 
 ### Resetting zones
 

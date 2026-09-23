@@ -29,7 +29,7 @@ public class SearchChests : EntityOperation
     var zdos = GetZDOs(args);
 
     var zs = ZNetScene.instance;
-    string[] prefixes = ["", "0_", "1_", "2_", "3_", "4_", "5_", "6_", "7_", "8_", "9_"];
+    string[] prefixes = ["", "0_", "1_", "2_", "3_", "4_", "5_", "6_", "7_", "8_", "9_", "10_", "11_", "12_", "13_", "14_", "15_"];
     var standContents = zdos.Select(zdo =>
     {
       var content = prefixes.Select(prefix => SearchStand(zdo, prefix, prefabs)).Where(x => x != "").ToList();
