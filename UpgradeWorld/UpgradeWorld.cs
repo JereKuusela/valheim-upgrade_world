@@ -8,9 +8,9 @@ namespace UpgradeWorld;
 [BepInPlugin(GUID, NAME, VERSION)]
 public class UpgradeWorld : BaseUnityPlugin
 {
-  const string GUID = "upgrade_world";
-  const string NAME = "Upgrade World";
-  const string VERSION = "1.83";
+  public const string GUID = "upgrade_world";
+  public const string NAME = "Upgrade World";
+  public const string VERSION = "1.84";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable

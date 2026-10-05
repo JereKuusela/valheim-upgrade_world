@@ -1,3 +1,7 @@
+- v1.84
+  - Fixes vegetation commands running with invalid vegetation ids.
+  - Fixes invalid locations causing errors during location id check.
+
 - v1.83
   - Adds more locations to the `bearcave` upgrade operation.
   - Adds new filter `altbiomes` to filter zones based on alternate biomes.
@@ -21,7 +25,3 @@
 - v1.80
   - Adds compatibility with Location Placement Accelerator mod. Thanks Kurios.ZeuS!
   - Improves parameter parsing to not omit empty values.
-
-- v1.79
-  - Adds wildcard `*` support for data based filtering to check any data key.
-  - Fixes vegetation reset sometimes not cleaning up the spawned terrain object. Thanks warp!

@@ -34,14 +34,14 @@ public class LocationIdParameters : FiltererParameters
     Include = [.. Unhandled.SelectMany(kvp => Parse.Split(kvp)).Distinct()];
     Unhandled.Clear();
     if (!base.Valid(terminal)) return false;
-    var invalidIncludes = Include.Where(id => !id.Contains("*") && ZoneSystem.instance.GetLocation(id) == null);
-    if (invalidIncludes.Count() > 0)
+    var invalidIncludes = Include.Where(id => !id.Contains("*") && !Helper.LocationExists(id)).ToList();
+    if (invalidIncludes.Count > 0)
     {
       Helper.Print(terminal, ServerExecution.User, $"Error: Location id {string.Join(", ", invalidIncludes)} not recognized.");
       return false;
     }
-    var invalidIgnores = Ignore.Where(id => !id.Contains("*") && ZoneSystem.instance.GetLocation(id) == null);
-    if (invalidIgnores.Count() > 0)
+    var invalidIgnores = Ignore.Where(id => !id.Contains("*") && !Helper.LocationExists(id)).ToList();
+    if (invalidIgnores.Count > 0)
     {
       Helper.Print(terminal, ServerExecution.User, $"Error: Location id {string.Join(", ", invalidIgnores)} not recognized.");
       return false;

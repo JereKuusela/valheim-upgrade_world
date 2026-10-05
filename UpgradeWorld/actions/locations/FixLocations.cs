@@ -16,8 +16,8 @@ public class FixLocations : BaseOperation
     {
       if (zdo.m_prefab != LocationProxyHash) continue;
       var locationId = zdo.GetInt(ZDOVars.s_location);
-      var location = ZoneSystem.instance.GetLocation(locationId);
-      if (location == null || !Helper.IsValid(location)) continue;
+      var location = Helper.GetLocation(locationId);
+      if (location == null) continue;
       var zone = ZoneSystem.GetZone(zdo.m_position);
       // If something already exists, no need to fix it.
       if (ZoneSystem.instance.m_locationInstances.ContainsKey(zone)) continue;
