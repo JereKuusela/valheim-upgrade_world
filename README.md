@@ -112,6 +112,8 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `clean_objects [...args]`: Removes missing objects from the world.
 - `clean_spawns [...args]`: Removes timestamps from the spawn system.
   - Note: This resets the spawn delays, which may cause creatures to respawn immediately.
+- `clean_ungenerated [...args]`: Removes objects from zones that are not generated.
+  - Note: This also removes objects intentionally placed in non-generated zones (for example with admin tools).
 - `clean_stands [...args]`: Removes missing objects from armor and item stands.
 - `locations_add [id1,id2,...] [...args]`: Adds locations to already explored areas. `chance` determines how many of the locations are added.
 - `locations_count [id1,id2,...] [...args]`: Counts locations. If no ids given then counts all locations.

@@ -9,7 +9,9 @@ public abstract class BaseOperation(Terminal context, bool pin = false)
   protected int LocationHash = "location".GetStableHashCode();
   protected Terminal Context = context ?? Console.instance;
   public ZRpc? User = ServerExecution.User;
-  private readonly List<Vector3> Pins = [];
+  protected readonly List<Vector3> Pins = [];
+  // Set while a wrapper operation runs nested operations, so their pins are printed by the wrapper.
+  protected static List<Vector3>? SharedPins;
 
   public void Print(string value, bool addDot = true)
   {
@@ -31,7 +33,7 @@ public abstract class BaseOperation(Terminal context, bool pin = false)
   }
   protected void AddPin(Vector3 pos)
   {
-    if (pin) Pins.Add(pos);
+    if (pin) (SharedPins ?? Pins).Add(pos);
   }
   protected void PrintPins()
   {

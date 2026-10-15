@@ -1,3 +1,7 @@
+- v1.85
+  - Adds new command `clean_ungenerated` to remove objects from non-generated zones (also included in `world_clean`).
+  - Fixes the save system not clearing up fully emptied areas. Remember to create back ups before using this mod!
+
 - v1.84
   - Fixes vegetation commands running with invalid vegetation ids.
   - Fixes invalid locations causing errors during location id check.
@@ -21,7 +25,3 @@
 - v1.81
   - Fixes for the new game update. Thanks andrewstevenson91!
   - More upgrade operations will probably come a bit later.
-
-- v1.80
-  - Adds compatibility with Location Placement Accelerator mod. Thanks Kurios.ZeuS!
-  - Improves parameter parsing to not omit empty values.

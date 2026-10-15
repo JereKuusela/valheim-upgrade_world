@@ -11,7 +11,9 @@ public class QueuedOperation(Terminal context, bool pin, string message, Action 
 
   protected override IEnumerator OnExecute(Stopwatch sw)
   {
-    _action();
+    SharedPins = Pins;
+    try { _action(); }
+    finally { SharedPins = null; }
     yield break;
   }
 
