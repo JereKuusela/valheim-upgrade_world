@@ -83,11 +83,11 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
 - `pin`: Shows the result on the map. Requires Server Devcommands mod.
 - `pos=x,z`: Position of the center. Default value is the world center. Default distance is all of the map.
-  - Without coordinates, `pos` uses the player position.
-  - For example `objects_list pos max=5` only includes objects within 5 meters of the player.
+  - Bare `pos` without `=` uses the player position.
+  - For example `objects_list pos max=5`.
 - `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
-  - Without coordinates, `zone` uses the player zone.
-  - For example `objects_list zone` only includes objects in the player zone.
+  - Bare `zone` without `=` uses the player zone.
+  - For example `objects_list zone`.
 - `print=key,type`: Prints object data. Type is only needed if the same key is used for multiple types. Only applies to `objects_list` command. Multiple values can be printed at once.
 - `safeZones=distance`: Set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
 - `start`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
