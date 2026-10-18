@@ -82,7 +82,10 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
 - `pin`: Shows the result on the map. Requires Server Devcommands mod.
-- `pos=x,z`: Position of the center. Default value is the world center. Using `pos` without coordinates uses the player position. Default distance is all of the map.
+- `pos=x,z`: Position of the center. Default value is the world center. Default distance is all of the map.
+  - `pos`: Without coordinates, uses the player position.
+- `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
+  - `zone`: Without coordinates, uses the player zone.
 - `print=key,type`: Prints object data. Type is only needed if the same key is used for multiple types. Only applies to `objects_list` command. Multiple values can be printed at once.
 - `safeZones=distance`: Set safe zone size of major structures (0 to disable). Default value 2 is defined in the config. List of major structures is also defined in the config.
 - `start`: Automatically executes the command without having to use `start`. Can be permanently turned on from the config.
@@ -91,7 +94,6 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
   - If the parameter is given multiple times, then objects that have any of the given type sets are included.
   - For example `type=Container,Ship` only includes ships with a chest.
   - For example `type=Container type=Ship` includes all ships and all chests.
-- `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
 
 ## Commands
 
