@@ -231,7 +231,7 @@ public class FiltererParameters
   public static Dictionary<string, Func<int, List<string>?>> GetAutoComplete()
   {
     return new() {
-      { "pos", index => CommandWrapper.XZ("pos", "Coordinates for the center point. If not given, player's position is used", index)},
+      { "pos", index => CommandWrapper.XZ("pos", "Coordinates for the center point. If not given, world center is used", index)},
       { "limit", index => CommandWrapper.Info("limit=<color=yellow>amount</color> | Limits the amount of objects.")},
       { "zone", index => CommandWrapper.XZ("zone" , "Indices for the center zone", index) },
       { "altbiomes", index => AltBiomeList.m_altBiomes.Select(biome => biome.m_name).ToList() },
