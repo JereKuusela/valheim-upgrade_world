@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace UpgradeWorld;
@@ -12,13 +13,12 @@ public class CleanDuplicates : EntityOperation
 
   private void Clean(bool alwaysPrint, FiltererParameters args)
   {
-    var zones = Zones.GetZones(args);
-
+    var generated = ZoneSystem.instance.m_generatedZones;
     HashSet<ZDO> toRemove = [];
-    foreach (var zone in zones)
+    foreach (var group in GetZDOs(args).GroupBy(zdo => zdo.GetSector()))
     {
-      var sectorObjects = Helper.GetZDOs(zone);
-      if (sectorObjects == null) continue;
+      if (!generated.Contains(group.Key)) continue;
+      var sectorObjects = group.ToList();
       for (var i = 0; i < sectorObjects.Count; i++)
       {
         var zdo = sectorObjects[i];
