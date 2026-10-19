@@ -1,3 +1,7 @@
+- v1.86
+  - Fixes `clean_duplicates` command ignoring most filter parameters. Thanks Zeall!
+  - Fixes `pos` parameter not using player coordinates when used without coordinates. Thanks Zeall!
+
 - v1.85
   - Adds new command `clean_ungenerated` to remove objects from non-generated zones (also included in `world_clean`).
   - Fixes the save system not clearing up fully emptied areas. Remember to create back ups before using this mod!
@@ -21,7 +25,3 @@
   - Improves error handling when multiple operations are queued. Thanks JPValheim!
   - Improves object modification to not take ownership of the object.
   - Improves support for `ignore` parameter in entity operations. Thanks JPValheim!
-
-- v1.81
-  - Fixes for the new game update. Thanks andrewstevenson91!
-  - More upgrade operations will probably come a bit later.
