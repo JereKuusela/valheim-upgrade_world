@@ -56,6 +56,18 @@ public class CleanStands : EntityOperation
       zdo.Set(prefix + "quality", 1);
       zdo.Set(ZDOVars.s_type, 0);
     }
+    else
+    {
+      foreach (var key in VisEquipmentKeys)
+      {
+        if (zdo.GetInt(key, 0) == item)
+          zdo.Set(key, 0);
+      }
+    }
     return true;
   }
+
+  private static readonly int[] VisEquipmentKeys = [
+    ZDOVars.s_leftItem, ZDOVars.s_rightItem, ZDOVars.s_leftBackItem, ZDOVars.s_rightBackItem,
+    ZDOVars.s_chestItem, ZDOVars.s_legItem, ZDOVars.s_helmetItem, ZDOVars.s_shoulderItem, ZDOVars.s_utilityItem];
 }
