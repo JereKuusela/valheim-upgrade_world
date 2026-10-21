@@ -8,7 +8,7 @@ public class RemoveLocations : ExecutedOperation
 {
   readonly HashSet<string> Ids;
   readonly FiltererParameters Args;
-  public RemoveLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Start)
+  public RemoveLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Pin)
   {
     Args = new(args)
     {
