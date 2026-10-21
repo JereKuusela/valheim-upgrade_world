@@ -31,6 +31,7 @@ public class FiltererParameters
   public HashSet<string> LocationIds = [];
   public TargetZones TargetZones = TargetZones.Generated;
   public Minimap.PinType? Pin;
+  public bool? Explored;
   public List<string> Unhandled = [];
   private bool HasLocationFilter;
   public bool IsBiomeValid(Heightmap.Biome biome) => Biomes.Count() == 0 || Biomes.Contains(biome);
@@ -56,6 +57,7 @@ public class FiltererParameters
     Amount = pars.Amount;
     SafeZones = pars.SafeZones;
     TargetZones = pars.TargetZones;
+    Explored = pars.Explored;
     Unhandled = pars.Unhandled;
     ObjectReset = pars.ObjectReset;
     TerrainReset = pars.TerrainReset;
@@ -183,6 +185,12 @@ public class FiltererParameters
   }
   public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position, true));
 
+  public static string ZonesText(bool? explored) => explored switch
+  {
+    true => "explored zones",
+    false => "unexplored zones",
+    _ => "zones"
+  };
   public string Print(string operation)
   {
     var str = operation + " ";
@@ -193,7 +201,7 @@ public class FiltererParameters
         str += " (excluding biome edges)";
     }
     else
-      str += "zones";
+      str += ZonesText(Explored);
     if (MinDistance > 0 || MaxDistance > 0)
     {
       if (Zone.HasValue)
