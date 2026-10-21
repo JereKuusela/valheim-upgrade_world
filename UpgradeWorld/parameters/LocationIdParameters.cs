@@ -25,10 +25,13 @@ public class LocationIdParameters : FiltererParameters
         Ignore = [.. split[1].Split(',')];
       else if (name == "log")
         Log = true;
+      else if (name == "explored" && Parse.Boolean(split[1]) is { } explored)
+        Explored = explored;
       else continue;
       Unhandled.Remove(par);
     }
   }
+  public override IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => base.FilterLocations(locations).Where(location => Zones.MatchesExplored(ZoneSystem.GetZone(location.m_position), Explored));
   public override bool Valid(Terminal terminal)
   {
     Include = [.. Unhandled.SelectMany(kvp => Parse.Split(kvp)).Distinct()];

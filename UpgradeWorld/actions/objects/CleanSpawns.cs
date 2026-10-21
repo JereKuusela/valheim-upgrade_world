@@ -3,7 +3,7 @@ namespace UpgradeWorld;
 /// <summary>Removes timestamps from the spawn system.</summary>
 public class CleanSpawns : EntityOperation
 {
-  public CleanSpawns(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
+  public CleanSpawns(Terminal context, ZDO[] zdos, Minimap.PinType? pin, bool alwaysPrint) : base(context, pin)
   {
     Clean(zdos, alwaysPrint);
   }

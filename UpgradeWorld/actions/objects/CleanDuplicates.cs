@@ -6,7 +6,7 @@ namespace UpgradeWorld;
 /// <summary>Removes missing objects from the world.</summary>
 public class CleanDuplicates : EntityOperation
 {
-  public CleanDuplicates(Terminal context, bool pin, bool alwaysPrint, FiltererParameters args) : base(context, pin)
+  public CleanDuplicates(Terminal context, Minimap.PinType? pin, bool alwaysPrint, FiltererParameters args) : base(context, pin)
   {
     Clean(alwaysPrint, args);
   }

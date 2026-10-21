@@ -3,7 +3,7 @@ namespace UpgradeWorld;
 /// <summary>Optimizes old dungeons.</summary>
 public class CleanDungeons : EntityOperation
 {
-  public CleanDungeons(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
+  public CleanDungeons(Terminal context, ZDO[] zdos, Minimap.PinType? pin, bool alwaysPrint) : base(context, pin)
   {
     Clean(zdos, alwaysPrint);
   }

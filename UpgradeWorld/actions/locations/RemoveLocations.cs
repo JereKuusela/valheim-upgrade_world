@@ -8,7 +8,7 @@ public class RemoveLocations : ExecutedOperation
 {
   readonly HashSet<string> Ids;
   readonly FiltererParameters Args;
-  public RemoveLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Start)
+  public RemoveLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Pin)
   {
     Args = new(args)
     {
@@ -26,7 +26,7 @@ public class RemoveLocations : ExecutedOperation
   {
     var zs = ZoneSystem.instance;
     var zdos = ZDOMan.instance.m_objectsByID.Values.Where(zdo => LocationProxyHash == zdo.m_prefab);
-    zdos = Args.FilterZdos(zdos, true);
+    zdos = Args.FilterZdos(zdos, true).Where(zdo => Zones.MatchesExplored(ZoneSystem.GetZone(zdo.GetPosition()), Args.Explored));
     var removed = 0;
     foreach (var zdo in zdos)
     {
@@ -47,7 +47,7 @@ public class RemoveLocations : ExecutedOperation
       if (Settings.Verbose)
         Print($"Location {name} removed at {zone}.");
     }
-    var toRemove = zs.m_locationInstances.Where(kvp => Args.FilterPosition(kvp.Value.m_position, true)).ToList();
+    var toRemove = zs.m_locationInstances.Where(kvp => Zones.MatchesExplored(kvp.Key, Args.Explored) && Args.FilterPosition(kvp.Value.m_position, true)).ToList();
     foreach (var kvp in toRemove)
     {
       if (!Args.Roll()) continue;
@@ -80,6 +80,7 @@ public class RemoveLocations : ExecutedOperation
     var removed = 0;
     foreach (var zone in notSpawnedZones)
     {
+      if (!Zones.MatchesExplored(zone, Args.Explored)) continue;
       if (!zs.m_locationInstances.TryGetValue(zone, out var location)) continue;
       removed++;
       AddPin(location.m_position);
