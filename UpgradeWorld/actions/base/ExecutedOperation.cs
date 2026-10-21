@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 namespace UpgradeWorld;
 ///<summary>Base class for all operations that need execution. Provides the execution logic.</summary>
-public abstract class ExecutedOperation(Terminal context, bool pin = false) : BaseOperation(context, pin)
+public abstract class ExecutedOperation(Terminal context, Minimap.PinType? pin = null) : BaseOperation(context, pin)
 {
   protected int Failed = 0;
   private string queuedInfo = "";

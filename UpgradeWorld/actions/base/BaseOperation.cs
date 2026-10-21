@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 namespace UpgradeWorld;
 ///<summary>Base class for all operations. Only provides basic utilities.</summary>
-public abstract class BaseOperation(Terminal context, bool pin = false)
+public abstract class BaseOperation(Terminal context, Minimap.PinType? pin = null)
 {
   protected int LocationProxyHash = "LocationProxy".GetStableHashCode();
   protected int LocationHash = "location".GetStableHashCode();
@@ -33,14 +33,15 @@ public abstract class BaseOperation(Terminal context, bool pin = false)
   }
   protected void AddPin(Vector3 pos)
   {
-    if (pin) (SharedPins ?? Pins).Add(pos);
+    if (pin.HasValue) (SharedPins ?? Pins).Add(pos);
   }
   protected void PrintPins()
   {
-    if (!pin) return;
+    if (!pin.HasValue) return;
+    var type = pin.Value;
     if (User != null)
     {
-      User.Invoke(ServerExecution.RPC_Pins, string.Join("|", Pins.Select(Helper.PrintPin)));
+      User.Invoke(ServerExecution.RPC_Pins, string.Join("|", Pins.Select(pos => Helper.PrintPin(pos) + ", " + type)));
     }
     else
     {
@@ -50,7 +51,7 @@ public abstract class BaseOperation(Terminal context, bool pin = false)
       findPins.Clear();
       foreach (var pos in Pins)
       {
-        var pin = Minimap.instance?.AddPin(pos, Minimap.PinType.Icon3, "", false, false, Player.m_localPlayer.GetPlayerID());
+        var pin = Minimap.instance?.AddPin(pos, type, "", false, false, Player.m_localPlayer.GetPlayerID());
         if (pin != null)
           findPins.Add(pin);
       }

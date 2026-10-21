@@ -2,7 +2,7 @@ namespace UpgradeWorld;
 /// <summary>Removes missing objects from the world.</summary>
 public class CleanObjects : EntityOperation
 {
-  public CleanObjects(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
+  public CleanObjects(Terminal context, ZDO[] zdos, Minimap.PinType? pin, bool alwaysPrint) : base(context, pin)
   {
     Clean(zdos, alwaysPrint);
   }

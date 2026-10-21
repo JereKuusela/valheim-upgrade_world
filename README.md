@@ -81,7 +81,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
-- `pin`: Shows the result on the map. Requires Server Devcommands mod.
+- `pin=type`: Shows the result on the map with the given map icon, for example `pin=Death`. Bare `pin` uses `Icon3`.
 - `pos=x,z`: Position of the center. Default value is the world center. Default distance is all of the map.
   - Bare `pos` without `=` uses the player position. For example `objects_list pos max=5`.
 - `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.

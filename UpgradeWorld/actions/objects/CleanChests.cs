@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Removes missing objects from chests.</summary>
 public class CleanChests : EntityOperation
 {
-  public CleanChests(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
+  public CleanChests(Terminal context, ZDO[] zdos, Minimap.PinType? pin, bool alwaysPrint) : base(context, pin)
   {
     Clean(zdos, alwaysPrint);
   }
