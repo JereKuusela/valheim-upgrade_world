@@ -10,6 +10,7 @@ public class LocationIdParameters : FiltererParameters
   private readonly List<string> Ignore = [];
   public HashSet<string> Ids = [];
   public bool Log = false;
+  public bool? Explored;
   public LocationIdParameters(FiltererParameters pars) : base(pars)
   {
   }
@@ -25,6 +26,8 @@ public class LocationIdParameters : FiltererParameters
         Ignore = [.. split[1].Split(',')];
       else if (name == "log")
         Log = true;
+      else if (name == "explored" && Parse.Boolean(split[1]) is { } explored)
+        Explored = explored;
       else continue;
       Unhandled.Remove(par);
     }

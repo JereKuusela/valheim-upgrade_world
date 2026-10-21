@@ -16,7 +16,8 @@ public class DistributeLocations : ExecutedOperation
   private int Total = 0;
   public static HashSet<Vector2s> AllowedZones = [];
   private readonly Dictionary<string, int> Counts = [];
-  public DistributeLocations(Terminal context, HashSet<string> ids, FiltererParameters args) : base(context, args.Pin)
+  private readonly bool? Explored;
+  public DistributeLocations(Terminal context, HashSet<string> ids, FiltererParameters args, bool? explored = null) : base(context, args.Pin)
   {
     Ids = [.. ZoneSystem.instance.m_locations
         .Where(Helper.IsValid)
@@ -31,9 +32,15 @@ public class DistributeLocations : ExecutedOperation
       return;
     }
     Chance = args.Chance;
+    Explored = explored;
     args = new(args)
     {
-      TargetZones = TargetZones.All
+      TargetZones = explored switch
+      {
+        true => TargetZones.Generated,
+        false => TargetZones.Ungenerated,
+        _ => TargetZones.All
+      }
     };
     var filterers = FiltererFactory.Create(args);
     List<string> messages = [];
@@ -109,7 +116,7 @@ public class DistributeLocations : ExecutedOperation
     foreach (var id in ids)
       Counts[id] = Count(id);
     var zs = ZoneSystem.instance;
-    zs.m_locationInstances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed || !Counts.ContainsKey(kvp.Value.m_location.m_prefab.Name)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    zs.m_locationInstances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed || !Counts.ContainsKey(kvp.Value.m_location.m_prefab.Name) || (Explored.HasValue && !AllowedZones.Contains(kvp.Key))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     // Better Continents adds its own locations after ClearNonPlacedLocations is called.
     // So a workaround is to make a dummy call.
     DummyClearNonPlacedLocations.Skip = true;
