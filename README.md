@@ -67,7 +67,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `count=min-max`: Filters objects by their amount. Only applies to `objects_count`.
 - `data=key,value,type`: Sets object data. Type is only needed if the key doesn't already exist. Only applies to `objects_edit`. Multiple data values can be set at once. For space bars, you need to use quotes with Server Devcommands mod.
 - `distance=min-max`: Short-hand for setting both distances.
-- `explored=true/false`: Adds locations only to explored (`true`) or unexplored (`false`) zones. Without the parameter, locations are added to both explored and unexplored zones. Only applies to `locations_add`.
+- `explored=true/false`: Limits locations to explored (`true`) or unexplored (`false`) zones. Without the parameter, both explored and unexplored zones are used. Only applies to `locations_add`, `locations_count`, `locations_list` and `locations_remove`.
 - `filter=key,value,includeMissing`: Filters object by data value. Third parameter must be truthy to include objects that don't have the data value set. Only applies to `objects_*` commands. Multiple filters can be set at once. For space bars, you need to use quotes with Server Devcommands mod.
 - `filter=type,value`: Filters object by data value, for any key of a given type.
   - Possible types are float, id, int, long, quat, string and vector.

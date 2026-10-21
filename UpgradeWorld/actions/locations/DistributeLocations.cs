@@ -139,7 +139,7 @@ public class DistributeLocations : ExecutedOperation
 
   protected override string OnInit()
   {
-    return $"Generate locations{LocationOperation.IdString(Ids)}.";
+    return $"Generate locations{LocationOperation.IdString(Ids)}{(Explored.HasValue ? " in " + FiltererParameters.ZonesText(Explored) : "")}.";
   }
 
   // Copy paste from Valheim to allow overriding IsZoneGenerated check.
