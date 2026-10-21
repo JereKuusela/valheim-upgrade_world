@@ -23,7 +23,7 @@ public class CountObjects : EntityOperation
     }
     var linq = counts.Where(kvp => kvp.Value >= countRange.Min && kvp.Value < countRange.Max).Select(kvp => $"{GetName(kvp.Key)}: {kvp.Value}");
     string[] texts = [$"Total: {total}", .. linq];
-    if (args.Log) Log(texts);
+    if (args.Log) LogResult(texts);
     else Print(texts, false);
     PrintPins();
   }

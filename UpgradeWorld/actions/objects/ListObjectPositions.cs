@@ -37,7 +37,7 @@ public class ListObjectPositions : EntityOperation
       AddPin(zdo.GetPosition());
       return $"{GetName(zdo.m_prefab)} {zdo.m_uid.ID} {Helper.PrintVectorXZY(zdo.GetPosition())}: {GetData(zdo, args.Prints)}";
     }).ToArray();
-    if (args.Log) Log(texts);
+    if (args.Log) LogResult(texts);
     else Print(texts, false);
     PrintPins();
   }

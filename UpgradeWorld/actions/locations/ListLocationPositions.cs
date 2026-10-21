@@ -26,7 +26,7 @@ public class ListLocationPositions : EntityOperation
       texts.Add($"{name}: {Helper.PrintVectorXZY(loc.m_position)} {WorldGenerator.instance.GetBiome(loc.m_position)}");
       AddPin(loc.m_position);
     }
-    if (log) Log(texts);
+    if (log) LogResult(texts);
     else Print(texts, false);
     PrintPins();
   }

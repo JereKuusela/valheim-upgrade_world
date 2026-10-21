@@ -78,7 +78,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `level=min-max`: Filters objects by their creature level. Only applies to `objects_*` commands.
 - `limit=amount`: Limits the amount of affected objects. Only applies to `objects_*` commands.
 - `locations=id1,id2,...`: Includes only objects or zones if the zone has any of the given locations.
-- `log`: Object commands print to the log file instead of the console.
+- `log`: Prints the result to the log file instead of the console. Only applies to `objects_count`, `objects_list`, `chests_search`, `locations_count` and `locations_list` commands.
 - `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
@@ -146,7 +146,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation.
 - `vegetation_remove [id1,id2,...] [...args]`: Removes vegetation from generated areas. If ids are not given, removes every vegetation.
 - `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation.
-- `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
+- `verbose`: Toggles the verbose mode, which prints the details of each change to the console. Doesn't affect `*_count` and `*_list` commands. Can also be toggled from the config.
 - `world_clean`: Combines all `clean_*` commands to fully clean the world.
 - `world_gen [legacy/hh/mistlands] [start]`: Sets the world generation version.
   - Biomes will change in the outer areas.
@@ -188,8 +188,8 @@ Filtering options in the config:
 
 Other settings are:
 
-- Verbose output: Prints more output which gives a better understanding how the mod operators. However this can spoil things of your world.
-- Verbose locations: Prints more detailed information about location generation. This can be useful for debugging location generation works.
+- Verbose output: Prints the details of each change to the console which gives a better understanding how the mod operates. However this can spoil things of your world.
+- Verbose locations: Prints the reasons to the console why a location could not be placed, for example wrong biome or altitude. This can be useful for debugging location generation.
 - Automatic start: Starts commands automatically without having to use the start command. This allows using the commands more easily but can lead to more mistakes.
 - Disable automatic genloc: After new content updates, Valheim automatically redistributes unplaced
 - Root users: SteamIds that are allowed to execute commands (-1 for the dedicated server). If not set, all admins can use the commands.
