@@ -13,6 +13,7 @@ public class CountLocations : EntityOperation
   {
     var zs = ZoneSystem.instance;
     var locs = args.FilterLocations(zs.m_locationInstances.Values).Where(l => ids.Count() == 0 || ids.Contains(l.m_location?.m_prefab.Name ?? "")).ToList();
+    var skipped = PlayerBaseFilterer.RemoveExcluded(locs, args.SafeZones);
     var total = 0;
     var counts = new Dictionary<string, int>();
     foreach (var loc in locs)
@@ -26,7 +27,8 @@ public class CountLocations : EntityOperation
       AddPin(loc.m_position);
     }
     var linq = counts.OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}: {kvp.Value}");
-    string[] texts = [$"Total: {total}", .. linq];
+    List<string> texts = [$"Total: {total}", .. linq];
+    if (skipped > 0) texts.Add($"{skipped} locations skipped by having a player base");
     if (log) Log(texts);
     else Print(texts, false);
     PrintPins();

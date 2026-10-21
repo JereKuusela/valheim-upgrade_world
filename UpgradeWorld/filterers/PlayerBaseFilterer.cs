@@ -40,6 +40,11 @@ public class PlayerBaseFilterer(int size) : IZoneFilterer
     }
     return excludedZones;
   }
+  public static int RemoveExcluded(List<ZoneSystem.LocationInstance> locations, int size)
+  {
+    new PlayerBaseFilterer(size).CalculateExcluded();
+    return locations.RemoveAll(location => ExcludedZones.Contains(ZoneSystem.GetZone(location.m_position)));
+  }
   public Vector2s[] FilterZones(Vector2s[] zones, ref List<string> messages)
   {
     CalculateExcluded();

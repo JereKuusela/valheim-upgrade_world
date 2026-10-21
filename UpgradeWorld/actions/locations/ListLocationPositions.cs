@@ -13,9 +13,12 @@ public class ListLocationPositions : EntityOperation
     var zs = ZoneSystem.instance;
     List<string> texts = [];
     var locs = args.FilterLocations(zs.m_locationInstances.Values).Where(l => ids.Count() == 0 || ids.Contains(l.m_location?.m_prefab.Name ?? "")).ToList();
+    var skipped = PlayerBaseFilterer.RemoveExcluded(locs, args.SafeZones);
+    var skippedText = $"{skipped} locations skipped by having a player base";
     if (locs.Count == 0)
     {
       Print("No locations found.");
+      if (skipped > 0) Print(skippedText);
       PrintPins();
       return;
     }
@@ -26,6 +29,7 @@ public class ListLocationPositions : EntityOperation
       texts.Add($"{name}: {Helper.PrintVectorXZY(loc.m_position)} {WorldGenerator.instance.GetBiome(loc.m_position)}");
       AddPin(loc.m_position);
     }
+    if (skipped > 0) texts.Add(skippedText);
     if (log) Log(texts);
     else Print(texts, false);
     PrintPins();
