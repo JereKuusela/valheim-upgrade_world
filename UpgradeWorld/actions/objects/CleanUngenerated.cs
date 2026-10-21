@@ -2,7 +2,7 @@ namespace UpgradeWorld;
 /// <summary>Removes persistent objects from zones that are not generated (leftovers that regenerate as duplicates).</summary>
 public class CleanUngenerated : EntityOperation
 {
-  public CleanUngenerated(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
+  public CleanUngenerated(Terminal context, ZDO[] zdos, Minimap.PinType? pin, bool alwaysPrint) : base(context, pin)
   {
     Clean(zdos, alwaysPrint);
   }

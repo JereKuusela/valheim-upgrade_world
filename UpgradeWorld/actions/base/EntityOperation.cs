@@ -5,7 +5,7 @@ using Service;
 using UnityEngine;
 namespace UpgradeWorld;
 ///<summary>Base class for entity related operations. Provides some utilities.</summary>
-public abstract class EntityOperation(Terminal context, bool pin) : BaseOperation(context, pin)
+public abstract class EntityOperation(Terminal context, Minimap.PinType? pin) : BaseOperation(context, pin)
 {
   protected static string S(int i) => i > 1 ? "s" : "";
 

@@ -30,7 +30,8 @@ public class FiltererParameters
   public int SafeZones = Settings.SafeZoneSize;
   public HashSet<string> LocationIds = [];
   public TargetZones TargetZones = TargetZones.Generated;
-  public bool Pin;
+  public Minimap.PinType? Pin;
+  public bool? Explored;
   public List<string> Unhandled = [];
   private bool HasLocationFilter;
   public bool IsBiomeValid(Heightmap.Biome biome) => Biomes.Count() == 0 || Biomes.Contains(biome);
@@ -56,6 +57,7 @@ public class FiltererParameters
     Amount = pars.Amount;
     SafeZones = pars.SafeZones;
     TargetZones = pars.TargetZones;
+    Explored = pars.Explored;
     Unhandled = pars.Unhandled;
     ObjectReset = pars.ObjectReset;
     TerrainReset = pars.TerrainReset;
@@ -86,6 +88,7 @@ public class FiltererParameters
           MinDistance = distance.Min;
           MaxDistance = distance.Max;
         }
+        else if (name == "pin" && Enum.TryParse(value, true, out Minimap.PinType pin) && Enum.IsDefined(typeof(Minimap.PinType), pin)) Pin = pin;
         else if (name == "biomes") Biomes = Parse.Biomes(value);
         else if (name == "altbiomes") AltBiomes = [.. value.Split(',')];
         else if (name == "locations")
@@ -97,7 +100,7 @@ public class FiltererParameters
       }
       else if (name == "noedges") NoEdges = true;
       else if (name == "start") Start = true;
-      else if (name == "pin") Pin = true;
+      else if (name == "pin") Pin = Minimap.PinType.Icon3;
       else if (name == "pos")
       {
         var player = Helper.GetPlayerPosition();
@@ -182,6 +185,12 @@ public class FiltererParameters
   }
   public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position, false));
 
+  public static string ZonesText(bool? explored) => explored switch
+  {
+    true => "explored zones",
+    false => "unexplored zones",
+    _ => "zones"
+  };
   public string Print(string operation)
   {
     var str = operation + " ";
@@ -192,7 +201,7 @@ public class FiltererParameters
         str += " (excluding biome edges)";
     }
     else
-      str += "zones";
+      str += ZonesText(Explored);
     if (MinDistance > 0 || MaxDistance > 0)
     {
       if (Zone.HasValue)
@@ -253,7 +262,7 @@ public class FiltererParameters
       { "clear", index => index == 0 ? CommandWrapper.Info("clear=<color=yellow>meters</color> | Overrides the radius of removed objects.") : null },
       { "start", index => CommandWrapper.Flag("start", "Starts the operation instantly") },
       { "force", index => CommandWrapper.Flag("force", "Disables the player base detection") },
-      { "pin", index => CommandWrapper.Flag("pin", "Pins results on the map") },
+      { "pin", index => Enum.GetNames(typeof(Minimap.PinType)).ToList() },
       { "noEdges", index => CommandWrapper.Flag("noedges", "Excludes zones with multiple biomes") },
       { "distance", index => {
           if (index == 0) return CommandWrapper.Info("distance=<color=yellow>min</color>,max | Minimum distance from the center point / zone.");

@@ -31,6 +31,7 @@ public class ListLocationPositions : EntityOperation
     }
     if (skipped > 0) texts.Add($"{skipped} locations skipped by having a player base");
     if (log) Log(texts);
+    if (log) LogResult(texts);
     else Print(texts, false);
     PrintPins();
   }

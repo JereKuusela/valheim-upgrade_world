@@ -60,8 +60,8 @@ public static class Settings
   public static void Init(ConfigFile config)
   {
     var section = "1. General";
-    configVerbose = config.Bind(section, "Verbose output", false, "If true, more detailed is printed (useful for debugging but may contain spoilers).");
-    configVerboseLocations = config.Bind(section, "Verbose locations", false, "If true, more detailed location generation information is printed.");
+    configVerbose = config.Bind(section, "Verbose output", false, "If true, the details of each change are printed to the console, which gives a better understanding of how the mod operates. However this can spoil things of your world.");
+    configVerboseLocations = config.Bind(section, "Verbose locations", false, "If true, the reasons why a location could not be placed are printed to the console, for example wrong biome or altitude. This can be useful for debugging location generation.");
     configAutoStart = config.Bind(section, "Automatic start", false, "If true, operations start automatically without having to use the start command.");
     configWorldRadius = config.Bind(section, "World radius", 10500, "Max radius for operations.");
     configWorldEdge = config.Bind(section, "World edge", 500, "Size of world edge.");

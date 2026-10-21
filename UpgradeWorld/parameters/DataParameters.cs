@@ -100,7 +100,7 @@ public class DataParameters : IdParameters
       return null;
     };
     autoComplete["type"] = index => ParameterComponents;
-    autoComplete["log"] = index => index == 0 ? CommandWrapper.Info("Out put to log file instead of console.") : null;
+    autoComplete["log"] = index => index == 0 ? CommandWrapper.Info("Output to log file instead of console.") : null;
     autoComplete["location"] = index => LocationOperation.AllIds();
     return autoComplete;
   }

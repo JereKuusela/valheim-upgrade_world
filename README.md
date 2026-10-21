@@ -67,6 +67,7 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `count=min-max`: Filters objects by their amount. Only applies to `objects_count`.
 - `data=key,value,type`: Sets object data. Type is only needed if the key doesn't already exist. Only applies to `objects_edit`. Multiple data values can be set at once. For space bars, you need to use quotes with Server Devcommands mod.
 - `distance=min-max`: Short-hand for setting both distances.
+- `explored=true/false`: Limits locations to explored (`true`) or unexplored (`false`) zones. Without the parameter, both explored and unexplored zones are used. Only applies to `locations_add`, `locations_count`, `locations_list` and `locations_remove`.
 - `filter=key,value,includeMissing`: Filters object by data value. Third parameter must be truthy to include objects that don't have the data value set. Only applies to `objects_*` commands. Multiple filters can be set at once. For space bars, you need to use quotes with Server Devcommands mod.
 - `filter=type,value`: Filters object by data value, for any key of a given type.
   - Possible types are float, id, int, long, quat, string and vector.
@@ -77,11 +78,11 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `level=min-max`: Filters objects by their creature level. Only applies to `objects_*` commands.
 - `limit=amount`: Limits the amount of affected objects. Only applies to `objects_*` commands.
 - `locations=id1,id2,...`: Includes only objects or zones if the zone has any of the given locations.
-- `log`: Object commands print to the log file instead of the console.
+- `log`: Prints the result to the log file instead of the console. Only applies to `objects_count`, `objects_list`, `chests_search`, `locations_count` and `locations_list` commands.
 - `max=distance` or `maxDistance=distance`: Maximum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `min=distance` or `minDistance=distance`: Minimum distance from the center. Meters for `pos` and adjacent zones for `zone`.
 - `noEdges`: Only include zones that have included biomes in all of its corners. Without the flag, it's enough if just one of the corners is in the included biomes.
-- `pin`: Shows the result on the map. Requires Server Devcommands mod.
+- `pin=type`: Shows the result on the map with the given map icon, for example `pin=Death`. Bare `pin` uses `Icon3`.
 - `pos=x,z`: Position of the center. Default value is the world center. Default distance is all of the map.
   - Bare `pos` without `=` uses the player position. For example `objects_list pos max=5`.
 - `zone=x,z`: Position of the center zone. Can't be used with `pos`. Default distance is the single zone.
@@ -145,7 +146,7 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation.
 - `vegetation_remove [id1,id2,...] [...args]`: Removes vegetation from generated areas. If ids are not given, removes every vegetation.
 - `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation.
-- `verbose`: Toggles the verbose mode which prints more information when enabled. Can also be toggled from the config.
+- `verbose`: Toggles the verbose mode, which prints the details of each change to the console. Doesn't affect `*_count` and `*_list` commands. Can also be toggled from the config.
 - `world_clean`: Combines all `clean_*` commands to fully clean the world.
 - `world_gen [legacy/hh/mistlands] [start]`: Sets the world generation version.
   - Biomes will change in the outer areas.
@@ -187,8 +188,8 @@ Filtering options in the config:
 
 Other settings are:
 
-- Verbose output: Prints more output which gives a better understanding how the mod operators. However this can spoil things of your world.
-- Verbose locations: Prints more detailed information about location generation. This can be useful for debugging location generation works.
+- Verbose output: Prints the details of each change to the console which gives a better understanding how the mod operates. However this can spoil things of your world.
+- Verbose locations: Prints the reasons to the console why a location could not be placed, for example wrong biome or altitude. This can be useful for debugging location generation.
 - Automatic start: Starts commands automatically without having to use the start command. This allows using the commands more easily but can lead to more mistakes.
 - Disable automatic genloc: After new content updates, Valheim automatically redistributes unplaced
 - Root users: SteamIds that are allowed to execute commands (-1 for the dedicated server). If not set, all admins can use the commands.

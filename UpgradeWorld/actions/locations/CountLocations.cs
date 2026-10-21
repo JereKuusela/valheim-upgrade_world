@@ -39,6 +39,9 @@ public class CountLocations : EntityOperation
     var linq = counts.OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}: {kvp.Value}{SkippedText(skippedCounts[kvp.Key])}");
     List<string> texts = [$"Total: {total}{SkippedText(totalSkipped)}", .. linq];
     if (log) Log(texts);
+    var linq = counts.OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}: {kvp.Value}");
+    string[] texts = [$"Total: {total}{(args.Explored.HasValue ? " in " + FiltererParameters.ZonesText(args.Explored) : "")}", .. linq];
+    if (log) LogResult(texts);
     else Print(texts, false);
     PrintPins();
   }

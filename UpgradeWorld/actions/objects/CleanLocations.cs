@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Removes missing location objects.</summary>
 public class CleanLocations : EntityOperation
 {
-  public CleanLocations(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
+  public CleanLocations(Terminal context, ZDO[] zdos, Minimap.PinType? pin, bool alwaysPrint) : base(context, pin)
   {
     Clean(zdos, alwaysPrint);
   }
