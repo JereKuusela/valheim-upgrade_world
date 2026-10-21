@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 namespace UpgradeWorld;
 ///<summary>Filters zones based on whether they include a player base item.</summary>
 public class PlayerBaseFilterer(int size) : IZoneFilterer
@@ -40,6 +41,8 @@ public class PlayerBaseFilterer(int size) : IZoneFilterer
     }
     return excludedZones;
   }
+  public static void Update(int size) => new PlayerBaseFilterer(size).CalculateExcluded();
+  public static bool IsExcluded(Vector3 position) => ExcludedZones.Contains(ZoneSystem.GetZone(position));
   public Vector2s[] FilterZones(Vector2s[] zones, ref List<string> messages)
   {
     CalculateExcluded();

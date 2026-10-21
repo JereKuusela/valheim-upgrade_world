@@ -183,7 +183,7 @@ public class FiltererParameters
     Vector3 pos = Pos.HasValue ? new(Pos.Value.x, 0, Pos.Value.y) : Zone.HasValue ? ZoneSystem.GetZonePos(Zone.Value) : Vector3.zero;
     return zdos.OrderBy(zdo => Utils.DistanceXZ(zdo.GetPosition(), pos)).Take(Limit);
   }
-  public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position, true));
+  public virtual IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => locations.Where(location => FilterPosition(location.m_position, false));
 
   public static string ZonesText(bool? explored) => explored switch
   {
