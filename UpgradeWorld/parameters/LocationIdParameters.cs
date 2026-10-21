@@ -10,7 +10,6 @@ public class LocationIdParameters : FiltererParameters
   private readonly List<string> Ignore = [];
   public HashSet<string> Ids = [];
   public bool Log = false;
-  public bool? Explored;
   public LocationIdParameters(FiltererParameters pars) : base(pars)
   {
   }
@@ -32,6 +31,7 @@ public class LocationIdParameters : FiltererParameters
       Unhandled.Remove(par);
     }
   }
+  public override IEnumerable<ZoneSystem.LocationInstance> FilterLocations(IEnumerable<ZoneSystem.LocationInstance> locations) => base.FilterLocations(locations).Where(location => Zones.MatchesExplored(ZoneSystem.GetZone(location.m_position), Explored));
   public override bool Valid(Terminal terminal)
   {
     Include = [.. Unhandled.SelectMany(kvp => Parse.Split(kvp)).Distinct()];

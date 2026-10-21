@@ -12,6 +12,7 @@ public static class Zones
     return root.GetComponentInChildren<Heightmap>();
   }
 
+  public static bool MatchesExplored(Vector2s zone, bool? explored) => !explored.HasValue || ZoneSystem.instance.m_generatedZones.Contains(zone) == explored.Value;
   private static Vector2s[] Sort(IEnumerable<Vector2s> zones) => [.. zones.OrderBy(zone => zone.Magnitude())];
   public static Vector2s[] GetZones(FiltererParameters args)
   {

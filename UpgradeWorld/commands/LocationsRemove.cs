@@ -5,7 +5,7 @@ public class LocationsRemoveCommand
 {
   public LocationsRemoveCommand()
   {
-    LocationOperation.Register("locations_remove");
+    LocationOperation.RegisterExplored("locations_remove");
     Helper.Command("locations_remove", "[id1,id2,...] [...args] -  Removes locations and prevents new ones from appearing (until a command like 'genloc' or 'locations_add' is used).", (args) =>
     {
       LocationIdParameters pars = new(args);

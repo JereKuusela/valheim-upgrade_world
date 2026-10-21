@@ -26,7 +26,7 @@ public class CountLocations : EntityOperation
       AddPin(loc.m_position);
     }
     var linq = counts.OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}: {kvp.Value}");
-    string[] texts = [$"Total: {total}", .. linq];
+    string[] texts = [$"Total: {total}{(args.Explored.HasValue ? " in " + FiltererParameters.ZonesText(args.Explored) : "")}", .. linq];
     if (log) Log(texts);
     else Print(texts, false);
     PrintPins();
