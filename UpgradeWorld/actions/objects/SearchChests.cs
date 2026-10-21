@@ -53,7 +53,7 @@ public class SearchChests : EntityOperation
     }).Where(x => x != "").ToList();
 
 
-    if (args.Log) Log(chestContents);
+    if (args.Log) LogResult(chestContents);
     else Print(chestContents, false);
     PrintPins();
   }

@@ -22,6 +22,11 @@ public abstract class BaseOperation(Terminal context, bool pin = false)
   {
     ZLog.Log("\n" + string.Join("\n", values));
   }
+  protected void LogResult(IEnumerable<string> values)
+  {
+    Log(values);
+    Print("Output written to the log file instead of the console");
+  }
   protected void Print(IEnumerable<string> values, bool addDot = true)
   {
     foreach (var s in values) Print(s, addDot);

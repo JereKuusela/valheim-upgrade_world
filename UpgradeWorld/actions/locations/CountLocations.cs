@@ -27,7 +27,7 @@ public class CountLocations : EntityOperation
     }
     var linq = counts.OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}: {kvp.Value}");
     string[] texts = [$"Total: {total}", .. linq];
-    if (log) Log(texts);
+    if (log) LogResult(texts);
     else Print(texts, false);
     PrintPins();
   }
