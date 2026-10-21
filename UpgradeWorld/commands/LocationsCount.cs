@@ -4,8 +4,7 @@ public class LocationsCountCommand
 {
   public LocationsCountCommand()
   {
-    LocationOperation.Register("locations_count", true);
-    LocationOperation.RegisterExplored("locations_count");
+    LocationOperation.Register("locations_count", "log", "explored");
     Helper.Command("locations_count", "[id1,id2,...] [...args] - Counts locations and returns totals for each location type.", (args) =>
     {
       LocationIdParameters pars = new(args);

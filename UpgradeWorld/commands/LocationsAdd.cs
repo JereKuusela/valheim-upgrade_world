@@ -4,7 +4,7 @@ public class LocationsAddCommand
 {
   public LocationsAddCommand()
   {
-    LocationOperation.RegisterExplored("locations_add");
+    LocationOperation.Register("locations_add", "explored");
     Helper.Command("locations_add", "[id1,id2,...] [...args] - Adds missing locations to generated areas.", (args) =>
     {
       LocationIdParameters pars = new(args);

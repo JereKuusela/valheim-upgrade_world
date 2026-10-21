@@ -84,26 +84,24 @@ public abstract class LocationOperation : ZoneOperation
     if (ids.Count() == 0) return "";
     return " " + Helper.JoinRows(ids);
   }
-  public static void Register(string name, bool log = false)
+  private static readonly Dictionary<string, Func<int, List<string>?>> Extras = new()
   {
-    if (!log)
+    ["log"] = index => index == 0 ? CommandWrapper.Info("Output to log file instead of console.") : null,
+    ["explored"] = index => index == 0 ? ["true", "false"] : null,
+  };
+
+  /// <summary>Registers a command. Extras are optional named parameters: "log", "explored".</summary>
+  public static void Register(string name, params string[] extras)
+  {
+    if (extras.Length == 0)
     {
       CommandWrapper.Register(name, AutoComplete, Named);
       return;
     }
-    var named = new Dictionary<string, Func<int, List<string>?>>(Named)
-    {
-      ["log"] = index => index == 0 ? CommandWrapper.Info("Output to log file instead of console.") : null
-    };
-    CommandWrapper.Register(name, index => index == 0 ? AllIds() : [.. Parameters, "log"], named);
-  }
-  public static void RegisterExplored(string name)
-  {
-    var named = new Dictionary<string, Func<int, List<string>?>>(Named)
-    {
-      ["explored"] = index => index == 0 ? ["true", "false"] : null
-    };
-    CommandWrapper.Register(name, index => index == 0 ? AllIds() : [.. Parameters, "explored"], named);
+    var named = new Dictionary<string, Func<int, List<string>?>>(Named);
+    foreach (var extra in extras) named[extra] = Extras[extra];
+    var parameters = Parameters.Concat(extras).ToList();
+    CommandWrapper.Register(name, index => index == 0 ? AllIds() : parameters, named);
   }
   private static Dictionary<string, Func<int, List<string>?>> CreateNamed()
   {
