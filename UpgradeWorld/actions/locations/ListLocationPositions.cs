@@ -30,7 +30,6 @@ public class ListLocationPositions : EntityOperation
       AddPin(loc.m_position);
     }
     if (skipped > 0) texts.Add($"{skipped} locations skipped by having a player base");
-    if (log) Log(texts);
     if (log) LogResult(texts);
     else Print(texts, false);
     PrintPins();

@@ -37,10 +37,9 @@ public class CountLocations : EntityOperation
       AddPin(loc.m_position);
     }
     var linq = counts.OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}: {kvp.Value}{SkippedText(skippedCounts[kvp.Key])}");
-    List<string> texts = [$"Total: {total}{SkippedText(totalSkipped)}", .. linq];
-    if (log) Log(texts);
-    var linq = counts.OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}: {kvp.Value}");
-    string[] texts = [$"Total: {total}{(args.Explored.HasValue ? " in " + FiltererParameters.ZonesText(args.Explored) : "")}", .. linq];
+    var explored = args.Explored.HasValue ? " in " + FiltererParameters.ZonesText(args.Explored) : "";
+    var skipped = SkippedText(totalSkipped);
+    string[] texts = [$"Total: {total}{explored}{skipped}", .. linq];
     if (log) LogResult(texts);
     else Print(texts, false);
     PrintPins();
