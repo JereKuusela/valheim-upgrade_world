@@ -43,7 +43,7 @@ public static class Executor
   private static void Stop()
   {
     if (context == null) throw new Exception("Executor context is not set. Call Executor.SetContext from a MonoBehaviour before stopping execution.");
-    context.StopCoroutine(executionCoroutine);
+    if (executionCoroutine != null) context.StopCoroutine(executionCoroutine);
     executionCoroutine = null;
   }
 
