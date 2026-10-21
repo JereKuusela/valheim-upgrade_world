@@ -5,7 +5,7 @@ namespace UpgradeWorld;
 /// <summary>Removes excess health data from creatures and structures.</summary>
 public class CleanHealth : EntityOperation
 {
-  public CleanHealth(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
+  public CleanHealth(Terminal context, ZDO[] zdos, Minimap.PinType? pin, bool alwaysPrint) : base(context, pin)
   {
     Clean(zdos, alwaysPrint);
   }

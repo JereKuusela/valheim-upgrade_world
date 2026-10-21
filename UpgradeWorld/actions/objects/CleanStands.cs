@@ -3,7 +3,7 @@ namespace UpgradeWorld;
 /// <summary>Removes missing objects from armor and item stands.</summary>
 public class CleanStands : EntityOperation
 {
-  public CleanStands(Terminal context, ZDO[] zdos, bool pin, bool alwaysPrint) : base(context, pin)
+  public CleanStands(Terminal context, ZDO[] zdos, Minimap.PinType? pin, bool alwaysPrint) : base(context, pin)
   {
     Clean(zdos, alwaysPrint);
   }
