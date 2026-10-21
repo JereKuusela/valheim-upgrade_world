@@ -88,6 +88,14 @@ public abstract class LocationOperation : ZoneOperation
   {
     CommandWrapper.Register(name, AutoComplete, Named);
   }
+  public static void RegisterExplored(string name)
+  {
+    var named = new Dictionary<string, Func<int, List<string>?>>(Named)
+    {
+      ["explored"] = index => index == 0 ? ["true", "false"] : null
+    };
+    CommandWrapper.Register(name, index => index == 0 ? AllIds() : [.. Parameters, "explored"], named);
+  }
   private static Dictionary<string, Func<int, List<string>?>> CreateNamed()
   {
     var named = FiltererParameters.GetAutoComplete();
