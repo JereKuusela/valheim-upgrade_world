@@ -10,6 +10,7 @@ public static class Executor
   private static readonly List<ExecutedOperation> operations = [];
   private static Coroutine? executionCoroutine;
   private static MonoBehaviour? context;
+  private static ExecutedOperation? hintOperation;
   public static void SetUser(ZRpc? user)
   {
     foreach (var operation in operations) operation.User = user;
@@ -50,12 +51,23 @@ public static class Executor
   public static void AddOperation(ExecutedOperation operation, bool autoStart)
   {
     bool start = Settings.AutoStart || autoStart;
-    if (!operation.Init(start))
+    if (!operation.Init())
       return;
     operations.Add(operation);
 
-    if (executionCoroutine == null && start)
+    if (!start)
+      hintOperation = operation;
+    else if (executionCoroutine == null)
       StartExecution();
+  }
+
+  public static void PrintHint()
+  {
+    var operation = hintOperation;
+    if (operation == null) return;
+    hintOperation = null;
+    if (executionCoroutine == null && operations.Count > 0)
+      operation.Print(Helper.GetStartMessage(), false);
   }
 
   public static List<ExecutedOperation> GetOperations()

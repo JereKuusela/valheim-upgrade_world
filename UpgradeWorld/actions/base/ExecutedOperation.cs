@@ -77,13 +77,11 @@ public abstract class ExecutedOperation(Terminal context, Minimap.PinType? pin =
   }
 
   protected abstract IEnumerator OnExecute(Stopwatch sw);
-  public bool Init(bool autoStart)
+  public bool Init()
   {
     queuedInfo = OnInit();
     if (queuedInfo == "") return false;
-    var output = queuedInfo;
-    if (!autoStart) output += Helper.GetStartMessage();
-    Print(output);
+    Print(queuedInfo);
     return true;
   }
   protected abstract string OnInit();
