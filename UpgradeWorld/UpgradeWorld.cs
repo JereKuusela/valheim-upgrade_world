@@ -41,6 +41,7 @@ public class UpgradeWorld : BaseUnityPlugin
   bool WasConsoleVisible = false;
   public void LateUpdate()
   {
+    Executor.PrintHint();
     if (!ZNet.instance)
     {
       LocationOperation.SetServerIds(null);

@@ -7,7 +7,7 @@ namespace UpgradeWorld;
 
 public static class Helper
 {
-  public static string GetStartMessage() => "\nUse command <color=yellow>start</color> to execute.";
+  public static string GetStartMessage() => "Use command <color=yellow>start</color> to execute.";
   public static bool IsValid(ZoneSystem.ZoneLocation loc) => loc != null && loc.m_prefab != null && (loc.m_prefab.IsValid || loc.m_prefab.m_name != null);
   public static IEnumerable<ZoneSystem.ZoneLocation> GetLocations() => ZoneSystem.instance.m_locations.Where(IsValid);
   public static bool LocationExists(string name) => GetLocation(name) != null;
