@@ -85,6 +85,14 @@ public class ResetZones : ZoneOperation
   protected override void OnEnd()
   {
     var text = $"{Operation} completed. {Reseted} zones reseted.";
+    var zones = ZonesToUpgrade.ToHashSet();
+    // Removed after the zones so that possible locations would be correctly unplaced.
+    var events = PersistentEvents.Active().FindAll(e => PersistentEvents.Touches(e, zones));
+    if (events.Count > 0)
+    {
+      PersistentEvents.Remove(events);
+      text += $" {events.Count} persistent event{(events.Count > 1 ? "s" : "")} removed.";
+    }
     if (Failed > 0) text += " " + Failed + " errors.";
     Print(text);
     BorderZones = BorderZones.Where(kvp => ZoneSystem.instance.IsZoneGenerated(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);

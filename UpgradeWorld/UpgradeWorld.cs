@@ -10,7 +10,7 @@ public class UpgradeWorld : BaseUnityPlugin
 {
   public const string GUID = "upgrade_world";
   public const string NAME = "Upgrade World";
-  public const string VERSION = "1.86";
+  public const string VERSION = "1.87";
 #nullable disable
   public static ManualLogSource Log;
 #nullable enable
@@ -127,7 +127,9 @@ public class SetCommands
     new CleanChestsCommand();
     new CleanDungeonsCommand();
     new CleanObjectsCommand();
-    new CleanUngeneratedCommand();
+    new PruneSaveSystemCommand();
+    new EventsListCommand();
+    new EventsRemoveCommand();
     new CleanLocationsCommand();
     new CleanHealthCommand();
     new CleanSpawnsCommand();

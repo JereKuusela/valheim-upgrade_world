@@ -1,3 +1,16 @@
+- v1.87
+  - Adds new commands `events_list` and `events_remove` to manage persistent events.
+  - Adds support for setting custom pin type. Thanks Zeall!
+  - Adds `explored` parameter to only target explored or unexplored zones. Thanks Zeall!
+  - Improves `log` parameter handling. Thanks Zeall!
+  - Improves operation output. Thanks Zeall!
+  - Changes `clean_ungenerated` command to `prune_savesystem` which also removes persistent events. No longer part of `world_clean`.
+  - Changes `zones_reset` command to also remove persistent events that touch the reseted zones.
+  - Fixes start hint showing after each operation. Now only shows once. Thanks Zeall!
+  - Fixes error caused by `start` command if no operations are queued. Thanks Zeall!
+  - Fixes `locations_remove` command showing pins when `start` was used. Thanks Zeall!
+  - Fixes `clean_stands` command leaving visual remnants after cleaning. Thanks Zeall!
+
 - v1.86
   - Fixes `clean_duplicates` command ignoring most filter parameters. Thanks Zeall!
   - Fixes `pos` parameter not using player coordinates when used without coordinates. Thanks Zeall!

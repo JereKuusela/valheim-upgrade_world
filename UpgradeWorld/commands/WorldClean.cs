@@ -13,7 +13,6 @@ public class WorldCleanCommand
       Executor.AddOperation(new QueuedOperation(args.Context, pars.Pin, "World clean.", () =>
       {
         var zdos = EntityOperation.GetZDOs(pars);
-        new CleanUngenerated(args.Context, zdos, pars.Pin, false);
         new CleanDuplicates(args.Context, pars.Pin, false, pars);
         new CleanLocations(args.Context, zdos, pars.Pin, false);
         new CleanObjects(args.Context, zdos, pars.Pin, false);

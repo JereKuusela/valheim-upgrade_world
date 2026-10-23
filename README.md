@@ -101,7 +101,11 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 Overview of available commands (remember that tab key can be used for autocomplete / cycle through options):
 
 - `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
-- `chests_reset [chest name|*] [looted] [...item_ids] [...args]`: Replaces the contents of selected treasure chest prefabs. Without a chest name, considers every registered Container prefab with a non-empty default loot table. Using `looted` will also include empty chests. Item IDs after the chest name form an allowlist: any other item skips the entire chest. Without an allowlist, player-stored items can be replaced. See the implementation details below.
+- `chests_reset [chest name|*] [looted] [...item_ids] [...args]`: Replaces the contents of selected treasure chest prefabs.
+  - Without a chest name, considers every registered Container prefab with a non-empty default loot table.
+  - Using `looted` will also include empty chests.
+  - Item IDs after the chest name form an allowlist: any other item skips the entire chest.
+  - Without an allowlist, player-stored items can be replaced. See the implementation details below.
 - `chests_search [id1,id2,...] [...args]`: Searches chests and stands for given items.
 - `clean_chests [...args]`: Removes missing item records from chests and other containers.
 - `clean_dungeons [...args]`: Optimizes old dungeons.
@@ -110,28 +114,39 @@ Overview of available commands (remember that tab key can be used for autocomple
   - This removes the current health if it equals the maximum health. When current health is missing, the game uses the maximum health as the default value.
   - This will affect creatures that have taken damage but healed back to full health.
   - This will affect structures that have taken damage but repaired back to full health.
-  - Note: May not work correctly if another mod modifies the maximum health.
+  - May not work correctly if another mod modifies the maximum health.
 - `clean_locations [...args]`: Removes missing locations from the world and from the location database.
 - `clean_objects [...args]`: Removes missing objects from the world.
 - `clean_spawns [...args]`: Removes timestamps from the spawn system.
-  - Note: This resets the spawn delays, which may cause creatures to respawn immediately.
-- `clean_ungenerated [...args]`: Removes objects from zones that are not generated.
-  - Note: This also removes objects intentionally placed in non-generated zones (for example with admin tools).
+  - This resets the spawn delays, which may cause creatures to respawn immediately.
 - `clean_stands [...args]`: Removes missing objects from armor and item stands.
+- `events_list [id1,id2,...] [...args]`: Lists persistent events showing their position and biome. Events are selected by their center position.
+- `events_remove [id1,id2,...] [...args]`: Removes persistent events and their objects.
+  - Events are selected by their center position, regardless of the zone being generated.
 - `locations_add [id1,id2,...] [...args]`: Adds locations to already explored areas. `chance` determines how many of the locations are added.
 - `locations_count [id1,id2,...] [...args]`: Counts locations. If no ids given then counts all locations.
 - `locations_list [id1,id2,...] [...args]`: Lists locations showing their position and biome.
 - `location_register [id] [x,z,y=player position]`: Registers a location to the database (without spawning it). If the location already exists, then its position is automatically used.
-- `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing (until a command like `genloc` or `locations_add` is used). `chance` determines how many of the locations are removed.
-- `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position. Dungeons which have a random rotation will also get a new layout. `chance` determines how many of the locations are reseted.
+- `locations_remove [id1,id2,...] [...args]`: Removes locations and prevents new ones from appearing.
+  - `genloc` or `locations_add` commands can be used to add them back.
+  - `chance` determines how many of the locations are removed.
+- `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position.
+  - Dungeons which have a random rotation will also get a new layout.
+  - `chance` determines how many of the locations are reseted.
 - `locations_swap [new id,id1,id2,...] [...args]`: Replaces locations with a new one.
-- `objects_count [id1,id2,...] [...args]`: Counts objects. If no ids given then counts all objects. Parameter `count=1` can be used to exclude non-existing objects.
+- `objects_count [id1,id2,...] [...args]`: Counts objects.
+  - If no ids given then counts all objects.
+  - Parameter `count=1` can be used to exclude non-existing objects.
 - `objects_edit [id1,id2,...] [data=key,value,type] [...args]`: Edits data of objects.
 - `objects_list [id1,id2,...] [print=key,type] [...args]`: Lists objects showing their position and biome. `print` allows displaying custom data.
 - `objects_refresh [id1,id2,...] [...args]`: Refreshes/respawns objects.
   - Chest loot is refreshed without any checks. Use `chests_reset` if more precise control is needed.
-- `objects_remove [id1,id2,...] [...args]`: Removes objects. Recommended to use `objects_count` to check that you don't remove too much.
+- `objects_remove [id1,id2,...] [...args]`: Removes objects.
+  - Recommended to use `objects_count` to check that you don't remove too much.
 - `objects_swap [new id,id1,id2,...] [...args]`: Replaces objects with a new one.
+- `prune_savesystem [...args]`: Removes objects and persistent events from zones that are not generated.
+  - This is meant for fixing issues caused by the old save system, not for regular use.
+  - This also removes objects intentionally placed in non-generated zones (for example with admin tools).
 - `save_disable`: Disables world saving. But still a good idea to make backups.
 - `save_enable`: Enables world saving.
 - `start`: Most commands don't execute instantly but instead print the zones being affected. This command can be then used to start executing.
@@ -146,14 +161,21 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `vegetation_add [id1,id2,...] [...args]`: Adds vegetation to generated areas. If ids are not given, adds every vegetation.
 - `vegetation_remove [id1,id2,...] [...args]`: Removes vegetation from generated areas. If ids are not given, removes every vegetation.
 - `vegetation_reset [id1,id2,...] [...args]`: Removes and adds vegetation to generated areas. If ids are not given, resets every vegetation.
-- `verbose`: Toggles the verbose mode, which prints the details of each change to the console. Doesn't affect `*_count` and `*_list` commands. Can also be toggled from the config.
+- `verbose`: Toggles the verbose mode, which prints the details of each change to the console.
+  - Doesn't affect `*_count` and `*_list` commands.
+  - Can also be toggled from the config.
 - `world_clean`: Combines all `clean_*` commands to fully clean the world.
 - `world_gen [legacy/hh/mistlands] [start]`: Sets the world generation version.
   - Biomes will change in the outer areas.
   - Rivers will move everywhere in the world and can destroy bases (even with the player base protection).
 - `world_reset [...args]`: Resets locations and zones.
-- `zones_generate [...args]`: Pre-generates areas without having to visit them. `empty` flag can be used to instantly generate empty zones.
-- `zones_reset [...args]`: Destroys areas making them ungenerated. These areas will be generated when visited. Can be also used to reduce save file size. `chance` determines how many of the zones are reseted.
+- `zones_generate [...args]`: Pre-generates areas without having to visit them.
+  - `empty` flag can be used to instantly generate empty zones.
+- `zones_reset [...args]`: Destroys areas making them ungenerated. These areas will be generated when visited.
+  - Useful to reduce save file size.
+  - `chance` determines how many of the zones are reseted.
+  - Locations are NOT repositioned. You can use `genloc` command to reposition locations on ungenerated zones.
+  - Persistent events that touch the reseted zones are also removed.
 - `zones_restore [...args]`: Adds missing zone control objects (responsible for random spawns).
 
 Examples:
@@ -208,8 +230,12 @@ Other settings are:
 1. Removes all objects from a zone (including player placed structures).
 2. If the zone has a location, marks the location as not spawned (to allow redistributing it).
 3. Marks the zone as ungenerated. Visiting the zone will regenerate like it were at start of the game.
-4. Locations are not automatically redistributed. Use "genloc" command (otherwise you get the same locations as before).
-5. Visiting zones will regenerate them.
+4. Locations are not automatically repositioned, so they will spawn in same places as before.
+5. If you want to shuffle locations, use the "genloc" command after resetting the zones.
+6. Visiting zones will regenerate them.
+7. Persistent events that touch the zones are removed with their objects.
+
+Persistent events are matched to objects by their prefab and distance from the event center, as the game doesn't mark which objects belong to an event.
 
 Portals in the loaded area won't be automatically disconnected but relogging fixes that.
 
