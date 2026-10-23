@@ -86,7 +86,7 @@ public class DistributeLocations : ExecutedOperation
           continue;
         Print($"Generating locations {id}. This may take a while...");
         foreach (var location in locations)
-          yield return GenerateLocationsTimeSliced(location, sw);
+          yield return GenerateLocationsTimeSliced(this, location, sw);
       }
     }
 
@@ -142,9 +142,10 @@ public class DistributeLocations : ExecutedOperation
     return $"Generate locations{LocationOperation.IdString(Ids)}{(Explored.HasValue ? " in " + FiltererParameters.ZonesText(Explored) : "")}.";
   }
 
-  // Copy paste from Valheim to allow overriding IsZoneGenerated check.
-  private IEnumerator GenerateLocationsTimeSliced(ZoneSystem.ZoneLocation location, Stopwatch timeSliceStopwatch)
+  // Copy of vanilla (keep in sync) using AllowedZones instead of IsZoneGenerated and different logging.
+  internal static IEnumerator GenerateLocationsTimeSliced(BaseOperation op, ZoneSystem.ZoneLocation location, Stopwatch timeSliceStopwatch)
   {
+    void Print(string value) => op.Print(value);
     var zs = ZoneSystem.instance;
     int seed = WorldGenerator.instance.GetSeed() + location.m_prefab.Name.GetStableHashCode();
     UnityEngine.Random.State state = UnityEngine.Random.state;
@@ -159,18 +160,20 @@ public class DistributeLocations : ExecutedOperation
     int errorNotSimilar = 0;
     int errorTerrainDelta = 0;
     int errorVegetation = 0;
+    int errorAltBiomeMissing = 0;
+    int errorAltBiomeBlock = 0;
     float maxRadius = Mathf.Max(location.m_exteriorRadius, location.m_interiorRadius);
-    int attempts = location.m_prioritized ? 200000 : 100000;
+    int attempts = location.m_prioritized ? 60000 : 12000;
     int iterations = 0;
     int placed = zs.CountNrOfLocation(location);
     float maxRange = 10000f;
-    if (location.m_centerFirst)
-    {
-      maxRange = location.m_minDistance;
-    }
+    zs.s_tempVeg.Clear();
     if (!location.m_unique || placed <= 0)
     {
-      zs.s_tempVeg.Clear();
+      if (location.m_centerFirst)
+      {
+        maxRange = location.m_minDistance;
+      }
       int i = 0;
       while (i < attempts && placed < location.m_quantity)
       {
@@ -183,7 +186,11 @@ public class DistributeLocations : ExecutedOperation
           state = UnityEngine.Random.state;
           UnityEngine.Random.state = insideState;
         }
-        Vector2s zoneID = ZoneSystem.GetRandomZone(maxRange);
+        Vector2s zoneID = location.m_centerFirst
+          ? ZoneSystem.GetRandomZone(maxRange)
+          : ZoneSystem.GetZone(AltBiomeWorldData.MapSpaceToWorldSpace(location.m_minAltitude < 0f
+            ? ZNet.World.m_biomeData.GetRandomPointByBiomes(location.m_biome)
+            : ZNet.World.m_biomeData.GetRandomPointByBiomesAboveSeaLevel(location.m_biome)));
         if (location.m_centerFirst)
         {
           maxRange += 1f;
@@ -196,8 +203,8 @@ public class DistributeLocations : ExecutedOperation
         }
         else if (AllowedZones.Contains(zoneID))
         {
-          Vector3 zonePos = ZoneSystem.GetZonePos(zoneID);
-          Heightmap.BiomeArea biomeArea = WorldGenerator.instance.GetBiomeArea(zonePos);
+          var zoneCenter = ZoneSystem.GetZoneCenter(zoneID);
+          Heightmap.BiomeArea biomeArea = WorldGenerator.instance.GetBiomeArea(zoneCenter);
           if ((location.m_biomeArea & biomeArea) == 0)
           {
             num = errorBiomeArea + 1;
@@ -205,7 +212,7 @@ public class DistributeLocations : ExecutedOperation
           }
           else
           {
-            for (int j = 0; j < 20; j = num)
+            for (int j = 0; j < 6; j++)
             {
               if (timeSliceStopwatch.Elapsed.TotalSeconds >= zs.m_timeSlicedGenerationTimeBudget)
               {
@@ -222,123 +229,107 @@ public class DistributeLocations : ExecutedOperation
               float magnitude = randomPointInZone.magnitude;
               if (location.m_minDistance != 0f && magnitude < location.m_minDistance)
               {
-                num = errorCenterDistance + 1;
-                errorCenterDistance = num;
+                errorCenterDistance++;
+                continue;
               }
-              else if (location.m_maxDistance != 0f && magnitude > location.m_maxDistance)
+              if (location.m_maxDistance != 0f && magnitude > location.m_maxDistance)
               {
-                num = errorCenterDistance + 1;
-                errorCenterDistance = num;
+                errorCenterDistance++;
+                continue;
               }
-              else
+              Heightmap.Biome biome = WorldGenerator.instance.GetBiome(randomPointInZone);
+              if ((location.m_biome & biome) == Heightmap.Biome.None)
               {
-                Heightmap.Biome biome = WorldGenerator.instance.GetBiome(randomPointInZone);
-                if ((location.m_biome & biome) == Heightmap.Biome.None)
+                errorBiome++;
+                continue;
+              }
+              randomPointInZone.y = WorldGenerator.instance.GetHeight(randomPointInZone.x, randomPointInZone.z, out var mask);
+              float altitude = (float)(randomPointInZone.y - 30.0);
+              if (altitude < location.m_minAltitude || altitude > location.m_maxAltitude)
+              {
+                errorAlt++;
+                continue;
+              }
+              if (location.m_inForest)
+              {
+                float forestFactor = WorldGenerator.GetForestFactor(randomPointInZone);
+                if (forestFactor < location.m_forestTresholdMin || forestFactor > location.m_forestTresholdMax)
                 {
-                  num = errorBiome + 1;
-                  errorBiome = num;
-                }
-                else
-                {
-                  Color color;
-                  randomPointInZone.y = WorldGenerator.instance.GetHeight(randomPointInZone.x, randomPointInZone.z, out color);
-                  float num2 = (float)(randomPointInZone.y - 30.0);
-                  if (num2 < location.m_minAltitude || num2 > location.m_maxAltitude)
-                  {
-                    num = errorAlt + 1;
-                    errorAlt = num;
-                  }
-                  else
-                  {
-                    if (location.m_inForest)
-                    {
-                      float forestFactor = WorldGenerator.GetForestFactor(randomPointInZone);
-                      if (forestFactor < location.m_forestTresholdMin || forestFactor > location.m_forestTresholdMax)
-                      {
-                        num = errorForest + 1;
-                        errorForest = num;
-                        goto IL_7F2;
-                      }
-                    }
-                    if (location.m_minDistanceFromCenter > 0f || location.m_maxDistanceFromCenter > 0f)
-                    {
-                      float num3 = Utils.LengthXZ(randomPointInZone);
-                      if ((location.m_minDistanceFromCenter > 0f && num3 < location.m_minDistanceFromCenter) || (location.m_maxDistanceFromCenter > 0f && num3 > location.m_maxDistanceFromCenter))
-                      {
-                        goto IL_7F2;
-                      }
-                    }
-                    WorldGenerator.instance.GetTerrainDelta(randomPointInZone, location.m_exteriorRadius, out var num4, out _);
-                    if (num4 > location.m_maxTerrainDelta || num4 < location.m_minTerrainDelta)
-                    {
-                      num = errorTerrainDelta + 1;
-                      errorTerrainDelta = num;
-                    }
-                    else if (location.m_minDistanceFromSimilar > 0f && zs.HaveLocationInRange(location.m_prefab.m_assetID, location.m_group, randomPointInZone, location.m_minDistanceFromSimilar, false))
-                    {
-                      num = errorSimilar + 1;
-                      errorSimilar = num;
-                    }
-                    else if (location.m_maxDistanceFromSimilar > 0f && !zs.HaveLocationInRange(location.m_prefab.m_assetID, location.m_groupMax, randomPointInZone, location.m_maxDistanceFromSimilar, true))
-                    {
-                      num = errorNotSimilar + 1;
-                      errorNotSimilar = num;
-                    }
-                    else
-                    {
-                      float a = color.a;
-                      if (location.m_minimumVegetation > 0f && a <= location.m_minimumVegetation)
-                      {
-                        num = errorVegetation + 1;
-                        errorVegetation = num;
-                      }
-                      else
-                      {
-                        if (location.m_maximumVegetation >= 1f || a < location.m_maximumVegetation)
-                        {
-                          if (location.m_surroundCheckVegetation)
-                          {
-                            float num5 = 0f;
-                            for (int k = 0; k < location.m_surroundCheckLayers; k++)
-                            {
-                              float num6 = (k + 1) / (float)location.m_surroundCheckLayers * location.m_surroundCheckDistance;
-                              for (int l = 0; l < 6; l++)
-                              {
-                                float f = l / 6f * 3.1415927f * 2f;
-                                Vector3 vector2 = randomPointInZone + new Vector3(Mathf.Sin(f) * num6, 0f, Mathf.Cos(f) * num6);
-                                Color color2;
-                                WorldGenerator.instance.GetHeight(vector2.x, vector2.z, out color2);
-                                float num7 = (location.m_surroundCheckDistance - num6) / (location.m_surroundCheckDistance * 2f);
-                                num5 += color2.a * num7;
-                              }
-                            }
-                            zs.s_tempVeg.Add(num5);
-                            if (zs.s_tempVeg.Count < 10)
-                            {
-                              goto IL_7F2;
-                            }
-                            float num8 = zs.s_tempVeg.Max();
-                            float num9 = zs.s_tempVeg.Average();
-                            float num10 = num9 + (num8 - num9) * location.m_surroundBetterThanAverage;
-                            if (num5 < num10)
-                            {
-                              goto IL_7F2;
-                            }
-                          }
-                          zs.RegisterLocation(location, randomPointInZone, false);
-                          num = placed + 1;
-                          placed = num;
-                          break;
-                        }
-                        num = errorVegetation + 1;
-                        errorVegetation = num;
-                      }
-                    }
-                  }
+                  errorForest++;
+                  continue;
                 }
               }
-            IL_7F2:
-              num = j + 1;
+              if (location.m_minDistanceFromCenter > 0f || location.m_maxDistanceFromCenter > 0f)
+              {
+                float fromCenter = Utils.LengthXZ(randomPointInZone);
+                if ((location.m_minDistanceFromCenter > 0f && fromCenter < location.m_minDistanceFromCenter) || (location.m_maxDistanceFromCenter > 0f && fromCenter > location.m_maxDistanceFromCenter))
+                  continue;
+              }
+              WorldGenerator.instance.GetTerrainDelta(randomPointInZone, location.m_exteriorRadius, out var delta, out _);
+              if (delta > location.m_maxTerrainDelta || delta < location.m_minTerrainDelta)
+              {
+                errorTerrainDelta++;
+                continue;
+              }
+              if (location.m_minDistanceFromSimilar > 0f && zs.HaveLocationInRange(location.m_prefab.m_assetID, location.m_group, randomPointInZone, location.m_minDistanceFromSimilar))
+              {
+                errorSimilar++;
+                continue;
+              }
+              if (location.m_maxDistanceFromSimilar > 0f && !zs.HaveLocationInRange(location.m_prefab.m_assetID, location.m_groupMax, randomPointInZone, location.m_maxDistanceFromSimilar, maxGroup: true))
+              {
+                errorNotSimilar++;
+                continue;
+              }
+              float vegetation = mask.a;
+              if (location.m_minimumVegetation > 0f && vegetation <= location.m_minimumVegetation)
+              {
+                errorVegetation++;
+                continue;
+              }
+              if (location.m_maximumVegetation < 1f && vegetation >= location.m_maximumVegetation)
+              {
+                errorVegetation++;
+                continue;
+              }
+              var biomeSector = WorldGenerator.instance.GetBiomeSector(randomPointInZone);
+              if (location.AltBiomeParent != null && !biomeSector.AltBiomes.Any(x => x.m_name == location.AltBiomeParent))
+              {
+                errorAltBiomeMissing++;
+                continue;
+              }
+              if (biomeSector.AltBiomes.Any(x => x.m_blockLocationNames.Contains(location.m_name)))
+              {
+                errorAltBiomeBlock++;
+                continue;
+              }
+              if (location.m_surroundCheckVegetation)
+              {
+                float surround = 0f;
+                for (int k = 0; k < location.m_surroundCheckLayers; k++)
+                {
+                  float distance = (k + 1) / (float)location.m_surroundCheckLayers * location.m_surroundCheckDistance;
+                  for (int l = 0; l < 6; l++)
+                  {
+                    float f = (float)((double)l / 6.0 * (double)Mathf.PI * 2.0);
+                    Vector3 point = randomPointInZone + new Vector3(Mathf.Sin(f) * distance, 0f, Mathf.Cos(f) * distance);
+                    WorldGenerator.instance.GetHeight(point.x, point.z, out var mask2);
+                    float weight = (float)(((double)location.m_surroundCheckDistance - (double)distance) / ((double)location.m_surroundCheckDistance * 2.0));
+                    surround += mask2.a * weight;
+                  }
+                }
+                zs.s_tempVeg.Add(surround);
+                if (zs.s_tempVeg.Count < 10)
+                  continue;
+                float max = zs.s_tempVeg.Max();
+                float average = zs.s_tempVeg.Average();
+                float cutoff = average + (max - average) * location.m_surroundBetterThanAverage;
+                if (surround < cutoff)
+                  continue;
+              }
+              zs.RegisterLocation(location, randomPointInZone, false);
+              placed++;
+              break;
             }
           }
         }
@@ -370,6 +361,10 @@ public class DistributeLocations : ExecutedOperation
             Print("Failed " + errorTerrainDelta + " times because the terrain delta was too high.");
           if (errorVegetation > 0)
             Print("Failed " + errorVegetation + " times because the vegetation factor was wrong.");
+          if (errorAltBiomeMissing > 0)
+            Print("Failed " + errorAltBiomeMissing + " times because the required alt biome was missing.");
+          if (errorAltBiomeBlock > 0)
+            Print("Failed " + errorAltBiomeBlock + " times because the alt biome blocked the location.");
         }
       }
     }

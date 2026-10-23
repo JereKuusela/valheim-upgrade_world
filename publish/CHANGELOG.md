@@ -1,4 +1,5 @@
 - v1.87
+  - Adds new command `locations_restore` to move locations to the places they would have in a fresh world.
   - Adds new commands `events_list` and `events_remove` to manage persistent events.
   - Adds support for setting custom pin type. Thanks Zeall!
   - Adds `explored` parameter to only target explored or unexplored zones. Thanks Zeall!

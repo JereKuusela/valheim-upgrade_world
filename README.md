@@ -67,7 +67,9 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 - `count=min-max`: Filters objects by their amount. Only applies to `objects_count`.
 - `data=key,value,type`: Sets object data. Type is only needed if the key doesn't already exist. Only applies to `objects_edit`. Multiple data values can be set at once. For space bars, you need to use quotes with Server Devcommands mod.
 - `distance=min-max`: Short-hand for setting both distances.
-- `explored=true/false`: Limits locations to explored (`true`) or unexplored (`false`) zones. Without the parameter, both explored and unexplored zones are used. Only applies to `locations_add`, `locations_count`, `locations_list` and `locations_remove`.
+- `explored=true/false`: Includes explored (generated) or unexplored (ungenerated) zones.
+  - `locations_add`, `locations_count`, `locations_list` and `locations_remove`: `true` limits to explored zones, `false` limits to unexplored zones. Without the parameter, both are used.
+  - `locations_restore`: Unexplored zones are always included. `true` also includes explored zones.
 - `filter=key,value,includeMissing`: Filters object by data value. Third parameter must be truthy to include objects that don't have the data value set. Only applies to `objects_*` commands. Multiple filters can be set at once. For space bars, you need to use quotes with Server Devcommands mod.
 - `filter=type,value`: Filters object by data value, for any key of a given type.
   - Possible types are float, id, int, long, quat, string and vector.
@@ -133,6 +135,10 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position.
   - Dungeons which have a random rotation will also get a new layout.
   - `chance` determines how many of the locations are reseted.
+- `locations_restore [id1,id2,...] [...args]`: Moves locations to the places they would have in a fresh world.
+  - Generates a fresh location registry and applies the positions of the given ids to unexplored zones.
+  - With `explored=true`, explored zones are also updated: old locations are removed and the new ones are spawned.
+  - Other locations in the way are replaced. Placed ones are only replaced with `explored=true`.
 - `locations_swap [new id,id1,id2,...] [...args]`: Replaces locations with a new one.
 - `objects_count [id1,id2,...] [...args]`: Counts objects.
   - If no ids given then counts all objects.

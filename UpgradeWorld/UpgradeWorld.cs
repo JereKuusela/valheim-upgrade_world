@@ -101,6 +101,7 @@ public class SetCommands
     new ObjectsListCommand();
     new LocationsListCommand();
     new LocationsAddCommand();
+    new LocationsRestoreCommand();
     new LocationsResetCommand();
     new ObjectsRemoveCommand();
     new ObjectsEditCommand();
