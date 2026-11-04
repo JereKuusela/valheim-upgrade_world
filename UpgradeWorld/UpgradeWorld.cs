@@ -121,6 +121,7 @@ public class SetCommands
     new SavingCommands();
     new WorldResetCommand();
     new ZonesRestoreCommand();
+    new SnowResetCommand();
     new WorldVersionCommand();
     new WorldCleanCommand();
     new LocationsSwapCommand();

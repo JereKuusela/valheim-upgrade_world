@@ -50,6 +50,7 @@ public abstract class BaseOperation(Terminal context, Minimap.PinType? pin = nul
     }
     else
     {
+      if (!Console.instance || !Minimap.instance || !Player.m_localPlayer) return;
       var findPins = Console.instance.m_findPins;
       foreach (var pin in findPins)
         Minimap.instance?.RemovePin(pin);

@@ -102,6 +102,19 @@ Most commands allow fine-tuning the affected area. Following parameters are avai
 
 Overview of available commands (remember that tab key can be used for autocomplete / cycle through options):
 
+- `snowreset [...args]`: Refills missing Deep North ground snow in saved terrain, including unloaded areas. Selects existing terrain records even when a zone is not marked generated, and keeps the normal area filters and player base detection.
+  - Leaves height edits, dirt/paved paint and existing snow above the generated depth unchanged. Points next to height edits are also excluded.
+  - Snow depth and cultivation share a paint channel. Green-only tool clearing cannot be distinguished from footprints; test those tool modes before using this on an established world.
+  - `snowreset start`: Refills eligible Deep North areas, keeping the configured base protection.
+  - `snowreset force start`: Also includes base zones; height and dirt/paved exclusions still apply.
+  - `snowreset zone start`: Tests only the current zone when run by an admin client. For EWP, use explicit coordinates if restricting the area: the dedicated server has no local player position.
+  - Unused regions can refill while players remain elsewhere. Terrain inside any player's loading range, owned by a connected player, or already sent to that connection is deferred. Moving away alone does not confirm that the client's cached data is safe; those records can wait until disconnect. Singleplayer executes immediately. Other players do not need UW.
+  - Uses each player's current server-approved Draw Distance, including changes made while waiting. Progress and completion messages continue reaching the initiating admin while they remain connected.
+  - Completed records are not reset again while deferred work waits. The waiting operation holds UW's queue; use `stop` to cancel. Pending work ends with the world/server session.
+  - One snow reset can be queued or running at a time. Further requests report that it is already queued; finish the current reset or use `stop` before selecting another area.
+  - Changed terrain is refreshed locally and saved through the normal game path. New connections receive the saved terrain normally.
+  - A repeated command can correctly report zero changes when eligible snow is already full. The result includes the number of terrain records inspected, with a separate message when none matched.
+
 - `biomes_count [precision] [...args]`: Counts biomes by sampling points with a given precision (meters). Result is also printed to the player.log file.
 - `chests_reset [chest name|*] [looted] [...item_ids] [...args]`: Replaces the contents of selected treasure chest prefabs.
   - Without a chest name, considers every registered Container prefab with a non-empty default loot table.
