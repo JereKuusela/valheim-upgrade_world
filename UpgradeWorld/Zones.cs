@@ -67,8 +67,8 @@ public static class Zones
 
   public static void PokeZone(Vector2s zone)
   {
-    LoadedZones.Add(zone);
-    ZoneSystem.instance.PokeLocalZone(zone);
+    if (ZoneSystem.instance.PokeLocalZone(zone))
+      LoadedZones.Add(zone);
   }
   public static void ReleaseZone(Vector2s zone)
   {
