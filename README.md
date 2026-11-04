@@ -146,6 +146,7 @@ Overview of available commands (remember that tab key can be used for autocomple
   - `genloc` or `locations_add` commands can be used to add them back.
   - `chance` determines how many of the locations are removed.
 - `locations_reset [id1,id2,...] [...args]`: Resets locations by removing them and then placing them at the same position.
+  - Keeps loaded entrances from sinking further when reset repeatedly.
   - Dungeons which have a random rotation will also get a new layout.
   - `chance` determines how many of the locations are reseted.
 - `locations_restore [id1,id2,...] [...args]`: Moves locations to the places they would have in a fresh world.

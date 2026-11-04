@@ -14,19 +14,23 @@ public class ResetTerrain
   public static ILookup<Vector2s, ZDO>? TCZdos = null;
   public static DateTime LastUpdate = DateTime.MinValue;
   public static bool Active = false;
+  public static (Vector3 Center, float Radius)? SpawnArea = null;
+
+  private static bool ShouldOverrideHeight(Vector3 pos) =>
+    Active || SpawnArea is { } area && Utils.DistanceXZ(pos, area.Center) < area.Radius;
 
   // Needed so that the vegetation spawns on the reseted terrain.
   [HarmonyPatch(nameof(ZoneSystem.GetGroundData)), HarmonyPostfix]
   static void OverrideGroundDataWithDefaultHeight(ref Vector3 p)
   {
-    if (!Active) return;
+    if (!ShouldOverrideHeight(p)) return;
     p.y = WorldGenerator.instance.GetHeight(p.x, p.z);
   }
   // Needed so that the vegetation spawns on the reseted terrain.
   [HarmonyPatch(nameof(ZoneSystem.GetGroundHeight), typeof(Vector3)), HarmonyPrefix]
   static bool OverrideGroundHeightWithDefaultHeight(Vector3 p, ref float __result)
   {
-    if (!Active) return true;
+    if (!ShouldOverrideHeight(p)) return true;
     __result = WorldGenerator.instance.GetHeight(p.x, p.z);
     return false;
   }
