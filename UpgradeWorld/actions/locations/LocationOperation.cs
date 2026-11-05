@@ -47,7 +47,17 @@ public abstract class LocationOperation : ZoneOperation
     ResetTerrain.Execute(location.m_position, resetRadius);
     zs.m_tempSpawnedObjects.Clear();
     zs.m_tempClearAreas.Clear();
-    zs.PlaceLocations(zone, zonePos, root.transform, heightmap, zs.m_tempClearAreas, ZoneSystem.SpawnMode.Ghost, zs.m_tempSpawnedObjects);
+    // The old location's terrain may still be applied until the end of the frame.
+    var previousArea = ResetTerrain.SpawnArea;
+    ResetTerrain.SpawnArea = (location.m_position, resetRadius);
+    try
+    {
+      zs.PlaceLocations(zone, zonePos, root.transform, heightmap, zs.m_tempClearAreas, ZoneSystem.SpawnMode.Ghost, zs.m_tempSpawnedObjects);
+    }
+    finally
+    {
+      ResetTerrain.SpawnArea = previousArea;
+    }
     foreach (var obj in zs.m_tempSpawnedObjects)
       UnityEngine.Object.Destroy(obj);
     zs.m_tempSpawnedObjects.Clear();
