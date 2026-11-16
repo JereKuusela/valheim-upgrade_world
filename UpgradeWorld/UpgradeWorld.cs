@@ -48,6 +48,7 @@ public class UpgradeWorld : BaseUnityPlugin
       VegetationOperation.SetServerIds(null);
       return;
     }
+    Executor.RetryDeferredSnow();
     var isConsoleVisible = Console.IsVisible();
     if (isConsoleVisible && !WasConsoleVisible)
       ServerExecution.RequestSync();
@@ -121,6 +122,7 @@ public class SetCommands
     new SavingCommands();
     new WorldResetCommand();
     new ZonesRestoreCommand();
+    new SnowResetCommand();
     new WorldVersionCommand();
     new WorldCleanCommand();
     new LocationsSwapCommand();
