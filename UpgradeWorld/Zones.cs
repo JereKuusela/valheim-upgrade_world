@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 namespace UpgradeWorld;
 
@@ -61,36 +62,24 @@ public static class Zones
     if (max == 0 && min > 0) max = int.MaxValue;
     return distance >= min && distance <= max;
   }
-  // Manually loaded zones must be tracked to not release active zones.
-  // Otherwise terrain compiler loses track of the height map.
-  private static readonly HashSet<Vector2s> LoadedZones = [];
+  private static readonly ConditionalWeakTable<ZoneSystem, Dictionary<Vector2s, GameObject>> LoadedZones = new();
 
   public static void PokeZone(Vector2s zone)
   {
-    LoadedZones.Add(zone);
-    ZoneSystem.instance.PokeLocalZone(zone);
+    var zones = ZoneSystem.instance;
+    if (zones.PokeLocalZone(zone))
+      LoadedZones.GetOrCreateValue(zones)[zone] = zones.m_zones[zone].m_root;
   }
   public static void ReleaseZone(Vector2s zone)
   {
-    if (!LoadedZones.Contains(zone)) return;
-    LoadedZones.Remove(zone);
-    var zdos = Helper.GetZDOs(zone);
-    if (zdos != null)
-    {
-      var scene = ZNetScene.instance;
-      foreach (var zdo in zdos)
-      {
-        if (!scene.m_instances.TryGetValue(zdo, out var instance)) continue;
-        instance.ResetZDO();
-        UnityEngine.Object.Destroy(instance);
-        scene.m_instances.Remove(zdo);
-      }
-    }
-    if (ZoneSystem.instance.m_zones.TryGetValue(zone, out var z))
-    {
-      UnityEngine.Object.Destroy(z.m_root);
-      ZoneSystem.instance.m_zones.Remove(zone);
-    }
+    var zones = ZoneSystem.instance;
+    if (!LoadedZones.TryGetValue(zones, out var loaded) || !loaded.TryGetValue(zone, out var root)) return;
+    loaded.Remove(zone);
+    if (!root || !zones.m_zones.TryGetValue(zone, out var current) || current.m_root != root) return;
+    var scene = ZNetScene.instance;
+    if (!scene.OutsideActiveArea(ZoneSystem.GetZonePos(zone)) || scene.HaveInstanceInSector(zone)) return;
+    UnityEngine.Object.Destroy(root);
+    zones.m_zones.Remove(zone);
   }
 }
 
