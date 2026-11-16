@@ -9,8 +9,11 @@ public abstract class ExecutedOperation(Terminal context, Minimap.PinType? pin =
   protected int Failed = 0;
   private string queuedInfo = "";
   public bool ExecutionFailed { get; private set; }
+  internal virtual bool IsComplete => true;
 
-  public IEnumerator Execute(Stopwatch sw)
+  public IEnumerator Execute(Stopwatch sw) => Execute(sw, true);
+
+  internal IEnumerator Execute(Stopwatch sw, bool cancelQueueOnFailure)
   {
     // Unity advances yielded child enumerators outside the old try/catch.
     // Advance the stack here so errors in any nested operation stop the queue.
@@ -51,19 +54,20 @@ public abstract class ExecutedOperation(Terminal context, Minimap.PinType? pin =
     {
       DisposeStack(stack, ref failure);
     }
-    if (failure == null)
+    if (failure == null && IsComplete)
     {
       try { PrintPins(); OnEnd(); }
       catch (Exception e) { failure = e; }
     }
     if (failure != null)
-      ReportFailure(failure);
+      ReportFailure(failure, cancelQueueOnFailure);
   }
 
-  private void ReportFailure(Exception failure)
+  private void ReportFailure(Exception failure, bool cancelQueue)
   {
     ExecutionFailed = true;
-    Print($"Operation failed: {failure.Message}. Remaining queued operations will be cancelled. Changes already made are not rolled back.");
+    var queued = cancelQueue ? " Remaining queued operations will be cancelled." : "";
+    Print($"Operation failed. {failure.Message}.{queued} Changes already made remain in the world.");
     UpgradeWorld.Log.LogError(failure);
   }
 

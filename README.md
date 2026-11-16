@@ -153,6 +153,12 @@ Overview of available commands (remember that tab key can be used for autocomple
 - `prune_savesystem [...args]`: Removes objects and persistent events from zones that are not generated.
   - This is meant for fixing issues caused by the old save system, not for regular use.
   - This also removes objects intentionally placed in non-generated zones (for example with admin tools).
+- `resetsnow [delayed] [...args]` refills missing snow live across saved Deep North terrain, including bases and unloaded zones.
+  - `resetsnow` starts the full sweep immediately. With `zone=x,z`, preview the scope and use `start`. The `Automatic start` setting also applies to zone requests.
+  - Use a position and distance such as `pos=x,z max=128` to narrow the sweep. Add `safeZones=2` for base protection.
+  - Use `resetsnow delayed` to wait for cached terrain. Players may need to reconnect away from the area. Other commands keep running during the wait.
+  - A live refill skips a zone if clients cannot provide a current terrain copy. `uw_check` shows pending work and `stop` clears it.
+  - Height edits, dirt and paving are preserved. Tool clearing that only changes snow depth can refill like footprints.
 - `save_disable`: Disables world saving. But still a good idea to make backups.
 - `save_enable`: Enables world saving.
 - `start`: Most commands don't execute instantly but instead print the zones being affected. This command can be then used to start executing.
