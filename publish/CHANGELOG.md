@@ -1,3 +1,6 @@
+- v1.88
+  - Fixed for the new update.
+
 - v1.87
   - Adds new command `locations_restore` to move locations to the places they would have in a fresh world.
   - Adds new commands `events_list` and `events_remove` to manage persistent events.

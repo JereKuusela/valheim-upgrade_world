@@ -21,11 +21,11 @@ public class DistributeLocations : ExecutedOperation
   {
     Ids = [.. ZoneSystem.instance.m_locations
         .Where(Helper.IsValid)
-        .Where(loc => ids.Contains(loc.m_prefab.Name))
+        .Where(loc => ids.Contains(loc.m_prefab.name))
         .Where(loc => loc.m_enable && loc.m_quantity != 0)
         .Where(loc => (loc.m_biome & args.BiomeMask) != Heightmap.Biome.None)
         .OrderByDescending(loc => loc.m_prioritized)
-        .Select(loc => loc.m_prefab.Name)];
+        .Select(loc => loc.m_prefab.name)];
     if (Ids.Length == 0)
     {
       Print("Error: No valid location ids.");
@@ -65,7 +65,7 @@ public class DistributeLocations : ExecutedOperation
       var lpaRequests = new Dictionary<ZoneSystem.ZoneLocation, int>();
       foreach (var id in Ids)
       {
-        foreach (var location in zs.m_locations.Where(loc => Helper.IsValid(loc) && loc.m_prefab.Name == id))
+        foreach (var location in zs.m_locations.Where(loc => Helper.IsValid(loc) && loc.m_prefab.name == id))
         {
           lpaRequests[location] = location.m_quantity;
         }
@@ -81,7 +81,7 @@ public class DistributeLocations : ExecutedOperation
       foreach (var id in Ids)
       {
         counter += 1;
-        var locations = zs.m_locations.Where(location => Helper.IsValid(location) && location.m_prefab.Name == id).ToArray();
+        var locations = zs.m_locations.Where(location => Helper.IsValid(location) && location.m_prefab.name == id).ToArray();
         if (locations.Length == 0)
           continue;
         Print($"Generating locations {id}. This may take a while...");
@@ -97,10 +97,10 @@ public class DistributeLocations : ExecutedOperation
       if (Chance < 1f)
       {
         zs.m_locationInstances = zs.m_locationInstances
-          .Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefab.Name != id || FiltererParameters.random.NextDouble() < Chance)
+          .Where(kvp => kvp.Value.m_placed || kvp.Value.m_location.m_prefab.name != id || FiltererParameters.random.NextDouble() < Chance)
           .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
       }
-      var unplaced = zs.m_locationInstances.Where(kvp => kvp.Value.m_location.m_prefab.Name == id && !kvp.Value.m_placed).ToList();
+      var unplaced = zs.m_locationInstances.Where(kvp => kvp.Value.m_location.m_prefab.name == id && !kvp.Value.m_placed).ToList();
       foreach (var kvp in unplaced) AddPin(kvp.Value.m_position);
       Total += Count(id);
       Added += Total - before;
@@ -116,7 +116,7 @@ public class DistributeLocations : ExecutedOperation
     foreach (var id in ids)
       Counts[id] = Count(id);
     var zs = ZoneSystem.instance;
-    zs.m_locationInstances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed || !Counts.ContainsKey(kvp.Value.m_location.m_prefab.Name) || (Explored.HasValue && !AllowedZones.Contains(kvp.Key))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    zs.m_locationInstances = zs.m_locationInstances.Where(kvp => kvp.Value.m_placed || !Counts.ContainsKey(kvp.Value.m_location.m_prefab.name) || (Explored.HasValue && !AllowedZones.Contains(kvp.Key))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     // Better Continents adds its own locations after ClearNonPlacedLocations is called.
     // So a workaround is to make a dummy call.
     DummyClearNonPlacedLocations.Skip = true;
@@ -126,7 +126,7 @@ public class DistributeLocations : ExecutedOperation
   private int Count(string id)
   {
     var zs = ZoneSystem.instance;
-    return zs.m_locationInstances.Count(kvp => kvp.Value.m_location.m_prefab.Name == id);
+    return zs.m_locationInstances.Count(kvp => kvp.Value.m_location.m_prefab.name == id);
   }
   protected override void OnEnd()
   {
@@ -147,7 +147,7 @@ public class DistributeLocations : ExecutedOperation
   {
     void Print(string value) => op.Print(value);
     var zs = ZoneSystem.instance;
-    int seed = WorldGenerator.instance.GetSeed() + location.m_prefab.Name.GetStableHashCode();
+    int seed = WorldGenerator.instance.GetSeed() + location.m_prefab.name.GetStableHashCode();
     UnityEngine.Random.State state = UnityEngine.Random.state;
     UnityEngine.Random.InitState(seed);
     int errorLocationInZone = 0;
@@ -338,7 +338,7 @@ public class DistributeLocations : ExecutedOperation
       }
       if (placed < location.m_quantity)
       {
-        Print($"Failed to place all {location.m_prefab.Name}, placed {placed} out of {location.m_quantity}.");
+        Print($"Failed to place all {location.m_prefab.name}, placed {placed} out of {location.m_quantity}.");
         if (Settings.VerboseLocations)
         {
           if (errorLocationInZone > 0)

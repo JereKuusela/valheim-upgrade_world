@@ -12,7 +12,7 @@ public class ListLocationPositions : EntityOperation
   {
     var zs = ZoneSystem.instance;
     List<string> texts = [];
-    var locs = args.FilterLocations(zs.m_locationInstances.Values).Where(l => ids.Count() == 0 || ids.Contains(l.m_location?.m_prefab.Name ?? "")).ToList();
+    var locs = args.FilterLocations(zs.m_locationInstances.Values).Where(l => ids.Count() == 0 || ids.Contains(l.m_location?.m_prefab.name ?? "")).ToList();
     PlayerBaseFilterer.Update(args.SafeZones);
     var skipped = locs.RemoveAll(loc => PlayerBaseFilterer.IsExcluded(loc.m_position));
     if (locs.Count == 0)
@@ -25,7 +25,7 @@ public class ListLocationPositions : EntityOperation
     foreach (var loc in locs)
     {
       var location = loc.m_location;
-      var name = location.m_prefab.Name;
+      var name = location.m_prefab.name;
       texts.Add($"{name}: {Helper.PrintVectorXZY(loc.m_position)} {WorldGenerator.instance.GetBiome(loc.m_position)}");
       AddPin(loc.m_position);
     }

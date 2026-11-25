@@ -169,7 +169,7 @@ public class FiltererParameters
     {
       var zone = ZoneSystem.GetZone(pos);
       var zs = ZoneSystem.instance;
-      if (!zs.m_locationInstances.TryGetValue(zone, out var location) || !LocationIds.Contains(location.m_location.m_prefab.Name))
+      if (!zs.m_locationInstances.TryGetValue(zone, out var location) || !LocationIds.Contains(location.m_location.m_prefab.name))
         return false;
     }
     return true;

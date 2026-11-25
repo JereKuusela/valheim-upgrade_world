@@ -61,7 +61,7 @@ public abstract class LocationOperation : ZoneOperation
   public static List<string> AllIds()
   {
     if (ServerIds != null) return ServerIds;
-    return [.. Helper.GetLocations().Select(location => location.m_prefab.Name).Distinct()];
+    return [.. Helper.GetLocations().Select(location => location.m_prefab.name).Distinct()];
   }
   public static void SetServerIds(string? data)
   {

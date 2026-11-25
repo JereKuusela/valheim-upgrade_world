@@ -12,7 +12,7 @@ public class CountLocations : EntityOperation
   private void CountPositions(HashSet<string> ids, bool log, FiltererParameters args)
   {
     var zs = ZoneSystem.instance;
-    var locs = args.FilterLocations(zs.m_locationInstances.Values).Where(l => ids.Count() == 0 || ids.Contains(l.m_location?.m_prefab.Name ?? "")).ToList();
+    var locs = args.FilterLocations(zs.m_locationInstances.Values).Where(l => ids.Count() == 0 || ids.Contains(l.m_location?.m_prefab.name ?? "")).ToList();
     PlayerBaseFilterer.Update(args.SafeZones);
     var total = 0;
     var totalSkipped = 0;
@@ -20,7 +20,7 @@ public class CountLocations : EntityOperation
     var skippedCounts = new Dictionary<string, int>();
     foreach (var loc in locs)
     {
-      var name = loc.m_location.m_prefab.Name;
+      var name = loc.m_location.m_prefab.name;
       if (!counts.ContainsKey(name))
       {
         counts[name] = 0;

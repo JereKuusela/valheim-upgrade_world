@@ -103,7 +103,7 @@ public static class PersistentEvents
       var zone = ZoneSystem.GetZone(e.position);
       // Placed locations are left for locations_remove.
       // Note: Vanilla Jotunn invasion doesn't add location so this isn't super important.
-      if (!string.IsNullOrWhiteSpace(name) && zs.m_locationInstances.TryGetValue(zone, out var location) && !location.m_placed && location.m_location.m_prefab.Name == name)
+      if (!string.IsNullOrWhiteSpace(name) && zs.m_locationInstances.TryGetValue(zone, out var location) && !location.m_placed && location.m_location.m_prefab.name == name)
         zs.m_locationInstances.Remove(zone);
       changed |= system.m_activePersistentEvents.list.Remove(e);
     }

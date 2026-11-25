@@ -74,16 +74,16 @@ public class RestoreLocations : ExecutedOperation
   {
     var zs = ZoneSystem.instance;
     var merged = new Dictionary<Vector2s, ZoneSystem.LocationInstance>(old);
-    var zones = old.Where(kvp => Ids.Contains(kvp.Value.m_location.m_prefab.Name)).Select(kvp => kvp.Key)
-      .Concat(fresh.Where(kvp => Ids.Contains(kvp.Value.m_location.m_prefab.Name)).Select(kvp => kvp.Key))
+    var zones = old.Where(kvp => Ids.Contains(kvp.Value.m_location.m_prefab.name)).Select(kvp => kvp.Key)
+      .Concat(fresh.Where(kvp => Ids.Contains(kvp.Value.m_location.m_prefab.name)).Select(kvp => kvp.Key))
       .Distinct().ToList();
     foreach (var zone in zones)
     {
       if (!Explored && zs.m_generatedZones.Contains(zone)) continue;
       var hasOld = old.TryGetValue(zone, out var oldInstance);
       var hasFresh = fresh.TryGetValue(zone, out var freshInstance);
-      var oldTarget = hasOld && Ids.Contains(oldInstance.m_location.m_prefab.Name);
-      var freshTarget = hasFresh && Ids.Contains(freshInstance.m_location.m_prefab.Name);
+      var oldTarget = hasOld && Ids.Contains(oldInstance.m_location.m_prefab.name);
+      var freshTarget = hasFresh && Ids.Contains(freshInstance.m_location.m_prefab.name);
       if (oldTarget && !Args.FilterPosition(oldInstance.m_position, true)) continue;
       if (freshTarget && !Args.FilterPosition(freshInstance.m_position, true)) continue;
       if (oldTarget && freshTarget && oldInstance.m_location == freshInstance.m_location && Utils.DistanceXZ(oldInstance.m_position, freshInstance.m_position) < 1f) continue;
@@ -104,7 +104,7 @@ public class RestoreLocations : ExecutedOperation
         else if (oldTarget) Moved++;
         else Replaced++;
         if (Settings.Verbose)
-          Print($"Location {freshInstance.m_location.m_prefab.Name} restored at {zone}.");
+          Print($"Location {freshInstance.m_location.m_prefab.name} restored at {zone}.");
       }
       else
       {
@@ -112,7 +112,7 @@ public class RestoreLocations : ExecutedOperation
         AddPin(oldInstance.m_position);
         Removed++;
         if (Settings.Verbose)
-          Print($"Location {oldInstance.m_location.m_prefab.Name} removed at {zone}.");
+          Print($"Location {oldInstance.m_location.m_prefab.name} removed at {zone}.");
       }
     }
     return merged;
