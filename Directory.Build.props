@@ -1,0 +1,34 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Build.props.user" Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.props.user')" />
+  <PropertyGroup>
+    <AlwaysUseLibsDir Condition="'$(AlwaysUseLibsDir)' == ''">false</AlwaysUseLibsDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(AlwaysUseLibsDir)' == 'true'">
+    <ManagedDir>$(LibsDir)</ManagedDir>
+    <BepInExDir>$(LibsDir)</BepInExDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(AlwaysUseLibsDir)' != 'true' And '$(ValheimDir)' != ''">
+    <ManagedDir>$(ValheimDir)\valheim_Data\Managed</ManagedDir>
+    <BepInExDir>$(ValheimDir)\BepInEx\core</BepInExDir>
+  </PropertyGroup>
+  <Target Name="CheckLibsDir" BeforeTargets="ResolveAssemblyReferences;CoreCompile">
+    <PropertyGroup>
+      <_MissingDirs Condition="'$(LibsDir)' == '' Or ('$(AlwaysUseLibsDir)' != 'true' And '$(ValheimDir)' == '')">true</_MissingDirs>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(_MissingDirs)' == 'true' And !Exists('$(MSBuildThisFileDirectory)Directory.Build.props.user')">
+      <_UserFileLine Include="&lt;Project&gt;" />
+      <_UserFileLine Include="  &lt;PropertyGroup&gt;" />
+      <_UserFileLine Include="    &lt;ValheimDir&gt;C:\YOUR_PATH\steamapps\common\Valheim&lt;/ValheimDir&gt;" />
+      <_UserFileLine Include="    &lt;LibsDir&gt;C:\YOUR_PATH\Libs&lt;/LibsDir&gt;" />
+      <_UserFileLine Include="    &lt;AlwaysUseLibsDir&gt;false&lt;/AlwaysUseLibsDir&gt;" />
+      <_UserFileLine Include="  &lt;/PropertyGroup&gt;" />
+      <_UserFileLine Include="&lt;/Project&gt;" />
+    </ItemGroup>
+    <WriteLinesToFile Condition="'@(_UserFileLine)' != ''" File="$(MSBuildThisFileDirectory)Directory.Build.props.user" Lines="@(_UserFileLine)" />
+    <Error Condition="'$(_MissingDirs)' == 'true'" Text="Set LibsDir and ValheimDir in Directory.Build.props.user or with MSBuild properties. With AlwaysUseLibsDir=true, only LibsDir is required." />
+    <Error Condition="!Exists('$(ManagedDir)\assembly_valheim.dll')" Text="assembly_valheim.dll was not found in '$(ManagedDir)'." />
+    <Error Condition="!Exists('$(BepInExDir)\BepInEx.dll')" Text="BepInEx.dll was not found in '$(BepInExDir)'." />
+    <Error Condition="!Exists('$(LibsDir)\gui_framework.dll')" Text="gui_framework.dll was not found in '$(LibsDir)'." />
+    <Error Condition="!Exists('$(LibsDir)\ServerDevcommands.dll')" Text="ServerDevcommands.dll was not found in '$(LibsDir)'." />
+  </Target>
+</Project>

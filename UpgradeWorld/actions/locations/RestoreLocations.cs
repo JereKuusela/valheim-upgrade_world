@@ -47,7 +47,7 @@ public class RestoreLocations : ExecutedOperation
         .Where(loc => loc.m_enable && loc.m_quantity != 0)
         .OrderByDescending(loc => loc.m_prioritized)
         .ToList();
-      Print("Generating a fresh location registry. This may take a while...");
+      Print("Generating a temporary location registry. This may take a while...");
       if (LPA.IsAvailable())
         yield return LPA.RunCustomPlacement(ordered.ToDictionary(loc => loc, loc => loc.m_quantity), DistributeLocations.AllowedZones);
       else

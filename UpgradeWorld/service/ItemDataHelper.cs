@@ -150,7 +150,7 @@ public static class ItemDataHelper
 
   public static void Save(List<ItemRecord> records, ZPackage pkg)
   {
-    pkg.Write((int)Version.Item.ChunksNCheats);
+    pkg.Write((int)Version.Item.NewCheats);
     pkg.Write((ushort)records.Count);
     foreach (var record in records)
     {

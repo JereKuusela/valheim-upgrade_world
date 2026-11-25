@@ -8,39 +8,40 @@
   <Target Name="CopyDLL" AfterTargets="Build">
     <Copy
       SourceFiles="$(TargetDir)$(ProjectName).dll"
-      DestinationFolder="$(ProjectDir)..\..\Libs" />
+      DestinationFolder="$(LibsDir)" />
     <Message Text="Copied to Libs folder." Importance="High" />
   </Target>
   <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
     <Reference Include="BepInEx">
-      <HintPath>..\..\Libs\BepInEx.dll</HintPath>
+      <HintPath>$(BepInExDir)\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\Libs\UnityEngine.dll</HintPath>
+      <HintPath>$(ManagedDir)\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\Libs\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="0Harmony">
-      <HintPath>..\..\Libs\0Harmony.dll</HintPath>
+      <HintPath>$(BepInExDir)\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Harmony">
-      <HintPath>..\..\Libs\BepInEx.Harmony.dll</HintPath>
+      <HintPath>$(BepInExDir)\BepInEx.Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="SoftReferenceableAssets">
-      <HintPath>..\..\Libs\SoftReferenceableAssets.dll</HintPath>
+    <Reference Include="SoftReferenceableAssets" Publicize="true">
+      <HintPath>$(ManagedDir)\SoftReferenceableAssets.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_valheim">
-      <HintPath>..\..\Libs\assembly_valheim.dll</HintPath>
+    <Reference Include="assembly_valheim" Publicize="true">
+      <HintPath>$(ManagedDir)\assembly_valheim.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_utils">
-      <HintPath>..\..\Libs\assembly_utils.dll</HintPath>
+    <Reference Include="assembly_utils" Publicize="true">
+      <HintPath>$(ManagedDir)\assembly_utils.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_guiutils">
-      <HintPath>..\..\Libs\assembly_guiutils.dll</HintPath>
+    <Reference Include="assembly_guiutils" Publicize="true">
+      <HintPath>$(ManagedDir)\assembly_guiutils.dll</HintPath>
     </Reference>
     <Reference Include="SPlatform">
-      <HintPath>..\..\Libs\SPlatform.dll</HintPath>
+      <HintPath>$(ManagedDir)\SPlatform.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
