@@ -12,6 +12,8 @@ public class DataHelper
 
   public static bool IsDataType(string type) => DataTypes.Contains(type.ToLowerInvariant());
 
+  private static int GetHash(string key) => int.TryParse(key, NumberStyles.Integer, CultureInfo.InvariantCulture, out var hash) ? hash : key.GetStableHashCode();
+
   public static bool HasDataOfType(ZDO zdo, string type)
   {
     var id = zdo.m_uid;
@@ -60,7 +62,7 @@ public class DataHelper
   public static bool ClearData(ZDO zdo, string key)
   {
     var id = zdo.m_uid;
-    var hash = key.GetStableHashCode();
+    var hash = GetHash(key);
     var hashId = (key + "_u").GetStableHashCode();
     var hashValue = (key + "_i").GetStableHashCode();
 
@@ -88,7 +90,7 @@ public class DataHelper
     }
 
     var id = zdo.m_uid;
-    var hash = key.GetStableHashCode();
+    var hash = GetHash(key);
     var hashId = (key + "_u").GetStableHashCode();
     var hashValue = (key + "_i").GetStableHashCode();
     var hasVec = ZDOExtraData.s_vec3.ContainsKey(id) && ZDOExtraData.s_vec3[id].ContainsKey(hash);
@@ -115,7 +117,7 @@ public class DataHelper
   public static bool SetData(ZDO zdo, string key, string data, string type)
   {
     var id = zdo.m_uid;
-    var hash = key.GetStableHashCode();
+    var hash = GetHash(key);
     var hashId = (key + "_u").GetStableHashCode();
     var hasVec = ZDOExtraData.s_vec3.ContainsKey(id) && ZDOExtraData.s_vec3[id].ContainsKey(hash);
     var hasQuat = ZDOExtraData.s_quats.ContainsKey(id) && ZDOExtraData.s_quats[id].ContainsKey(hash);
@@ -166,7 +168,7 @@ public class DataHelper
     if (key == "*") return HasAnyData(zdo, data);
 
     var id = zdo.m_uid;
-    var hash = key.GetStableHashCode();
+    var hash = GetHash(key);
     var hashId = (key + "_u").GetStableHashCode();
     var hasVec = ZDOExtraData.s_vec3.ContainsKey(id) && ZDOExtraData.s_vec3[id].ContainsKey(hash);
     if (hasVec)
